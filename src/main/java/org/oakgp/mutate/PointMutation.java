@@ -7,27 +7,32 @@ import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.operator.Operator;
 import org.oakgp.selector.NodeSelector;
+import org.oakgp.util.Random;
 
 /** Performs mutation (also known as node replacement mutation). */
 public final class PointMutation implements NodeEvolver {
+	private final Random random;
 	private final FunctionSet functionSet;
 	private final TerminalSet terminalSet;
 
-	public PointMutation(FunctionSet functionSet, TerminalSet terminalSet) {
+	public PointMutation(Random random, FunctionSet functionSet, TerminalSet terminalSet) {
+		this.random = random;
 		this.functionSet = functionSet;
 		this.terminalSet = terminalSet;
 	}
 
 	@Override
 	public Node evolve(NodeSelector selector) {
-		// TODO don't always change the root node - instead randomly select any node in the tree
-		Node original = selector.next();
-		if (original instanceof FunctionNode) {
-			FunctionNode n = (FunctionNode) original;
-			Operator f = functionSet.nextAlternative(n.getOperator());
-			return new FunctionNode(f, n.getArguments());
-		} else {
-			return terminalSet.nextAlternative(original);
-		}
+		Node root = selector.next();
+		int mutationPoint = random.nextInt(root.getNodeCount());
+		return root.replaceAt(mutationPoint, node -> {
+			if (node instanceof FunctionNode) {
+				FunctionNode functionNode = (FunctionNode) node;
+				Operator operator = functionSet.nextAlternative(functionNode.getOperator());
+				return new FunctionNode(operator, functionNode.getArguments());
+			} else {
+				return terminalSet.nextAlternative(node);
+			}
+		});
 	}
 }

@@ -11,8 +11,8 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 import org.junit.Test;
-import org.oakgp.mutate.SubtreeCrossover;
 import org.oakgp.mutate.PointMutation;
+import org.oakgp.mutate.SubtreeCrossover;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
@@ -112,7 +112,7 @@ public class SystemTest {
 		Map<NodeEvolver, Long> nodeEvolvers = new HashMap<>();
 		nodeEvolvers.put(t -> makeRandomTree(FUNCTION_SET, terminalSet, 4), 5L);
 		nodeEvolvers.put(new SubtreeCrossover(RANDOM), 22L);
-		nodeEvolvers.put(new PointMutation(FUNCTION_SET, terminalSet), 22L);
+		nodeEvolvers.put(new PointMutation(RANDOM, FUNCTION_SET, terminalSet), 22L);
 		return nodeEvolvers;
 	}
 

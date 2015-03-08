@@ -23,6 +23,8 @@ import org.oakgp.selector.NodeSelector;
 import org.oakgp.util.Random;
 
 public class PointMutationTest {
+	// TODO test mutating child nodes, not just the root node (which is all the tests currently do)
+
 	private static final double VARIABLE_RATIO = .6;
 	private static final int NUMBER_OF_VARIABLES = 9;
 	private static final ConstantNode[] CONSTANTS = new ConstantNode[] { new ConstantNode(7), new ConstantNode(8), new ConstantNode(9) };
@@ -70,6 +72,6 @@ public class PointMutationTest {
 	private PointMutation createPointMutation(Random mockRandom) {
 		FunctionSet functionSet = new FunctionSet(mockRandom, OPERATORS);
 		TerminalSet terminalSet = new TerminalSet(mockRandom, VARIABLE_RATIO, NUMBER_OF_VARIABLES, CONSTANTS);
-		return new PointMutation(functionSet, terminalSet);
+		return new PointMutation(mockRandom, functionSet, terminalSet);
 	}
 }
