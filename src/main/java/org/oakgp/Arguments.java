@@ -1,5 +1,7 @@
 package org.oakgp;
 
+import java.util.Arrays;
+
 import org.oakgp.node.Node;
 
 /**
@@ -69,5 +71,20 @@ public final class Arguments {
 		Node[] copy = new Node[original.length];
 		System.arraycopy(original, 0, copy, 0, original.length);
 		return copy;
+	}
+
+	@Override
+	public int hashCode() {
+		return Arrays.hashCode(args);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		return o instanceof Arguments && Arrays.equals(this.args, ((Arguments) o).args);
+	}
+
+	@Override
+	public String toString() {
+		return Arrays.toString(args);
 	}
 }

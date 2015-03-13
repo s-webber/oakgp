@@ -46,6 +46,16 @@ public final class ConstantNode implements Node {
 	}
 
 	@Override
+	public int hashCode() {
+		return value;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		return o instanceof ConstantNode && this.value == ((ConstantNode) o).value;
+	}
+
+	@Override
 	public String toString() {
 		return Integer.toString(value);
 	}

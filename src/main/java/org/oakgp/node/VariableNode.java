@@ -52,6 +52,16 @@ public final class VariableNode implements Node {
 	}
 
 	@Override
+	public int hashCode() {
+		return id;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		return o instanceof VariableNode && this.id == ((VariableNode) o).id;
+	}
+
+	@Override
 	public String toString() {
 		return "p" + id;
 	}

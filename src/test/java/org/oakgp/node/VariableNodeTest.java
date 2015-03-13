@@ -1,13 +1,13 @@
 package org.oakgp.node;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
 import static org.oakgp.Assignments.createAssignments;
 
 import org.junit.Test;
 import org.oakgp.Assignments;
-import org.oakgp.node.ConstantNode;
-import org.oakgp.node.VariableNode;
 
 public class VariableNodeTest {
 	@Test
@@ -34,5 +34,24 @@ public class VariableNodeTest {
 		final ConstantNode c = new ConstantNode(Integer.MAX_VALUE);
 		assertSame(v, v.replaceAt(0, t -> t));
 		assertSame(c, v.replaceAt(0, t -> c));
+	}
+
+	@Test
+	public void testEqualsAndHashCode() {
+		final VariableNode n1 = new VariableNode(1);
+		final VariableNode n2 = new VariableNode(1);
+		assertNotSame(n1, n2);
+		assertEquals(n1, n1);
+		assertEquals(n1.hashCode(), n2.hashCode());
+		assertEquals(n1, n2);
+	}
+
+	@Test
+	public void testNotEquals() {
+		final VariableNode n = new VariableNode(1);
+		assertNotEquals(n, new VariableNode(0));
+		assertNotEquals(n, new VariableNode(2));
+		assertNotEquals(n, new ConstantNode(1));
+		assertNotEquals(n, new Integer(1));
 	}
 }

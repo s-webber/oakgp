@@ -16,11 +16,11 @@ public class GenerationProcessorTest {
 	@Test
 	public void test() {
 		// test data
-		Node a = new ConstantNode(0);
+		Node a = new ConstantNode(1);
 		double aFitness = 9;
-		Node b = new ConstantNode(0);
+		Node b = new ConstantNode(2);
 		double bFitness = 12;
-		Node c = new ConstantNode(0);
+		Node c = new ConstantNode(3);
 		double cFitness = 8;
 		List<Node> input = Arrays.asList(a, b, c);
 

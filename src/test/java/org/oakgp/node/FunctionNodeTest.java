@@ -1,6 +1,8 @@
 package org.oakgp.node;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
 import static org.oakgp.Arguments.createArguments;
 import static org.oakgp.Assignments.createAssignments;
@@ -10,10 +12,6 @@ import java.util.function.Function;
 import org.junit.Test;
 import org.oakgp.Arguments;
 import org.oakgp.Assignments;
-import org.oakgp.node.ConstantNode;
-import org.oakgp.node.FunctionNode;
-import org.oakgp.node.Node;
-import org.oakgp.node.VariableNode;
 import org.oakgp.operator.Add;
 import org.oakgp.operator.Multiply;
 import org.oakgp.operator.Operator;
@@ -57,6 +55,48 @@ public class FunctionNodeTest {
 		assertEquals("1", n.getAt(4).toString());
 		assertEquals("(org.oakgp.operator.Add p0 1)", n.getAt(5).toString());
 		assertEquals("(org.oakgp.operator.Add (org.oakgp.operator.Multiply p0 p0) (org.oakgp.operator.Add p0 1))", n.getAt(6).toString());
+	}
+
+	@Test
+	public void testEqualsAndHashCode() {
+		final FunctionNode n1 = createFunctionNode();
+		final FunctionNode n2 = createFunctionNode();
+		assertNotSame(n1, n2);
+		assertEquals(n1, n1);
+		assertEquals(n1.hashCode(), n2.hashCode());
+		assertEquals(n1, n2);
+	}
+
+	@Test
+	public void testNotEquals() {
+		final FunctionNode n = new FunctionNode(new Add(), createArguments(new VariableNode(0), new ConstantNode(7)));
+
+		// verify (sanity-check) that equals will return true when it should
+		assertEquals(n, new FunctionNode(new Add(), createArguments(new VariableNode(0), new ConstantNode(7))));
+
+		// test different operator
+		assertNotEquals(n, new FunctionNode(new Multiply(), createArguments(new VariableNode(0), new ConstantNode(7))));
+
+		// test different first argument
+		assertNotEquals(n, new FunctionNode(new Add(), createArguments(new VariableNode(1), new ConstantNode(7))));
+
+		// test different second argument
+		assertNotEquals(n, new FunctionNode(new Add(), createArguments(new VariableNode(0), new ConstantNode(6))));
+
+		// test same arguments but different order
+		assertNotEquals(n, new FunctionNode(new Add(), createArguments(new ConstantNode(7), new VariableNode(0))));
+
+		// test wrong arguments but different order
+		assertNotEquals(n, new FunctionNode(new Add(), createArguments(new ConstantNode(0), new VariableNode(7))));
+
+		// test extra argument
+		assertNotEquals(n, new FunctionNode(new Add(), createArguments(new VariableNode(0), new ConstantNode(7), new ConstantNode(7))));
+
+		// test one less argument
+		assertNotEquals(n, new FunctionNode(new Add(), createArguments(new VariableNode(0))));
+
+		// test no arguments
+		assertNotEquals(n, new FunctionNode(new Add(), createArguments()));
 	}
 
 	/** Returns representation of: {@code (x*x)+x+1} */

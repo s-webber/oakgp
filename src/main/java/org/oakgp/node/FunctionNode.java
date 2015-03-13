@@ -75,6 +75,22 @@ public final class FunctionNode implements Node {
 	}
 
 	@Override
+	public int hashCode() {
+		// TODO cache hashCode?
+		return f.getClass().hashCode() * arguments.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof FunctionNode) {
+			FunctionNode fn = (FunctionNode) o;
+			return this.f.getClass().equals(fn.f.getClass()) && this.arguments.equals(fn.arguments);
+		} else {
+			return false;
+		}
+	}
+
+	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append('(');
