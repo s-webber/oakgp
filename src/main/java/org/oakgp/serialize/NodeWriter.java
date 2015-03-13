@@ -12,6 +12,8 @@ import org.oakgp.operator.Multiply;
 import org.oakgp.operator.Operator;
 
 public class NodeWriter {
+	private final SymbolMap symbolMap = new SymbolMap();
+
 	public String writeNode(Node node) {
 		StringBuilder sb = new StringBuilder();
 		writeNode(node, sb);
@@ -24,7 +26,7 @@ public class NodeWriter {
 			Operator operator = functionNode.getOperator();
 			Arguments arguments = functionNode.getArguments();
 			sb.append('(');
-			sb.append(operator.getClass().getName());
+			sb.append(symbolMap.getDisplayName(operator));
 			for (int i = 0; i < arguments.length(); i++) {
 				sb.append(' ');
 				sb.append(writeNode(arguments.get(i)));

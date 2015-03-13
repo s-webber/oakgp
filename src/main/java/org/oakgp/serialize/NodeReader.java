@@ -20,6 +20,7 @@ public class NodeReader implements Closeable {
 	private static final char FUNCTION_END_CHAR = ')';
 	private static final String FUNCTION_END_STRING = Character.toString(FUNCTION_END_CHAR);
 
+	private final SymbolMap symbolMap = new SymbolMap();
 	private final CharReader cr;
 
 	public NodeReader(String input) {
@@ -34,7 +35,7 @@ public class NodeReader implements Closeable {
 	private Node nextNode(String firstToken) throws IOException {
 		if (firstToken == FUNCTION_START_STRING) {
 			String functionName = nextToken();
-			Operator operator = createOperator(functionName);
+			Operator operator = symbolMap.getOperator(functionName);
 			List<Node> arguments = new ArrayList<>();
 			String nextToken;
 			while ((nextToken = nextToken()) != FUNCTION_END_STRING) {
@@ -45,14 +46,6 @@ public class NodeReader implements Closeable {
 			return new VariableNode(Integer.parseInt(firstToken.substring(1)));
 		} else {
 			return new ConstantNode(Integer.parseInt(firstToken));
-		}
-	}
-
-	private Operator createOperator(String functionName) {
-		try {
-			return (Operator) Class.forName(functionName).newInstance();
-		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-			throw new RuntimeException(e);
 		}
 	}
 

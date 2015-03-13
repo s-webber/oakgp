@@ -67,11 +67,19 @@ public class NodeReaderTest {
 	}
 
 	@Test
-	public void testFunctionNode() throws IOException {
+	public void testFunctionNodeSpecifiedByClassName() throws IOException {
 		String input = "(org.oakgp.operator.Add 7 21)";
 		Node output = readNode(input);
 		assertSame(FunctionNode.class, output.getClass());
 		assertEquals(input, output.toString());
+	}
+
+	@Test
+	public void testFunctionNodeSpecifiedBySymbol() throws IOException {
+		String expected = "(org.oakgp.operator.Add 7 21)";
+		Node output = readNode("(+ 7 21)");
+		assertSame(FunctionNode.class, output.getClass());
+		assertEquals(expected, output.toString());
 	}
 
 	@Test
