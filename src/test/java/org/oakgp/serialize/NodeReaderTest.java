@@ -4,9 +4,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+import static org.oakgp.TestUtils.readNode;
+import static org.oakgp.TestUtils.readNodes;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
@@ -122,21 +123,5 @@ public class NodeReaderTest {
 		for (int i = 0; i < inputs.length; i++) {
 			assertEquals(inputs[i].toString(), outputs.get(i).toString());
 		}
-	}
-
-	private Node readNode(String input) throws IOException {
-		List<Node> outputs = readNodes(input);
-		assertEquals(1, outputs.size());
-		return outputs.get(0);
-	}
-
-	private List<Node> readNodes(String input) throws IOException {
-		List<Node> outputs = new ArrayList<>();
-		try (NodeReader nr = new NodeReader(input)) {
-			while (!nr.isEndOfStream()) {
-				outputs.add(nr.readNode());
-			}
-		}
-		return outputs;
 	}
 }
