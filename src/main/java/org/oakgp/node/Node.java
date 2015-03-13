@@ -3,6 +3,7 @@ package org.oakgp.node;
 import java.util.function.Function;
 
 import org.oakgp.Assignments;
+import org.oakgp.Type;
 
 /** A node represents a single point of a tree structure. */
 public interface Node {
@@ -41,4 +42,6 @@ public interface Node {
 	 * @return the {@code Node} at {@code index} of the tree structure represented by this object
 	 */
 	Node getAt(int index);
+
+	Type getType();
 }

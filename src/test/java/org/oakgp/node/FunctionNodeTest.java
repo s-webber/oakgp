@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
 import static org.oakgp.Arguments.createArguments;
 import static org.oakgp.Assignments.createAssignments;
+import static org.oakgp.Type.INTEGER;
 
 import java.util.function.Function;
 
@@ -19,7 +20,7 @@ import org.oakgp.operator.Operator;
 public class FunctionNodeTest {
 	@Test
 	public void testEvaluate() {
-		Operator operator = (arguments1, assignments) -> arguments1.get(0).evaluate(assignments) * arguments1.get(1).evaluate(assignments);
+		Operator operator = new Multiply();
 		Arguments arguments = createArguments(new ConstantNode(42), new VariableNode(0));
 		FunctionNode functionNode = new FunctionNode(operator, arguments);
 
@@ -55,6 +56,12 @@ public class FunctionNodeTest {
 		assertEquals("1", n.getAt(4).toString());
 		assertEquals("(org.oakgp.operator.Add p0 1)", n.getAt(5).toString());
 		assertEquals("(org.oakgp.operator.Add (org.oakgp.operator.Multiply p0 p0) (org.oakgp.operator.Add p0 1))", n.getAt(6).toString());
+	}
+
+	@Test
+	public void testGetType() {
+		FunctionNode n = createFunctionNode();
+		assertSame(INTEGER, n.getType());
 	}
 
 	@Test

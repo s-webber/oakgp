@@ -5,18 +5,24 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
 import static org.oakgp.Assignments.createAssignments;
+import static org.oakgp.Type.INTEGER;
 
 import org.junit.Test;
 import org.oakgp.Assignments;
 
 public class VariableNodeTest {
 	@Test
-	public void test() {
+	public void testGetters() {
 		final int id = 7;
 		final VariableNode v = new VariableNode(id);
 		assertEquals(id, v.getId());
 		assertEquals(1, v.getNodeCount());
-		assertEquals("p" + id, v.toString());
+		assertSame(INTEGER, v.getType());
+	}
+
+	@Test
+	public void testToString() {
+		assertEquals("p5", new VariableNode(5).toString());
 	}
 
 	@Test

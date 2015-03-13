@@ -3,15 +3,22 @@ package org.oakgp.node;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertSame;
+import static org.oakgp.Type.INTEGER;
 
 import org.junit.Test;
 
 public class ConstantNodeTest {
 	@Test
-	public void test() {
+	public void testGetters() {
 		final ConstantNode n = new ConstantNode(7);
 		assertEquals(1, n.getNodeCount());
-		assertEquals("7", n.toString());
+		assertSame(INTEGER, n.getType());
+	}
+
+	@Test
+	public void testToString() {
+		assertEquals("5", new ConstantNode(5).toString());
 	}
 
 	@Test

@@ -2,9 +2,9 @@ package org.oakgp.operator;
 
 import org.oakgp.Arguments;
 import org.oakgp.Assignments;
+import org.oakgp.Signature;
 
 /** Represents an operation. */
-@FunctionalInterface
 public interface Operator {
 	/**
 	 * Returns the result of applying this operation to the specified {@code Arguments} and {@code Assignments}.
@@ -16,4 +16,6 @@ public interface Operator {
 	 * @return the result of applying this operation to the {@code arguments} and {@code assignments}
 	 */
 	int evaluate(Arguments arguments, Assignments assignments);
+
+	Signature getSignature();
 }

@@ -3,6 +3,7 @@ package org.oakgp.node;
 import java.util.function.Function;
 
 import org.oakgp.Assignments;
+import org.oakgp.Type;
 
 /**
  * Represents a constant value.
@@ -43,6 +44,11 @@ public final class ConstantNode implements Node {
 	@Override
 	public Node getAt(int index) {
 		return this;
+	}
+
+	@Override
+	public Type getType() {
+		return Type.INTEGER;
 	}
 
 	@Override

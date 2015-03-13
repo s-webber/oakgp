@@ -2,11 +2,12 @@ package org.oakgp.node;
 
 import org.oakgp.Arguments;
 import org.oakgp.Assignments;
+import org.oakgp.Type;
 import org.oakgp.operator.Operator;
 
 /** Contains a function (operator) and the arguments (operands) to apply to it. */
 public final class FunctionNode implements Node {
-	private final Operator f;
+	private final Operator operator;
 	private final Arguments arguments;
 
 	/**
@@ -18,12 +19,12 @@ public final class FunctionNode implements Node {
 	 *            the arguments (i.e. operands) to apply to {@code operator} when evaluating this {@code FunctionNode}
 	 */
 	public FunctionNode(Operator operator, Arguments arguments) {
-		this.f = operator;
+		this.operator = operator;
 		this.arguments = arguments;
 	}
 
 	public Operator getOperator() {
-		return f;
+		return operator;
 	}
 
 	public Arguments getArguments() {
@@ -32,7 +33,7 @@ public final class FunctionNode implements Node {
 
 	@Override
 	public int evaluate(Assignments assignments) {
-		return f.evaluate(arguments, assignments);
+		return operator.evaluate(arguments, assignments);
 	}
 
 	@Override
@@ -42,7 +43,7 @@ public final class FunctionNode implements Node {
 			Node node = arguments.get(i);
 			int c = node.getNodeCount();
 			if (total + c > index) {
-				return new FunctionNode(f, arguments.replaceAt(i, node.replaceAt(index - total, replacement)));
+				return new FunctionNode(operator, arguments.replaceAt(i, node.replaceAt(index - total, replacement)));
 			} else {
 				total += c;
 			}
@@ -75,16 +76,21 @@ public final class FunctionNode implements Node {
 	}
 
 	@Override
+	public Type getType() {
+		return operator.getSignature().getReturnType();
+	}
+
+	@Override
 	public int hashCode() {
 		// TODO cache hashCode?
-		return f.getClass().hashCode() * arguments.hashCode();
+		return operator.getClass().hashCode() * arguments.hashCode();
 	}
 
 	@Override
 	public boolean equals(Object o) {
 		if (o instanceof FunctionNode) {
 			FunctionNode fn = (FunctionNode) o;
-			return this.f.getClass().equals(fn.f.getClass()) && this.arguments.equals(fn.arguments);
+			return this.operator.getClass().equals(fn.operator.getClass()) && this.arguments.equals(fn.arguments);
 		} else {
 			return false;
 		}
@@ -94,7 +100,7 @@ public final class FunctionNode implements Node {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append('(');
-		sb.append(f.getClass().getName());
+		sb.append(operator.getClass().getName());
 		for (int i = 0; i < arguments.length(); i++) {
 			sb.append(' ');
 			sb.append(arguments.get(i));
