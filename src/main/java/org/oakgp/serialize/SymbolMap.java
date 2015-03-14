@@ -4,7 +4,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.oakgp.operator.Add;
+import org.oakgp.operator.Equal;
+import org.oakgp.operator.GreaterThan;
+import org.oakgp.operator.GreaterThanOrEqual;
+import org.oakgp.operator.If;
+import org.oakgp.operator.LessThan;
+import org.oakgp.operator.LessThanOrEqual;
 import org.oakgp.operator.Multiply;
+import org.oakgp.operator.NotEqual;
 import org.oakgp.operator.Operator;
 import org.oakgp.operator.Subtract;
 
@@ -15,6 +22,15 @@ public final class SymbolMap {
 		addMapping("+", Add.class);
 		addMapping("-", Subtract.class);
 		addMapping("*", Multiply.class);
+
+		addMapping("<", LessThan.class);
+		addMapping("<=", LessThanOrEqual.class);
+		addMapping(">", GreaterThan.class);
+		addMapping(">=", GreaterThanOrEqual.class);
+		addMapping("=", Equal.class);
+		addMapping("!=", NotEqual.class);
+
+		addMapping("if", If.class);
 	}
 
 	private static void addMapping(String symbol, Class<? extends Operator> operatorClass) {
