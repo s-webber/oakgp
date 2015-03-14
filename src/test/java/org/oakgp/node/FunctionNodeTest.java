@@ -104,6 +104,12 @@ public class FunctionNodeTest {
 
 		// test no arguments
 		assertNotEquals(n, new FunctionNode(new Add(), createArguments()));
+
+		// test not equal to other Node implementations
+		assertNotEquals(n, new ConstantNode(7));
+
+		// test not equal to other non-Node instances
+		assertNotEquals(n, new Object());
 	}
 
 	/** Returns representation of: {@code (x*x)+x+1} */
