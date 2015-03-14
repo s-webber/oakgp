@@ -18,7 +18,7 @@ import org.oakgp.Signature;
 import org.oakgp.node.ConstantNode;
 
 public class MultiplyTest {
-	private final Multiply multiply = new Multiply();
+	private final Operator multiply = new Multiply();
 
 	@Test
 	public void testEvaluate() {

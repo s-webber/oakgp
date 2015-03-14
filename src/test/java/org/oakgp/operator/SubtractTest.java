@@ -16,7 +16,7 @@ import org.oakgp.Assignments;
 import org.oakgp.Signature;
 
 public class SubtractTest {
-	private final Subtract subtract = new Subtract();
+	private final Operator subtract = new Subtract();
 
 	@Test
 	public void testEvaluate() {

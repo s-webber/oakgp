@@ -17,7 +17,7 @@ import org.oakgp.Signature;
 import org.oakgp.node.ConstantNode;
 
 public class AddTest {
-	private final Add add = new Add();
+	private final Operator add = new Add();
 
 	@Test
 	public void testEvaluate() {
