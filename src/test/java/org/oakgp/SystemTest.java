@@ -17,11 +17,19 @@ import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.operator.Add;
+import org.oakgp.operator.Equal;
+import org.oakgp.operator.GreaterThan;
+import org.oakgp.operator.GreaterThanOrEqual;
+import org.oakgp.operator.If;
+import org.oakgp.operator.LessThan;
+import org.oakgp.operator.LessThanOrEqual;
 import org.oakgp.operator.Multiply;
+import org.oakgp.operator.NotEqual;
 import org.oakgp.operator.Operator;
 import org.oakgp.operator.Subtract;
 import org.oakgp.selector.NodeSelectorFactory;
 import org.oakgp.selector.WeightedNodeSelectorFactory;
+import org.oakgp.serialize.NodeWriter;
 import org.oakgp.util.JavaUtilRandomAdapter;
 import org.oakgp.util.Random;
 
@@ -35,12 +43,14 @@ import org.oakgp.util.Random;
 public class SystemTest {
 	private static final Random RANDOM = new JavaUtilRandomAdapter();
 	private static final NodeSelectorFactory SELECTOR_FACTORY = new WeightedNodeSelectorFactory(RANDOM);
-	private static final FunctionSet FUNCTION_SET = new FunctionSet(RANDOM, new Operator[] { new Add(), new Subtract(), new Multiply() });
+	private static final FunctionSet ARITHMETIC_FUNCTION_SET = new FunctionSet(RANDOM, new Operator[] { new Add(), new Subtract(), new Multiply() });
+	private static final FunctionSet COMPARISON_FUNCTION_SET = new FunctionSet(RANDOM, new Operator[] { new Add(), new Subtract(), new Multiply(),
+			new LessThan(), new LessThanOrEqual(), new GreaterThan(), new GreaterThanOrEqual(), new Equal(), new NotEqual(), new If() });
 	private static final int GENERATION_SIZE = 50;
 	private static final double RATIO_VARIABLES = .6;
 
 	@Test
-	public void test() {
+	public void testTwoVariableArithmeticExpression() {
 		int numVariables = 2;
 		ConstantNode[] constants = new ConstantNode[11];
 		for (int i = 0; i < constants.length; i++) {
@@ -52,12 +62,12 @@ public class SystemTest {
 			int y = a.get(1);
 			return (x * x) + 2 * y + 3 * x + 5;
 		}));
-		List<Node> initialGeneration = createInitialGeneration(FUNCTION_SET, terminalSet, GENERATION_SIZE);
-		doIt(terminalSet, fitnessFunction, initialGeneration);
+		List<Node> initialGeneration = createInitialGeneration(ARITHMETIC_FUNCTION_SET, terminalSet, GENERATION_SIZE);
+		doIt(ARITHMETIC_FUNCTION_SET, terminalSet, fitnessFunction, initialGeneration);
 	}
 
 	@Test
-	public void test2() {
+	public void testThreeVariableArithmeticExpression() {
 		int numVariables = 3;
 		ConstantNode[] constants = new ConstantNode[11];
 		for (int i = 0; i < constants.length; i++) {
@@ -70,8 +80,25 @@ public class SystemTest {
 			int z = a.get(2);
 			return (x * -3) + (y * 5) - z;
 		}));
-		List<Node> initialGeneration = createInitialGeneration(FUNCTION_SET, terminalSet, GENERATION_SIZE);
-		doIt(terminalSet, fitnessFunction, initialGeneration);
+		List<Node> initialGeneration = createInitialGeneration(ARITHMETIC_FUNCTION_SET, terminalSet, GENERATION_SIZE);
+		doIt(ARITHMETIC_FUNCTION_SET, terminalSet, fitnessFunction, initialGeneration);
+	}
+
+	@Test
+	public void testTwoVariableBooleanLogicExpression() {
+		int numVariables = 2;
+		ConstantNode[] constants = new ConstantNode[5];
+		for (int i = 0; i < constants.length; i++) {
+			constants[i] = new ConstantNode(i);
+		}
+		TerminalSet terminalSet = new TerminalSet(RANDOM, RATIO_VARIABLES, numVariables, constants);
+		FitnessFunction fitnessFunction = new TestDataFitnessFunction(createTests(numVariables, a -> {
+			int x = a.get(0);
+			int y = a.get(1);
+			return x > 20 ? x : y;
+		}));
+		List<Node> initialGeneration = createInitialGeneration(COMPARISON_FUNCTION_SET, terminalSet, GENERATION_SIZE);
+		doIt(COMPARISON_FUNCTION_SET, terminalSet, fitnessFunction, initialGeneration);
 	}
 
 	private static Map<Assignments, Integer> createTests(int numVariables, Function<Assignments, Integer> f) {
@@ -92,12 +119,17 @@ public class SystemTest {
 		return variables;
 	}
 
-	private void doIt(TerminalSet terminalSet, FitnessFunction fitnessFunction, List<Node> initialGeneration) {
+	private void doIt(FunctionSet functionSet, TerminalSet terminalSet, FitnessFunction fitnessFunction, List<Node> initialGeneration) {
 		Predicate<List<RankedCandidate>> terminator = createTerminator();
-		Map<NodeEvolver, Long> nodeEvolvers = createNodeEvolvers(terminalSet);
+		Map<NodeEvolver, Long> nodeEvolvers = createNodeEvolvers(functionSet, terminalSet);
 		RankedCandidate best = Runner.process(new GenerationProcessor(fitnessFunction), new GenerationEvolver(SELECTOR_FACTORY, nodeEvolvers), terminator,
 				initialGeneration);
 		System.out.println("FIN " + best.getFitness() + " " + best.getNode());
+		printSimplified(best.getNode());
+	}
+
+	private void printSimplified(Node n) {
+		System.out.println(new NodeWriter().writeNode(new NodeSimplifier().simplify(n)));
 	}
 
 	private static List<Node> createInitialGeneration(FunctionSet functionSet, TerminalSet terminalSet, int size) {
@@ -108,21 +140,29 @@ public class SystemTest {
 		return initialGeneration;
 	}
 
-	private Map<NodeEvolver, Long> createNodeEvolvers(TerminalSet terminalSet) {
+	private Map<NodeEvolver, Long> createNodeEvolvers(FunctionSet functionSet, TerminalSet terminalSet) {
 		Map<NodeEvolver, Long> nodeEvolvers = new HashMap<>();
-		nodeEvolvers.put(t -> makeRandomTree(FUNCTION_SET, terminalSet, 4), 5L);
+		nodeEvolvers.put(t -> makeRandomTree(functionSet, terminalSet, 4), 5L);
 		nodeEvolvers.put(new SubtreeCrossover(RANDOM), 22L);
-		nodeEvolvers.put(new PointMutation(RANDOM, FUNCTION_SET, terminalSet), 22L);
+		nodeEvolvers.put(new PointMutation(RANDOM, functionSet, terminalSet), 22L);
 		return nodeEvolvers;
 	}
 
 	private static Node makeRandomTree(FunctionSet functionSet, TerminalSet terminalSet, int depth) {
+		return makeRandomTree(Type.INTEGER, functionSet, terminalSet, depth);
+	}
+
+	private static Node makeRandomTree(Type type, FunctionSet functionSet, TerminalSet terminalSet, int depth) {
 		if (depth > 0 && RANDOM.nextDouble() < .5) {
-			Node arg1 = makeRandomTree(functionSet, terminalSet, depth - 1);
-			Node arg2 = makeRandomTree(functionSet, terminalSet, depth - 1);
-			Arguments args = createArguments(arg1, arg2);
-			Operator f = FUNCTION_SET.next();
-			return new FunctionNode(f, args);
+			Operator operator = functionSet.next(type);
+			Signature signature = operator.getSignature();
+			Node[] args = new Node[signature.getArgumentTypesLength()];
+			for (int i = 0; i < args.length; i++) {
+				Type argType = signature.getArgumentType(i);
+				Node arg = makeRandomTree(argType, functionSet, terminalSet, depth - 1);
+				args[i] = arg;
+			}
+			return new FunctionNode(operator, createArguments(args));
 		} else {
 			return terminalSet.next();
 		}
