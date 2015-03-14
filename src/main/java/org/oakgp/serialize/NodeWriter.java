@@ -11,7 +11,7 @@ import org.oakgp.operator.Add;
 import org.oakgp.operator.Multiply;
 import org.oakgp.operator.Operator;
 
-public class NodeWriter {
+public final class NodeWriter {
 	private final SymbolMap symbolMap = new SymbolMap();
 
 	public String writeNode(Node node) {

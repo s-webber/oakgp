@@ -1,6 +1,6 @@
 package org.oakgp;
 
-public class Signature {
+public final class Signature {
 	private final Type returnType;
 	private final Type[] argumentTypes;
 

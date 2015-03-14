@@ -14,7 +14,7 @@ import org.oakgp.node.Node;
 import org.oakgp.node.VariableNode;
 import org.oakgp.operator.Operator;
 
-public class NodeReader implements Closeable {
+public final class NodeReader implements Closeable {
 	private static final char FUNCTION_START_CHAR = '(';
 	private static final String FUNCTION_START_STRING = Character.toString(FUNCTION_START_CHAR);
 	private static final char FUNCTION_END_CHAR = ')';
@@ -77,7 +77,7 @@ public class NodeReader implements Closeable {
 		return cr.isEndOfStream();
 	}
 
-	static class CharReader implements Closeable {
+	private static final class CharReader implements Closeable {
 		private final BufferedReader br;
 		private int previous = -1;
 

@@ -24,7 +24,7 @@ import org.oakgp.node.Node;
  * </p>
  * <b>Note:</b> relies on {@code Operator} implementations being referentially transparent.
  */
-public class NodeSimplifier {
+public final class NodeSimplifier {
 	public Node simplify(Node input) {
 		if (input instanceof FunctionNode) {
 			return simplifyFunctionNode((FunctionNode) input);
