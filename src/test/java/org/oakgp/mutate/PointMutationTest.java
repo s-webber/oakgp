@@ -1,6 +1,7 @@
 package org.oakgp.mutate;
 
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.oakgp.Arguments.createArguments;
@@ -19,7 +20,7 @@ import org.oakgp.operator.Add;
 import org.oakgp.operator.Multiply;
 import org.oakgp.operator.Operator;
 import org.oakgp.operator.Subtract;
-import org.oakgp.selector.NodeSelector;
+import org.oakgp.selector.DummyNodeSelector;
 import org.oakgp.util.Random;
 
 public class PointMutationTest {
@@ -39,16 +40,16 @@ public class PointMutationTest {
 		given(mockRandom.nextInt(NUMBER_OF_VARIABLES)).willReturn(expectedVariableId);
 		given(mockRandom.nextInt(CONSTANTS.length)).willReturn(expectedConstantIndex);
 
-		NodeSelector mockSelector = mock(NodeSelector.class);
-		given(mockSelector.next()).willReturn(new ConstantNode(9), new VariableNode(2));
+		DummyNodeSelector dummySelector = new DummyNodeSelector(new ConstantNode(9), new VariableNode(2));
 
 		PointMutation pointMutation = createPointMutation(mockRandom);
 
-		Node offspring1 = pointMutation.evolve(mockSelector);
+		Node offspring1 = pointMutation.evolve(dummySelector);
 		assertVariable(expectedVariableId, offspring1);
 
-		Node offspring2 = pointMutation.evolve(mockSelector);
+		Node offspring2 = pointMutation.evolve(dummySelector);
 		assertConstant(CONSTANTS[expectedConstantIndex].evaluate(null), offspring2);
+		assertTrue(dummySelector.isEmpty());
 	}
 
 	@Test
@@ -57,16 +58,16 @@ public class PointMutationTest {
 		Random mockRandom = mock(Random.class);
 		given(mockRandom.nextInt(OPERATORS.length)).willReturn(expectedOperatorIndex);
 
-		NodeSelector mockSelector = mock(NodeSelector.class);
 		Arguments arguments = createArguments(new ConstantNode(3), new ConstantNode(7));
 		FunctionNode originalFunctionNode = new FunctionNode(OPERATORS[0], arguments);
-		given(mockSelector.next()).willReturn(originalFunctionNode);
+		DummyNodeSelector dummySelector = new DummyNodeSelector(originalFunctionNode);
 
 		PointMutation pointMutation = createPointMutation(mockRandom);
 
-		FunctionNode offspring = (FunctionNode) pointMutation.evolve(mockSelector);
+		FunctionNode offspring = (FunctionNode) pointMutation.evolve(dummySelector);
 		assertSame(OPERATORS[expectedOperatorIndex], offspring.getOperator());
 		assertSame(arguments, offspring.getArguments());
+		assertTrue(dummySelector.isEmpty());
 	}
 
 	private PointMutation createPointMutation(Random mockRandom) {
