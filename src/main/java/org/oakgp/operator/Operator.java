@@ -22,7 +22,7 @@ public interface Operator {
 
 	Signature getSignature();
 
-	default Optional<Node> simplify() {
+	default Optional<Node> simplify(Arguments arguments) {
 		return Optional.empty();
 	}
 }

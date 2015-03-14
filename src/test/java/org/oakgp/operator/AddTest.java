@@ -4,6 +4,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.oakgp.Arguments.createArguments;
 import static org.oakgp.Assignments.createAssignments;
+import static org.oakgp.TestUtils.assertCanSimplify;
+import static org.oakgp.TestUtils.assertCannotSimplify;
+import static org.oakgp.TestUtils.createArguments;
+import static org.oakgp.TestUtils.readNode;
 import static org.oakgp.Type.INTEGER;
 
 import org.junit.Test;
@@ -29,5 +33,20 @@ public class AddTest {
 		assertEquals(2, signature.getArgumentTypesLength());
 		assertSame(INTEGER, signature.getArgumentType(0));
 		assertSame(INTEGER, signature.getArgumentType(1));
+	}
+
+	@Test
+	public void testCanSimplify() {
+		String arg = "p1";
+		// anything plus zero is itself
+		assertCanSimplify(add, readNode(arg), createArguments(arg, "0"));
+		assertCanSimplify(add, readNode(arg), createArguments("0", arg));
+	}
+
+	@Test
+	public void testCannotSimplify() {
+		String arg = "p1";
+		assertCannotSimplify(add, createArguments(arg, "1"));
+		assertCannotSimplify(add, createArguments(arg, "-1"));
 	}
 }

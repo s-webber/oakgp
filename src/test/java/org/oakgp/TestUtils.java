@@ -1,15 +1,18 @@
 package org.oakgp;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
 import org.oakgp.node.VariableNode;
+import org.oakgp.operator.Operator;
 import org.oakgp.serialize.NodeReader;
 
 public class TestUtils {
@@ -39,5 +42,24 @@ public class TestUtils {
 			throw new RuntimeException("IOException caught reading: " + input, e);
 		}
 		return outputs;
+	}
+
+	public static Arguments createArguments(String... expressions) {
+		Node[] args = new Node[expressions.length];
+		for (int i = 0; i < expressions.length; i++) {
+			args[i] = readNode(expressions[i]);
+		}
+		return Arguments.createArguments(args);
+	}
+
+	public static void assertCanSimplify(Operator operator, Node expected, Arguments arguments) {
+		Optional<Node> o = operator.simplify(arguments);
+		assertTrue(o.isPresent());
+		assertEquals(expected, o.get());
+	}
+
+	public static void assertCannotSimplify(Operator operator, Arguments arguments) {
+		Optional<Node> o = operator.simplify(arguments);
+		assertFalse(o.isPresent());
 	}
 }

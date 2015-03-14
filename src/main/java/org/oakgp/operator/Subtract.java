@@ -1,5 +1,10 @@
 package org.oakgp.operator;
 
+import java.util.Optional;
+
+import org.oakgp.Arguments;
+import org.oakgp.node.Node;
+
 /** Performs subtraction. */
 public final class Subtract extends ArithmeticOperator {
 	/**
@@ -10,5 +15,16 @@ public final class Subtract extends ArithmeticOperator {
 	@Override
 	protected int evaluate(int arg1, int arg2) {
 		return arg1 - arg2;
+	}
+
+	@Override
+	public Optional<Node> simplify(Arguments arguments) {
+		if (ZERO.equals(arguments.get(1))) {
+			return Optional.of(arguments.get(0));
+		} else if (arguments.get(0).equals(arguments.get(1))) {
+			return Optional.of(ZERO);
+		} else {
+			return Optional.empty();
+		}
 	}
 }

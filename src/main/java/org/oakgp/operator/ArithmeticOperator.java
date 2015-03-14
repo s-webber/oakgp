@@ -5,8 +5,11 @@ import static org.oakgp.Type.INTEGER;
 import org.oakgp.Arguments;
 import org.oakgp.Assignments;
 import org.oakgp.Signature;
+import org.oakgp.node.ConstantNode;
 
 abstract class ArithmeticOperator implements Operator {
+	public static final ConstantNode ZERO = new ConstantNode(0);
+	public static final ConstantNode ONE = new ConstantNode(1);
 	private static final Signature SIGNATURE = Signature.createSignature(INTEGER, INTEGER, INTEGER);
 
 	@Override
