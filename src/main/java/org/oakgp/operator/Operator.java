@@ -1,8 +1,11 @@
 package org.oakgp.operator;
 
+import java.util.Optional;
+
 import org.oakgp.Arguments;
 import org.oakgp.Assignments;
 import org.oakgp.Signature;
+import org.oakgp.node.Node;
 
 /** Represents an operation. */
 public interface Operator {
@@ -18,4 +21,8 @@ public interface Operator {
 	int evaluate(Arguments arguments, Assignments assignments);
 
 	Signature getSignature();
+
+	default Optional<Node> simplify() {
+		return Optional.empty();
+	}
 }
