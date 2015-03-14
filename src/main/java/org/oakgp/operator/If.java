@@ -28,7 +28,9 @@ public final class If implements Operator {
 
 	@Override
 	public Optional<Node> simplify(Arguments arguments) {
-		if (arguments.get(0) instanceof ConstantNode) {
+		if (arguments.get(1).equals(arguments.get(2))) {
+			return Optional.of(arguments.get(1));
+		} else if (arguments.get(0) instanceof ConstantNode) {
 			int index = getOutcomeArgumentIndex(arguments, null);
 			return Optional.of(arguments.get(index));
 		} else {

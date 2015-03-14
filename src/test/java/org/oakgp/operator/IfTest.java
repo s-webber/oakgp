@@ -42,6 +42,7 @@ public class IfTest {
 		String arg3 = "p1";
 		assertCanSimplify(operator, readNode(arg2), createArguments("1", arg2, arg3));
 		assertCanSimplify(operator, readNode(arg3), createArguments("0", arg2, arg3));
+		assertCanSimplify(operator, readNode(arg2), createArguments("p0", arg2, arg2));
 	}
 
 	@Test
