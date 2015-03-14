@@ -4,8 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.oakgp.TestUtils.readNode;
 
-import java.io.IOException;
-
 import org.junit.Test;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
@@ -16,28 +14,28 @@ public class NodeSimplifierTest {
 	private final NodeSimplifier nodeSimplifier = new NodeSimplifier();
 
 	@Test
-	public void testConstantNode() throws IOException {
+	public void testConstantNode() {
 		Node input = new ConstantNode(1);
 		Node output = nodeSimplifier.simplify(input);
 		assertSame(input, output);
 	}
 
 	@Test
-	public void testVariableNode() throws IOException {
+	public void testVariableNode() {
 		Node input = new VariableNode(1);
 		Node output = nodeSimplifier.simplify(input);
 		assertSame(input, output);
 	}
 
 	@Test
-	public void testFunctionNodeWithVariable() throws IOException {
+	public void testFunctionNodeWithVariable() {
 		Node input = readNode("(+ 7 p0)");
 		Node output = nodeSimplifier.simplify(input);
 		assertSame(input, output);
 	}
 
 	@Test
-	public void testFunctionNodeNoVariables() throws IOException {
+	public void testFunctionNodeNoVariables() {
 		Node input = readNode("(+ 7 3)");
 		Node output = nodeSimplifier.simplify(input);
 		assertSame(ConstantNode.class, output.getClass());
@@ -45,7 +43,7 @@ public class NodeSimplifierTest {
 	}
 
 	@Test
-	public void testDeeplyNestedTree() throws IOException {
+	public void testDeeplyNestedTree() {
 		Node input = readNode("(+ (- 5 6) (* p0 (- (* 6 7) (+ 2 3))))");
 		Node output = nodeSimplifier.simplify(input);
 		assertSame(FunctionNode.class, output.getClass());

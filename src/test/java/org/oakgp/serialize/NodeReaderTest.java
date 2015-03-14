@@ -7,7 +7,6 @@ import static org.junit.Assert.assertTrue;
 import static org.oakgp.TestUtils.readNode;
 import static org.oakgp.TestUtils.readNodes;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.junit.Test;
@@ -20,7 +19,7 @@ public class NodeReaderTest {
 	// TODO test error conditions
 
 	@Test
-	public void testZero() throws IOException {
+	public void testZero() {
 		String input = "0";
 		Node output = readNode(input);
 		assertSame(ConstantNode.class, output.getClass());
@@ -28,7 +27,7 @@ public class NodeReaderTest {
 	}
 
 	@Test
-	public void testNegativeConstantNode() throws IOException {
+	public void testNegativeConstantNode() {
 		String input = "-9";
 		Node output = readNode(input);
 		assertSame(ConstantNode.class, output.getClass());
@@ -36,7 +35,7 @@ public class NodeReaderTest {
 	}
 
 	@Test
-	public void testSingleCharacterConstantNode() throws IOException {
+	public void testSingleCharacterConstantNode() {
 		String input = "4";
 		Node output = readNode(input);
 		assertSame(ConstantNode.class, output.getClass());
@@ -44,7 +43,7 @@ public class NodeReaderTest {
 	}
 
 	@Test
-	public void testMulipleCharacterConstantNode() throws IOException {
+	public void testMulipleCharacterConstantNode() {
 		String input = "147";
 		Node output = readNode(input);
 		assertSame(ConstantNode.class, output.getClass());
@@ -52,7 +51,7 @@ public class NodeReaderTest {
 	}
 
 	@Test
-	public void testSingleDigitIdVariableNode() throws IOException {
+	public void testSingleDigitIdVariableNode() {
 		String input = "p1";
 		Node output = readNode(input);
 		assertSame(VariableNode.class, output.getClass());
@@ -60,7 +59,7 @@ public class NodeReaderTest {
 	}
 
 	@Test
-	public void testMultipleDigitIdVariableNode() throws IOException {
+	public void testMultipleDigitIdVariableNode() {
 		String input = "p78";
 		Node output = readNode(input);
 		assertSame(VariableNode.class, output.getClass());
@@ -68,7 +67,7 @@ public class NodeReaderTest {
 	}
 
 	@Test
-	public void testFunctionNodeSpecifiedByClassName() throws IOException {
+	public void testFunctionNodeSpecifiedByClassName() {
 		String input = "(org.oakgp.operator.Add 7 21)";
 		Node output = readNode(input);
 		assertSame(FunctionNode.class, output.getClass());
@@ -76,7 +75,7 @@ public class NodeReaderTest {
 	}
 
 	@Test
-	public void testFunctionNodeSpecifiedBySymbol() throws IOException {
+	public void testFunctionNodeSpecifiedBySymbol() {
 		String expected = "(org.oakgp.operator.Add 7 21)";
 		Node output = readNode("(+ 7 21)");
 		assertSame(FunctionNode.class, output.getClass());
@@ -84,7 +83,7 @@ public class NodeReaderTest {
 	}
 
 	@Test
-	public void testFunctionNodeWithFunctionNodeArguments() throws IOException {
+	public void testFunctionNodeWithFunctionNodeArguments() {
 		String input = "(org.oakgp.operator.Add (org.oakgp.operator.Subtract p0 587) (org.oakgp.operator.Multiply 43 p1))";
 		Node output = readNode(input);
 		assertSame(FunctionNode.class, output.getClass());
@@ -92,21 +91,21 @@ public class NodeReaderTest {
 	}
 
 	@Test
-	public void testEmptyString() throws IOException {
+	public void testEmptyString() {
 		String input = "";
 		List<Node> outputs = readNodes(input);
 		assertTrue(outputs.isEmpty());
 	}
 
 	@Test
-	public void testWhitespace() throws IOException {
+	public void testWhitespace() {
 		String input = " \r\n\t\t  ";
 		List<Node> outputs = readNodes(input);
 		assertTrue(outputs.isEmpty());
 	}
 
 	@Test
-	public void testPadded() throws IOException {
+	public void testPadded() {
 		String input = " \r\n42\t\t  ";
 		Node output = readNode(input);
 		assertSame(ConstantNode.class, output.getClass());
@@ -115,7 +114,7 @@ public class NodeReaderTest {
 	}
 
 	@Test
-	public void testMulipleNodes() throws IOException {
+	public void testMulipleNodes() {
 		String[] inputs = { "6", "(org.oakgp.operator.Add p0 p1)", "42", "p0", "(org.oakgp.operator.Add 1 2)", "p98" };
 		String combinedInput = " " + inputs[0] + inputs[1] + inputs[2] + " " + inputs[3] + "\n\r\t\t\t" + inputs[4] + "       \n   " + inputs[5] + "\r\n";
 		List<Node> outputs = readNodes(combinedInput);

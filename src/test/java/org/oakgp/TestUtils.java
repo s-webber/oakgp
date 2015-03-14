@@ -23,18 +23,20 @@ public class TestUtils {
 		assertEquals(expectedValue, ((ConstantNode) node).evaluate(null));
 	}
 
-	public static Node readNode(String input) throws IOException {
+	public static Node readNode(String input) {
 		List<Node> outputs = readNodes(input);
 		assertEquals(1, outputs.size());
 		return outputs.get(0);
 	}
 
-	public static List<Node> readNodes(String input) throws IOException {
+	public static List<Node> readNodes(String input) {
 		List<Node> outputs = new ArrayList<>();
 		try (NodeReader nr = new NodeReader(input)) {
 			while (!nr.isEndOfStream()) {
 				outputs.add(nr.readNode());
 			}
+		} catch (IOException e) {
+			throw new RuntimeException("IOException caught reading: " + input, e);
 		}
 		return outputs;
 	}
