@@ -6,6 +6,24 @@ import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 
+/**
+ * Simplifies tree structures by replacing expressions with their values.
+ * <p>
+ * e.g. The expression:
+ *
+ * <pre>
+ * (+ 7 (* 3 6))
+ * </pre>
+ *
+ * can be simplified to the value:
+ *
+ * <pre>
+ * 25
+ * </pre>
+ *
+ * </p>
+ * <b>Note:</b> relies on {@code Operator} implementations being referentially transparent.
+ */
 public class NodeSimplifier {
 	public Node simplify(Node input) {
 		if (input instanceof FunctionNode) {
