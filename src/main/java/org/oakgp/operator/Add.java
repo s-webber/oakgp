@@ -1,27 +1,14 @@
 package org.oakgp.operator;
 
-import static org.oakgp.Type.INTEGER;
-
-import org.oakgp.Arguments;
-import org.oakgp.Assignments;
-import org.oakgp.Signature;
-
 /** Performs addition. */
-public final class Add implements Operator {
-	private static final Signature SIGNATURE = Signature.createSignature(INTEGER, INTEGER, INTEGER);
-
+public final class Add extends ArithmeticOperator {
 	/**
 	 * Returns the result of adding the two elements of the specified arguments.
 	 *
-	 * @return the result of adding the two elements of {@code arguments}
+	 * @return the result of adding {@code arg1} and {@code arg2}
 	 */
 	@Override
-	public int evaluate(Arguments arguments, Assignments assignments) {
-		return arguments.get(0).evaluate(assignments) + arguments.get(1).evaluate(assignments);
-	}
-
-	@Override
-	public Signature getSignature() {
-		return SIGNATURE;
+	protected int evaluate(int arg1, int arg2) {
+		return arg1 + arg2;
 	}
 }
