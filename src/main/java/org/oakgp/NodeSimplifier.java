@@ -2,6 +2,8 @@ package org.oakgp;
 
 import static org.oakgp.Arguments.createArguments;
 
+import java.util.Optional;
+
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
@@ -34,6 +36,7 @@ public final class NodeSimplifier {
 	}
 
 	private Node simplifyFunctionNode(FunctionNode input) {
+		// try to simplify each of the arguments
 		Arguments inputArgs = input.getArguments();
 		Node[] simplifiedArgs = new Node[inputArgs.length()];
 		boolean modified = false;
@@ -49,14 +52,26 @@ public final class NodeSimplifier {
 			}
 		}
 
+		// if could simplify arguments then use simplified version to create new FunctionNode
+		Arguments arguments;
 		FunctionNode output;
 		if (modified) {
-			output = new FunctionNode(input.getOperator(), createArguments(simplifiedArgs));
+			arguments = createArguments(simplifiedArgs);
+			output = new FunctionNode(input.getOperator(), arguments);
 		} else {
+			arguments = inputArgs;
 			output = input;
 		}
+
+		// if all arguments are constants then return result of evaluating them
 		if (constants) {
 			return new ConstantNode(output.evaluate(null));
+		}
+
+		// try to simplify using operator
+		Optional<Node> simplified = input.getOperator().simplify(arguments);
+		if (simplified.isPresent()) {
+			return simplified.get();
 		} else {
 			return output;
 		}

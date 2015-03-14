@@ -49,4 +49,12 @@ public class NodeSimplifierTest {
 		assertSame(FunctionNode.class, output.getClass());
 		assertEquals("(org.oakgp.operator.Add -1 (org.oakgp.operator.Multiply p0 37))", output.toString());
 	}
+
+	@Test
+	public void testDeeplyNestedTreeSimplifedByOperator() {
+		Node input = readNode("(- (+ p6 3) (* 1 (- (+ p6 3) (* p7 (- p5 p5)))))");
+		Node output = nodeSimplifier.simplify(input);
+		assertSame(ConstantNode.class, output.getClass());
+		assertEquals("0", output.toString());
+	}
 }
