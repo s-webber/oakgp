@@ -1,14 +1,8 @@
 package org.oakgp.serialize;
 
-import static org.oakgp.Arguments.createArguments;
-
 import org.oakgp.Arguments;
-import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
-import org.oakgp.node.VariableNode;
-import org.oakgp.operator.Add;
-import org.oakgp.operator.Multiply;
 import org.oakgp.operator.Operator;
 
 public final class NodeWriter {
@@ -35,12 +29,5 @@ public final class NodeWriter {
 		} else {
 			sb.append(node);
 		}
-	}
-
-	public static void main(String[] args) {
-		NodeWriter writer = new NodeWriter();
-		Node node = new FunctionNode(new Add(), createArguments(new FunctionNode(new Multiply(), createArguments(new VariableNode(0), new VariableNode(0))),
-				new FunctionNode(new Add(), createArguments(new VariableNode(0), new ConstantNode(1)))));
-		System.out.println(writer.writeNode(node));
 	}
 }
