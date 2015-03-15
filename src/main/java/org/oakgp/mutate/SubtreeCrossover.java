@@ -17,9 +17,24 @@ public final class SubtreeCrossover implements NodeEvolver {
 	public Node evolve(NodeSelector selector) {
 		Node parent1 = selector.next();
 		Node parent2 = selector.next();
-		// TODO don't allow removal of root node?
-		int to = random.nextInt(parent1.getNodeCount());
+		int to = selectCrossoverPoint(parent1);
 		int from = random.nextInt(parent2.getNodeCount());
-		return parent1.replaceAt(to, t -> parent2.getAt(from));
+		Node replacementSubTree = parent2.getAt(from);
+		return parent1.replaceAt(to, t -> {
+			if (t.getType() == replacementSubTree.getType()) {
+				return replacementSubTree;
+			} else {
+				return t;
+			}
+		});
+	}
+
+	private int selectCrossoverPoint(Node parent1) {
+		int nodeCount = parent1.getNodeCount();
+		if (nodeCount == 1) {
+			return 0;
+		} else {
+			return random.nextInt(nodeCount - 1); // -1 to avoid selecting root node
+		}
 	}
 }
