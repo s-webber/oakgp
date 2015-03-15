@@ -53,6 +53,14 @@ public class TestUtils {
 		return Arguments.createArguments(args);
 	}
 
+	public static ConstantNode createConstant(Object value) {
+		return new ConstantNode(value);
+	}
+
+	public static VariableNode createVariable(int id) {
+		return new VariableNode(id);
+	}
+
 	public static void assertCanSimplify(Operator operator, Node expected, Arguments arguments) {
 		Optional<Node> o = operator.simplify(arguments);
 		assertTrue(o.isPresent());
