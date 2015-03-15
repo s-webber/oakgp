@@ -24,4 +24,9 @@ public final class RankedCandidate implements Comparable<RankedCandidate> { // T
 	public int compareTo(RankedCandidate o) {
 		return Double.compare(fitness, o.fitness);
 	}
+
+	@Override
+	public String toString() {
+		return "[" + node + " " + fitness + "]";
+	}
 }

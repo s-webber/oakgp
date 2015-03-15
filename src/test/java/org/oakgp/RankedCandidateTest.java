@@ -2,6 +2,7 @@ package org.oakgp;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
+import static org.oakgp.TestUtils.readNode;
 
 import org.junit.Test;
 import org.oakgp.node.ConstantNode;
@@ -25,5 +26,11 @@ public class RankedCandidateTest {
 		assertEquals(-1, a.compareTo(b));
 		assertEquals(1, b.compareTo(a));
 		assertEquals(0, a.compareTo(c));
+	}
+
+	@Test
+	public void testToString() {
+		RankedCandidate rankedCandidate = new RankedCandidate(readNode("(+ 2 v0)"), 85.75);
+		assertEquals("[(org.oakgp.operator.Add 2 v0) 85.75]", rankedCandidate.toString());
 	}
 }
