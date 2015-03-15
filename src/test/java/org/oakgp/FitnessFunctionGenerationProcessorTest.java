@@ -1,9 +1,8 @@
 package org.oakgp;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
+import static org.oakgp.TestUtils.assertRankedCandidate;
 
 import java.util.Arrays;
 import java.util.List;
@@ -38,10 +37,5 @@ public class FitnessFunctionGenerationProcessorTest {
 		assertRankedCandidate(output.get(0), c, cFitness);
 		assertRankedCandidate(output.get(1), a, aFitness);
 		assertRankedCandidate(output.get(2), b, bFitness);
-	}
-
-	private void assertRankedCandidate(RankedCandidate actual, Node expectedNode, double expectedFitness) {
-		assertSame(expectedNode, actual.getNode());
-		assertEquals(expectedFitness, actual.getFitness(), 0);
 	}
 }

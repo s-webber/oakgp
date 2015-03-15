@@ -2,6 +2,7 @@ package org.oakgp;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
@@ -61,5 +62,10 @@ public class TestUtils {
 	public static void assertCannotSimplify(Operator operator, Arguments arguments) {
 		Optional<Node> o = operator.simplify(arguments);
 		assertFalse(o.isPresent());
+	}
+
+	public static void assertRankedCandidate(RankedCandidate actual, Node expectedNode, double expectedFitness) {
+		assertSame(expectedNode, actual.getNode());
+		assertEquals(expectedFitness, actual.getFitness(), 0);
 	}
 }
