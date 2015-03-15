@@ -1,9 +1,17 @@
-package org.oakgp;
+package org.oakgp.examples.simple;
 
-import static org.oakgp.Arguments.createArguments;
 import static org.oakgp.Assignments.createAssignments;
+import static org.oakgp.examples.SystemTestUtils.ARITHMETIC_FUNCTION_SET;
+import static org.oakgp.examples.SystemTestUtils.COMPARISON_FUNCTION_SET;
+import static org.oakgp.examples.SystemTestUtils.GENERATION_SIZE;
+import static org.oakgp.examples.SystemTestUtils.RANDOM;
+import static org.oakgp.examples.SystemTestUtils.RATIO_VARIABLES;
+import static org.oakgp.examples.SystemTestUtils.SELECTOR_FACTORY;
+import static org.oakgp.examples.SystemTestUtils.createConstants;
+import static org.oakgp.examples.SystemTestUtils.createInitialGeneration;
+import static org.oakgp.examples.SystemTestUtils.makeRandomTree;
+import static org.oakgp.examples.SystemTestUtils.printRankedCandidate;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,27 +19,21 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 import org.junit.Test;
+import org.oakgp.Assignments;
+import org.oakgp.FitnessFunction;
+import org.oakgp.FitnessFunctionGenerationProcessor;
+import org.oakgp.FunctionSet;
+import org.oakgp.GenerationEvolver;
+import org.oakgp.GenerationProcessor;
+import org.oakgp.NodeEvolver;
+import org.oakgp.RankedCandidate;
+import org.oakgp.Runner;
+import org.oakgp.TerminalSet;
+import org.oakgp.TestDataFitnessFunction;
 import org.oakgp.mutate.PointMutation;
 import org.oakgp.mutate.SubtreeCrossover;
 import org.oakgp.node.ConstantNode;
-import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
-import org.oakgp.operator.Add;
-import org.oakgp.operator.Equal;
-import org.oakgp.operator.GreaterThan;
-import org.oakgp.operator.GreaterThanOrEqual;
-import org.oakgp.operator.If;
-import org.oakgp.operator.LessThan;
-import org.oakgp.operator.LessThanOrEqual;
-import org.oakgp.operator.Multiply;
-import org.oakgp.operator.NotEqual;
-import org.oakgp.operator.Operator;
-import org.oakgp.operator.Subtract;
-import org.oakgp.selector.NodeSelectorFactory;
-import org.oakgp.selector.WeightedNodeSelectorFactory;
-import org.oakgp.serialize.NodeWriter;
-import org.oakgp.util.JavaUtilRandomAdapter;
-import org.oakgp.util.Random;
 
 /**
  * Performs full genetic programming runs without relying on any mock objects.
@@ -40,22 +42,11 @@ import org.oakgp.util.Random;
  * dependency). Leaving here for the moment as it provides a convenient mechanism to perform a full test of the process. TODO decide long-term solution for this
  * </p>
  */
-public class SystemTest {
-	private static final Random RANDOM = new JavaUtilRandomAdapter();
-	private static final NodeSelectorFactory SELECTOR_FACTORY = new WeightedNodeSelectorFactory(RANDOM);
-	private static final FunctionSet ARITHMETIC_FUNCTION_SET = new FunctionSet(RANDOM, new Operator[] { new Add(), new Subtract(), new Multiply() });
-	private static final FunctionSet COMPARISON_FUNCTION_SET = new FunctionSet(RANDOM, new Operator[] { new Add(), new Subtract(), new Multiply(),
-			new LessThan(), new LessThanOrEqual(), new GreaterThan(), new GreaterThanOrEqual(), new Equal(), new NotEqual(), new If() });
-	private static final int GENERATION_SIZE = 50;
-	private static final double RATIO_VARIABLES = .6;
-
+public class FitnessFunctionSystemTest {
 	@Test
 	public void testTwoVariableArithmeticExpression() {
+		ConstantNode[] constants = createConstants(11);
 		int numVariables = 2;
-		ConstantNode[] constants = new ConstantNode[11];
-		for (int i = 0; i < constants.length; i++) {
-			constants[i] = new ConstantNode(i);
-		}
 		TerminalSet terminalSet = new TerminalSet(RANDOM, RATIO_VARIABLES, numVariables, constants);
 		FitnessFunction fitnessFunction = new TestDataFitnessFunction(createTests(numVariables, a -> {
 			int x = a.get(0);
@@ -68,11 +59,8 @@ public class SystemTest {
 
 	@Test
 	public void testThreeVariableArithmeticExpression() {
+		ConstantNode[] constants = createConstants(11);
 		int numVariables = 3;
-		ConstantNode[] constants = new ConstantNode[11];
-		for (int i = 0; i < constants.length; i++) {
-			constants[i] = new ConstantNode(i);
-		}
 		TerminalSet terminalSet = new TerminalSet(RANDOM, RATIO_VARIABLES, numVariables, constants);
 		FitnessFunction fitnessFunction = new TestDataFitnessFunction(createTests(numVariables, a -> {
 			int x = a.get(0);
@@ -86,11 +74,8 @@ public class SystemTest {
 
 	@Test
 	public void testTwoVariableBooleanLogicExpression() {
+		ConstantNode[] constants = createConstants(5);
 		int numVariables = 2;
-		ConstantNode[] constants = new ConstantNode[5];
-		for (int i = 0; i < constants.length; i++) {
-			constants[i] = new ConstantNode(i);
-		}
 		TerminalSet terminalSet = new TerminalSet(RANDOM, RATIO_VARIABLES, numVariables, constants);
 		FitnessFunction fitnessFunction = new TestDataFitnessFunction(createTests(numVariables, a -> {
 			int x = a.get(0);
@@ -122,22 +107,9 @@ public class SystemTest {
 	private void doIt(FunctionSet functionSet, TerminalSet terminalSet, FitnessFunction fitnessFunction, List<Node> initialGeneration) {
 		Predicate<List<RankedCandidate>> terminator = createTerminator();
 		Map<NodeEvolver, Long> nodeEvolvers = createNodeEvolvers(functionSet, terminalSet);
-		RankedCandidate best = Runner.process(new FitnessFunctionGenerationProcessor(fitnessFunction), new GenerationEvolver(SELECTOR_FACTORY, nodeEvolvers),
-				terminator, initialGeneration);
-		System.out.println("FIN " + best.getFitness() + " " + best.getNode());
-		printSimplified(best.getNode());
-	}
-
-	private void printSimplified(Node n) {
-		System.out.println(new NodeWriter().writeNode(new NodeSimplifier().simplify(n)));
-	}
-
-	private static List<Node> createInitialGeneration(FunctionSet functionSet, TerminalSet terminalSet, int size) {
-		List<Node> initialGeneration = new ArrayList<>();
-		for (int i = 0; i < size; i++) {
-			initialGeneration.add(makeRandomTree(functionSet, terminalSet, 4));
-		}
-		return initialGeneration;
+		GenerationProcessor generationProcessor = new FitnessFunctionGenerationProcessor(fitnessFunction);
+		RankedCandidate best = Runner.process(generationProcessor, new GenerationEvolver(SELECTOR_FACTORY, nodeEvolvers), terminator, initialGeneration);
+		printRankedCandidate(best);
 	}
 
 	private Map<NodeEvolver, Long> createNodeEvolvers(FunctionSet functionSet, TerminalSet terminalSet) {
@@ -146,26 +118,6 @@ public class SystemTest {
 		nodeEvolvers.put(new SubtreeCrossover(RANDOM), 22L);
 		nodeEvolvers.put(new PointMutation(RANDOM, functionSet, terminalSet), 22L);
 		return nodeEvolvers;
-	}
-
-	private static Node makeRandomTree(FunctionSet functionSet, TerminalSet terminalSet, int depth) {
-		return makeRandomTree(Type.INTEGER, functionSet, terminalSet, depth);
-	}
-
-	private static Node makeRandomTree(Type type, FunctionSet functionSet, TerminalSet terminalSet, int depth) {
-		if (depth > 0 && RANDOM.nextDouble() < .5) {
-			Operator operator = functionSet.next(type);
-			Signature signature = operator.getSignature();
-			Node[] args = new Node[signature.getArgumentTypesLength()];
-			for (int i = 0; i < args.length; i++) {
-				Type argType = signature.getArgumentType(i);
-				Node arg = makeRandomTree(argType, functionSet, terminalSet, depth - 1);
-				args[i] = arg;
-			}
-			return new FunctionNode(operator, createArguments(args));
-		} else {
-			return terminalSet.next();
-		}
 	}
 
 	private Predicate<List<RankedCandidate>> createTerminator() {
