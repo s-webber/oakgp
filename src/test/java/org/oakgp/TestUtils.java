@@ -22,7 +22,7 @@ public class TestUtils {
 		assertEquals(expectedId, ((VariableNode) node).getId());
 	}
 
-	public static void assertConstant(int expectedValue, Node node) {
+	public static void assertConstant(Object expectedValue, Node node) {
 		assertTrue(node instanceof ConstantNode);
 		assertEquals(expectedValue, ((ConstantNode) node).evaluate(null));
 	}

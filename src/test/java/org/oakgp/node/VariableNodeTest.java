@@ -27,11 +27,11 @@ public class VariableNodeTest {
 
 	@Test
 	public void testEvaluate() {
-		final int expected = 9;
+		final Integer expected = 9;
 		final VariableNode v = new VariableNode(0);
 		final Assignments assignments = createAssignments(expected);
-		final int actual = v.evaluate(assignments);
-		assertEquals(expected, actual);
+		final Object actual = (int) v.evaluate(assignments);
+		assertSame(expected, actual);
 	}
 
 	@Test

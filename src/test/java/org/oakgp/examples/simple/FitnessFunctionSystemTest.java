@@ -49,8 +49,8 @@ public class FitnessFunctionSystemTest {
 		int numVariables = 2;
 		TerminalSet terminalSet = new TerminalSet(RANDOM, RATIO_VARIABLES, numVariables, constants);
 		FitnessFunction fitnessFunction = new TestDataFitnessFunction(createTests(numVariables, a -> {
-			int x = a.get(0);
-			int y = a.get(1);
+			int x = (int) a.get(0);
+			int y = (int) a.get(1);
 			return (x * x) + 2 * y + 3 * x + 5;
 		}));
 		List<Node> initialGeneration = createInitialGeneration(ARITHMETIC_FUNCTION_SET, terminalSet, GENERATION_SIZE);
@@ -63,9 +63,9 @@ public class FitnessFunctionSystemTest {
 		int numVariables = 3;
 		TerminalSet terminalSet = new TerminalSet(RANDOM, RATIO_VARIABLES, numVariables, constants);
 		FitnessFunction fitnessFunction = new TestDataFitnessFunction(createTests(numVariables, a -> {
-			int x = a.get(0);
-			int y = a.get(1);
-			int z = a.get(2);
+			int x = (int) a.get(0);
+			int y = (int) a.get(1);
+			int z = (int) a.get(2);
 			return (x * -3) + (y * 5) - z;
 		}));
 		List<Node> initialGeneration = createInitialGeneration(ARITHMETIC_FUNCTION_SET, terminalSet, GENERATION_SIZE);
@@ -78,8 +78,8 @@ public class FitnessFunctionSystemTest {
 		int numVariables = 2;
 		TerminalSet terminalSet = new TerminalSet(RANDOM, RATIO_VARIABLES, numVariables, constants);
 		FitnessFunction fitnessFunction = new TestDataFitnessFunction(createTests(numVariables, a -> {
-			int x = a.get(0);
-			int y = a.get(1);
+			int x = (int) a.get(0);
+			int y = (int) a.get(1);
 			return x > 20 ? x : y;
 		}));
 		List<Node> initialGeneration = createInitialGeneration(COMPARISON_FUNCTION_SET, terminalSet, GENERATION_SIZE);
@@ -89,15 +89,15 @@ public class FitnessFunctionSystemTest {
 	private static Map<Assignments, Integer> createTests(int numVariables, Function<Assignments, Integer> f) {
 		Map<Assignments, Integer> tests = new HashMap<>();
 		for (int i = 0; i < 200; i++) {
-			int[] inputs = createInputs(numVariables);
+			Object[] inputs = createInputs(numVariables);
 			Assignments assignments = createAssignments(inputs);
 			tests.put(assignments, f.apply(assignments));
 		}
 		return tests;
 	}
 
-	private static int[] createInputs(int numVariables) {
-		int[] variables = new int[numVariables];
+	private static Object[] createInputs(int numVariables) {
+		Object[] variables = new Object[numVariables];
 		for (int i = 0; i < numVariables; i++) {
 			variables[i] = RANDOM.nextInt(40);
 		}

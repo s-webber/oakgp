@@ -14,7 +14,7 @@ public interface Node {
 	 *            represents the values to assign to any variables for this particular evaluation of this {@code Node}
 	 * @return the result of evaluating this {@code Node} using the values of the specified {@code Assignments}
 	 */
-	int evaluate(Assignments assignments);
+	Object evaluate(Assignments assignments);
 
 	/**
 	 * Returns the total number of nodes represented by this {@code Node} - including any child-nodes.

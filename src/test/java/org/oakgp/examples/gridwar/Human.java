@@ -12,11 +12,11 @@ import org.oakgp.node.Node;
 /** Represents a human player in a GridWar game. */
 class Human implements Node {
 	@Override
-	public int evaluate(Assignments assignments) {
-		int playerX = assignments.get(0);
-		int playerY = assignments.get(1);
-		int opponentX = assignments.get(3);
-		int opponentY = assignments.get(4);
+	public Object evaluate(Assignments assignments) {
+		int playerX = (int) assignments.get(0);
+		int playerY = (int) assignments.get(1);
+		int opponentX = (int) assignments.get(3);
+		int opponentY = (int) assignments.get(4);
 		for (int y = 0; y < GRID_WIDTH; y++) {
 			for (int x = 0; x < GRID_WIDTH; x++) {
 				char c;

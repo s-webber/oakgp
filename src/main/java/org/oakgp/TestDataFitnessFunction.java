@@ -31,7 +31,7 @@ public final class TestDataFitnessFunction implements FitnessFunction {
 		for (Map.Entry<Assignments, Integer> test : tests.entrySet()) {
 			Assignments input = test.getKey();
 			int expected = test.getValue();
-			int actual = node.evaluate(input);
+			int actual = (int) node.evaluate(input);
 			diff += Math.abs(actual - expected);
 		}
 		return diff;

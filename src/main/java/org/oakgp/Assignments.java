@@ -6,7 +6,7 @@ package org.oakgp;
  * Immutable.
  */
 public final class Assignments {
-	private final int[] assignments;
+	private final Object[] assignments;
 
 	/**
 	 * Returns a new {@code Assignments} which contains the specified values.
@@ -17,14 +17,14 @@ public final class Assignments {
 	 *            the values to be stored in the {@code Assignments}
 	 * @return a new {@code Assignments} which contains the values specified by {@code values}
 	 */
-	public static Assignments createAssignments(int... values) {
-		int[] copy = new int[values.length];
+	public static Assignments createAssignments(Object... values) {
+		Object[] copy = new Object[values.length];
 		System.arraycopy(values, 0, copy, 0, values.length);
 		return new Assignments(copy);
 	}
 
 	/** @see #createAssignments(Node...) */
-	private Assignments(int[] assignments) {
+	private Assignments(Object[] assignments) {
 		this.assignments = assignments;
 	}
 
@@ -37,7 +37,7 @@ public final class Assignments {
 	 * @throws IndexOutOfBoundsException
 	 *             if the index is out of range
 	 */
-	public int get(int index) {
+	public Object get(int index) {
 		return assignments[index];
 	}
 }

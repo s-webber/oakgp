@@ -33,7 +33,7 @@ public final class VariableNode implements Node {
 	 * @return the value stored in {@code Assignments} at the index specified by the ID of this {@code VariableNode}
 	 */
 	@Override
-	public int evaluate(Assignments assignments) {
+	public Object evaluate(Assignments assignments) {
 		return assignments.get(id);
 	}
 

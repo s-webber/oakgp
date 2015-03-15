@@ -13,10 +13,9 @@ import org.oakgp.node.Node;
 
 public final class If implements Operator {
 	private static final Signature SIGNATURE = Signature.createSignature(INTEGER, BOOLEAN, INTEGER, INTEGER);
-	private static final Integer TRUE = 1;
 
 	@Override
-	public int evaluate(Arguments arguments, Assignments assignments) {
+	public Object evaluate(Arguments arguments, Assignments assignments) {
 		int index = getOutcomeArgumentIndex(arguments, assignments);
 		return arguments.get(index).evaluate(assignments);
 	}
@@ -39,6 +38,7 @@ public final class If implements Operator {
 	}
 
 	private int getOutcomeArgumentIndex(Arguments arguments, Assignments assignments) {
-		return arguments.get(0).evaluate(assignments) == TRUE ? 1 : 2;
+		// TODO do arguments.get(0).evaluate(assignments) == java.lang.Boolean.TRUE
+		return arguments.get(0).evaluate(assignments).equals(1) ? 1 : 2;
 	}
 }

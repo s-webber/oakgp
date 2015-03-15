@@ -18,7 +18,7 @@ public interface Operator {
 	 *            represents values assigned to variables belonging to {@code arguments}
 	 * @return the result of applying this operation to the {@code arguments} and {@code assignments}
 	 */
-	int evaluate(Arguments arguments, Assignments assignments);
+	Object evaluate(Arguments arguments, Assignments assignments);
 
 	Signature getSignature();
 

@@ -11,7 +11,7 @@ public class AssignmentsTest {
 	public void test() {
 		int x = 9;
 		int y = 7;
-		int[] values = { x, y };
+		Object[] values = { x, y };
 		Assignments assignments = createAssignments(values);
 		assertEquals(x, assignments.get(0));
 		assertEquals(y, assignments.get(1));

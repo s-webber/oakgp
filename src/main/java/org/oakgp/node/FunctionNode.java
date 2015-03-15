@@ -32,7 +32,7 @@ public final class FunctionNode implements Node {
 	}
 
 	@Override
-	public int evaluate(Assignments assignments) {
+	public Object evaluate(Assignments assignments) {
 		return operator.evaluate(arguments, assignments);
 	}
 

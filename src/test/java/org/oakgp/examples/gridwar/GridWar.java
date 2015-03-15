@@ -65,7 +65,7 @@ class GridWar implements TwoPlayerGame {
 	}
 
 	private static int getNextMove(Player player, Assignments assignments) {
-		int result = player.getLogic().evaluate(assignments);
+		int result = (int) player.getLogic().evaluate(assignments);
 		// ensure result is in the range 0 to 3
 		return Math.abs(result % NUMBER_OF_POSSIBLE_DIRECTIONS);
 	}

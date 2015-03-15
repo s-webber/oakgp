@@ -12,6 +12,7 @@ import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
 
 abstract class ComparisonOperator implements Operator {
+	// TODO use: import static java.lang.Boolean.*;
 	private static final Integer TRUE = 1;
 	private static final Integer FALSE = 0;
 	private static final ConstantNode TRUE_NODE = new ConstantNode(TRUE);
@@ -25,8 +26,10 @@ abstract class ComparisonOperator implements Operator {
 	}
 
 	@Override
-	public final int evaluate(Arguments arguments, Assignments assignments) {
-		if (evaluate(arguments.get(0).evaluate(assignments), arguments.get(1).evaluate(assignments))) {
+	public final Object evaluate(Arguments arguments, Assignments assignments) {
+		int i1 = (int) arguments.get(0).evaluate(assignments);
+		int i2 = (int) arguments.get(1).evaluate(assignments);
+		if (evaluate(i1, i2)) {
 			return TRUE;
 		} else {
 			return FALSE;

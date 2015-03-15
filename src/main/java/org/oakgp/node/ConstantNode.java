@@ -11,7 +11,7 @@ import org.oakgp.Type;
  * Return the same value each time is it evaluated.
  */
 public final class ConstantNode implements Node {
-	private final int value;
+	private final Object value;
 
 	/**
 	 * Constructs a new {@code ConstantNode} that represents the specified value.
@@ -19,7 +19,7 @@ public final class ConstantNode implements Node {
 	 * @param value
 	 *            the value to be represented by the {@code ConstantNode}
 	 */
-	public ConstantNode(int value) {
+	public ConstantNode(Object value) {
 		this.value = value;
 	}
 
@@ -27,7 +27,7 @@ public final class ConstantNode implements Node {
 	 * Returns the value specified when this {@code ConstantNode} was constructed.
 	 */
 	@Override
-	public int evaluate(Assignments assignments) {
+	public Object evaluate(Assignments assignments) {
 		return value;
 	}
 
@@ -53,7 +53,7 @@ public final class ConstantNode implements Node {
 
 	@Override
 	public int hashCode() {
-		return value;
+		return value.hashCode();
 	}
 
 	@Override
@@ -63,6 +63,6 @@ public final class ConstantNode implements Node {
 
 	@Override
 	public String toString() {
-		return Integer.toString(value);
+		return value.toString();
 	}
 }

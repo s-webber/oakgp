@@ -23,10 +23,10 @@ public class ConstantNodeTest {
 
 	@Test
 	public void testEvaluate() {
-		int expected = 9;
+		Integer expected = 9;
 		ConstantNode n = new ConstantNode(expected);
-		int actual = n.evaluate(null);
-		assertEquals(expected, actual);
+		Object actual = n.evaluate(null);
+		assertSame(expected, actual);
 	}
 
 	@Test
