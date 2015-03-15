@@ -1,12 +1,14 @@
 package org.oakgp.operator;
 
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.oakgp.Assignments.createAssignments;
 import static org.oakgp.TestUtils.assertCanSimplify;
 import static org.oakgp.TestUtils.assertCannotSimplify;
 import static org.oakgp.TestUtils.createArguments;
-import static org.oakgp.TestUtils.readNode;
+import static org.oakgp.TestUtils.createConstant;
 import static org.oakgp.Type.BOOLEAN;
 import static org.oakgp.Type.INTEGER;
 
@@ -20,9 +22,9 @@ public class LessThanTest {
 	@Test
 	public void testEvaluate() {
 		Assignments assignments = createAssignments();
-		assertEquals(1, lessThan.evaluate(createArguments("7", "8"), assignments));
-		assertEquals(0, lessThan.evaluate(createArguments("8", "8"), assignments));
-		assertEquals(0, lessThan.evaluate(createArguments("9", "8"), assignments));
+		assertSame(TRUE, lessThan.evaluate(createArguments("7", "8"), assignments));
+		assertSame(FALSE, lessThan.evaluate(createArguments("8", "8"), assignments));
+		assertSame(FALSE, lessThan.evaluate(createArguments("9", "8"), assignments));
 	}
 
 	@Test
@@ -37,7 +39,7 @@ public class LessThanTest {
 	@Test
 	public void testCanSimplify() {
 		String arg = "v1";
-		assertCanSimplify(lessThan, readNode("0"), createArguments(arg, arg));
+		assertCanSimplify(lessThan, createConstant(FALSE), createArguments(arg, arg));
 	}
 
 	@Test

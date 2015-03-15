@@ -1,5 +1,6 @@
 package org.oakgp.operator;
 
+import static java.lang.Boolean.TRUE;
 import static org.oakgp.Type.BOOLEAN;
 import static org.oakgp.Type.INTEGER;
 
@@ -38,7 +39,6 @@ public final class If implements Operator {
 	}
 
 	private int getOutcomeArgumentIndex(Arguments arguments, Assignments assignments) {
-		// TODO do arguments.get(0).evaluate(assignments) == java.lang.Boolean.TRUE
-		return arguments.get(0).evaluate(assignments).equals(1) ? 1 : 2;
+		return TRUE.equals(arguments.get(0).evaluate(assignments)) ? 1 : 2;
 	}
 }

@@ -1,5 +1,7 @@
 package org.oakgp.operator;
 
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 import static org.oakgp.Type.BOOLEAN;
 import static org.oakgp.Type.INTEGER;
 
@@ -12,9 +14,6 @@ import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
 
 abstract class ComparisonOperator implements Operator {
-	// TODO use: import static java.lang.Boolean.*;
-	private static final Integer TRUE = 1;
-	private static final Integer FALSE = 0;
 	private static final ConstantNode TRUE_NODE = new ConstantNode(TRUE);
 	private static final ConstantNode FALSE_NODE = new ConstantNode(FALSE);
 	private static final Signature SIGNATURE = Signature.createSignature(BOOLEAN, INTEGER, INTEGER);

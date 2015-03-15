@@ -1,18 +1,23 @@
 package org.oakgp.operator;
 
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.oakgp.Assignments.createAssignments;
 import static org.oakgp.TestUtils.assertCanSimplify;
 import static org.oakgp.TestUtils.assertCannotSimplify;
 import static org.oakgp.TestUtils.createArguments;
-import static org.oakgp.TestUtils.readNode;
+import static org.oakgp.TestUtils.createConstant;
+import static org.oakgp.TestUtils.createVariable;
 import static org.oakgp.Type.BOOLEAN;
 import static org.oakgp.Type.INTEGER;
 
 import org.junit.Test;
+import org.oakgp.Arguments;
 import org.oakgp.Assignments;
 import org.oakgp.Signature;
+import org.oakgp.node.VariableNode;
 
 public class IfTest {
 	private final Operator operator = new If();
@@ -38,11 +43,11 @@ public class IfTest {
 
 	@Test
 	public void testCanSimplify() {
-		String arg2 = "v0";
-		String arg3 = "v1";
-		assertCanSimplify(operator, readNode(arg2), createArguments("1", arg2, arg3));
-		assertCanSimplify(operator, readNode(arg3), createArguments("0", arg2, arg3));
-		assertCanSimplify(operator, readNode(arg2), createArguments("v0", arg2, arg2));
+		VariableNode arg2 = createVariable(0);
+		VariableNode arg3 = createVariable(1);
+		assertCanSimplify(operator, arg2, Arguments.createArguments(createConstant(TRUE), arg2, arg3));
+		assertCanSimplify(operator, arg3, Arguments.createArguments(createConstant(FALSE), arg2, arg3));
+		assertCanSimplify(operator, arg2, Arguments.createArguments(createVariable(2), arg2, arg2));
 	}
 
 	@Test
