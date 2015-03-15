@@ -122,8 +122,8 @@ public class SystemTest {
 	private void doIt(FunctionSet functionSet, TerminalSet terminalSet, FitnessFunction fitnessFunction, List<Node> initialGeneration) {
 		Predicate<List<RankedCandidate>> terminator = createTerminator();
 		Map<NodeEvolver, Long> nodeEvolvers = createNodeEvolvers(functionSet, terminalSet);
-		RankedCandidate best = Runner.process(new GenerationProcessor(fitnessFunction), new GenerationEvolver(SELECTOR_FACTORY, nodeEvolvers), terminator,
-				initialGeneration);
+		RankedCandidate best = Runner.process(new FitnessFunctionGenerationProcessor(fitnessFunction), new GenerationEvolver(SELECTOR_FACTORY, nodeEvolvers),
+				terminator, initialGeneration);
 		System.out.println("FIN " + best.getFitness() + " " + best.getNode());
 		printSimplified(best.getNode());
 	}

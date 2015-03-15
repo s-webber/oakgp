@@ -12,7 +12,7 @@ import org.junit.Test;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
 
-public class GenerationProcessorTest {
+public class FitnessFunctionGenerationProcessorTest {
 	@Test
 	public void test() {
 		// test data
@@ -31,7 +31,7 @@ public class GenerationProcessorTest {
 		given(mockFitnessFunction.evaluate(c)).willReturn(cFitness);
 
 		// invoke process method
-		GenerationProcessor generationProcessor = new GenerationProcessor(mockFitnessFunction);
+		GenerationProcessor generationProcessor = new FitnessFunctionGenerationProcessor(mockFitnessFunction);
 		List<RankedCandidate> output = generationProcessor.process(input);
 
 		// assert output
