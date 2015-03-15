@@ -22,7 +22,7 @@ public class VariableNodeTest {
 
 	@Test
 	public void testToString() {
-		assertEquals("p5", new VariableNode(5).toString());
+		assertEquals("v5", new VariableNode(5).toString());
 	}
 
 	@Test

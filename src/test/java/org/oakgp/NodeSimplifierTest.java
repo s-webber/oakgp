@@ -29,7 +29,7 @@ public class NodeSimplifierTest {
 
 	@Test
 	public void testFunctionNodeWithVariable() {
-		Node input = readNode("(+ 7 p0)");
+		Node input = readNode("(+ 7 v0)");
 		Node output = nodeSimplifier.simplify(input);
 		assertSame(input, output);
 	}
@@ -44,15 +44,15 @@ public class NodeSimplifierTest {
 
 	@Test
 	public void testDeeplyNestedTree() {
-		Node input = readNode("(+ (- 5 6) (* p0 (- (* 6 7) (+ 2 3))))");
+		Node input = readNode("(+ (- 5 6) (* v0 (- (* 6 7) (+ 2 3))))");
 		Node output = nodeSimplifier.simplify(input);
 		assertSame(FunctionNode.class, output.getClass());
-		assertEquals("(org.oakgp.operator.Add -1 (org.oakgp.operator.Multiply p0 37))", output.toString());
+		assertEquals("(org.oakgp.operator.Add -1 (org.oakgp.operator.Multiply v0 37))", output.toString());
 	}
 
 	@Test
 	public void testDeeplyNestedTreeSimplifedByOperator() {
-		Node input = readNode("(- (+ p6 3) (* 1 (- (+ p6 3) (* p7 (- p5 p5)))))");
+		Node input = readNode("(- (+ v6 3) (* 1 (- (+ v6 3) (* v7 (- v5 v5)))))");
 		Node output = nodeSimplifier.simplify(input);
 		assertSame(ConstantNode.class, output.getClass());
 		assertEquals("0", output.toString());

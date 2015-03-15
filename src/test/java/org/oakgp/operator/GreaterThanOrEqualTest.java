@@ -36,14 +36,14 @@ public class GreaterThanOrEqualTest {
 
 	@Test
 	public void testCanSimplify() {
-		String arg = "p1";
+		String arg = "v1";
 		assertCanSimplify(greaterThanOrEqual, readNode("1"), createArguments(arg, arg));
 	}
 
 	@Test
 	public void testCannotSimplify() {
-		assertCannotSimplify(greaterThanOrEqual, createArguments("p1", "8"));
-		assertCannotSimplify(greaterThanOrEqual, createArguments("8", "p1"));
-		assertCannotSimplify(greaterThanOrEqual, createArguments("p0", "p1"));
+		assertCannotSimplify(greaterThanOrEqual, createArguments("v1", "8"));
+		assertCannotSimplify(greaterThanOrEqual, createArguments("8", "v1"));
+		assertCannotSimplify(greaterThanOrEqual, createArguments("v0", "v1"));
 	}
 }

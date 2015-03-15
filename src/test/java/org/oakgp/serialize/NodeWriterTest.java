@@ -25,14 +25,14 @@ public class NodeWriterTest {
 	public void testVariableNode() {
 		NodeWriter writer = new NodeWriter();
 		String output = writer.writeNode(new VariableNode(2));
-		assertEquals("p2", output);
+		assertEquals("v2", output);
 	}
 
 	@Test
 	public void testFunctionNode() {
 		NodeWriter writer = new NodeWriter();
 		String output = writer.writeNode(new FunctionNode(new Add(), createArguments(new ConstantNode(5), new VariableNode(0))));
-		assertEquals("(+ 5 p0)", output);
+		assertEquals("(+ 5 v0)", output);
 	}
 
 	@Test
@@ -41,6 +41,6 @@ public class NodeWriterTest {
 		FunctionNode arg1 = new FunctionNode(new Subtract(), createArguments(new ConstantNode(5), new VariableNode(0)));
 		FunctionNode arg2 = new FunctionNode(new Multiply(), createArguments(new VariableNode(1), new ConstantNode(-6876)));
 		String output = writer.writeNode(new FunctionNode(new Add(), createArguments(arg1, arg2)));
-		assertEquals("(+ (- 5 p0) (* p1 -6876))", output);
+		assertEquals("(+ (- 5 v0) (* v1 -6876))", output);
 	}
 }

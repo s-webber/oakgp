@@ -36,14 +36,14 @@ public class NotEqualTest {
 
 	@Test
 	public void testCanSimplify() {
-		String arg = "p1";
+		String arg = "v1";
 		assertCanSimplify(notEqual, readNode("0"), createArguments(arg, arg));
 	}
 
 	@Test
 	public void testCannotSimplify() {
-		assertCannotSimplify(notEqual, createArguments("p1", "8"));
-		assertCannotSimplify(notEqual, createArguments("8", "p1"));
-		assertCannotSimplify(notEqual, createArguments("p0", "p1"));
+		assertCannotSimplify(notEqual, createArguments("v1", "8"));
+		assertCannotSimplify(notEqual, createArguments("8", "v1"));
+		assertCannotSimplify(notEqual, createArguments("v0", "v1"));
 	}
 }

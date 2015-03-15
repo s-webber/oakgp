@@ -42,7 +42,7 @@ public final class NodeReader implements Closeable {
 				arguments.add(nextNode(nextToken));
 			}
 			return new FunctionNode(operator, Arguments.createArguments(arguments.toArray(new Node[arguments.size()])));
-		} else if (firstToken.charAt(0) == 'p') {
+		} else if (firstToken.charAt(0) == 'v') {
 			return new VariableNode(Integer.parseInt(firstToken.substring(1)));
 		} else {
 			return new ConstantNode(Integer.parseInt(firstToken));

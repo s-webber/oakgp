@@ -84,7 +84,7 @@ public class ArgumentsTest {
 	@Test
 	public void testToString() {
 		Arguments arguments = Arguments.createArguments(new ConstantNode(7), new VariableNode(0), new ConstantNode(42));
-		assertEquals("[7, p0, 42]", arguments.toString());
+		assertEquals("[7, v0, 42]", arguments.toString());
 	}
 
 	private void assertArrayIndexOutOfBoundsException(Arguments arguments, int index) {

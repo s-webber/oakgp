@@ -38,7 +38,7 @@ public class MultiplyTest {
 
 	@Test
 	public void testCanSimplify() {
-		String arg = "p1";
+		String arg = "v1";
 		// anything multiplied by zero is zero
 		assertCanSimplify(multiply, ZERO, createArguments(arg, "0"));
 		assertCanSimplify(multiply, ZERO, createArguments("0", arg));
@@ -49,10 +49,10 @@ public class MultiplyTest {
 
 	@Test
 	public void testCannotSimplify() {
-		assertCannotSimplify(multiply, createArguments("2", "p1"));
-		assertCannotSimplify(multiply, createArguments("p1", "2"));
-		assertCannotSimplify(multiply, createArguments("-1", "p1"));
-		assertCannotSimplify(multiply, createArguments("p1", "-1"));
-		assertCannotSimplify(multiply, createArguments("p1", "p2"));
+		assertCannotSimplify(multiply, createArguments("2", "v1"));
+		assertCannotSimplify(multiply, createArguments("v1", "2"));
+		assertCannotSimplify(multiply, createArguments("-1", "v1"));
+		assertCannotSimplify(multiply, createArguments("v1", "-1"));
+		assertCannotSimplify(multiply, createArguments("v1", "v2"));
 	}
 }

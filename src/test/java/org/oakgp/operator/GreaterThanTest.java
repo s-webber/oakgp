@@ -36,14 +36,14 @@ public class GreaterThanTest {
 
 	@Test
 	public void testCanSimplify() {
-		String arg = "p1";
+		String arg = "v1";
 		assertCanSimplify(greaterThan, readNode("0"), createArguments(arg, arg));
 	}
 
 	@Test
 	public void testCannotSimplify() {
-		assertCannotSimplify(greaterThan, createArguments("p1", "8"));
-		assertCannotSimplify(greaterThan, createArguments("8", "p1"));
-		assertCannotSimplify(greaterThan, createArguments("p0", "p1"));
+		assertCannotSimplify(greaterThan, createArguments("v1", "8"));
+		assertCannotSimplify(greaterThan, createArguments("8", "v1"));
+		assertCannotSimplify(greaterThan, createArguments("v0", "v1"));
 	}
 }

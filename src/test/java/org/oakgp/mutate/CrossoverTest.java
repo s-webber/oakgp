@@ -17,12 +17,12 @@ public class CrossoverTest {
 		given(mockRandom.nextInt(3)).willReturn(1);
 		given(mockRandom.nextInt(5)).willReturn(3);
 
-		DummyNodeSelector dummySelector = new DummyNodeSelector("(+ 9 5)", "(* 7 (- 8 p5))");
+		DummyNodeSelector dummySelector = new DummyNodeSelector("(+ 9 5)", "(* 7 (- 8 v5))");
 
 		SubtreeCrossover c = new SubtreeCrossover(mockRandom);
 
 		Node result = c.evolve(dummySelector);
-		assertEquals("(org.oakgp.operator.Add 9 (org.oakgp.operator.Subtract 8 p5))", result.toString());
+		assertEquals("(org.oakgp.operator.Add 9 (org.oakgp.operator.Subtract 8 v5))", result.toString());
 		assertTrue(dummySelector.isEmpty());
 	}
 

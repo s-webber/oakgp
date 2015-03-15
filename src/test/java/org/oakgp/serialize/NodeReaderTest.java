@@ -52,7 +52,7 @@ public class NodeReaderTest {
 
 	@Test
 	public void testSingleDigitIdVariableNode() {
-		String input = "p1";
+		String input = "v1";
 		Node output = readNode(input);
 		assertSame(VariableNode.class, output.getClass());
 		assertEquals(input, output.toString());
@@ -60,7 +60,7 @@ public class NodeReaderTest {
 
 	@Test
 	public void testMultipleDigitIdVariableNode() {
-		String input = "p78";
+		String input = "v78";
 		Node output = readNode(input);
 		assertSame(VariableNode.class, output.getClass());
 		assertEquals(input, output.toString());
@@ -84,7 +84,7 @@ public class NodeReaderTest {
 
 	@Test
 	public void testFunctionNodeWithFunctionNodeArguments() {
-		String input = "(org.oakgp.operator.Add (org.oakgp.operator.Subtract p0 587) (org.oakgp.operator.Multiply 43 p1))";
+		String input = "(org.oakgp.operator.Add (org.oakgp.operator.Subtract v0 587) (org.oakgp.operator.Multiply 43 v1))";
 		Node output = readNode(input);
 		assertSame(FunctionNode.class, output.getClass());
 		assertEquals(input, output.toString());
@@ -115,7 +115,7 @@ public class NodeReaderTest {
 
 	@Test
 	public void testMulipleNodes() {
-		String[] inputs = { "6", "(org.oakgp.operator.Add p0 p1)", "42", "p0", "(org.oakgp.operator.Add 1 2)", "p98" };
+		String[] inputs = { "6", "(org.oakgp.operator.Add v0 v1)", "42", "v0", "(org.oakgp.operator.Add 1 2)", "v98" };
 		String combinedInput = " " + inputs[0] + inputs[1] + inputs[2] + " " + inputs[3] + "\n\r\t\t\t" + inputs[4] + "       \n   " + inputs[5] + "\r\n";
 		List<Node> outputs = readNodes(combinedInput);
 		assertEquals(inputs.length, outputs.size());

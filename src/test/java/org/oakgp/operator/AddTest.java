@@ -37,7 +37,7 @@ public class AddTest {
 
 	@Test
 	public void testCanSimplify() {
-		String arg = "p1";
+		String arg = "v1";
 		// anything plus zero is itself
 		assertCanSimplify(add, readNode(arg), createArguments(arg, "0"));
 		assertCanSimplify(add, readNode(arg), createArguments("0", arg));
@@ -45,7 +45,7 @@ public class AddTest {
 
 	@Test
 	public void testCannotSimplify() {
-		String arg = "p1";
+		String arg = "v1";
 		assertCannotSimplify(add, createArguments(arg, "1"));
 		assertCannotSimplify(add, createArguments(arg, "-1"));
 	}

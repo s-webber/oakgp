@@ -36,14 +36,14 @@ public class EqualTest {
 
 	@Test
 	public void testCanSimplify() {
-		String arg = "p1";
+		String arg = "v1";
 		assertCanSimplify(equal, readNode("1"), createArguments(arg, arg));
 	}
 
 	@Test
 	public void testCannotSimplify() {
-		assertCannotSimplify(equal, createArguments("p1", "8"));
-		assertCannotSimplify(equal, createArguments("8", "p1"));
-		assertCannotSimplify(equal, createArguments("p0", "p1"));
+		assertCannotSimplify(equal, createArguments("v1", "8"));
+		assertCannotSimplify(equal, createArguments("8", "v1"));
+		assertCannotSimplify(equal, createArguments("v0", "v1"));
 	}
 }

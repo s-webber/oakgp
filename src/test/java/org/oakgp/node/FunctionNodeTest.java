@@ -36,12 +36,12 @@ public class FunctionNodeTest {
 		FunctionNode n = createFunctionNode();
 		Function<Node, Node> replacement = t -> new ConstantNode(9);
 
-		assertEquals("(org.oakgp.operator.Add (org.oakgp.operator.Multiply 9 p0) (org.oakgp.operator.Add p0 1))", n.replaceAt(0, replacement).toString());
-		assertEquals("(org.oakgp.operator.Add (org.oakgp.operator.Multiply p0 9) (org.oakgp.operator.Add p0 1))", n.replaceAt(1, replacement).toString());
-		assertEquals("(org.oakgp.operator.Add 9 (org.oakgp.operator.Add p0 1))", n.replaceAt(2, replacement).toString());
-		assertEquals("(org.oakgp.operator.Add (org.oakgp.operator.Multiply p0 p0) (org.oakgp.operator.Add 9 1))", n.replaceAt(3, replacement).toString());
-		assertEquals("(org.oakgp.operator.Add (org.oakgp.operator.Multiply p0 p0) (org.oakgp.operator.Add p0 9))", n.replaceAt(4, replacement).toString());
-		assertEquals("(org.oakgp.operator.Add (org.oakgp.operator.Multiply p0 p0) 9)", n.replaceAt(5, replacement).toString());
+		assertEquals("(org.oakgp.operator.Add (org.oakgp.operator.Multiply 9 v1) (org.oakgp.operator.Add v2 1))", n.replaceAt(0, replacement).toString());
+		assertEquals("(org.oakgp.operator.Add (org.oakgp.operator.Multiply v0 9) (org.oakgp.operator.Add v2 1))", n.replaceAt(1, replacement).toString());
+		assertEquals("(org.oakgp.operator.Add 9 (org.oakgp.operator.Add v2 1))", n.replaceAt(2, replacement).toString());
+		assertEquals("(org.oakgp.operator.Add (org.oakgp.operator.Multiply v0 v1) (org.oakgp.operator.Add 9 1))", n.replaceAt(3, replacement).toString());
+		assertEquals("(org.oakgp.operator.Add (org.oakgp.operator.Multiply v0 v1) (org.oakgp.operator.Add v2 9))", n.replaceAt(4, replacement).toString());
+		assertEquals("(org.oakgp.operator.Add (org.oakgp.operator.Multiply v0 v1) 9)", n.replaceAt(5, replacement).toString());
 		assertEquals("9", n.replaceAt(6, replacement).toString());
 	}
 
@@ -49,13 +49,13 @@ public class FunctionNodeTest {
 	public void testGetAt() {
 		FunctionNode n = createFunctionNode();
 
-		assertEquals("p0", n.getAt(0).toString());
-		assertEquals("p0", n.getAt(1).toString());
-		assertEquals("(org.oakgp.operator.Multiply p0 p0)", n.getAt(2).toString());
-		assertEquals("p0", n.getAt(3).toString());
+		assertEquals("v0", n.getAt(0).toString());
+		assertEquals("v1", n.getAt(1).toString());
+		assertEquals("(org.oakgp.operator.Multiply v0 v1)", n.getAt(2).toString());
+		assertEquals("v2", n.getAt(3).toString());
 		assertEquals("1", n.getAt(4).toString());
-		assertEquals("(org.oakgp.operator.Add p0 1)", n.getAt(5).toString());
-		assertEquals("(org.oakgp.operator.Add (org.oakgp.operator.Multiply p0 p0) (org.oakgp.operator.Add p0 1))", n.getAt(6).toString());
+		assertEquals("(org.oakgp.operator.Add v2 1)", n.getAt(5).toString());
+		assertEquals("(org.oakgp.operator.Add (org.oakgp.operator.Multiply v0 v1) (org.oakgp.operator.Add v2 1))", n.getAt(6).toString());
 	}
 
 	@Test
@@ -112,9 +112,9 @@ public class FunctionNodeTest {
 		assertNotEquals(n, new Object());
 	}
 
-	/** Returns representation of: {@code (x*x)+x+1} */
+	/** Returns representation of: {@code (x*y)+z+1} */
 	private FunctionNode createFunctionNode() {
-		return new FunctionNode(new Add(), createArguments(new FunctionNode(new Multiply(), createArguments(new VariableNode(0), new VariableNode(0))),
-				new FunctionNode(new Add(), createArguments(new VariableNode(0), new ConstantNode(1)))));
+		return new FunctionNode(new Add(), createArguments(new FunctionNode(new Multiply(), createArguments(new VariableNode(0), new VariableNode(1))),
+				new FunctionNode(new Add(), createArguments(new VariableNode(2), new ConstantNode(1)))));
 	}
 }

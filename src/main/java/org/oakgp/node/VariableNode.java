@@ -69,6 +69,6 @@ public final class VariableNode implements Node {
 
 	@Override
 	public String toString() {
-		return "p" + id;
+		return "v" + id;
 	}
 }

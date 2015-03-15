@@ -36,14 +36,14 @@ public class LessThanOrEqualTest {
 
 	@Test
 	public void testCanSimplify() {
-		String arg = "p1";
+		String arg = "v1";
 		assertCanSimplify(lessThanOrEqual, readNode("1"), createArguments(arg, arg));
 	}
 
 	@Test
 	public void testCannotSimplify() {
-		assertCannotSimplify(lessThanOrEqual, createArguments("p1", "8"));
-		assertCannotSimplify(lessThanOrEqual, createArguments("8", "p1"));
-		assertCannotSimplify(lessThanOrEqual, createArguments("p0", "p1"));
+		assertCannotSimplify(lessThanOrEqual, createArguments("v1", "8"));
+		assertCannotSimplify(lessThanOrEqual, createArguments("8", "v1"));
+		assertCannotSimplify(lessThanOrEqual, createArguments("v0", "v1"));
 	}
 }

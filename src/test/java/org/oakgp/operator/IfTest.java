@@ -38,15 +38,15 @@ public class IfTest {
 
 	@Test
 	public void testCanSimplify() {
-		String arg2 = "p0";
-		String arg3 = "p1";
+		String arg2 = "v0";
+		String arg3 = "v1";
 		assertCanSimplify(operator, readNode(arg2), createArguments("1", arg2, arg3));
 		assertCanSimplify(operator, readNode(arg3), createArguments("0", arg2, arg3));
-		assertCanSimplify(operator, readNode(arg2), createArguments("p0", arg2, arg2));
+		assertCanSimplify(operator, readNode(arg2), createArguments("v0", arg2, arg2));
 	}
 
 	@Test
 	public void testCannotSimplify() {
-		assertCannotSimplify(operator, createArguments("p0", "1", "2"));
+		assertCannotSimplify(operator, createArguments("v0", "1", "2"));
 	}
 }
