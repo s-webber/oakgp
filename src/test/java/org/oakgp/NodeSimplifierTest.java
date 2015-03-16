@@ -66,9 +66,15 @@ public class NodeSimplifierTest {
 	}
 
 	@Test
+	public void testDeeplyNestedTreeSimplifedToFunction3() {
+		// TODO (- (+ v0 (+ 8 v1)) v1) = (x + (8 + y)) - y = x+8
+		assertCanSimplify("(- (+ v0 (+ 8 v1)) v1)", "(- (+ v0 (+ 8 v1)) v1)");
+	}
+
+	@Test
 	public void testVeryDeeplyNestedTreeSimplifedByOperator1() {
 		// TODO keep trying to improve until get to 4y-3x
-		// note: (2+(2x+8) = 10+2x
+		// note: (2+(2x+8)) = 10+2x
 		Node input = readNode("(- v1 (- (- v0 (- v1 (- (- (+ 2 (+ v0 (- (+ v0 (+ 8 v1)) v1))) v1) v1))) 10))");
 		Node output = nodeSimplifier.simplify(input);
 		Assignments assignments = Assignments.createAssignments(7, 12);
@@ -94,7 +100,7 @@ public class NodeSimplifierTest {
 		Assignments assignments = Assignments.createAssignments(0, 1, 2, 3, 1);
 		assertEquals(input.evaluate(assignments), output.evaluate(assignments));
 		assertEquals(
-				"(* 3 (* (* 3 (- 1 (- (- 6 (+ (* 3 (* (* 3 (- 1 (- (- 1 (- (+ -2 (- (+ (* 3 (* (* 3 (- 1 (- (- 7 (+ (- (- 4 (- (+ (+ (- v3 3) (+ v2 v3)) (+ 4 v2)) (+ -2 v2))) (+ 1 (+ v2 v2))) (+ v2 v2))) 1))) -3)) (+ v2 v2)) (+ v2 v2))) (+ (- 3 v2) (+ 1 (- (+ 3 (- (- 2 (+ (* 3 (* (* 3 (- 1 (- (- 7 (+ (- (- 4 (- (+ (+ (- v3 3) (+ v2 v3)) (+ 4 v2)) (+ -2 v2))) (+ 1 (+ v2 v2))) (+ v2 v2))) 1))) -3)) (+ v2 v2))) (+ 3 (+ v2 v2)))) v2))))) (+ (+ 1 v2) (- 10 v2))))) (* 3 (- 0 (+ v2 1))))) (+ v2 v2))) (+ -11 (+ v2 v2))))) -3))",
+				"(* 3 (* (* 3 (- 1 (- (- 6 (+ (* 3 (* (* 3 (- 1 (- (- 1 (- (+ -2 (- (+ (* 3 (* (* 3 (- 1 (- (- 7 (+ (- (- 4 (- (+ (+ (- v3 3) (+ v2 v3)) (+ 4 v2)) (+ -2 v2))) (+ 1 (* 2 v2))) (* 2 v2))) 1))) -3)) (* 2 v2)) (* 2 v2))) (+ (- 3 v2) (+ 1 (- (+ 3 (- (- 2 (+ (* 3 (* (* 3 (- 1 (- (- 7 (+ (- (- 4 (- (+ (+ (- v3 3) (+ v2 v3)) (+ 4 v2)) (+ -2 v2))) (+ 1 (* 2 v2))) (* 2 v2))) 1))) -3)) (* 2 v2))) (+ 3 (* 2 v2)))) v2))))) (+ (+ 1 v2) (- 10 v2))))) (* 3 (- 0 (+ v2 1))))) (* 2 v2))) (+ -11 (* 2 v2))))) -3))",
 				new NodeWriter().writeNode(output));
 	}
 

@@ -41,6 +41,7 @@ public class AddTest {
 		// anything plus zero is itself
 		assertCanSimplify(add, readNode(arg), createArguments(arg, "0"));
 		assertCanSimplify(add, readNode(arg), createArguments("0", arg));
+		assertCanSimplify(add, readNode("(* 2 v1)"), createArguments(arg, arg));
 	}
 
 	@Test
@@ -54,6 +55,10 @@ public class AddTest {
 		assertCanSimplify("(+ 7 (+ v0 v0))", "(+ (+ v0 3) (+ v0 4))");
 		assertCanSimplify("(+ 7 (+ v0 v0))", "(+ (+ v0 3) (+ 4 v0))");
 		assertCanSimplify("(+ 7 (+ v0 v0))", "(+ (+ 3 v0) (+ v0 4))");
+		assertCanSimplify("(* 3 v0)", "(+ v0 (* 2 v0))");
+		assertCanSimplify("(* 15 v0)", "(+ v0 (* 14 v0))");
+		assertCanSimplify("(+ 10 (* 2 v0))", "(+ 2 (+ (* 2 v0) 8))");
+		assertCanSimplify("(+ 10 (* 2 v0))", "(+ 2 (+ 8 (* 2 v0)))");
 	}
 
 	@Test

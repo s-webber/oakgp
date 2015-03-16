@@ -27,6 +27,9 @@ public final class Add extends ArithmeticOperator {
 			return Optional.of(arg2);
 		} else if (ZERO.equals(arg2)) {
 			return Optional.of(arg1);
+		} else if (arg1.equals(arg2)) {
+			// x + x = 2 * x
+			return Optional.of(new FunctionNode(new Multiply(), Arguments.createArguments(new ConstantNode(2), arg1)));
 		} else if (arg1 instanceof FunctionNode && arg2 instanceof FunctionNode) {
 			FunctionNode fn1 = (FunctionNode) arg1;
 			FunctionNode fn2 = (FunctionNode) arg2;
@@ -55,17 +58,28 @@ public final class Add extends ArithmeticOperator {
 				return Optional.of(new FunctionNode(this, Arguments.createArguments(new ConstantNode(((int) fn1Value) + ((int) fn2Value)), new FunctionNode(
 						this, Arguments.createArguments(fn1.getArguments().get(0), fn2.getArguments().get(1))))));
 			}
-		} else if (arg1 instanceof ConstantNode && arg2 instanceof FunctionNode) {
+		} else if (arg2 instanceof FunctionNode) {
 			FunctionNode fn = (FunctionNode) arg2;
+			Operator fnOperator = fn.getOperator();
 			Node firstArg = fn.getArguments().get(0);
-			if (firstArg instanceof ConstantNode) {
-				Operator fnOperator = fn.getOperator();
+			Node secondArg = fn.getArguments().get(1);
+			if (fnOperator.getClass() == Multiply.class && arg1.equals(secondArg)) {
+				return Optional.of(new FunctionNode(fnOperator, Arguments.createArguments(new ConstantNode(((int) firstArg.evaluate(null)) + 1), secondArg)));
+			} else if (arg1 instanceof ConstantNode && firstArg instanceof ConstantNode) {
 				if (fnOperator.getClass() == Add.class) {
 					return Optional.of(new FunctionNode(fnOperator, Arguments.createArguments(
-							new ConstantNode(((int) arg1.evaluate(null)) + ((int) firstArg.evaluate(null))), fn.getArguments().get(1))));
+							new ConstantNode(((int) arg1.evaluate(null)) + ((int) firstArg.evaluate(null))), secondArg)));
 				} else if (fnOperator.getClass() == Subtract.class) {
 					return Optional.of(new FunctionNode(fnOperator, Arguments.createArguments(
-							new ConstantNode(((int) arg1.evaluate(null)) + ((int) firstArg.evaluate(null))), fn.getArguments().get(1))));
+							new ConstantNode(((int) arg1.evaluate(null)) + ((int) firstArg.evaluate(null))), secondArg)));
+				}
+			} else if (arg1 instanceof ConstantNode && secondArg instanceof ConstantNode) {
+				if (fnOperator.getClass() == Add.class) {
+					return Optional.of(new FunctionNode(fnOperator, Arguments.createArguments(
+							new ConstantNode(((int) arg1.evaluate(null)) + ((int) secondArg.evaluate(null))), firstArg)));
+				} else if (fnOperator.getClass() == Subtract.class) {
+					return Optional.of(new FunctionNode(fnOperator, Arguments.createArguments(
+							new ConstantNode(((int) arg1.evaluate(null)) + ((int) secondArg.evaluate(null))), firstArg)));
 				}
 			}
 		}
