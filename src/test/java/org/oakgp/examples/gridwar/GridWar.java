@@ -20,7 +20,7 @@ import org.oakgp.util.Random;
 class GridWar implements TwoPlayerGame {
 	static final int GRID_WIDTH = 4;
 	private static final int NUMBER_OF_POSSIBLE_DIRECTIONS = 4;
-	private static final int MAX_MOVES = 30;
+	private static final int MAX_MOVES = 24;
 	private static final int WIN = 1;
 	private static final int LOSE = -1;
 	private static final int NO_WINNER = 0;
