@@ -29,6 +29,7 @@ import org.oakgp.node.Node;
 import org.oakgp.tournament.RoundRobinTournament;
 
 public class GridWarSystemTest {
+	private static final int NUM_GENERATIONS = 250;
 	private static final int NUM_VARIABLES = 5;
 	private static final int NUM_CONSTANTS = 5;
 
@@ -59,14 +60,14 @@ public class GridWarSystemTest {
 
 	private Predicate<List<RankedCandidate>> createTerminator() {
 		return new Predicate<List<RankedCandidate>>() {
-			int ctr = 0;
+			int ctr = 1;
 
 			@Override
 			public boolean test(List<RankedCandidate> t) {
 				if (ctr % 50 == 0) {
 					System.out.println(ctr);
 				}
-				return ctr++ > 250;
+				return ctr++ > NUM_GENERATIONS;
 			}
 		};
 	}
