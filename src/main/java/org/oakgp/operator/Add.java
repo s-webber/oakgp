@@ -67,7 +67,7 @@ public final class Add extends ArithmeticOperator {
 			Operator fnOperator = fn.getOperator();
 			Node firstArg = fn.getArguments().get(0);
 			Node secondArg = fn.getArguments().get(1);
-			if (fnOperator.getClass() == Multiply.class && arg1.equals(secondArg)) {
+			if (fnOperator.getClass() == Multiply.class && firstArg instanceof ConstantNode && arg1.equals(secondArg)) {
 				return Optional.of(new FunctionNode(fnOperator, Arguments.createArguments(new ConstantNode(((int) firstArg.evaluate(null)) + 1), secondArg)));
 			} else if (arg1 instanceof ConstantNode && firstArg instanceof ConstantNode) {
 				if (fnOperator.getClass() == Add.class) {
