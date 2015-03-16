@@ -67,6 +67,19 @@ public class TestUtils {
 		assertEquals(expected, o.get());
 	}
 
+	public static void assertCanSimplify(String expected, String input) {
+		Node inputNode = readNode(input);
+		Node expectedNode = readNode(expected);
+		Node simpliedVersion = new NodeSimplifier().simplify(inputNode);
+		assertEquals(expectedNode.toString(), simpliedVersion.toString());
+		assertEquals(expectedNode, simpliedVersion);
+		int[][] assignedValues = { { 0, 0 }, { 1, 21 }, { 2, 14 }, { 3, -6 }, { 7, 3 }, { -1, 9 }, { -7, 0 } };
+		for (int[] assignedValue : assignedValues) {
+			Assignments assignments = Assignments.createAssignments(assignedValue[0], assignedValue[1]);
+			assertEquals(inputNode.evaluate(assignments), simpliedVersion.evaluate(assignments));
+		}
+	}
+
 	public static void assertCannotSimplify(Operator operator, Arguments arguments) {
 		Optional<Node> o = operator.simplify(arguments);
 		assertFalse(o.isPresent());

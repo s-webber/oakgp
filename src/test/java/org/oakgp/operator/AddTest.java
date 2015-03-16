@@ -44,6 +44,19 @@ public class AddTest {
 	}
 
 	@Test
+	public void testCanSimplifyFunctionNodeArguments() {
+		assertCanSimplify("(+ 2 v0)", "(+ 1 (+ 1 v0))");
+		assertCanSimplify("(- 2 v0)", "(+ 1 (- 1 v0))");
+		assertCanSimplify("(+ 10 v0)", "(+ 6 (+ 4 v0))");
+		assertCanSimplify("(- 10 v0)", "(+ 6 (- 4 v0))");
+		assertCanSimplify("(+ 3 (+ v0 v0))", "(+ (+ 1 v0) (+ 2 v0))");
+		assertCanSimplify("(+ 7 (+ v0 v0))", "(+ (+ 3 v0) (+ 4 v0))");
+		assertCanSimplify("(+ 7 (+ v0 v0))", "(+ (+ v0 3) (+ v0 4))");
+		assertCanSimplify("(+ 7 (+ v0 v0))", "(+ (+ v0 3) (+ 4 v0))");
+		assertCanSimplify("(+ 7 (+ v0 v0))", "(+ (+ 3 v0) (+ v0 4))");
+	}
+
+	@Test
 	public void testCannotSimplify() {
 		String arg = "v1";
 		assertCannotSimplify(add, createArguments(arg, "1"));
