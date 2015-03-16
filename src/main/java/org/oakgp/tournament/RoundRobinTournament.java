@@ -30,7 +30,10 @@ public final class RoundRobinTournament implements GenerationProcessor {
 			Node player1 = input.get(i1);
 			for (int i2 = i1 + 1; i2 < size; i2++) {
 				Node player2 = input.get(i2);
-				double result = game.evaluate(player1, player2);
+				// Some games have a "first-mover advantage" - meaning the player that moves first has a greater chance of winning than the player that moves
+				// second. To avoid "first-mover advantage" causing players to be unfairly ranked, each pair plays each other twice - with each having the
+				// opportunity to move first.
+				double result = game.evaluate(player1, player2) - game.evaluate(player2, player1);
 				fitness[i1] += result;
 				fitness[i2] += -result;
 			}
