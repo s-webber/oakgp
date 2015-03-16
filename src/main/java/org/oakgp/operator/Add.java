@@ -1,11 +1,15 @@
 package org.oakgp.operator;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.oakgp.Arguments;
+import org.oakgp.NodeSimplifier;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
+import org.oakgp.serialize.NodeWriter;
 
 /** Performs addition. */
 public final class Add extends ArithmeticOperator {
@@ -29,7 +33,7 @@ public final class Add extends ArithmeticOperator {
 			return Optional.of(arg1);
 		} else if (arg1.equals(arg2)) {
 			// x + x = 2 * x
-			return Optional.of(new FunctionNode(new Multiply(), Arguments.createArguments(new ConstantNode(2), arg1)));
+			return Optional.of(times2(arg1));
 		} else if (arg1 instanceof FunctionNode && arg2 instanceof FunctionNode) {
 			FunctionNode fn1 = (FunctionNode) arg1;
 			FunctionNode fn2 = (FunctionNode) arg2;
@@ -83,10 +87,57 @@ public final class Add extends ArithmeticOperator {
 				}
 			}
 		}
+
+		if (arg2 instanceof FunctionNode && ((FunctionNode) arg2).getOperator().getClass() == Add.class) {
+			List<Node> result = getAddArguments(arg2);
+			if (result.size() < 2) {
+				throw new RuntimeException((arg2 instanceof FunctionNode) + " " + new NodeWriter().writeNode(arg2) + "<");
+			}
+			if (result.contains(arg1)) {
+				result.remove(arg1);
+				return Optional.of(new FunctionNode(this, Arguments.createArguments(times2(arg1), createAddArguments(result))));
+			}
+		}
+
+		if (arg2 instanceof FunctionNode && ((FunctionNode) arg2).getOperator().getClass() == Subtract.class) {
+			FunctionNode fn = (FunctionNode) arg2;
+			Node newFirstArg = new FunctionNode(this, Arguments.createArguments(arg1, fn.getArguments().get(0)));
+			newFirstArg = new NodeSimplifier().simplify(newFirstArg);
+			return Optional.of(new FunctionNode(fn.getOperator(), Arguments.createArguments(newFirstArg, fn.getArguments().get(1))));
+		}
+
 		return Optional.empty();
 	}
 
-	private boolean sameOperator(Class<? extends Operator> operatorClass, FunctionNode fn1, FunctionNode fn2) {
+	private FunctionNode times2(Node arg) {
+		return new FunctionNode(new Multiply(), Arguments.createArguments(new ConstantNode(2), arg));
+	}
+
+	static boolean sameOperator(Class<? extends Operator> operatorClass, FunctionNode fn1, FunctionNode fn2) {
 		return fn1.getOperator().getClass() == operatorClass && fn2.getOperator().getClass() == operatorClass;
+	}
+
+	static Node createAddArguments(List<Node> result) {
+		if (result.size() == 1) {
+			return result.get(0);
+		} else {
+			return new FunctionNode(new Add(), Arguments.createArguments(result.remove(0), createAddArguments(result)));
+		}
+	}
+
+	static List<Node> getAddArguments(Node n) {
+		List<Node> result = new ArrayList<>();
+		if (n instanceof FunctionNode) {
+			FunctionNode fn = (FunctionNode) n;
+			if (fn.getOperator().getClass() == Add.class) {
+				result.addAll(getAddArguments(fn.getArguments().get(0)));
+				result.addAll(getAddArguments(fn.getArguments().get(1)));
+			} else {
+				result.add(n);
+			}
+		} else {
+			result.add(n);
+		}
+		return result;
 	}
 }

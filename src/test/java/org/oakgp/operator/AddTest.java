@@ -59,6 +59,10 @@ public class AddTest {
 		assertCanSimplify("(* 15 v0)", "(+ v0 (* 14 v0))");
 		assertCanSimplify("(+ 10 (* 2 v0))", "(+ 2 (+ (* 2 v0) 8))");
 		assertCanSimplify("(+ 10 (* 2 v0))", "(+ 2 (+ 8 (* 2 v0)))");
+		assertCanSimplify("(+ (* 2 v0) 8)", "(+ v0 (+ v0 8))");
+		assertCanSimplify("(+ (* 2 v0) 8)", "(+ v0 (+ 8 v0))");
+		assertCanSimplify("(- (* 2 v0) 2)", "(+ v0 (- v0 2))");
+		assertCanSimplify("(- (+ v0 2) v0)", "(+ v0 (- 2 v0))");
 	}
 
 	@Test

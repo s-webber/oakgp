@@ -51,12 +51,14 @@ public class SubtractTest {
 		assertCanSimplify("(+ 2 v0)", "(- 6 (- 4 v0))");
 
 		// (1 + x) - (2 + y) evaluates to -1+x-y
-		assertCanSimplify("(+ -1 (- v0 v1))", "(- (+ 1 v0) (+ 2 v1))");
+		assertCanSimplify("(- (+ -1 v0) v1)", "(- (+ 1 v0) (+ 2 v1))");
 		assertCanSimplify("-1", "(- (+ 1 v0) (+ 2 v0))");
 
 		// (1 + x) - (12 - y) evaluates to -11+x+y
 		assertCanSimplify("(+ -11 (+ v0 v1))", "(- (+ 1 v0) (- 12 v1))");
 		assertCanSimplify("(+ -11 (* 2 v0))", "(- (+ 1 v0) (- 12 v0))");
+
+		assertCanSimplify("1", "(- (+ 1 v0) v0)");
 	}
 
 	@Test

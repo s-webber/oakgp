@@ -1,5 +1,10 @@
 package org.oakgp.operator;
 
+import static org.oakgp.operator.Add.createAddArguments;
+import static org.oakgp.operator.Add.getAddArguments;
+import static org.oakgp.operator.Add.sameOperator;
+
+import java.util.List;
 import java.util.Optional;
 
 import org.oakgp.Arguments;
@@ -60,10 +65,23 @@ public final class Subtract extends ArithmeticOperator {
 						((int) fn1Value) - ((int) fn2Value)), newFunctionNode))));
 			}
 		}
-		return Optional.empty();
-	}
 
-	private boolean sameOperator(Class<? extends Operator> operatorClass, FunctionNode fn1, FunctionNode fn2) {
-		return fn1.getOperator().getClass() == operatorClass && fn2.getOperator().getClass() == operatorClass;
+		if (arg1 instanceof FunctionNode && ((FunctionNode) arg1).getOperator().getClass() == Add.class) {
+			List<Node> result = getAddArguments(arg1);
+			if (result.contains(arg2)) {
+				result.remove(arg2);
+				return Optional.of(createAddArguments(result));
+			}
+		}
+
+		if (arg1 instanceof FunctionNode && ((FunctionNode) arg1).getOperator().getClass() == Subtract.class) {
+			FunctionNode fn = (FunctionNode) arg1;
+			if (arg2.equals(fn.getArguments().get(1))) {
+				return Optional.of(new FunctionNode(new Add(), Arguments.createArguments(
+						new FunctionNode(new Multiply(), Arguments.createArguments(new ConstantNode(-2), arg2)), fn.getArguments().get(0))));
+			}
+		}
+
+		return Optional.empty();
 	}
 }
