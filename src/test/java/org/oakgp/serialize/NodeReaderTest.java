@@ -1,7 +1,6 @@
 package org.oakgp.serialize;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.oakgp.TestUtils.readNode;
@@ -48,12 +47,14 @@ public class NodeReaderTest {
 		assertParseLiteral(147);
 	}
 
-	private void assertParseLiteral(Object expected) {
-		String input = expected.toString();
-		Node output = readNode(input);
-		assertSame(ConstantNode.class, output.getClass());
-		assertEquals(input, output.toString());
-		assertEquals(expected, ((ConstantNode) output).evaluate(null));
+	@Test
+	public void testSingleWordString() {
+		assertParseLiteral("\"hello\"", "hello");
+	}
+
+	@Test
+	public void testMultiWordString() {
+		assertParseLiteral("\"Hello, world!\"", "Hello, world!");
 	}
 
 	@Test
@@ -66,14 +67,6 @@ public class NodeReaderTest {
 		assertParseVariable(78);
 	}
 
-	private void assertParseVariable(int id) {
-		String input = "v" + id;
-		Node output = readNode(input);
-		assertSame(VariableNode.class, output.getClass());
-		assertEquals(id, ((VariableNode) output).getId());
-		assertEquals(input, output.toString());
-	}
-
 	@Test
 	public void testFunctionNodeSpecifiedByClassName() {
 		assertParseFunction("(org.oakgp.operator.Add 7 21)");
@@ -81,21 +74,12 @@ public class NodeReaderTest {
 
 	@Test
 	public void testFunctionNodeSpecifiedBySymbol() {
-		String expected = "(org.oakgp.operator.Add 7 21)";
-		Node output = readNode("(+ 7 21)");
-		assertSame(FunctionNode.class, output.getClass());
-		assertEquals(expected, output.toString());
+		assertParseFunction("(+ 7 21)", "(org.oakgp.operator.Add 7 21)");
 	}
 
 	@Test
 	public void testFunctionNodeWithFunctionNodeArguments() {
 		assertParseFunction("(org.oakgp.operator.Add (org.oakgp.operator.Subtract v0 587) (org.oakgp.operator.Multiply 43 v1))");
-	}
-
-	private void assertParseFunction(String input) {
-		Node output = readNode(input);
-		assertSame(FunctionNode.class, output.getClass());
-		assertEquals(input, output.toString());
 	}
 
 	@Test
@@ -115,10 +99,7 @@ public class NodeReaderTest {
 	@Test
 	public void testPadded() {
 		String input = " \r\n42\t\t  ";
-		Node output = readNode(input);
-		assertSame(ConstantNode.class, output.getClass());
-		assertNotEquals(input, output.toString());
-		assertEquals(input.trim(), output.toString());
+		assertParseLiteral(input, 42);
 	}
 
 	@Test
@@ -131,4 +112,34 @@ public class NodeReaderTest {
 			assertEquals(inputs[i].toString(), outputs.get(i).toString());
 		}
 	}
+
+	private void assertParseLiteral(Object expected) {
+		assertParseLiteral(expected.toString(), expected);
+	}
+
+	private void assertParseLiteral(String input, Object expected) {
+		Node output = readNode(input);
+		assertSame(ConstantNode.class, output.getClass());
+		assertEquals(expected.toString(), output.toString());
+		assertEquals(expected, ((ConstantNode) output).evaluate(null));
+	}
+
+	private void assertParseVariable(int id) {
+		String input = "v" + id;
+		Node output = readNode(input);
+		assertSame(VariableNode.class, output.getClass());
+		assertEquals(id, ((VariableNode) output).getId());
+		assertEquals(input, output.toString());
+	}
+
+	private void assertParseFunction(String input) {
+		assertParseFunction(input, input);
+	}
+
+	private void assertParseFunction(String input, String expected) {
+		Node output = readNode(input);
+		assertSame(FunctionNode.class, output.getClass());
+		assertEquals(expected, output.toString());
+	}
+
 }

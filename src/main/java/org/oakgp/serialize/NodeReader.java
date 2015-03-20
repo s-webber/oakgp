@@ -19,6 +19,12 @@ public final class NodeReader implements Closeable {
 	private static final String FUNCTION_START_STRING = Character.toString(FUNCTION_START_CHAR);
 	private static final char FUNCTION_END_CHAR = ')';
 	private static final String FUNCTION_END_STRING = Character.toString(FUNCTION_END_CHAR);
+	private static final char STRING_CHAR = '\"';
+	private static final String STRING_STRING = Character.toString(STRING_CHAR);
+	private static final char ARRAY_START_CHAR = '[';
+	private static final String ARRAY_START_STRING = Character.toString(ARRAY_START_CHAR);
+	private static final char ARRAY_END_CHAR = ']';
+	private static final String ARRAY_END_STRING = Character.toString(ARRAY_END_CHAR);
 
 	private final SymbolMap symbolMap = new SymbolMap();
 	private final CharReader cr;
@@ -42,6 +48,14 @@ public final class NodeReader implements Closeable {
 				arguments.add(nextNode(nextToken));
 			}
 			return new FunctionNode(operator, Arguments.createArguments(arguments.toArray(new Node[arguments.size()])));
+		} else if (firstToken == STRING_STRING) {
+			StringBuilder sb = new StringBuilder();
+			int next;
+			while ((next = cr.next()) != STRING_CHAR) {
+				assertNotEndOfStream(next);
+				sb.append((char) next);
+			}
+			return new ConstantNode(sb.toString());
 		} else if (firstToken.charAt(0) == 'v') {
 			return new VariableNode(Integer.parseInt(firstToken.substring(1)));
 		} else {
@@ -67,15 +81,26 @@ public final class NodeReader implements Closeable {
 			return FUNCTION_START_STRING;
 		} else if (c == FUNCTION_END_CHAR) {
 			return FUNCTION_END_STRING;
-		} else if (c == -1) {
-			throw new IllegalStateException();
+		} else if (c == STRING_CHAR) {
+			return STRING_STRING;
+		} else if (c == ARRAY_START_CHAR) {
+			return ARRAY_START_STRING;
+		} else if (c == ARRAY_END_CHAR) {
+			return ARRAY_END_STRING;
 		} else {
+			assertNotEndOfStream(c);
 			StringBuilder sb = new StringBuilder();
 			do {
 				sb.append((char) c);
 			} while ((c = cr.next()) != -1 && c != FUNCTION_START_CHAR && c != FUNCTION_END_CHAR && !Character.isWhitespace(c));
 			cr.rewind(c);
 			return sb.toString();
+		}
+	}
+
+	private void assertNotEndOfStream(int c) {
+		if (c == -1) {
+			throw new IllegalStateException();
 		}
 	}
 
