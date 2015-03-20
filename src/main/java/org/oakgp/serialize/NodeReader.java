@@ -47,7 +47,7 @@ public final class NodeReader implements Closeable {
 			while ((nextToken = nextToken()) != FUNCTION_END_STRING) {
 				arguments.add(nextNode(nextToken));
 			}
-			return new FunctionNode(operator, Arguments.createArguments(arguments.toArray(new Node[arguments.size()])));
+			return new FunctionNode(operator, createArgumentsFromList(arguments));
 		} else if (firstToken == STRING_STRING) {
 			StringBuilder sb = new StringBuilder();
 			int next;
@@ -62,12 +62,17 @@ public final class NodeReader implements Closeable {
 			while ((nextToken = nextToken()) != ARRAY_END_STRING) {
 				arguments.add(nextNode(nextToken));
 			}
-			return new ConstantNode(arguments);
+			return new ConstantNode(createArgumentsFromList(arguments));
 		} else if (firstToken.charAt(0) == 'v') {
 			return new VariableNode(Integer.parseInt(firstToken.substring(1)));
 		} else {
 			return new ConstantNode(parseLiteral(firstToken));
 		}
+	}
+
+	// TODO move to Arguments
+	private Arguments createArgumentsFromList(List<Node> arguments) {
+		return Arguments.createArguments(arguments.toArray(new Node[arguments.size()]));
 	}
 
 	private Object parseLiteral(String firstToken) {

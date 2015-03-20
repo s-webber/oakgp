@@ -6,11 +6,10 @@ import static org.junit.Assert.assertTrue;
 import static org.oakgp.TestUtils.readNode;
 import static org.oakgp.TestUtils.readNodes;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.junit.Test;
+import org.oakgp.Arguments;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
@@ -61,16 +60,13 @@ public class NodeReaderTest {
 
 	@Test
 	public void testEmptyArray() {
-		assertParseLiteral("[]", Collections.EMPTY_LIST);
+		assertParseLiteral("[]", Arguments.createArguments());
 	}
 
 	@Test
 	public void testArray() {
-		List<Node> expected = new ArrayList<Node>();
-		expected.add(new ConstantNode(Boolean.TRUE));
-		expected.add(new ConstantNode(9));
-		expected.add(new ConstantNode(Boolean.FALSE));
-		expected.add(new VariableNode(0));
+		Arguments expected = Arguments.createArguments(new ConstantNode(Boolean.TRUE), new ConstantNode(9), new ConstantNode(Boolean.FALSE),
+				new VariableNode(0));
 		assertParseLiteral("[true 9 false v0]", expected);
 	}
 
