@@ -45,7 +45,18 @@ public final class NodeReader implements Closeable {
 		} else if (firstToken.charAt(0) == 'v') {
 			return new VariableNode(Integer.parseInt(firstToken.substring(1)));
 		} else {
-			return new ConstantNode(Integer.parseInt(firstToken));
+			return new ConstantNode(parseLiteral(firstToken));
+		}
+	}
+
+	private Object parseLiteral(String firstToken) {
+		switch (firstToken) {
+		case "true":
+			return Boolean.TRUE;
+		case "false":
+			return Boolean.FALSE;
+		default:
+			return Integer.parseInt(firstToken);
 		}
 	}
 

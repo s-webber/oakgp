@@ -19,59 +19,64 @@ public class NodeReaderTest {
 	// TODO test error conditions
 
 	@Test
+	public void testTrue() {
+		assertParseLiteral(Boolean.TRUE);
+	}
+
+	@Test
+	public void testFalse() {
+		assertParseLiteral(Boolean.FALSE);
+	}
+
+	@Test
 	public void testZero() {
-		String input = "0";
-		Node output = readNode(input);
-		assertSame(ConstantNode.class, output.getClass());
-		assertEquals(input, output.toString());
+		assertParseLiteral(0);
 	}
 
 	@Test
 	public void testNegativeConstantNode() {
-		String input = "-9";
-		Node output = readNode(input);
-		assertSame(ConstantNode.class, output.getClass());
-		assertEquals(input, output.toString());
+		assertParseLiteral(-9);
 	}
 
 	@Test
 	public void testSingleCharacterConstantNode() {
-		String input = "4";
-		Node output = readNode(input);
-		assertSame(ConstantNode.class, output.getClass());
-		assertEquals(input, output.toString());
+		assertParseLiteral(4);
 	}
 
 	@Test
 	public void testMulipleCharacterConstantNode() {
-		String input = "147";
+		assertParseLiteral(147);
+	}
+
+	private void assertParseLiteral(Object expected) {
+		String input = expected.toString();
 		Node output = readNode(input);
 		assertSame(ConstantNode.class, output.getClass());
 		assertEquals(input, output.toString());
+		assertEquals(expected, ((ConstantNode) output).evaluate(null));
 	}
 
 	@Test
 	public void testSingleDigitIdVariableNode() {
-		String input = "v1";
-		Node output = readNode(input);
-		assertSame(VariableNode.class, output.getClass());
-		assertEquals(input, output.toString());
+		assertParseVariable(1);
 	}
 
 	@Test
 	public void testMultipleDigitIdVariableNode() {
-		String input = "v78";
+		assertParseVariable(78);
+	}
+
+	private void assertParseVariable(int id) {
+		String input = "v" + id;
 		Node output = readNode(input);
 		assertSame(VariableNode.class, output.getClass());
+		assertEquals(id, ((VariableNode) output).getId());
 		assertEquals(input, output.toString());
 	}
 
 	@Test
 	public void testFunctionNodeSpecifiedByClassName() {
-		String input = "(org.oakgp.operator.Add 7 21)";
-		Node output = readNode(input);
-		assertSame(FunctionNode.class, output.getClass());
-		assertEquals(input, output.toString());
+		assertParseFunction("(org.oakgp.operator.Add 7 21)");
 	}
 
 	@Test
@@ -84,7 +89,10 @@ public class NodeReaderTest {
 
 	@Test
 	public void testFunctionNodeWithFunctionNodeArguments() {
-		String input = "(org.oakgp.operator.Add (org.oakgp.operator.Subtract v0 587) (org.oakgp.operator.Multiply 43 v1))";
+		assertParseFunction("(org.oakgp.operator.Add (org.oakgp.operator.Subtract v0 587) (org.oakgp.operator.Multiply 43 v1))");
+	}
+
+	private void assertParseFunction(String input) {
 		Node output = readNode(input);
 		assertSame(FunctionNode.class, output.getClass());
 		assertEquals(input, output.toString());
