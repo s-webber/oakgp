@@ -56,6 +56,13 @@ public final class NodeReader implements Closeable {
 				sb.append((char) next);
 			}
 			return new ConstantNode(sb.toString());
+		} else if (firstToken == ARRAY_START_STRING) {
+			List<Node> arguments = new ArrayList<>();
+			String nextToken;
+			while ((nextToken = nextToken()) != ARRAY_END_STRING) {
+				arguments.add(nextNode(nextToken));
+			}
+			return new ConstantNode(arguments);
 		} else if (firstToken.charAt(0) == 'v') {
 			return new VariableNode(Integer.parseInt(firstToken.substring(1)));
 		} else {
@@ -92,7 +99,8 @@ public final class NodeReader implements Closeable {
 			StringBuilder sb = new StringBuilder();
 			do {
 				sb.append((char) c);
-			} while ((c = cr.next()) != -1 && c != FUNCTION_START_CHAR && c != FUNCTION_END_CHAR && !Character.isWhitespace(c));
+			} while ((c = cr.next()) != -1 && c != FUNCTION_END_CHAR && c != FUNCTION_START_CHAR && c != ARRAY_START_CHAR && c != ARRAY_END_CHAR
+					&& c != STRING_CHAR && !Character.isWhitespace(c));
 			cr.rewind(c);
 			return sb.toString();
 		}

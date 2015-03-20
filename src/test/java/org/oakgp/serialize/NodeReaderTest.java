@@ -6,6 +6,8 @@ import static org.junit.Assert.assertTrue;
 import static org.oakgp.TestUtils.readNode;
 import static org.oakgp.TestUtils.readNodes;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.Test;
@@ -16,16 +18,6 @@ import org.oakgp.node.VariableNode;
 
 public class NodeReaderTest {
 	// TODO test error conditions
-
-	@Test
-	public void testTrue() {
-		assertParseLiteral(Boolean.TRUE);
-	}
-
-	@Test
-	public void testFalse() {
-		assertParseLiteral(Boolean.FALSE);
-	}
 
 	@Test
 	public void testZero() {
@@ -48,6 +40,16 @@ public class NodeReaderTest {
 	}
 
 	@Test
+	public void testTrue() {
+		assertParseLiteral(Boolean.TRUE);
+	}
+
+	@Test
+	public void testFalse() {
+		assertParseLiteral(Boolean.FALSE);
+	}
+
+	@Test
 	public void testSingleWordString() {
 		assertParseLiteral("\"hello\"", "hello");
 	}
@@ -55,6 +57,21 @@ public class NodeReaderTest {
 	@Test
 	public void testMultiWordString() {
 		assertParseLiteral("\"Hello, world!\"", "Hello, world!");
+	}
+
+	@Test
+	public void testEmptyArray() {
+		assertParseLiteral("[]", Collections.EMPTY_LIST);
+	}
+
+	@Test
+	public void testArray() {
+		List<Node> expected = new ArrayList<Node>();
+		expected.add(new ConstantNode(Boolean.TRUE));
+		expected.add(new ConstantNode(9));
+		expected.add(new ConstantNode(Boolean.FALSE));
+		expected.add(new VariableNode(0));
+		assertParseLiteral("[true 9 false v0]", expected);
 	}
 
 	@Test
