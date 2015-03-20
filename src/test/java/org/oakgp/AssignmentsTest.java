@@ -1,6 +1,7 @@
 package org.oakgp;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.fail;
 import static org.oakgp.Assignments.createAssignments;
 
@@ -23,6 +24,38 @@ public class AssignmentsTest {
 
 		assertArrayIndexOutOfBoundsException(assignments, -1);
 		assertArrayIndexOutOfBoundsException(assignments, 2);
+	}
+
+	@Test
+	public void testEqualsAndHashCode() {
+		Assignments a1 = createAssignments("hello", true, 42);
+		Assignments a2 = createAssignments("hello", true, 42);
+		assertEquals(a1, a1);
+		assertEquals(a1.hashCode(), a2.hashCode());
+		assertEquals(a1, a2);
+	}
+
+	@Test
+	public void testNotEquals() {
+		Assignments a = createAssignments("hello", true, 42);
+
+		// same arguments, different order
+		assertNotEquals(a, createAssignments(42, true, "hello"));
+
+		// different arguments
+		assertNotEquals(a, createAssignments("hello", true, 43));
+
+		// one fewer argument
+		assertNotEquals(a, createAssignments("hello", true));
+
+		// one extra argument
+		assertNotEquals(a, createAssignments("hello", true, 42, 42));
+	}
+
+	@Test
+	public void testToString() {
+		Assignments assignments = createAssignments("hello", true, 42);
+		assertEquals("[hello, true, 42]", assignments.toString());
 	}
 
 	private void assertArrayIndexOutOfBoundsException(Assignments assignments, int index) {

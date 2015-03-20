@@ -1,5 +1,7 @@
 package org.oakgp;
 
+import java.util.Arrays;
+
 /**
  * Represents values assigned to variables.
  * <p>
@@ -39,5 +41,20 @@ public final class Assignments {
 	 */
 	public Object get(int index) {
 		return assignments[index];
+	}
+
+	@Override
+	public int hashCode() {
+		return Arrays.hashCode(assignments);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		return o instanceof Assignments && Arrays.equals(this.assignments, ((Assignments) o).assignments);
+	}
+
+	@Override
+	public String toString() {
+		return Arrays.toString(assignments);
 	}
 }
