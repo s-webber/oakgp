@@ -16,11 +16,11 @@ public class TestDataFitnessFunctionTest {
 	public void test() {
 		// test data
 		Map<Assignments, Integer> testData = new HashMap<>();
-		Assignments assignments1 = createAssignments();
+		Assignments assignments1 = createAssignments(1);
 		testData.put(assignments1, 9);
-		Assignments assignments2 = createAssignments();
+		Assignments assignments2 = createAssignments(2);
 		testData.put(assignments2, 2);
-		Assignments assignments3 = createAssignments();
+		Assignments assignments3 = createAssignments(3);
 		testData.put(assignments3, 7);
 
 		// mock
