@@ -2,50 +2,34 @@ package org.oakgp.operator;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
-import static org.oakgp.Assignments.createAssignments;
-import static org.oakgp.TestUtils.assertCanSimplify;
-import static org.oakgp.TestUtils.assertCannotSimplify;
-import static org.oakgp.TestUtils.createArguments;
-import static org.oakgp.TestUtils.createConstant;
-import static org.oakgp.Type.BOOLEAN;
-import static org.oakgp.Type.INTEGER;
 
-import org.junit.Test;
-import org.oakgp.Assignments;
-import org.oakgp.Signature;
+import java.util.List;
 
-public class LessThanOrEqualTest {
-	private final Operator lessThanOrEqual = new LessThanOrEqual();
-
-	@Test
-	public void testEvaluate() {
-		Assignments assignments = createAssignments();
-		assertSame(TRUE, lessThanOrEqual.evaluate(createArguments("7", "8"), assignments));
-		assertSame(TRUE, lessThanOrEqual.evaluate(createArguments("8", "8"), assignments));
-		assertSame(FALSE, lessThanOrEqual.evaluate(createArguments("9", "8"), assignments));
+public class LessThanOrEqualTest extends AbstractOperatorTest {
+	@Override
+	protected Operator getOperator() {
+		return new LessThanOrEqual();
 	}
 
-	@Test
-	public void testGetSignature() {
-		Signature signature = lessThanOrEqual.getSignature();
-		assertSame(BOOLEAN, signature.getReturnType());
-		assertEquals(2, signature.getArgumentTypesLength());
-		assertSame(INTEGER, signature.getArgumentType(0));
-		assertSame(INTEGER, signature.getArgumentType(1));
+	@Override
+	protected void getEvaluateTests(EvaluateTestCases t) {
+		t.put("(<= 7 8)", TRUE);
+		t.put("(<= 8 8)", TRUE);
+		t.put("(<= 9 8)", FALSE);
 	}
 
-	@Test
-	public void testCanSimplify() {
-		String arg = "v1";
-		assertCanSimplify(lessThanOrEqual, createConstant(TRUE), createArguments(arg, arg));
+	@Override
+	protected void getCanSimplifyTests(SimplifyTestCases t) {
+		t.put("(<= v1 v1)", "true");
+		t.put("(<= 8 7)", "false");
+		t.put("(<= 8 8)", "true");
+		t.put("(<= 8 9)", "true");
 	}
 
-	@Test
-	public void testCannotSimplify() {
-		assertCannotSimplify(lessThanOrEqual, createArguments("v1", "8"));
-		assertCannotSimplify(lessThanOrEqual, createArguments("8", "v1"));
-		assertCannotSimplify(lessThanOrEqual, createArguments("v0", "v1"));
+	@Override
+	protected void getCannotSimplifyTests(List<String> t) {
+		t.add("(<= v1 8)");
+		t.add("(<= 8 v1)");
+		t.add("(<= v0 v1)");
 	}
 }

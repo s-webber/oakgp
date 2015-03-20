@@ -1,58 +1,35 @@
 package org.oakgp.operator;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
-import static org.oakgp.Arguments.createArguments;
-import static org.oakgp.Assignments.createAssignments;
-import static org.oakgp.TestUtils.assertCanSimplify;
-import static org.oakgp.TestUtils.assertCannotSimplify;
-import static org.oakgp.TestUtils.createArguments;
-import static org.oakgp.TestUtils.readNode;
-import static org.oakgp.Type.INTEGER;
-import static org.oakgp.operator.ArithmeticOperator.ZERO;
+import java.util.List;
 
-import org.junit.Test;
-import org.oakgp.Arguments;
-import org.oakgp.Assignments;
-import org.oakgp.Signature;
-import org.oakgp.node.ConstantNode;
-
-public class MultiplyTest {
-	private final Operator multiply = new Multiply();
-
-	@Test
-	public void testEvaluate() {
-		Arguments arguments = createArguments(new ConstantNode(3), new ConstantNode(21));
-		Assignments assignments = createAssignments();
-		assertEquals(63, multiply.evaluate(arguments, assignments));
+public class MultiplyTest extends AbstractOperatorTest {
+	@Override
+	protected Operator getOperator() {
+		return new Multiply();
 	}
 
-	@Test
-	public void testGetSignature() {
-		Signature signature = multiply.getSignature();
-		assertSame(INTEGER, signature.getReturnType());
-		assertEquals(2, signature.getArgumentTypesLength());
-		assertSame(INTEGER, signature.getArgumentType(0));
-		assertSame(INTEGER, signature.getArgumentType(1));
+	@Override
+	protected void getEvaluateTests(EvaluateTestCases t) {
+		t.put("(* 3 21)", 63);
 	}
 
-	@Test
-	public void testCanSimplify() {
-		String arg = "v1";
+	@Override
+	protected void getCanSimplifyTests(SimplifyTestCases t) {
 		// anything multiplied by zero is zero
-		assertCanSimplify(multiply, ZERO, createArguments(arg, "0"));
-		assertCanSimplify(multiply, ZERO, createArguments("0", arg));
+		t.put("(* v1 0)", "0");
+		t.put("(* 0 v1)", "0");
+
 		// anything multiplied by one is itself
-		assertCanSimplify(multiply, readNode(arg), createArguments(arg, "1"));
-		assertCanSimplify(multiply, readNode(arg), createArguments("1", arg));
+		t.put("(* v1 1)", "v1");
+		t.put("(* 1 v1)", "v1");
 	}
 
-	@Test
-	public void testCannotSimplify() {
-		assertCannotSimplify(multiply, createArguments("2", "v1"));
-		assertCannotSimplify(multiply, createArguments("v1", "2"));
-		assertCannotSimplify(multiply, createArguments("-1", "v1"));
-		assertCannotSimplify(multiply, createArguments("v1", "-1"));
-		assertCannotSimplify(multiply, createArguments("v1", "v2"));
+	@Override
+	protected void getCannotSimplifyTests(List<String> t) {
+		t.add("(* 2 v1)");
+		t.add("(* v1 2)");
+		t.add("(* -1 v1)");
+		t.add("(* v1 -1)");
+		t.add("(* v1 v2)");
 	}
 }
