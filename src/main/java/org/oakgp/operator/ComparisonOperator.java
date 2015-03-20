@@ -43,7 +43,7 @@ abstract class ComparisonOperator implements Operator {
 	}
 
 	@Override
-	public Optional<Node> simplify(Arguments arguments) {
+	public final Optional<Node> simplify(Arguments arguments) {
 		if (arguments.get(0).equals(arguments.get(1))) {
 			return Optional.of(equalsIsTrue ? TRUE_NODE : FALSE_NODE);
 		} else {
