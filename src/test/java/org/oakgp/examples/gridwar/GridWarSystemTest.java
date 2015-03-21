@@ -26,7 +26,9 @@ import org.oakgp.mutate.PointMutation;
 import org.oakgp.mutate.SubtreeCrossover;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
+import org.oakgp.tournament.FirstPlayerAdvantageGame;
 import org.oakgp.tournament.RoundRobinTournament;
+import org.oakgp.tournament.TwoPlayerGame;
 
 public class GridWarSystemTest {
 	private static final int NUM_GENERATIONS = 250;
@@ -43,7 +45,8 @@ public class GridWarSystemTest {
 		Predicate<List<RankedCandidate>> terminator = createTerminator();
 
 		// run process
-		GenerationProcessor generationProcessor = new RoundRobinTournament(new GridWar(RANDOM));
+		TwoPlayerGame game = new FirstPlayerAdvantageGame(new GridWar(RANDOM));
+		GenerationProcessor generationProcessor = new RoundRobinTournament(game);
 		RankedCandidate best = Runner.process(generationProcessor, new GenerationEvolver(SELECTOR_FACTORY, nodeEvolvers), terminator, initialGeneration);
 
 		// print best
