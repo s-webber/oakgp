@@ -5,7 +5,7 @@ import java.util.Map;
 import org.oakgp.CacheMap;
 import org.oakgp.node.Node;
 
-public class TwoPlayerGameCache implements TwoPlayerGame {
+public final class TwoPlayerGameCache implements TwoPlayerGame {
 	private final TwoPlayerGame twoPlayerGame;
 	private final Map<NodePair, Double> cache;
 
