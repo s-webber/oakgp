@@ -39,6 +39,7 @@ public class SystemTestUtils {
 	public static final FunctionSet COMPARISON_FUNCTION_SET = new FunctionSet(RANDOM, new Operator[] { new Add(), new Subtract(), new Multiply(),
 			new LessThan(), new LessThanOrEqual(), new GreaterThan(), new GreaterThanOrEqual(), new Equal(), new NotEqual(), new If() });
 	public static final int GENERATION_SIZE = 50;
+	public static final int ELITISM_SIZE = 3;
 	public static final double RATIO_VARIABLES = .6;
 
 	public static List<Node> createInitialGeneration(FunctionSet functionSet, TerminalSet terminalSet, int size) {

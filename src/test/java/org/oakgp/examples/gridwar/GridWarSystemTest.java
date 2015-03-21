@@ -1,6 +1,7 @@
 package org.oakgp.examples.gridwar;
 
 import static org.oakgp.examples.SystemTestUtils.COMPARISON_FUNCTION_SET;
+import static org.oakgp.examples.SystemTestUtils.ELITISM_SIZE;
 import static org.oakgp.examples.SystemTestUtils.GENERATION_SIZE;
 import static org.oakgp.examples.SystemTestUtils.RANDOM;
 import static org.oakgp.examples.SystemTestUtils.RATIO_VARIABLES;
@@ -48,7 +49,8 @@ public class GridWarSystemTest {
 		// run process
 		TwoPlayerGame game = createGridWarGame();
 		GenerationProcessor generationProcessor = new RoundRobinTournament(game);
-		RankedCandidate best = Runner.process(generationProcessor, new GenerationEvolver(SELECTOR_FACTORY, nodeEvolvers), terminator, initialGeneration);
+		GenerationEvolver generationEvolver = new GenerationEvolver(ELITISM_SIZE, SELECTOR_FACTORY, nodeEvolvers);
+		RankedCandidate best = Runner.process(generationProcessor, generationEvolver, terminator, initialGeneration);
 
 		// print best
 		printRankedCandidate(best);
@@ -62,8 +64,8 @@ public class GridWarSystemTest {
 	private Map<NodeEvolver, Long> createNodeEvolvers(TerminalSet terminalSet) {
 		Map<NodeEvolver, Long> nodeEvolvers = new HashMap<>();
 		nodeEvolvers.put(t -> makeRandomTree(COMPARISON_FUNCTION_SET, terminalSet, 4), 5L);
-		nodeEvolvers.put(new SubtreeCrossover(RANDOM), 22L);
-		nodeEvolvers.put(new PointMutation(RANDOM, COMPARISON_FUNCTION_SET, terminalSet), 22L);
+		nodeEvolvers.put(new SubtreeCrossover(RANDOM), 21L);
+		nodeEvolvers.put(new PointMutation(RANDOM, COMPARISON_FUNCTION_SET, terminalSet), 21L);
 		return nodeEvolvers;
 	}
 

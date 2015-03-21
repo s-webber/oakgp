@@ -3,6 +3,7 @@ package org.oakgp.examples.simple;
 import static org.oakgp.Assignments.createAssignments;
 import static org.oakgp.examples.SystemTestUtils.ARITHMETIC_FUNCTION_SET;
 import static org.oakgp.examples.SystemTestUtils.COMPARISON_FUNCTION_SET;
+import static org.oakgp.examples.SystemTestUtils.ELITISM_SIZE;
 import static org.oakgp.examples.SystemTestUtils.GENERATION_SIZE;
 import static org.oakgp.examples.SystemTestUtils.RANDOM;
 import static org.oakgp.examples.SystemTestUtils.RATIO_VARIABLES;
@@ -110,15 +111,16 @@ public class FitnessFunctionSystemTest {
 		Map<NodeEvolver, Long> nodeEvolvers = createNodeEvolvers(functionSet, terminalSet);
 		FitnessFunction fitnessFunctionCache = new FitnessFunctionCache(GENERATION_SIZE, fitnessFunction);
 		GenerationProcessor generationProcessor = new FitnessFunctionGenerationProcessor(fitnessFunctionCache);
-		RankedCandidate best = Runner.process(generationProcessor, new GenerationEvolver(SELECTOR_FACTORY, nodeEvolvers), terminator, initialGeneration);
+		GenerationEvolver generationEvolver = new GenerationEvolver(ELITISM_SIZE, SELECTOR_FACTORY, nodeEvolvers);
+		RankedCandidate best = Runner.process(generationProcessor, generationEvolver, terminator, initialGeneration);
 		printRankedCandidate(best);
 	}
 
 	private Map<NodeEvolver, Long> createNodeEvolvers(FunctionSet functionSet, TerminalSet terminalSet) {
 		Map<NodeEvolver, Long> nodeEvolvers = new HashMap<>();
 		nodeEvolvers.put(t -> makeRandomTree(functionSet, terminalSet, 4), 5L);
-		nodeEvolvers.put(new SubtreeCrossover(RANDOM), 22L);
-		nodeEvolvers.put(new PointMutation(RANDOM, functionSet, terminalSet), 22L);
+		nodeEvolvers.put(new SubtreeCrossover(RANDOM), 21L);
+		nodeEvolvers.put(new PointMutation(RANDOM, functionSet, terminalSet), 21L);
 		return nodeEvolvers;
 	}
 

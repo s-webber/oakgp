@@ -1,5 +1,7 @@
 package org.oakgp;
 
+import static java.lang.Math.min;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -10,10 +12,12 @@ import org.oakgp.selector.NodeSelectorFactory;
 
 /** Creates a new generation of {@code Node} instances evolved from an existing generation. */
 public final class GenerationEvolver {
+	private final int elitismSize;
 	private final NodeSelectorFactory selectorFactory;
 	private final Map<NodeEvolver, Long> nodeEvolvers;
 
-	public GenerationEvolver(NodeSelectorFactory selectorFactory, Map<NodeEvolver, Long> nodeEvolvers) {
+	public GenerationEvolver(int elitismSize, NodeSelectorFactory selectorFactory, Map<NodeEvolver, Long> nodeEvolvers) {
+		this.elitismSize = elitismSize;
 		this.selectorFactory = selectorFactory;
 		this.nodeEvolvers = nodeEvolvers;
 	}
@@ -29,9 +33,10 @@ public final class GenerationEvolver {
 		NodeSelector selector = selectorFactory.getSelector(oldGeneration);
 		List<Node> newGeneration = new ArrayList<>();
 
-		// keep best 2 (elitism) TODO make this value configurable
-		newGeneration.add(oldGeneration.get(0).getNode());
-		newGeneration.add(oldGeneration.get(1).getNode());
+		final int elitismSizeForGeneration = min(elitismSize, oldGeneration.size());
+		for (int i = 0; i < elitismSizeForGeneration; i++) {
+			newGeneration.add(oldGeneration.get(i).getNode());
+		}
 
 		for (Map.Entry<NodeEvolver, Long> e : nodeEvolvers.entrySet()) {
 			NodeEvolver nodeEvolver = e.getKey();
@@ -40,6 +45,7 @@ public final class GenerationEvolver {
 				newGeneration.add(nodeEvolver.evolve(selector));
 			}
 		}
+
 		return newGeneration;
 	}
 }
