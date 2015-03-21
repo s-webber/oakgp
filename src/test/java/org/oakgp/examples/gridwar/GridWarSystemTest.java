@@ -29,6 +29,7 @@ import org.oakgp.node.Node;
 import org.oakgp.tournament.FirstPlayerAdvantageGame;
 import org.oakgp.tournament.RoundRobinTournament;
 import org.oakgp.tournament.TwoPlayerGame;
+import org.oakgp.tournament.TwoPlayerGameCache;
 
 public class GridWarSystemTest {
 	private static final int NUM_GENERATIONS = 250;
@@ -45,12 +46,17 @@ public class GridWarSystemTest {
 		Predicate<List<RankedCandidate>> terminator = createTerminator();
 
 		// run process
-		TwoPlayerGame game = new FirstPlayerAdvantageGame(new GridWar(RANDOM));
+		TwoPlayerGame game = createGridWarGame();
 		GenerationProcessor generationProcessor = new RoundRobinTournament(game);
 		RankedCandidate best = Runner.process(generationProcessor, new GenerationEvolver(SELECTOR_FACTORY, nodeEvolvers), terminator, initialGeneration);
 
 		// print best
 		printRankedCandidate(best);
+	}
+
+	private TwoPlayerGame createGridWarGame() {
+		TwoPlayerGame game = new FirstPlayerAdvantageGame(new GridWar(RANDOM));
+		return new TwoPlayerGameCache(GENERATION_SIZE * 2, game);
 	}
 
 	private Map<NodeEvolver, Long> createNodeEvolvers(TerminalSet terminalSet) {
