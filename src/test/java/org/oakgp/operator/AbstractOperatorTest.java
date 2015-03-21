@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
+import org.oakgp.Assignments;
 import org.oakgp.NodeSimplifier;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
@@ -34,7 +35,17 @@ public abstract class AbstractOperatorTest {
 			Node expectedResult = readNode(test.expectedOutput);
 			Node actualResult = new NodeSimplifier().simplify(input);
 			assertEquals(input.toString(), expectedResult, actualResult);
-			// TODO assert evaluate() returns same result for both input and actualResult
+
+			assertNodesEvaluateSameOutcome(test, expectedResult, actualResult);
+		}
+	}
+
+	private void assertNodesEvaluateSameOutcome(SimplifyTest test, Node expectedResult, Node actualResult) {
+		for (Object[] a : test.assignedValues) {
+			Assignments assignments = Assignments.createAssignments(a);
+			Object expectedOutcome = expectedResult.evaluate(assignments);
+			Object actualOutcome = actualResult.evaluate(assignments);
+			assertEquals(expectedOutcome, actualOutcome);
 		}
 	}
 
@@ -50,9 +61,11 @@ public abstract class AbstractOperatorTest {
 	}
 
 	private FunctionNode readInput(String input) {
-		FunctionNode node = (FunctionNode) readNode(input);
-		assertSame(getOperator().getClass(), node.getOperator().getClass());
-		return node;
+		Node node = readNode(input);
+		assertSame(node.toString(), FunctionNode.class, node.getClass());
+		FunctionNode functionNode = (FunctionNode) node;
+		assertSame(getOperator().getClass(), functionNode.getOperator().getClass());
+		return functionNode;
 	}
 
 	protected abstract Operator getOperator();
@@ -85,17 +98,27 @@ public abstract class AbstractOperatorTest {
 		private List<SimplifyTest> tests = new ArrayList<>();
 
 		public void put(String input, String expectedOutput) {
-			tests.add(new SimplifyTest(input, expectedOutput));
+			put(input, expectedOutput, new Object[0][0]);
+		}
+
+		public void put(String input, String expectedOutput, Object[] assignedValues) {
+			put(input, expectedOutput, new Object[][] { assignedValues });
+		}
+
+		public void put(String input, String expectedOutput, Object[][] assignedValues) {
+			tests.add(new SimplifyTest(input, expectedOutput, assignedValues));
 		}
 	}
 
 	private static class SimplifyTest {
 		final String input;
 		final String expectedOutput;
+		final Object[][] assignedValues;
 
-		SimplifyTest(String input, String expectedOutput) {
+		SimplifyTest(String input, String expectedOutput, Object[][] assignedValues) {
 			this.input = input;
 			this.expectedOutput = expectedOutput;
+			this.assignedValues = assignedValues;
 		}
 	}
 }
