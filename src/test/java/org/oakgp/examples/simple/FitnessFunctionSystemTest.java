@@ -21,6 +21,7 @@ import java.util.function.Predicate;
 import org.junit.Test;
 import org.oakgp.Assignments;
 import org.oakgp.FitnessFunction;
+import org.oakgp.FitnessFunctionCache;
 import org.oakgp.FitnessFunctionGenerationProcessor;
 import org.oakgp.FunctionSet;
 import org.oakgp.GenerationEvolver;
@@ -107,7 +108,8 @@ public class FitnessFunctionSystemTest {
 	private void doIt(FunctionSet functionSet, TerminalSet terminalSet, FitnessFunction fitnessFunction, List<Node> initialGeneration) {
 		Predicate<List<RankedCandidate>> terminator = createTerminator();
 		Map<NodeEvolver, Long> nodeEvolvers = createNodeEvolvers(functionSet, terminalSet);
-		GenerationProcessor generationProcessor = new FitnessFunctionGenerationProcessor(fitnessFunction);
+		FitnessFunction fitnessFunctionCache = new FitnessFunctionCache(GENERATION_SIZE, fitnessFunction);
+		GenerationProcessor generationProcessor = new FitnessFunctionGenerationProcessor(fitnessFunctionCache);
 		RankedCandidate best = Runner.process(generationProcessor, new GenerationEvolver(SELECTOR_FACTORY, nodeEvolvers), terminator, initialGeneration);
 		printRankedCandidate(best);
 	}
