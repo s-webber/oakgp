@@ -1,5 +1,7 @@
 package org.oakgp;
 
+import static org.oakgp.CacheMap.createCache;
+
 import java.util.Map;
 
 import org.oakgp.node.Node;
@@ -10,7 +12,7 @@ public final class FitnessFunctionCache implements FitnessFunction {
 
 	public FitnessFunctionCache(int maxSize, FitnessFunction fitnessFunction) {
 		this.fitnessFunction = fitnessFunction;
-		this.cache = CacheMap.create(maxSize);
+		this.cache = createCache(maxSize);
 	}
 
 	@Override

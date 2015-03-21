@@ -5,7 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public final class CacheMap<K, V> extends LinkedHashMap<K, V> {
-	public static <K, V> Map<K, V> create(int maxSize) {
+	public static <K, V> Map<K, V> createCache(int maxSize) {
 		CacheMap<K, V> m = new CacheMap<>(maxSize);
 		return Collections.synchronizedMap(m);
 	}

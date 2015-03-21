@@ -11,13 +11,13 @@ import org.junit.Test;
 public class CacheMapTest {
 	@Test
 	public void testSynchronized() {
-		assertEquals("java.util.Collections$SynchronizedMap", CacheMap.create(3).getClass().getName());
+		assertEquals("java.util.Collections$SynchronizedMap", CacheMap.createCache(3).getClass().getName());
 	}
 
 	@Test
 	public void testSizeThree() {
 		final int maxSize = 3;
-		Map<String, Integer> m = CacheMap.create(maxSize);
+		Map<String, Integer> m = CacheMap.createCache(maxSize);
 
 		m.put("a", 1);
 		m.put("b", 1);
@@ -77,7 +77,7 @@ public class CacheMapTest {
 	@Test
 	public void testSizeTen() {
 		final int maxSize = 10;
-		Map<Integer, String> m = CacheMap.create(maxSize);
+		Map<Integer, String> m = CacheMap.createCache(maxSize);
 
 		for (int i = 0; i <= maxSize; i++) {
 			m.put(i, "");

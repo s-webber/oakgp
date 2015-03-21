@@ -1,8 +1,9 @@
 package org.oakgp.tournament;
 
+import static org.oakgp.CacheMap.createCache;
+
 import java.util.Map;
 
-import org.oakgp.CacheMap;
 import org.oakgp.node.Node;
 
 public final class TwoPlayerGameCache implements TwoPlayerGame {
@@ -11,7 +12,7 @@ public final class TwoPlayerGameCache implements TwoPlayerGame {
 
 	public TwoPlayerGameCache(int maxSize, TwoPlayerGame twoPlayerGame) {
 		this.twoPlayerGame = twoPlayerGame;
-		this.cache = CacheMap.create(maxSize);
+		this.cache = createCache(maxSize);
 	}
 
 	@Override
