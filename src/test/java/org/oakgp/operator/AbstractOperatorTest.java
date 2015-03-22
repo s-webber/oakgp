@@ -13,6 +13,7 @@ import org.oakgp.Assignments;
 import org.oakgp.NodeSimplifier;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
+import org.oakgp.serialize.NodeWriter;
 
 public abstract class AbstractOperatorTest {
 	@Test
@@ -37,7 +38,7 @@ public abstract class AbstractOperatorTest {
 			FunctionNode input = readInput(test.input);
 			Node expectedResult = readNode(test.expectedOutput);
 			Node actualResult = new NodeSimplifier().simplify(input);
-			assertEquals(input.toString(), expectedResult, actualResult);
+			assertEquals(new NodeWriter().writeNode(input), expectedResult, actualResult);
 
 			assertNodesEvaluateSameOutcome(test, expectedResult, actualResult);
 		}
