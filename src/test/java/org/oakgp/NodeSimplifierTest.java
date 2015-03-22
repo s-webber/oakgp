@@ -2,6 +2,7 @@ package org.oakgp;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
+import static org.oakgp.TestUtils.createConstant;
 import static org.oakgp.TestUtils.readNode;
 
 import org.junit.Test;
@@ -16,7 +17,7 @@ public class NodeSimplifierTest {
 
 	@Test
 	public void testConstantNode() {
-		Node input = new ConstantNode(1);
+		Node input = createConstant(1);
 		Node output = nodeSimplifier.simplify(input);
 		assertSame(input, output);
 	}

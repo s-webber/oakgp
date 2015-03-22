@@ -63,7 +63,7 @@ public final class NodeSimplifier {
 
 		// if all arguments are constants then return result of evaluating them
 		if (constants) {
-			return new ConstantNode(output.evaluate(null));
+			return new ConstantNode(output.evaluate(null), output.getType());
 		}
 
 		// try to simplify using operator

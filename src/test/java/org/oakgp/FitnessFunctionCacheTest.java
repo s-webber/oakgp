@@ -1,19 +1,19 @@
 package org.oakgp;
 
 import static org.junit.Assert.assertEquals;
+import static org.oakgp.TestUtils.createConstant;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.Test;
-import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
 
 public class FitnessFunctionCacheTest {
 	@Test
 	public void test() {
 		// set-up expectations
-		final Node n1 = new ConstantNode(1);
-		final Node n2 = new ConstantNode(2);
+		final Node n1 = createConstant(1);
+		final Node n2 = createConstant(2);
 		final double fitness1 = 9;
 		final double fitness2 = -3;
 		final AtomicInteger evaluateCtr = new AtomicInteger(0);

@@ -40,10 +40,10 @@ public final class Subtract extends ArithmeticOperator {
 				Operator fnOperator = fn.getOperator();
 				if (fnOperator.getClass() == Add.class) {
 					return Optional.of(new FunctionNode(this, Arguments.createArguments(
-							new ConstantNode(((int) arg1.evaluate(null)) - ((int) firstArg.evaluate(null))), fn.getArguments().get(1))));
+							createConstant(((int) arg1.evaluate(null)) - ((int) firstArg.evaluate(null))), fn.getArguments().get(1))));
 				} else if (fnOperator.getClass() == Subtract.class) {
 					return Optional.of(new FunctionNode(new Add(), Arguments.createArguments(
-							new ConstantNode(((int) arg1.evaluate(null)) - ((int) firstArg.evaluate(null))), fn.getArguments().get(1))));
+							createConstant(((int) arg1.evaluate(null)) - ((int) firstArg.evaluate(null))), fn.getArguments().get(1))));
 				}
 			}
 		} else if (arg1 instanceof FunctionNode && arg2 instanceof FunctionNode) {
@@ -53,16 +53,16 @@ public final class Subtract extends ArithmeticOperator {
 				Object fn1Value = fn1.getArguments().get(0).evaluate(null);
 				Object fn2Value = fn2.getArguments().get(0).evaluate(null);
 				FunctionNode newFunctionNode = new FunctionNode(this, Arguments.createArguments(fn1.getArguments().get(1), fn2.getArguments().get(1)));
-				return Optional.of(new NodeSimplifier().simplify(new FunctionNode(fn1.getOperator(), Arguments.createArguments(new ConstantNode(
-						((int) fn1Value) - ((int) fn2Value)), newFunctionNode))));
+				return Optional.of(new NodeSimplifier().simplify(new FunctionNode(fn1.getOperator(), Arguments.createArguments(createConstant(((int) fn1Value)
+						- ((int) fn2Value)), newFunctionNode))));
 			} else if (fn1.getArguments().get(0) instanceof ConstantNode && fn2.getArguments().get(0) instanceof ConstantNode
 					&& fn1.getOperator().getClass() == Add.class && fn2.getOperator().getClass() == Subtract.class) {
 				Object fn1Value = fn1.getArguments().get(0).evaluate(null);
 				Object fn2Value = fn2.getArguments().get(0).evaluate(null);
 				FunctionNode newFunctionNode = new FunctionNode(fn1.getOperator(), Arguments.createArguments(fn1.getArguments().get(1),
 						fn2.getArguments().get(1)));
-				return Optional.of(new NodeSimplifier().simplify(new FunctionNode(fn1.getOperator(), Arguments.createArguments(new ConstantNode(
-						((int) fn1Value) - ((int) fn2Value)), newFunctionNode))));
+				return Optional.of(new NodeSimplifier().simplify(new FunctionNode(fn1.getOperator(), Arguments.createArguments(createConstant(((int) fn1Value)
+						- ((int) fn2Value)), newFunctionNode))));
 			}
 		}
 
@@ -78,7 +78,7 @@ public final class Subtract extends ArithmeticOperator {
 			FunctionNode fn = (FunctionNode) arg1;
 			if (arg2.equals(fn.getArguments().get(1))) {
 				return Optional.of(new FunctionNode(new Add(), Arguments.createArguments(
-						new FunctionNode(new Multiply(), Arguments.createArguments(new ConstantNode(-2), arg2)), fn.getArguments().get(0))));
+						new FunctionNode(new Multiply(), Arguments.createArguments(createConstant(-2), arg2)), fn.getArguments().get(0))));
 			}
 		}
 

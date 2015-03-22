@@ -2,16 +2,16 @@ package org.oakgp;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
+import static org.oakgp.TestUtils.createConstant;
 import static org.oakgp.TestUtils.readNode;
 
 import org.junit.Test;
-import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
 
 public class RankedCandidateTest {
 	@Test
 	public void testGetters() {
-		Node n = new ConstantNode(0);
+		Node n = createConstant(0);
 		double f = 7.5;
 		RankedCandidate a = new RankedCandidate(n, f);
 		assertSame(n, a.getNode());

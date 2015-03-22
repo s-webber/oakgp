@@ -12,6 +12,7 @@ import org.oakgp.Type;
  */
 public final class ConstantNode implements Node {
 	private final Object value;
+	private final Type type;
 
 	/**
 	 * Constructs a new {@code ConstantNode} that represents the specified value.
@@ -19,8 +20,9 @@ public final class ConstantNode implements Node {
 	 * @param value
 	 *            the value to be represented by the {@code ConstantNode}
 	 */
-	public ConstantNode(Object value) {
+	public ConstantNode(Object value, Type type) {
 		this.value = value;
+		this.type = type;
 	}
 
 	/**
@@ -48,7 +50,7 @@ public final class ConstantNode implements Node {
 
 	@Override
 	public Type getType() {
-		return Type.INTEGER;
+		return type;
 	}
 
 	@Override
@@ -58,7 +60,12 @@ public final class ConstantNode implements Node {
 
 	@Override
 	public boolean equals(Object o) {
-		return o instanceof ConstantNode && this.value == ((ConstantNode) o).value;
+		if (o instanceof ConstantNode) {
+			ConstantNode c = (ConstantNode) o;
+			return this.value == c.value && this.type == c.type;
+		} else {
+			return false;
+		}
 	}
 
 	@Override

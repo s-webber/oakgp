@@ -4,6 +4,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.oakgp.TestUtils.assertConstant;
 import static org.oakgp.TestUtils.assertVariable;
+import static org.oakgp.TestUtils.createConstant;
 
 import org.junit.Test;
 import org.oakgp.node.ConstantNode;
@@ -14,7 +15,7 @@ public class TerminalSetTest {
 	// TODO add extra tests for when: a) numVariables=0, b) numVariables=1 and c) constants.length=0
 
 	private static final double VARIABLE_RATIO = .6;
-	private static final ConstantNode[] CONSTANTS = new ConstantNode[] { new ConstantNode(7), new ConstantNode(8), new ConstantNode(9) };
+	private static final ConstantNode[] CONSTANTS = new ConstantNode[] { createConstant(7), createConstant(8), createConstant(9) };
 
 	@Test
 	public void testNext() {
@@ -95,8 +96,8 @@ public class TerminalSetTest {
 		assertVariable(1, terminalSet.nextAlternative(new VariableNode(2)));
 
 		given(mockRandom.nextInt(3)).willReturn(2, 0, 1);
-		assertVariable(2, terminalSet.nextAlternative(new ConstantNode(9)));
-		assertVariable(0, terminalSet.nextAlternative(new ConstantNode(9)));
-		assertVariable(1, terminalSet.nextAlternative(new ConstantNode(9)));
+		assertVariable(2, terminalSet.nextAlternative(createConstant(9)));
+		assertVariable(0, terminalSet.nextAlternative(createConstant(9)));
+		assertVariable(1, terminalSet.nextAlternative(createConstant(9)));
 	}
 }

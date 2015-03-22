@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
 import static org.oakgp.Arguments.createArguments;
 import static org.oakgp.Assignments.createAssignments;
+import static org.oakgp.TestUtils.createConstant;
 import static org.oakgp.Type.INTEGER;
 
 import java.util.function.Function;
@@ -21,7 +22,7 @@ public class FunctionNodeTest {
 	@Test
 	public void testEvaluate() {
 		Operator operator = new Multiply();
-		Arguments arguments = createArguments(new ConstantNode(42), new VariableNode(0));
+		Arguments arguments = createArguments(createConstant(42), new VariableNode(0));
 		FunctionNode functionNode = new FunctionNode(operator, arguments);
 
 		assertSame(operator, functionNode.getOperator());
@@ -34,7 +35,7 @@ public class FunctionNodeTest {
 	@Test
 	public void testReplaceAt() {
 		FunctionNode n = createFunctionNode();
-		Function<Node, Node> replacement = t -> new ConstantNode(9);
+		Function<Node, Node> replacement = t -> createConstant(9);
 
 		assertEquals("(org.oakgp.operator.Add (org.oakgp.operator.Multiply 9 v1) (org.oakgp.operator.Add v2 1))", n.replaceAt(0, replacement).toString());
 		assertEquals("(org.oakgp.operator.Add (org.oakgp.operator.Multiply v0 9) (org.oakgp.operator.Add v2 1))", n.replaceAt(1, replacement).toString());
@@ -76,28 +77,28 @@ public class FunctionNodeTest {
 
 	@Test
 	public void testNotEquals() {
-		final FunctionNode n = new FunctionNode(new Add(), createArguments(new VariableNode(0), new ConstantNode(7)));
+		final FunctionNode n = new FunctionNode(new Add(), createArguments(new VariableNode(0), createConstant(7)));
 
 		// verify (sanity-check) that equals will return true when it should
-		assertEquals(n, new FunctionNode(new Add(), createArguments(new VariableNode(0), new ConstantNode(7))));
+		assertEquals(n, new FunctionNode(new Add(), createArguments(new VariableNode(0), createConstant(7))));
 
 		// test different operator
-		assertNotEquals(n, new FunctionNode(new Multiply(), createArguments(new VariableNode(0), new ConstantNode(7))));
+		assertNotEquals(n, new FunctionNode(new Multiply(), createArguments(new VariableNode(0), createConstant(7))));
 
 		// test different first argument
-		assertNotEquals(n, new FunctionNode(new Add(), createArguments(new VariableNode(1), new ConstantNode(7))));
+		assertNotEquals(n, new FunctionNode(new Add(), createArguments(new VariableNode(1), createConstant(7))));
 
 		// test different second argument
-		assertNotEquals(n, new FunctionNode(new Add(), createArguments(new VariableNode(0), new ConstantNode(6))));
+		assertNotEquals(n, new FunctionNode(new Add(), createArguments(new VariableNode(0), createConstant(6))));
 
 		// test same arguments but different order
-		assertNotEquals(n, new FunctionNode(new Add(), createArguments(new ConstantNode(7), new VariableNode(0))));
+		assertNotEquals(n, new FunctionNode(new Add(), createArguments(createConstant(7), new VariableNode(0))));
 
 		// test wrong arguments but different order
-		assertNotEquals(n, new FunctionNode(new Add(), createArguments(new ConstantNode(0), new VariableNode(7))));
+		assertNotEquals(n, new FunctionNode(new Add(), createArguments(createConstant(0), new VariableNode(7))));
 
 		// test extra argument
-		assertNotEquals(n, new FunctionNode(new Add(), createArguments(new VariableNode(0), new ConstantNode(7), new ConstantNode(7))));
+		assertNotEquals(n, new FunctionNode(new Add(), createArguments(new VariableNode(0), createConstant(7), createConstant(7))));
 
 		// test one less argument
 		assertNotEquals(n, new FunctionNode(new Add(), createArguments(new VariableNode(0))));
@@ -106,7 +107,7 @@ public class FunctionNodeTest {
 		assertNotEquals(n, new FunctionNode(new Add(), createArguments()));
 
 		// test not equal to other Node implementations
-		assertNotEquals(n, new ConstantNode(7));
+		assertNotEquals(n, createConstant(7));
 
 		// test not equal to other non-Node instances
 		assertNotEquals(n, new Object());
@@ -115,6 +116,6 @@ public class FunctionNodeTest {
 	/** Returns representation of: {@code (x*y)+z+1} */
 	private FunctionNode createFunctionNode() {
 		return new FunctionNode(new Add(), createArguments(new FunctionNode(new Multiply(), createArguments(new VariableNode(0), new VariableNode(1))),
-				new FunctionNode(new Add(), createArguments(new VariableNode(2), new ConstantNode(1)))));
+				new FunctionNode(new Add(), createArguments(new VariableNode(2), createConstant(1)))));
 	}
 }

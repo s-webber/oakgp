@@ -41,26 +41,26 @@ public final class Add extends ArithmeticOperator {
 					&& (sameOperator(Add.class, fn1, fn2) || sameOperator(Subtract.class, fn1, fn2))) {
 				Object fn1Value = fn1.getArguments().get(0).evaluate(null);
 				Object fn2Value = fn2.getArguments().get(0).evaluate(null);
-				return Optional.of(new FunctionNode(fn1.getOperator(), Arguments.createArguments(new ConstantNode(((int) fn1Value) + ((int) fn2Value)),
+				return Optional.of(new FunctionNode(fn1.getOperator(), Arguments.createArguments(createConstant(((int) fn1Value) + ((int) fn2Value)),
 						new FunctionNode(this, Arguments.createArguments(fn1.getArguments().get(1), fn2.getArguments().get(1))))));
 			} else if (fn1.getArguments().get(1) instanceof ConstantNode && fn2.getArguments().get(1) instanceof ConstantNode
 					&& sameOperator(Add.class, fn1, fn2)) {
 				Object fn1Value = fn1.getArguments().get(1).evaluate(null);
 				Object fn2Value = fn2.getArguments().get(1).evaluate(null);
-				return Optional.of(new FunctionNode(fn1.getOperator(), Arguments.createArguments(new ConstantNode(((int) fn1Value) + ((int) fn2Value)),
+				return Optional.of(new FunctionNode(fn1.getOperator(), Arguments.createArguments(createConstant(((int) fn1Value) + ((int) fn2Value)),
 						new FunctionNode(this, Arguments.createArguments(fn1.getArguments().get(0), fn2.getArguments().get(0))))));
 			} else if (fn1.getArguments().get(0) instanceof ConstantNode && fn2.getArguments().get(1) instanceof ConstantNode
 					&& sameOperator(Add.class, fn1, fn2)) {
 				Object fn1Value = fn1.getArguments().get(0).evaluate(null);
 				Object fn2Value = fn2.getArguments().get(1).evaluate(null);
-				return Optional.of(new FunctionNode(fn1.getOperator(), Arguments.createArguments(new ConstantNode(((int) fn1Value) + ((int) fn2Value)),
+				return Optional.of(new FunctionNode(fn1.getOperator(), Arguments.createArguments(createConstant(((int) fn1Value) + ((int) fn2Value)),
 						new FunctionNode(this, Arguments.createArguments(fn1.getArguments().get(1), fn2.getArguments().get(0))))));
 			} else if (fn1.getArguments().get(1) instanceof ConstantNode && fn2.getArguments().get(0) instanceof ConstantNode
 					&& sameOperator(Add.class, fn1, fn2)) {
 				Object fn1Value = fn1.getArguments().get(1).evaluate(null);
 				Object fn2Value = fn2.getArguments().get(0).evaluate(null);
-				return Optional.of(new FunctionNode(this, Arguments.createArguments(new ConstantNode(((int) fn1Value) + ((int) fn2Value)), new FunctionNode(
-						this, Arguments.createArguments(fn1.getArguments().get(0), fn2.getArguments().get(1))))));
+				return Optional.of(new FunctionNode(this, Arguments.createArguments(createConstant(((int) fn1Value) + ((int) fn2Value)), new FunctionNode(this,
+						Arguments.createArguments(fn1.getArguments().get(0), fn2.getArguments().get(1))))));
 			}
 		} else if (arg2 instanceof FunctionNode) {
 			FunctionNode fn = (FunctionNode) arg2;
@@ -68,22 +68,22 @@ public final class Add extends ArithmeticOperator {
 			Node firstArg = fn.getArguments().get(0);
 			Node secondArg = fn.getArguments().get(1);
 			if (fnOperator.getClass() == Multiply.class && firstArg instanceof ConstantNode && arg1.equals(secondArg)) {
-				return Optional.of(new FunctionNode(fnOperator, Arguments.createArguments(new ConstantNode(((int) firstArg.evaluate(null)) + 1), secondArg)));
+				return Optional.of(new FunctionNode(fnOperator, Arguments.createArguments(createConstant(((int) firstArg.evaluate(null)) + 1), secondArg)));
 			} else if (arg1 instanceof ConstantNode && firstArg instanceof ConstantNode) {
 				if (fnOperator.getClass() == Add.class) {
 					return Optional.of(new FunctionNode(fnOperator, Arguments.createArguments(
-							new ConstantNode(((int) arg1.evaluate(null)) + ((int) firstArg.evaluate(null))), secondArg)));
+							createConstant(((int) arg1.evaluate(null)) + ((int) firstArg.evaluate(null))), secondArg)));
 				} else if (fnOperator.getClass() == Subtract.class) {
 					return Optional.of(new FunctionNode(fnOperator, Arguments.createArguments(
-							new ConstantNode(((int) arg1.evaluate(null)) + ((int) firstArg.evaluate(null))), secondArg)));
+							createConstant(((int) arg1.evaluate(null)) + ((int) firstArg.evaluate(null))), secondArg)));
 				}
 			} else if (arg1 instanceof ConstantNode && secondArg instanceof ConstantNode) {
 				if (fnOperator.getClass() == Add.class) {
 					return Optional.of(new FunctionNode(fnOperator, Arguments.createArguments(
-							new ConstantNode(((int) arg1.evaluate(null)) + ((int) secondArg.evaluate(null))), firstArg)));
+							createConstant(((int) arg1.evaluate(null)) + ((int) secondArg.evaluate(null))), firstArg)));
 				} else if (fnOperator.getClass() == Subtract.class) {
 					return Optional.of(new FunctionNode(fnOperator, Arguments.createArguments(
-							new ConstantNode(((int) arg1.evaluate(null)) + ((int) secondArg.evaluate(null))), firstArg)));
+							createConstant(((int) arg1.evaluate(null)) + ((int) secondArg.evaluate(null))), firstArg)));
 				}
 			}
 		}
@@ -110,7 +110,7 @@ public final class Add extends ArithmeticOperator {
 	}
 
 	private FunctionNode times2(Node arg) {
-		return new FunctionNode(new Multiply(), Arguments.createArguments(new ConstantNode(2), arg));
+		return new FunctionNode(new Multiply(), Arguments.createArguments(createConstant(2), arg));
 	}
 
 	static boolean sameOperator(Class<? extends Operator> operatorClass, FunctionNode fn1, FunctionNode fn2) {

@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.junit.Test;
 import org.oakgp.Arguments;
+import org.oakgp.Type;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
@@ -65,8 +66,8 @@ public class NodeReaderTest {
 
 	@Test
 	public void testArray() {
-		Arguments expected = Arguments.createArguments(new ConstantNode(Boolean.TRUE), new ConstantNode(9), new ConstantNode(Boolean.FALSE),
-				new VariableNode(0));
+		Arguments expected = Arguments.createArguments(new ConstantNode(Boolean.TRUE, Type.BOOLEAN), new ConstantNode(9, Type.INTEGER), new ConstantNode(
+				Boolean.FALSE, Type.BOOLEAN), new VariableNode(0));
 		assertParseLiteral("[true 9 false v0]", expected);
 	}
 

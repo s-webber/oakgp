@@ -14,8 +14,8 @@ import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
 
 abstract class ComparisonOperator implements Operator {
-	private static final ConstantNode TRUE_NODE = new ConstantNode(TRUE);
-	private static final ConstantNode FALSE_NODE = new ConstantNode(FALSE);
+	private static final ConstantNode TRUE_NODE = new ConstantNode(TRUE, BOOLEAN); // TODO share version used by NodeReader
+	private static final ConstantNode FALSE_NODE = new ConstantNode(FALSE, BOOLEAN); // TODO share version used by NodeReader
 	private static final Signature SIGNATURE = Signature.createSignature(BOOLEAN, INTEGER, INTEGER);
 
 	private boolean equalsIsTrue;

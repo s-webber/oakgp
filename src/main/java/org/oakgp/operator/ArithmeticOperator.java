@@ -8,8 +8,8 @@ import org.oakgp.Signature;
 import org.oakgp.node.ConstantNode;
 
 abstract class ArithmeticOperator implements Operator {
-	public static final ConstantNode ZERO = new ConstantNode(0); // TODO move or make private
-	public static final ConstantNode ONE = new ConstantNode(1); // TODO move or make private
+	static final ConstantNode ZERO = createConstant(0); // TODO move or make private
+	static final ConstantNode ONE = createConstant(1); // TODO move or make private
 	private static final Signature SIGNATURE = Signature.createSignature(INTEGER, INTEGER, INTEGER);
 
 	@Override
@@ -20,6 +20,10 @@ abstract class ArithmeticOperator implements Operator {
 	}
 
 	protected abstract int evaluate(int arg1, int arg2);
+
+	protected static ConstantNode createConstant(int i) {
+		return new ConstantNode(i, INTEGER);
+	}
 
 	@Override
 	public final Signature getSignature() {

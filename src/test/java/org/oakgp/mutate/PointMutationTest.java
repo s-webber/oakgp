@@ -7,6 +7,7 @@ import static org.mockito.Mockito.mock;
 import static org.oakgp.Arguments.createArguments;
 import static org.oakgp.TestUtils.assertConstant;
 import static org.oakgp.TestUtils.assertVariable;
+import static org.oakgp.TestUtils.createConstant;
 
 import org.junit.Test;
 import org.oakgp.Arguments;
@@ -28,7 +29,7 @@ public class PointMutationTest {
 
 	private static final double VARIABLE_RATIO = .6;
 	private static final int NUMBER_OF_VARIABLES = 9;
-	private static final ConstantNode[] CONSTANTS = new ConstantNode[] { new ConstantNode(7), new ConstantNode(8), new ConstantNode(9) };
+	private static final ConstantNode[] CONSTANTS = new ConstantNode[] { createConstant(7), createConstant(8), createConstant(9) };
 	private static final Operator[] OPERATORS = new Operator[] { new Add(), new Subtract(), new Multiply() };
 
 	@Test
@@ -40,7 +41,7 @@ public class PointMutationTest {
 		given(mockRandom.nextInt(NUMBER_OF_VARIABLES)).willReturn(expectedVariableId);
 		given(mockRandom.nextInt(CONSTANTS.length)).willReturn(expectedConstantIndex);
 
-		DummyNodeSelector dummySelector = new DummyNodeSelector(new ConstantNode(9), new VariableNode(2));
+		DummyNodeSelector dummySelector = new DummyNodeSelector(createConstant(9), new VariableNode(2));
 
 		PointMutation pointMutation = createPointMutation(mockRandom);
 
@@ -58,7 +59,7 @@ public class PointMutationTest {
 		Random mockRandom = mock(Random.class);
 		given(mockRandom.nextInt(OPERATORS.length)).willReturn(expectedOperatorIndex);
 
-		Arguments arguments = createArguments(new ConstantNode(3), new ConstantNode(7));
+		Arguments arguments = createArguments(createConstant(3), createConstant(7));
 		FunctionNode originalFunctionNode = new FunctionNode(OPERATORS[0], arguments);
 		DummyNodeSelector dummySelector = new DummyNodeSelector(originalFunctionNode);
 

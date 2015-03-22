@@ -1,6 +1,7 @@
 package org.oakgp.examples;
 
 import static org.oakgp.Arguments.createArguments;
+import static org.oakgp.TestUtils.createConstant;
 
 import java.util.Collection;
 import java.util.Set;
@@ -74,7 +75,7 @@ public class SystemTestUtils {
 	public static ConstantNode[] createConstants(int numberOfConstants) {
 		ConstantNode[] constants = new ConstantNode[numberOfConstants];
 		for (int i = 0; i < numberOfConstants; i++) {
-			constants[i] = new ConstantNode(i);
+			constants[i] = createConstant(i);
 		}
 		return constants;
 	}

@@ -50,8 +50,8 @@ public class TestUtils {
 		return Arguments.createArguments(args);
 	}
 
-	public static ConstantNode createConstant(Object value) {
-		return new ConstantNode(value);
+	public static ConstantNode createConstant(int value) {
+		return new ConstantNode(value, Type.INTEGER);
 	}
 
 	public static VariableNode createVariable(int id) {

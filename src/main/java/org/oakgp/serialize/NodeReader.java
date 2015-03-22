@@ -1,5 +1,10 @@
 package org.oakgp.serialize;
 
+import static org.oakgp.Type.ARRAY;
+import static org.oakgp.Type.BOOLEAN;
+import static org.oakgp.Type.INTEGER;
+import static org.oakgp.Type.STRING;
+
 import java.io.BufferedReader;
 import java.io.Closeable;
 import java.io.IOException;
@@ -15,6 +20,8 @@ import org.oakgp.node.VariableNode;
 import org.oakgp.operator.Operator;
 
 public final class NodeReader implements Closeable {
+	private static final ConstantNode TRUE_NODE = new ConstantNode(Boolean.TRUE, BOOLEAN); // TODO move somewhere it can be shared
+	private static final ConstantNode FALSE_NODE = new ConstantNode(Boolean.FALSE, BOOLEAN); // TODO move somewhere it can be shared
 	private static final char FUNCTION_START_CHAR = '(';
 	private static final String FUNCTION_START_STRING = Character.toString(FUNCTION_START_CHAR);
 	private static final char FUNCTION_END_CHAR = ')';
@@ -55,18 +62,18 @@ public final class NodeReader implements Closeable {
 				assertNotEndOfStream(next);
 				sb.append((char) next);
 			}
-			return new ConstantNode(sb.toString());
+			return new ConstantNode(sb.toString(), STRING);
 		} else if (firstToken == ARRAY_START_STRING) {
 			List<Node> arguments = new ArrayList<>();
 			String nextToken;
 			while ((nextToken = nextToken()) != ARRAY_END_STRING) {
 				arguments.add(nextNode(nextToken));
 			}
-			return new ConstantNode(createArgumentsFromList(arguments));
+			return new ConstantNode(createArgumentsFromList(arguments), ARRAY);
 		} else if (firstToken.charAt(0) == 'v') {
 			return new VariableNode(Integer.parseInt(firstToken.substring(1)));
 		} else {
-			return new ConstantNode(parseLiteral(firstToken));
+			return parseLiteral(firstToken);
 		}
 	}
 
@@ -75,14 +82,14 @@ public final class NodeReader implements Closeable {
 		return Arguments.createArguments(arguments.toArray(new Node[arguments.size()]));
 	}
 
-	private Object parseLiteral(String firstToken) {
+	private ConstantNode parseLiteral(String firstToken) {
 		switch (firstToken) {
 		case "true":
-			return Boolean.TRUE;
+			return TRUE_NODE;
 		case "false":
-			return Boolean.FALSE;
+			return FALSE_NODE;
 		default:
-			return Integer.parseInt(firstToken);
+			return new ConstantNode(Integer.parseInt(firstToken), INTEGER);
 		}
 	}
 

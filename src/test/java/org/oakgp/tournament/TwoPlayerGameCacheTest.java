@@ -1,20 +1,20 @@
 package org.oakgp.tournament;
 
 import static org.junit.Assert.assertEquals;
+import static org.oakgp.TestUtils.createConstant;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.Test;
-import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
 
 public class TwoPlayerGameCacheTest {
 	@Test
 	public void test() {
 		// set-up expectations
-		final Node n1 = new ConstantNode(1);
-		final Node n2 = new ConstantNode(2);
-		final Node n3 = new ConstantNode(3);
+		final Node n1 = createConstant(1);
+		final Node n2 = createConstant(2);
+		final Node n3 = createConstant(3);
 		final double fitness1 = 7;
 		final double fitness2 = 4;
 		final AtomicInteger evaluateCtr = new AtomicInteger(0);
