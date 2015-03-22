@@ -3,13 +3,13 @@ package org.oakgp;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.oakgp.TestUtils.createConstant;
+import static org.oakgp.TestUtils.createVariable;
 import static org.oakgp.TestUtils.readNode;
 
 import org.junit.Test;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
-import org.oakgp.node.VariableNode;
 import org.oakgp.serialize.NodeWriter;
 
 public class NodeSimplifierTest {
@@ -24,7 +24,7 @@ public class NodeSimplifierTest {
 
 	@Test
 	public void testVariableNode() {
-		Node input = new VariableNode(1);
+		Node input = createVariable(1);
 		Node output = nodeSimplifier.simplify(input);
 		assertSame(input, output);
 	}

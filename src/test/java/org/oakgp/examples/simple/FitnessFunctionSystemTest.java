@@ -1,6 +1,7 @@
 package org.oakgp.examples.simple;
 
 import static org.oakgp.Assignments.createAssignments;
+import static org.oakgp.TestUtils.createTypeArray;
 import static org.oakgp.examples.SystemTestUtils.ARITHMETIC_FUNCTION_SET;
 import static org.oakgp.examples.SystemTestUtils.COMPARISON_FUNCTION_SET;
 import static org.oakgp.examples.SystemTestUtils.ELITISM_SIZE;
@@ -50,7 +51,7 @@ public class FitnessFunctionSystemTest {
 	public void testTwoVariableArithmeticExpression() {
 		ConstantNode[] constants = createConstants(11);
 		int numVariables = 2;
-		TerminalSet terminalSet = new TerminalSet(RANDOM, RATIO_VARIABLES, numVariables, constants);
+		TerminalSet terminalSet = new TerminalSet(RANDOM, RATIO_VARIABLES, createTypeArray(numVariables), constants);
 		FitnessFunction fitnessFunction = new TestDataFitnessFunction(createTests(numVariables, a -> {
 			int x = (int) a.get(0);
 			int y = (int) a.get(1);
@@ -64,7 +65,7 @@ public class FitnessFunctionSystemTest {
 	public void testThreeVariableArithmeticExpression() {
 		ConstantNode[] constants = createConstants(11);
 		int numVariables = 3;
-		TerminalSet terminalSet = new TerminalSet(RANDOM, RATIO_VARIABLES, numVariables, constants);
+		TerminalSet terminalSet = new TerminalSet(RANDOM, RATIO_VARIABLES, createTypeArray(numVariables), constants);
 		FitnessFunction fitnessFunction = new TestDataFitnessFunction(createTests(numVariables, a -> {
 			int x = (int) a.get(0);
 			int y = (int) a.get(1);
@@ -79,7 +80,7 @@ public class FitnessFunctionSystemTest {
 	public void testTwoVariableBooleanLogicExpression() {
 		ConstantNode[] constants = createConstants(5);
 		int numVariables = 2;
-		TerminalSet terminalSet = new TerminalSet(RANDOM, RATIO_VARIABLES, numVariables, constants);
+		TerminalSet terminalSet = new TerminalSet(RANDOM, RATIO_VARIABLES, createTypeArray(numVariables), constants);
 		FitnessFunction fitnessFunction = new TestDataFitnessFunction(createTests(numVariables, a -> {
 			int x = (int) a.get(0);
 			int y = (int) a.get(1);

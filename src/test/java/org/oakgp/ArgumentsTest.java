@@ -5,10 +5,10 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.fail;
 import static org.oakgp.TestUtils.createConstant;
+import static org.oakgp.TestUtils.createVariable;
 
 import org.junit.Test;
 import org.oakgp.node.Node;
-import org.oakgp.node.VariableNode;
 
 public class ArgumentsTest {
 	@Test
@@ -57,8 +57,8 @@ public class ArgumentsTest {
 
 	@Test
 	public void testEqualsAndHashCode() {
-		Arguments a1 = Arguments.createArguments(createConstant(7), new VariableNode(0), createConstant(42));
-		Arguments a2 = Arguments.createArguments(createConstant(7), new VariableNode(0), createConstant(42));
+		Arguments a1 = Arguments.createArguments(createConstant(7), createVariable(0), createConstant(42));
+		Arguments a2 = Arguments.createArguments(createConstant(7), createVariable(0), createConstant(42));
 		assertEquals(a1, a1);
 		assertEquals(a1.hashCode(), a2.hashCode());
 		assertEquals(a1, a2);
@@ -66,24 +66,24 @@ public class ArgumentsTest {
 
 	@Test
 	public void testNotEquals() {
-		Arguments a = Arguments.createArguments(createConstant(7), new VariableNode(0), createConstant(42));
+		Arguments a = Arguments.createArguments(createConstant(7), createVariable(0), createConstant(42));
 
 		// same arguments, different order
-		assertNotEquals(a, Arguments.createArguments(createConstant(42), new VariableNode(0), createConstant(7)));
+		assertNotEquals(a, Arguments.createArguments(createConstant(42), createVariable(0), createConstant(7)));
 
 		// different arguments
-		assertNotEquals(a, Arguments.createArguments(createConstant(7), new VariableNode(0), createConstant(43)));
+		assertNotEquals(a, Arguments.createArguments(createConstant(7), createVariable(0), createConstant(43)));
 
 		// one fewer argument
-		assertNotEquals(a, Arguments.createArguments(createConstant(7), new VariableNode(0)));
+		assertNotEquals(a, Arguments.createArguments(createConstant(7), createVariable(0)));
 
 		// one extra argument
-		assertNotEquals(a, Arguments.createArguments(createConstant(7), new VariableNode(0), createConstant(42), createConstant(42)));
+		assertNotEquals(a, Arguments.createArguments(createConstant(7), createVariable(0), createConstant(42), createConstant(42)));
 	}
 
 	@Test
 	public void testToString() {
-		Arguments arguments = Arguments.createArguments(createConstant(7), new VariableNode(0), createConstant(42));
+		Arguments arguments = Arguments.createArguments(createConstant(7), createVariable(0), createConstant(42));
 		assertEquals("[7, v0, 42]", arguments.toString());
 	}
 

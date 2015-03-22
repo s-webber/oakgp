@@ -3,6 +3,7 @@ package org.oakgp.serialize;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+import static org.oakgp.TestUtils.createVariable;
 import static org.oakgp.TestUtils.readNode;
 import static org.oakgp.TestUtils.readNodes;
 
@@ -67,7 +68,7 @@ public class NodeReaderTest {
 	@Test
 	public void testArray() {
 		Arguments expected = Arguments.createArguments(new ConstantNode(Boolean.TRUE, Type.BOOLEAN), new ConstantNode(9, Type.INTEGER), new ConstantNode(
-				Boolean.FALSE, Type.BOOLEAN), new VariableNode(0));
+				Boolean.FALSE, Type.BOOLEAN), createVariable(0));
 		assertParseLiteral("[true 9 false v0]", expected);
 	}
 

@@ -32,7 +32,7 @@ public class TestUtils {
 
 	public static List<Node> readNodes(String input) {
 		List<Node> outputs = new ArrayList<>();
-		try (NodeReader nr = new NodeReader(input)) {
+		try (NodeReader nr = new NodeReader(input, createTypeArray(100))) {
 			while (!nr.isEndOfStream()) {
 				outputs.add(nr.readNode());
 			}
@@ -55,7 +55,15 @@ public class TestUtils {
 	}
 
 	public static VariableNode createVariable(int id) {
-		return new VariableNode(id);
+		return new VariableNode(id, Type.INTEGER);
+	}
+
+	public static Type[] createTypeArray(int size) {
+		Type[] a = new Type[size];
+		for (int i = 0; i < size; i++) {
+			a[i] = Type.INTEGER;
+		}
+		return a;
 	}
 
 	public static void assertRankedCandidate(RankedCandidate actual, Node expectedNode, double expectedFitness) {

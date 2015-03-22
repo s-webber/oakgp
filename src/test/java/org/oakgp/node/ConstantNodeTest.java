@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
 import static org.oakgp.TestUtils.createConstant;
+import static org.oakgp.TestUtils.createVariable;
 import static org.oakgp.Type.INTEGER;
 
 import org.junit.Test;
@@ -53,7 +54,7 @@ public class ConstantNodeTest {
 		final ConstantNode n = createConstant(7);
 		assertNotEquals(n, createConstant(8));
 		assertNotEquals(n, createConstant(-7));
-		assertNotEquals(n, new VariableNode(7));
+		assertNotEquals(n, createVariable(7));
 		assertNotEquals(n, new Integer(7));
 	}
 }

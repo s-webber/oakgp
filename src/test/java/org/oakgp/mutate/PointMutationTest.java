@@ -8,15 +8,16 @@ import static org.oakgp.Arguments.createArguments;
 import static org.oakgp.TestUtils.assertConstant;
 import static org.oakgp.TestUtils.assertVariable;
 import static org.oakgp.TestUtils.createConstant;
+import static org.oakgp.TestUtils.createTypeArray;
 
 import org.junit.Test;
 import org.oakgp.Arguments;
 import org.oakgp.FunctionSet;
 import org.oakgp.TerminalSet;
+import org.oakgp.Type;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
-import org.oakgp.node.VariableNode;
 import org.oakgp.operator.Add;
 import org.oakgp.operator.Multiply;
 import org.oakgp.operator.Operator;
@@ -28,9 +29,9 @@ public class PointMutationTest {
 	// TODO test mutating child nodes, not just the root node (which is all the tests currently do)
 
 	private static final double VARIABLE_RATIO = .6;
-	private static final int NUMBER_OF_VARIABLES = 9;
-	private static final ConstantNode[] CONSTANTS = new ConstantNode[] { createConstant(7), createConstant(8), createConstant(9) };
-	private static final Operator[] OPERATORS = new Operator[] { new Add(), new Subtract(), new Multiply() };
+	private static final Type[] VARIABLE_TYPES = createTypeArray(9);
+	private static final ConstantNode[] CONSTANTS = { createConstant(7), createConstant(8), createConstant(9) };
+	private static final Operator[] OPERATORS = { new Add(), new Subtract(), new Multiply() };
 
 	@Test
 	public void testTerminalMutation() {
@@ -38,10 +39,10 @@ public class PointMutationTest {
 		int expectedConstantIndex = 2;
 		Random mockRandom = mock(Random.class);
 		given(mockRandom.nextDouble()).willReturn(VARIABLE_RATIO - .1, VARIABLE_RATIO + .1);
-		given(mockRandom.nextInt(NUMBER_OF_VARIABLES)).willReturn(expectedVariableId);
+		given(mockRandom.nextInt(VARIABLE_TYPES.length)).willReturn(expectedVariableId);
 		given(mockRandom.nextInt(CONSTANTS.length)).willReturn(expectedConstantIndex);
 
-		DummyNodeSelector dummySelector = new DummyNodeSelector(createConstant(9), new VariableNode(2));
+		DummyNodeSelector dummySelector = new DummyNodeSelector(createConstant(9), createConstant(2));
 
 		PointMutation pointMutation = createPointMutation(mockRandom);
 
@@ -73,7 +74,7 @@ public class PointMutationTest {
 
 	private PointMutation createPointMutation(Random mockRandom) {
 		FunctionSet functionSet = new FunctionSet(mockRandom, OPERATORS);
-		TerminalSet terminalSet = new TerminalSet(mockRandom, VARIABLE_RATIO, NUMBER_OF_VARIABLES, CONSTANTS);
+		TerminalSet terminalSet = new TerminalSet(mockRandom, VARIABLE_RATIO, VARIABLE_TYPES, CONSTANTS);
 		return new PointMutation(mockRandom, functionSet, terminalSet);
 	}
 }

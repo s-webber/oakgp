@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.oakgp.Arguments;
+import org.oakgp.Type;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
@@ -35,10 +36,12 @@ public final class NodeReader implements Closeable {
 
 	private final SymbolMap symbolMap = new SymbolMap();
 	private final CharReader cr;
+	private final Type[] variableTypes;
 
-	public NodeReader(String input) {
+	public NodeReader(String input, Type... variableTypes) {
 		StringReader sr = new StringReader(input);
-		cr = new CharReader(new BufferedReader(sr));
+		this.cr = new CharReader(new BufferedReader(sr));
+		this.variableTypes = variableTypes;
 	}
 
 	public Node readNode() throws IOException {
@@ -71,7 +74,8 @@ public final class NodeReader implements Closeable {
 			}
 			return new ConstantNode(createArgumentsFromList(arguments), ARRAY);
 		} else if (firstToken.charAt(0) == 'v') {
-			return new VariableNode(Integer.parseInt(firstToken.substring(1)));
+			int id = Integer.parseInt(firstToken.substring(1));
+			return new VariableNode(id, variableTypes[id]);
 		} else {
 			return parseLiteral(firstToken);
 		}

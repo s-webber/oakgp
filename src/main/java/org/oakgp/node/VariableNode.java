@@ -12,6 +12,7 @@ import org.oakgp.Type;
  */
 public final class VariableNode implements Node {
 	private final int id;
+	private final Type type;
 
 	/**
 	 * Constructs a new {@code VariableNode} with the specified ID.
@@ -19,8 +20,9 @@ public final class VariableNode implements Node {
 	 * @param id
 	 *            represents the index to specify when getting the value for this variable from an {@link Assignments}
 	 */
-	public VariableNode(int id) {
+	public VariableNode(int id, Type type) {
 		this.id = id;
+		this.type = type;
 	}
 
 	public int getId() {
@@ -54,7 +56,7 @@ public final class VariableNode implements Node {
 
 	@Override
 	public Type getType() {
-		return Type.INTEGER;
+		return type;
 	}
 
 	@Override
@@ -64,6 +66,7 @@ public final class VariableNode implements Node {
 
 	@Override
 	public boolean equals(Object o) {
+		// TODO confirm - no need to also check type?
 		return o instanceof VariableNode && this.id == ((VariableNode) o).id;
 	}
 

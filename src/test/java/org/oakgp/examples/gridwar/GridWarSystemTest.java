@@ -1,5 +1,6 @@
 package org.oakgp.examples.gridwar;
 
+import static org.oakgp.TestUtils.createTypeArray;
 import static org.oakgp.examples.SystemTestUtils.COMPARISON_FUNCTION_SET;
 import static org.oakgp.examples.SystemTestUtils.ELITISM_SIZE;
 import static org.oakgp.examples.SystemTestUtils.GENERATION_SIZE;
@@ -24,6 +25,7 @@ import org.oakgp.NodeEvolver;
 import org.oakgp.RankedCandidate;
 import org.oakgp.Runner;
 import org.oakgp.TerminalSet;
+import org.oakgp.Type;
 import org.oakgp.mutate.PointMutation;
 import org.oakgp.mutate.SubtreeCrossover;
 import org.oakgp.node.ConstantNode;
@@ -35,14 +37,14 @@ import org.oakgp.tournament.TwoPlayerGameCache;
 
 public class GridWarSystemTest {
 	private static final int NUM_GENERATIONS = 100;
-	private static final int NUM_VARIABLES = 5;
+	private static final Type[] VARIABLE_TYPES = createTypeArray(5);
 	private static final int NUM_CONSTANTS = 5;
 
 	@Test
 	public void test() {
 		// set-up
 		ConstantNode[] constants = createConstants(NUM_CONSTANTS);
-		TerminalSet terminalSet = new TerminalSet(RANDOM, RATIO_VARIABLES, NUM_VARIABLES, constants);
+		TerminalSet terminalSet = new TerminalSet(RANDOM, RATIO_VARIABLES, VARIABLE_TYPES, constants);
 		Collection<Node> initialGeneration = createInitialGeneration(COMPARISON_FUNCTION_SET, terminalSet, GENERATION_SIZE);
 		Map<NodeEvolver, Long> nodeEvolvers = createNodeEvolvers(terminalSet);
 		Predicate<List<RankedCandidate>> terminator = createTerminator();

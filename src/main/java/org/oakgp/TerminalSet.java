@@ -10,13 +10,18 @@ public final class TerminalSet {
 	private final Random random;
 	private final double ratioVariables;
 	private final int numVariables;
+	private final VariableNode[] variableNodeCache;
 	private final ConstantNode[] constants;
 
 	// TODO defensive copy of constants?
-	public TerminalSet(Random random, double ratioVariables, int numVariables, ConstantNode[] constants) {
+	public TerminalSet(Random random, double ratioVariables, Type[] variableTypes, ConstantNode[] constants) {
 		this.random = random;
 		this.ratioVariables = ratioVariables;
-		this.numVariables = numVariables;
+		this.numVariables = variableTypes.length;
+		this.variableNodeCache = new VariableNode[numVariables];
+		for (int i = 0; i < numVariables; i++) {
+			variableNodeCache[i] = new VariableNode(i, variableTypes[i]);
+		}
 		this.constants = constants;
 	}
 
@@ -57,12 +62,12 @@ public final class TerminalSet {
 				if (randomId == ((VariableNode) current).getId()) {
 					int secondRandomId = random.nextInt(numVariables - 1);
 					if (secondRandomId >= randomId) {
-						return new VariableNode(secondRandomId + 1);
+						return variableNodeCache[secondRandomId + 1];
 					} else {
-						return new VariableNode(secondRandomId);
+						return variableNodeCache[secondRandomId];
 					}
 				} else {
-					return new VariableNode(randomId);
+					return variableNodeCache[randomId];
 				}
 			}
 		} else {
@@ -74,9 +79,8 @@ public final class TerminalSet {
 		return constants[random.nextInt(constants.length)];
 	}
 
-	// TODO create cache of VariableNodes rather than creating new instances each time?
 	private Node nextVariable() {
-		return new VariableNode(random.nextInt(numVariables));
+		return variableNodeCache[random.nextInt(numVariables)];
 	}
 
 	private Node nextAlternativeConstant(Node current) {
