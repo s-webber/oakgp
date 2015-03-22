@@ -24,6 +24,8 @@ public class AddTest extends AbstractOperatorTest {
 		// anything plus zero is itself
 		testCases.put("(+ v1 0)", "v1", assignedValues);
 		testCases.put("(+ 0 v1)", "v1", assignedValues);
+		testCases.put("(+ (+ v0 v1) 0)", "(+ v0 v1)", assignedValues);
+		testCases.put("(+ 0 (+ v0 v1))", "(+ v0 v1)", assignedValues);
 
 		testCases.put("(+ v1 v1)", "(* 2 v1)", assignedValues);
 
