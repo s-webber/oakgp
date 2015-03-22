@@ -134,11 +134,11 @@ public class FitnessFunctionSystemTest {
 			public boolean test(List<RankedCandidate> t) {
 				ctr++;
 				double best = t.get(0).getFitness();
-				boolean finished = ctr > 1000 || best == 0;
+				boolean finished = ctr > 500 || best == 0;
 				if (previousBest != best) {
 					previousBest = best;
 					System.out.println(ctr + " " + best);
-				} else if (finished || ctr % 500 == 0) {
+				} else if (finished || ctr % 100 == 0) {
 					System.out.println(ctr + " " + best);
 				}
 				return finished;
