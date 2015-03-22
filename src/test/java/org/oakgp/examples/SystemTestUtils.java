@@ -2,8 +2,8 @@ package org.oakgp.examples;
 
 import static org.oakgp.Arguments.createArguments;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.Set;
 
 import org.oakgp.FunctionSet;
 import org.oakgp.NodeSimplifier;
@@ -29,6 +29,7 @@ import org.oakgp.selector.NodeSelectorFactory;
 import org.oakgp.selector.WeightedNodeSelectorFactory;
 import org.oakgp.serialize.NodeWriter;
 import org.oakgp.util.JavaUtilRandomAdapter;
+import org.oakgp.util.NodeSet;
 import org.oakgp.util.Random;
 
 /** Utility classes for tests in sub-packages of {@code org.oakgp.examples}. */
@@ -42,8 +43,8 @@ public class SystemTestUtils {
 	public static final int ELITISM_SIZE = 3;
 	public static final double RATIO_VARIABLES = .6;
 
-	public static List<Node> createInitialGeneration(FunctionSet functionSet, TerminalSet terminalSet, int size) {
-		List<Node> initialGeneration = new ArrayList<>();
+	public static Collection<Node> createInitialGeneration(FunctionSet functionSet, TerminalSet terminalSet, int size) {
+		Set<Node> initialGeneration = new NodeSet();
 		for (int i = 0; i < size; i++) {
 			initialGeneration.add(makeRandomTree(functionSet, terminalSet, 4));
 		}

@@ -13,6 +13,7 @@ import static org.oakgp.examples.SystemTestUtils.createInitialGeneration;
 import static org.oakgp.examples.SystemTestUtils.makeRandomTree;
 import static org.oakgp.examples.SystemTestUtils.printRankedCandidate;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,7 +56,7 @@ public class FitnessFunctionSystemTest {
 			int y = (int) a.get(1);
 			return (x * x) + 2 * y + 3 * x + 5;
 		}));
-		List<Node> initialGeneration = createInitialGeneration(ARITHMETIC_FUNCTION_SET, terminalSet, GENERATION_SIZE);
+		Collection<Node> initialGeneration = createInitialGeneration(ARITHMETIC_FUNCTION_SET, terminalSet, GENERATION_SIZE);
 		doIt(ARITHMETIC_FUNCTION_SET, terminalSet, fitnessFunction, initialGeneration);
 	}
 
@@ -70,7 +71,7 @@ public class FitnessFunctionSystemTest {
 			int z = (int) a.get(2);
 			return (x * -3) + (y * 5) - z;
 		}));
-		List<Node> initialGeneration = createInitialGeneration(ARITHMETIC_FUNCTION_SET, terminalSet, GENERATION_SIZE);
+		Collection<Node> initialGeneration = createInitialGeneration(ARITHMETIC_FUNCTION_SET, terminalSet, GENERATION_SIZE);
 		doIt(ARITHMETIC_FUNCTION_SET, terminalSet, fitnessFunction, initialGeneration);
 	}
 
@@ -84,7 +85,7 @@ public class FitnessFunctionSystemTest {
 			int y = (int) a.get(1);
 			return x > 20 ? x : y;
 		}));
-		List<Node> initialGeneration = createInitialGeneration(COMPARISON_FUNCTION_SET, terminalSet, GENERATION_SIZE);
+		Collection<Node> initialGeneration = createInitialGeneration(COMPARISON_FUNCTION_SET, terminalSet, GENERATION_SIZE);
 		doIt(COMPARISON_FUNCTION_SET, terminalSet, fitnessFunction, initialGeneration);
 	}
 
@@ -106,7 +107,7 @@ public class FitnessFunctionSystemTest {
 		return variables;
 	}
 
-	private void doIt(FunctionSet functionSet, TerminalSet terminalSet, FitnessFunction fitnessFunction, List<Node> initialGeneration) {
+	private void doIt(FunctionSet functionSet, TerminalSet terminalSet, FitnessFunction fitnessFunction, Collection<Node> initialGeneration) {
 		Predicate<List<RankedCandidate>> terminator = createTerminator();
 		Map<NodeEvolver, Long> nodeEvolvers = createNodeEvolvers(functionSet, terminalSet);
 		FitnessFunction fitnessFunctionCache = new FitnessFunctionCache(GENERATION_SIZE, fitnessFunction);

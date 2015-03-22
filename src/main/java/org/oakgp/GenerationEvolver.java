@@ -2,14 +2,15 @@ package org.oakgp;
 
 import static java.lang.Math.min;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.oakgp.node.Node;
 import org.oakgp.selector.NodeSelector;
 import org.oakgp.selector.NodeSelectorFactory;
+import org.oakgp.util.NodeSet;
 
 /** Creates a new generation of {@code Node} instances evolved from an existing generation. */
 public final class GenerationEvolver {
@@ -32,7 +33,7 @@ public final class GenerationEvolver {
 	 */
 	public Collection<Node> process(List<RankedCandidate> oldGeneration) {
 		NodeSelector selector = selectorFactory.getSelector(oldGeneration);
-		List<Node> newGeneration = new ArrayList<>();
+		Set<Node> newGeneration = new NodeSet();
 
 		final int elitismSizeForGeneration = min(elitismSize, oldGeneration.size());
 		for (int i = 0; i < elitismSizeForGeneration; i++) {

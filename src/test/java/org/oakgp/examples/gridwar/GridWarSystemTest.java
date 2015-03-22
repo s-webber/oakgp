@@ -11,6 +11,7 @@ import static org.oakgp.examples.SystemTestUtils.createInitialGeneration;
 import static org.oakgp.examples.SystemTestUtils.makeRandomTree;
 import static org.oakgp.examples.SystemTestUtils.printRankedCandidate;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +34,7 @@ import org.oakgp.tournament.TwoPlayerGame;
 import org.oakgp.tournament.TwoPlayerGameCache;
 
 public class GridWarSystemTest {
-	private static final int NUM_GENERATIONS = 250;
+	private static final int NUM_GENERATIONS = 100;
 	private static final int NUM_VARIABLES = 5;
 	private static final int NUM_CONSTANTS = 5;
 
@@ -42,7 +43,7 @@ public class GridWarSystemTest {
 		// set-up
 		ConstantNode[] constants = createConstants(NUM_CONSTANTS);
 		TerminalSet terminalSet = new TerminalSet(RANDOM, RATIO_VARIABLES, NUM_VARIABLES, constants);
-		List<Node> initialGeneration = createInitialGeneration(COMPARISON_FUNCTION_SET, terminalSet, GENERATION_SIZE);
+		Collection<Node> initialGeneration = createInitialGeneration(COMPARISON_FUNCTION_SET, terminalSet, GENERATION_SIZE);
 		Map<NodeEvolver, Long> nodeEvolvers = createNodeEvolvers(terminalSet);
 		Predicate<List<RankedCandidate>> terminator = createTerminator();
 
