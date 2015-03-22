@@ -1,6 +1,7 @@
 package org.oakgp.operator;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
 import static org.oakgp.TestUtils.readNode;
 
@@ -18,6 +19,7 @@ public abstract class AbstractOperatorTest {
 	public final void testEvaluate() {
 		EvaluateTestCases testCases = new EvaluateTestCases();
 		getEvaluateTests(testCases);
+		assertFalse(testCases.tests.isEmpty());
 		for (EvaluateTest test : testCases.tests) {
 			FunctionNode input = readInput(test.input);
 			// TODO pass Assignments into evaluate()
@@ -30,6 +32,7 @@ public abstract class AbstractOperatorTest {
 	public final void testCanSimplify() {
 		SimplifyTestCases testCases = new SimplifyTestCases();
 		getCanSimplifyTests(testCases);
+		assertFalse(testCases.tests.isEmpty());
 		for (SimplifyTest test : testCases.tests) {
 			FunctionNode input = readInput(test.input);
 			Node expectedResult = readNode(test.expectedOutput);
