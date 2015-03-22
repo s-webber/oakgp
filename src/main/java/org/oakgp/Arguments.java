@@ -11,6 +11,7 @@ import org.oakgp.node.Node;
  */
 public final class Arguments {
 	private final Node[] args;
+	private final int hashCode;
 
 	/**
 	 * Returns a new {@code Arguments} which contains the specified values.
@@ -28,6 +29,7 @@ public final class Arguments {
 	/** @see #createArguments(Node...) */
 	private Arguments(Node[] args) {
 		this.args = args;
+		this.hashCode = Arrays.hashCode(args);
 	}
 
 	/**
@@ -75,7 +77,7 @@ public final class Arguments {
 
 	@Override
 	public int hashCode() {
-		return Arrays.hashCode(args);
+		return hashCode;
 	}
 
 	@Override

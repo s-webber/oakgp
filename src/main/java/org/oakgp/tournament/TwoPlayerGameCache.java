@@ -30,10 +30,12 @@ public final class TwoPlayerGameCache implements TwoPlayerGame {
 	private static class NodePair {
 		private final Node n1;
 		private final Node n2;
+		private final int hashCode;
 
 		public NodePair(Node n1, Node n2) {
 			this.n1 = n1;
 			this.n2 = n2;
+			this.hashCode = (n1.hashCode() * 31) * n2.hashCode();
 		}
 
 		@Override
@@ -44,7 +46,7 @@ public final class TwoPlayerGameCache implements TwoPlayerGame {
 
 		@Override
 		public int hashCode() {
-			return n1.hashCode() + n2.hashCode();
+			return hashCode;
 		}
 	}
 }

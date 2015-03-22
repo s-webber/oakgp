@@ -9,6 +9,7 @@ import org.oakgp.operator.Operator;
 public final class FunctionNode implements Node {
 	private final Operator operator;
 	private final Arguments arguments;
+	private final int hashCode;
 
 	/**
 	 * Constructs a new {@code FunctionNode} with the specified operator function and arguments.
@@ -21,6 +22,7 @@ public final class FunctionNode implements Node {
 	public FunctionNode(Operator operator, Arguments arguments) {
 		this.operator = operator;
 		this.arguments = arguments;
+		this.hashCode = (operator.getClass().hashCode() * 31) * arguments.hashCode();
 	}
 
 	public Operator getOperator() {
@@ -82,8 +84,7 @@ public final class FunctionNode implements Node {
 
 	@Override
 	public int hashCode() {
-		// TODO cache hashCode?
-		return operator.getClass().hashCode() * arguments.hashCode();
+		return hashCode;
 	}
 
 	@Override

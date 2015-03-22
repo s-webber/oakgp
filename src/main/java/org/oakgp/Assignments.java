@@ -9,6 +9,7 @@ import java.util.Arrays;
  */
 public final class Assignments {
 	private final Object[] assignments;
+	private final int hashCode;
 
 	/**
 	 * Returns a new {@code Assignments} which contains the specified values.
@@ -28,6 +29,7 @@ public final class Assignments {
 	/** @see #createAssignments(Node...) */
 	private Assignments(Object[] assignments) {
 		this.assignments = assignments;
+		this.hashCode = Arrays.hashCode(assignments);
 	}
 
 	/**
@@ -45,7 +47,7 @@ public final class Assignments {
 
 	@Override
 	public int hashCode() {
-		return Arrays.hashCode(assignments);
+		return hashCode;
 	}
 
 	@Override
