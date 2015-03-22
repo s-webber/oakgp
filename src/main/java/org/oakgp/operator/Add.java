@@ -48,11 +48,23 @@ public final class Add extends ArithmeticOperator {
 			FunctionNode fn1 = (FunctionNode) arg1;
 			FunctionNode fn2 = (FunctionNode) arg2;
 			if (fn1.getArguments().get(0) instanceof ConstantNode && fn2.getArguments().get(0) instanceof ConstantNode
-					&& (sameOperator(Add.class, fn1, fn2) || sameOperator(Subtract.class, fn1, fn2))) {
+					&& (sameOperator(Add.class, fn1) || sameOperator(Subtract.class, fn1))
+					&& (sameOperator(Add.class, fn2) || sameOperator(Subtract.class, fn2))) {
 				Object fn1Value = fn1.getArguments().get(0).evaluate(null);
 				Object fn2Value = fn2.getArguments().get(0).evaluate(null);
-				return Optional.of(new FunctionNode(fn1.getOperator(), Arguments.createArguments(createConstant(((int) fn1Value) + ((int) fn2Value)),
-						new FunctionNode(this, Arguments.createArguments(fn1.getArguments().get(1), fn2.getArguments().get(1))))));
+				Operator operator1 = fn1.getOperator();// sameOperator(Subtract.class, fn1, fn2) ? fn1.getOperator() : this;
+				Operator operator2;
+				if (sameOperator(Add.class, fn1) && sameOperator(Add.class, fn2)) {
+					operator2 = this;
+				} else if (sameOperator(Subtract.class, fn1) && sameOperator(Add.class, fn2)) {
+					operator2 = new Subtract();
+				} else if (sameOperator(Add.class, fn1) && sameOperator(Subtract.class, fn2)) {
+					operator2 = new Subtract();
+				} else {
+					operator2 = this;
+				}
+				return Optional.of(new FunctionNode(operator1, Arguments.createArguments(createConstant(((int) fn1Value) + ((int) fn2Value)), new FunctionNode(
+						operator2, Arguments.createArguments(fn1.getArguments().get(1), fn2.getArguments().get(1))))));
 			} else if (fn1.getArguments().get(1) instanceof ConstantNode && fn2.getArguments().get(1) instanceof ConstantNode
 					&& sameOperator(Add.class, fn1, fn2)) {
 				throw new IllegalArgumentException();
@@ -144,7 +156,11 @@ public final class Add extends ArithmeticOperator {
 	}
 
 	static boolean sameOperator(Class<? extends Operator> operatorClass, FunctionNode fn1, FunctionNode fn2) {
-		return fn1.getOperator().getClass() == operatorClass && fn2.getOperator().getClass() == operatorClass;
+		return sameOperator(operatorClass, fn1) && sameOperator(operatorClass, fn2);
+	}
+
+	static boolean sameOperator(Class<? extends Operator> operatorClass, FunctionNode fn1) {
+		return fn1.getOperator().getClass() == operatorClass;
 	}
 
 	static Node createAddArguments(List<Node> result) {

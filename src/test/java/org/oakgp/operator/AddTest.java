@@ -30,6 +30,12 @@ public class AddTest extends AbstractOperatorTest {
 		testCases.put("(+ v1 v1)", "(* 2 v1)", assignedValues);
 
 		testCases.put("(+ (+ 4 v0) (+ v0 (* 2 v1)))", "(+ 4 (+ (* 2 v0) (* 2 v1)))", assignedValues);
+		testCases.put("(+ (- 10 v0) (+ 1 v0))", "11", assignedValues);
+		testCases.put("(+ (+ 10 v0) (- 1 v0))", "11", assignedValues);
+		testCases.put("(+ (- 10 v0) (+ 1 v1))", "(- 11 (- v0 v1))", assignedValues);
+		testCases.put("(+ (+ 10 v0) (- 1 v1))", "(- (+ 11 v0) v1)", assignedValues);
+		testCases.put("(+ (- 10 v0) (- 1 v0))", "(- 11 (* 2 v0))", assignedValues);
+		testCases.put("(+ (+ 10 v0) (+ 1 v0))", "(+ 11 (* 2 v0))", assignedValues);
 
 		testCases.put("(+ 1 (+ 1 v0))", "(+ 2 v0)", assignedValues);
 		testCases.put("(+ 1 (- 1 v0))", "(- 2 v0)", assignedValues);
