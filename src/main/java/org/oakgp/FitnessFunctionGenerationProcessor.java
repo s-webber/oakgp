@@ -1,6 +1,7 @@
 package org.oakgp;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -28,7 +29,7 @@ public final class FitnessFunctionGenerationProcessor implements GenerationProce
 	 * @return a {@code List} of {@code RankedCandidate} - one for each {@code Node} specified in {@code input} - sorted by fitness
 	 */
 	@Override
-	public List<RankedCandidate> process(List<Node> input) {
+	public List<RankedCandidate> process(Collection<Node> input) {
 		List<RankedCandidate> output = new ArrayList<>(input.size());
 		for (Node n : input) {
 			RankedCandidate rankedCandidate = rankCandidate(n);

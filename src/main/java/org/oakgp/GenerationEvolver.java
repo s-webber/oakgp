@@ -3,6 +3,7 @@ package org.oakgp;
 import static java.lang.Math.min;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -29,7 +30,7 @@ public final class GenerationEvolver {
 	 *            the existing generation to use as a basis for evolving a new generation
 	 * @return a new generation of {@code Node} instances evolved from the existing generation specified by {@code oldGeneration}
 	 */
-	public List<Node> process(List<RankedCandidate> oldGeneration) {
+	public Collection<Node> process(List<RankedCandidate> oldGeneration) {
 		NodeSelector selector = selectorFactory.getSelector(oldGeneration);
 		List<Node> newGeneration = new ArrayList<>();
 

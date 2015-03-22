@@ -1,5 +1,6 @@
 package org.oakgp;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -26,10 +27,10 @@ public final class Runner {
 	 * @return the candidate with the best fitness that was found during this run
 	 */
 	public static RankedCandidate process(GenerationProcessor generationProcessor, GenerationEvolver generationEvolver,
-			Predicate<List<RankedCandidate>> terminator, List<Node> initialGeneration) {
+			Predicate<List<RankedCandidate>> terminator, Collection<Node> initialGeneration) {
 		List<RankedCandidate> rankedCandidates = generationProcessor.process(initialGeneration);
 		while (!terminator.test(rankedCandidates)) {
-			List<Node> newGeneration = generationEvolver.process(rankedCandidates);
+			Collection<Node> newGeneration = generationEvolver.process(rankedCandidates);
 			rankedCandidates = generationProcessor.process(newGeneration);
 		}
 		return getBest(rankedCandidates);
