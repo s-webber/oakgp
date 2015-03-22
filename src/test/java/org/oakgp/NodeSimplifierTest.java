@@ -90,8 +90,17 @@ public class NodeSimplifierTest {
 
 	@Test
 	public void testDeeplyNestedTreeSimplifedToFunction6() {
-		// TODO (+ 2 (+ (* 2 v0) (+ 8 v1))) = 2 + ((2 * x) + (8 + y)) = 10+2x+y
-		assertCanSimplify("(+ 2 (+ (* 2 v0) (+ 8 v1)))", "(+ 2 (+ (* 2 v0) (+ 8 v1)))");
+		// (+ 2 (+ (* 2 v0) (+ 8 v1))) = 2 + ((2 * x) + (8 + y)) = 10+2x+y
+		assertCanSimplify("(+ 10 (+ v1 (* 2 v0)))", "(+ 2 (+ (* 2 v0) (+ 8 v1)))");
+	}
+
+	@Test
+	public void testDeeplyNestedTreeSimplifedToFunction7() {
+		// TODO
+		// (- (- (+ (* 2 v3) (* 2 v2)) 1) (- v2 2)) =
+		// (((2 * y) + (2 * x)) - 1) - (x - 2) =
+		// x+1+2y
+		assertCanSimplify("(- (- (+ (* 2 v0) (* 2 v1)) 1) (- v1 2))", "(- (- (+ (* 2 v0) (* 2 v1)) 1) (- v1 2))");
 	}
 
 	@Test
@@ -112,7 +121,7 @@ public class NodeSimplifierTest {
 		Node output = nodeSimplifier.simplify(input);
 		Assignments assignments = Assignments.createAssignments(7, 12, 8);
 		assertEquals(input.evaluate(assignments), output.evaluate(assignments));
-		assertEquals("(- v1 (- (- v0 (- v1 (- (+ (+ 2 (+ (* 2 v0) (+ 8 v2))) (* -2 v1)) v1))) 10))", new NodeWriter().writeNode(output));
+		assertEquals("(- v1 (- (- v0 (- v1 (- (+ (+ 10 (+ v2 (* 2 v0))) (* -2 v1)) v1))) 10))", new NodeWriter().writeNode(output));
 	}
 
 	@Test

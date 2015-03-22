@@ -59,6 +59,8 @@ public class AddTest extends AbstractOperatorTest {
 		testCases.put("(+ 5 (- v0 5))", "v0", assignedValues);
 		testCases.put("(+ 5 (- 5 v0))", "(- 10 v0)", assignedValues);
 		testCases.put("(+ 5 (- v0 2))", "(+ 3 v0)", assignedValues);
+
+		testCases.put("(+ 9 (+ v1 (+ v0 8)))", "(+ 17 (+ v0 v1))", assignedValues);
 	}
 
 	@Override

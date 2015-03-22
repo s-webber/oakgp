@@ -132,6 +132,20 @@ public final class Add extends ArithmeticOperator {
 				result.remove(arg1);
 				return Optional.of(new FunctionNode(this, Arguments.createArguments(times2(arg1), createAddArguments(result))));
 			}
+			if (arg1 instanceof ConstantNode) {
+				int sumConstants = (int) ((ConstantNode) arg1).evaluate(null);
+				List<Node> nonConstants = new ArrayList<>();
+				for (Node n : result) {
+					if (n instanceof ConstantNode) {
+						sumConstants += (int) ((ConstantNode) n).evaluate(null);
+					} else {
+						nonConstants.add(n);
+					}
+				}
+				if (nonConstants.size() < result.size()) {
+					return Optional.of(new FunctionNode(this, Arguments.createArguments(createConstant(sumConstants), createAddArguments(nonConstants))));
+				}
+			}
 		}
 
 		if (arg2 instanceof FunctionNode && ((FunctionNode) arg2).getOperator().getClass() == Subtract.class) {
