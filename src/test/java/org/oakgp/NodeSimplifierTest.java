@@ -97,10 +97,12 @@ public class NodeSimplifierTest {
 	@Test
 	public void testDeeplyNestedTreeSimplifedToFunction7() {
 		// TODO
-		// (- (- (+ (* 2 v3) (* 2 v2)) 1) (- v2 2)) =
+		// (- (- (+ (* 2 v1) (* 2 v0)) 1) (- v0 2)) =
 		// (((2 * y) + (2 * x)) - 1) - (x - 2) =
 		// x+1+2y
-		assertCanSimplify("(- (- (+ (* 2 v0) (* 2 v1)) 1) (- v1 2))", "(- (- (+ (* 2 v0) (* 2 v1)) 1) (- v1 2))");
+		// (((2 * y) + (2 * x)) - 1) - x = x+2y-1
+		assertCanSimplify("(- (- (+ (* 2 v0) (* 2 v1)) 1) v1)", "(- (- (+ (* 2 v0) (* 2 v1)) 1) v1)");
+		assertCanSimplify("(- (- (+ (* 2 v0) (* 2 v1)) 1) (- v0 2))", "(- (- (+ (* 2 v0) (* 2 v1)) 1) (- v0 2))");
 	}
 
 	@Test
@@ -121,7 +123,7 @@ public class NodeSimplifierTest {
 		Node output = nodeSimplifier.simplify(input);
 		Assignments assignments = Assignments.createAssignments(7, 12, 8);
 		assertEquals(input.evaluate(assignments), output.evaluate(assignments));
-		assertEquals("(- v1 (- (- v0 (- v1 (- (+ (+ 10 (+ v2 (* 2 v0))) (* -2 v1)) v1))) 10))", new NodeWriter().writeNode(output));
+		assertEquals("(- v1 (- (- v0 (- v1 (+ (+ 10 (+ v2 (* 2 v0))) (* -3 v1)))) 10))", new NodeWriter().writeNode(output));
 	}
 
 	@Test
@@ -142,7 +144,7 @@ public class NodeSimplifierTest {
 		Node input = readNode("(+ (- v4 (- 3 v4)) (if (- 4 (+ v4 v2)) (+ (+ 1 (+ (- v1 (- v1 (- v1 (* v3 (* v0 v2))))) (* v4 (+ v3 v1)))) (if (- v4 (* 3 (- (if (- v3 (+ v3 (- v2 (* 3 v3)))) (+ (* (- (+ v3 (* v1 v2)) (if (- v3 (if (- (- v1 (- (- v1 4) (if (- 3 v4) v4 0))) (- (- v1 (- (- v1 1) v4)) (- v3 3))) (- v1 v4) v1)) (- (- v2 (- v3 (* v1 v2))) v4) v1)) (if (- v3 (+ 1 (+ v3 (* (+ v1 1) v2)))) 3 v1)) (if v1 v2 v1)) v4) (* 3 v2)))) 3 (+ (- 0 (- (* v1 (* v1 (- (- v1 v4) (* v3 (* v0 v2))))) (* v4 (- v3 v1)))) v1))) (+ (- v1 (- (- v1 v2) (if v4 v4 v1))) (if (* (- v3 (if (- v3 (- (if (* v3 (+ v3 (- (if (+ (- v3 (+ v1 v2)) (- (* v1 v4) (+ v4 (* (+ v1 (- v1 v4)) (if (- (* v4 (- v3 v1)) (- (- v3 (- v3 (if (- (* v1 (if (- v3 (+ v3 (- (if (* (- v3 (+ v1 v2)) (- (+ v1 v3) (* 4 (* 3 v2)))) (* (+ v1 (- (- v0 3) (* v3 v2))) (if (- (* v1 (+ v3 (+ v1 1))) (* (- v3 (- v3 (if (- (* v4 (- (- v1 1) (if (- 1 v4) v4 v1))) (- v3 (* 3 (* v1 v2)))) (- v1 v4) v1))) v2)) v2 v1)) (- (- v1 (- (- v1 1) (if (- (if (- v3 (+ v3 (- (if (+ (- v3 (+ v1 v2)) (- (+ v1 v4) (* 4 (* v1 v4)))) (- (+ v1 (- (- v1 v4) (- v3 (* v0 v2)))) (if (- (* v4 (- v3 v1)) (* (- v3 (- (+ (- v1 (- (- v1 v2) (if v4 v4 v1))) (if (* (- v3 (if (- v3 (- (if (* v3 (+ v3 (- (if (+ (- v3 (+ v1 v2)) (- (* v1 v4) (* v4 (* (+ v1 (- v1 v4)) (if (- (* v4 (- v3 v1)) (* (- v3 (- v3 (if (- (* v1 (if (- v3 (+ v3 (- (if (* (- v2 (+ v1 v2)) (- (+ v1 v3) (* 4 (* 3 v2)))) (* (+ v1 (- (- v0 3) (* v3 v2))) (if (- (* 3 (+ v3 v1)) (* (- v3 (- v3 (if (- (* v4 (- (- v1 1) (if (- 1 v4) v4 v1))) (- v3 (* 3 (* v1 v2)))) (- v1 v4) v1))) v2)) v2 v1)) (- (- v1 (- (- v1 1) (if (- (if (- v3 (+ v3 (- (if (+ (- v3 (+ v1 v2)) (- (+ v1 v4) (* 4 (* v1 v4)))) (- (+ v1 (- 0 (- v3 (* v0 v2)))) (if (- (* 2 (- v3 v1)) (* (- v3 (- v3 (if (+ (* v1 (- (- v1 1) v3)) (- v3 (* 3 (* v1 v2)))) (* v1 v4) v1))) v2)) v2 v1)) (- (- v1 (- (- v1 2) (if (- v1 v4) v4 v1))) (+ v3 3))) v3))) (* v2 (if v1 v2 v1)) v4) v4) v4 v1))) (- v3 3))) v3))) (* v2 (if v1 v4 v1)) v4)) (- v3 (* 3 (- (- 3 v4) (* 4 v2))))) (* v1 v4) v1))) v2)) v2 v4))))) (* (+ v1 (- (- v1 v2) (* v3 (* v0 v2)))) (if (- 3 (* (- v3 (- v3 (if (- (+ v1 (- (- v1 1) (if (- 1 v4) 1 v1))) (- v4 (* 3 (- (- 3 v4) (- 4 v2))))) (- v1 v4) v1))) v2)) v2 v1)) (- (- v1 (- (- v1 v3) (if (- v1 v3) 1 v1))) (- v3 3))) (* 3 v3)))) (* (if (- 1 v4) v4 0) (if v4 v2 v1)) v4) (+ v3 (* (- v1 1) 3)))) 3 v1)) (if v1 v2 v1)) (- v1 (* v1 v2)) v1)) (if (+ (* v1 (- (- v1 1) (if (- 1 v4) v4 v1))) (- v3 (* 3 (* v1 v2)))) (- v1 v4) v1))) v2)) v2 v1)) (- (- v1 (- (- v1 2) (if (- v1 v4) v4 v1))) (+ v3 3))) v3))) (* v2 (if v1 v4 v1)) v4) v4) v4 v1))) (- v3 3))) v3))) (* v2 (if v1 v4 v1)) v4)) (- v3 (* 3 (- (- 3 v4) (* 4 v2))))) (+ v1 v4) v1))) v2)) v2 v4))))) (* (* v1 (- (- v1 v2) (* v3 (* v0 v2)))) (if (- v3 (* (- v3 (- v3 (if (- (+ v1 (- (- v1 1) (if (- 1 v4) v4 v1))) (- v4 (* 3 (- (- 3 v4) (- 4 v2))))) (- v1 v4) v1))) v2)) v2 v1)) (- (- v1 (- (- v1 v3) (if (- v1 v3) 1 v1))) (- v3 3))) (* 3 v3)))) (* (if (- 1 v4) v4 0) (if v4 v2 v1)) v4) (+ v3 (* (- v1 1) 3)))) 3 v1)) (if v1 v2 v1)) (- v1 (* v1 v2)) v1))))");
 		Node output = nodeSimplifier.simplify(input);
 		assertEquals(
-				"(+ (- v4 (- 3 v4)) (if (- 4 (+ v2 v4)) (+ (+ 1 (+ (- v1 (- v1 (- v1 (* v3 (* v0 v2))))) (* v4 (+ v1 v3)))) (if (- v4 (* 3 (- (if (- v3 (- (+ v2 v3) (* 3 v3))) (+ (if v1 v2 v1) (* (if (- v3 (+ 1 (+ v3 (* v2 (+ 1 v1))))) 3 v1) (- (+ v3 (* v1 v2)) (if (- v3 (if (- (- v1 (- (- v1 4) (if (- 3 v4) v4 0))) (- (- v1 (- (- v1 1) v4)) (- v3 3))) (- v1 v4) v1)) (- (- v2 (- v3 (* v1 v2))) v4) v1)))) v4) (* 3 v2)))) 3 (- v1 (- (* v1 (* v1 (- (- v1 v4) (* v3 (* v0 v2))))) (* v4 (- v3 v1)))))) (- (+ v1 (if (* (if v1 v2 v1) (- v3 (if (- v3 (- (if (* v3 (- (+ v3 (if (- (- (+ v3 (* v1 v4)) (+ v4 (* (if (- (* v4 (- v3 v1)) (- (- v3 (- v3 (if (- (* v1 (if (- v3 (if (* (- (+ v1 v3) (* 4 (* 3 v2))) (- v3 (+ v1 v2))) (* (- (- (+ v0 v1) 3) (* v2 v3)) (if (- (* v1 (+ v3 (+ 1 v1))) (* v2 (- v3 (- v3 (if (- (* v4 (- (- v1 1) (if (- 1 v4) v4 v1))) (- v3 (* 3 (* v1 v2)))) (- v1 v4) v1))))) v2 v1)) (- (- v1 (- (- v1 1) (if (- (if (- v3 (if (- (- (+ v3 (+ v1 v4)) (* 4 (* v1 v4))) (+ v1 v2)) (- (- (- (* 2 v1) v4) (- v3 (* v0 v2))) (if (- (* v4 (- v3 v1)) (* v2 (- v3 (- (- (+ v1 (if (* (if v1 v2 v1) (- v3 (if (- v3 (- (if (* v3 (- (+ v3 (if (- (- (+ v3 (* v1 v4)) (* v4 (* (if (- (* v4 (- v3 v1)) (* v2 (- v3 (- v3 (if (- (* v1 (if (- v3 (if (* (- (+ v1 v3) (* 4 (* 3 v2))) (- v2 (+ v1 v2))) (* (if (- (* 3 (+ v1 v3)) (* v2 (- v3 (- v3 (if (- (* v4 (- (- v1 1) (if (- 1 v4) v4 v1))) (- v3 (* 3 (* v1 v2)))) (- v1 v4) v1))))) v2 v1) (- (- (+ v0 v1) 3) (* v2 v3))) (- (- v1 (- (- v1 1) (if (- (if (- v3 (if (- (- (+ v3 (+ v1 v4)) (* 4 (* v1 v4))) (+ v1 v2)) (- (- v1 (- v3 (* v0 v2))) (if (- (* 2 (- v3 v1)) (* v2 (- v3 (- v3 (if (- (+ v3 (* v1 (- (- v1 1) v3))) (* 3 (* v1 v2))) (* v1 v4) v1))))) v2 v1)) (- (- v1 (- (- v1 2) (if (- v1 v4) v4 v1))) (+ 3 v3)))) (* v2 (if v1 v2 v1)) v4) v4) v4 v1))) (- v3 3)))) (* v2 (if v1 v4 v1)) v4)) (- v3 (* 3 (- (- 3 v4) (* 4 v2))))) (* v1 v4) v1))))) v2 v4) (- (* 2 v1) v4)))) (+ v1 v2)) (* (- (- (* 2 v1) v2) (* v3 (* v0 v2))) (if (- 3 (* v2 (- v3 (- v3 (if (- (- (- (* 2 v1) 1) (if (- 1 v4) 1 v1)) (- v4 (* 3 (- (- 3 v4) (- 4 v2))))) (- v1 v4) v1))))) v2 v1)) (- (- v1 (- (- v1 v3) (if (- v1 v3) 1 v1))) (- v3 3)))) (* 3 v3))) (* (if v4 v2 v1) (if (- 1 v4) v4 0)) v4) (+ v3 (* 3 (- v1 1))))) 3 v1))) (- v1 (* v1 v2)) v1)) (- (- v1 v2) (if v4 v4 v1))) (if (+ (- v3 (* 3 (* v1 v2))) (* v1 (- (- v1 1) (if (- 1 v4) v4 v1)))) (- v1 v4) v1))))) v2 v1)) (- (- v1 (- (- v1 2) (if (- v1 v4) v4 v1))) (+ 3 v3)))) (* v2 (if v1 v4 v1)) v4) v4) v4 v1))) (- v3 3)))) (* v2 (if v1 v4 v1)) v4)) (- v3 (* 3 (- (- 3 v4) (* 4 v2))))) (+ v1 v4) v1))) v2)) v2 v4) (- (* 2 v1) v4)))) (+ v1 v2)) (* (* v1 (- (- v1 v2) (* v3 (* v0 v2)))) (if (- v3 (* v2 (- v3 (- v3 (if (- (- (- (* 2 v1) 1) (if (- 1 v4) v4 v1)) (- v4 (* 3 (- (- 3 v4) (- 4 v2))))) (- v1 v4) v1))))) v2 v1)) (- (- v1 (- (- v1 v3) (if (- v1 v3) 1 v1))) (- v3 3)))) (* 3 v3))) (* (if v4 v2 v1) (if (- 1 v4) v4 0)) v4) (+ v3 (* 3 (- v1 1))))) 3 v1))) (- v1 (* v1 v2)) v1)) (- (- v1 v2) (if v4 v4 v1)))))",
+				"(+ (- v4 (- 3 v4)) (if (- 4 (+ v2 v4)) (+ (+ 1 (+ (- v1 (- v1 (- v1 (* v3 (* v0 v2))))) (* v4 (+ v1 v3)))) (if (- v4 (* 3 (* 3 v2))) 3 (- v1 (- (* v1 (* v1 (- (- v1 v4) (* v3 (* v0 v2))))) (* v4 (- v3 v1)))))) (- (- (* 2 v1) v2) (if v4 v4 v1))))",
 				new NodeWriter().writeNode(output));
 	}
 
@@ -150,7 +152,7 @@ public class NodeSimplifierTest {
 		Node inputNode = readNode(input);
 		Node expectedNode = readNode(expected);
 		Node simpliedVersion = new NodeSimplifier().simplify(inputNode);
-		assertEquals(expectedNode.toString(), simpliedVersion.toString());
+		assertEquals(new NodeWriter().writeNode(simpliedVersion), expectedNode.toString(), simpliedVersion.toString());
 		assertEquals(expectedNode, simpliedVersion);
 		int[][] assignedValues = { { 0, 0 }, { 1, 21 }, { 2, 14 }, { 3, -6 }, { 7, 3 }, { -1, 9 }, { -7, 0 } };
 		for (int[] assignedValue : assignedValues) {

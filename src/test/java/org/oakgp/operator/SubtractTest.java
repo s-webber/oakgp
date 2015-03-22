@@ -39,6 +39,9 @@ public class SubtractTest extends AbstractOperatorTest {
 		testCases.put("(- (+ 1 v0) (- 12 v0))", "(- (* 2 v0) 11)", assignedValues);
 
 		testCases.put("(- (+ 1 v0) v0)", "1", assignedValues);
+
+		testCases.put("(- (- (- (* 2 v0) 9) v1) v1)", "(+ (- (* 2 v0) 9) (* -2 v1))", assignedValues);
+		testCases.put("(- (- (+ (* 2 v0) 9) v1) v1)", "(+ (* -2 v1) (+ 9 (* 2 v0)))", assignedValues);
 	}
 
 	@Override

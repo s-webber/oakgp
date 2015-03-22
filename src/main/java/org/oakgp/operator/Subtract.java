@@ -81,10 +81,51 @@ public final class Subtract extends ArithmeticOperator {
 			}
 		}
 
+		if (arg1 instanceof FunctionNode) {
+			Node n = replace((FunctionNode) arg1, arg2);
+			if (!n.equals(arg1)) {
+				return Optional.of(n);
+			}
+		}
+
 		if (arg2 instanceof ConstantNode && ((int) arg2.evaluate(null)) < 0) {
 			return Optional.of(new FunctionNode(new Add(), Arguments.createArguments(arg1, createConstant(-((int) arg2.evaluate(null))))));
 		}
 
 		return Optional.empty();
+	}
+
+	private static Node replace(FunctionNode fn, Node nodeToReplace) {
+		if (!(fn.getOperator() instanceof ArithmeticOperator)) {
+			return nodeToReplace;
+		}
+
+		if (sameOperator(Add.class, fn)) {
+			if (fn.getArguments().get(0).equals(nodeToReplace)) {
+				return new FunctionNode(fn.getOperator(), Arguments.createArguments(createConstant(0), fn.getArguments().get(1)));
+			} else if (fn.getArguments().get(1).equals(nodeToReplace)) {
+				return new FunctionNode(fn.getOperator(), Arguments.createArguments(fn.getArguments().get(0), createConstant(0)));
+			}
+		}
+		if (sameOperator(Multiply.class, fn) && fn.getArguments().get(0) instanceof ConstantNode && fn.getArguments().get(1).equals(nodeToReplace)) {
+			return new FunctionNode(fn.getOperator(), Arguments.createArguments(
+					createConstant((int) ((ConstantNode) fn.getArguments().get(0)).evaluate(null) - 1), nodeToReplace));
+		}
+		if (sameOperator(Add.class, fn)) {
+			if (fn.getArguments().get(0) instanceof FunctionNode) {
+				Node n = replace((FunctionNode) fn.getArguments().get(0), nodeToReplace);
+				if (!n.equals(fn.getArguments().get(0))) {
+					return new FunctionNode(fn.getOperator(), Arguments.createArguments(n, fn.getArguments().get(1)));
+				}
+			}
+			if (fn.getArguments().get(1) instanceof FunctionNode) {
+				Node n = replace((FunctionNode) fn.getArguments().get(1), nodeToReplace);
+				if (!n.equals(fn.getArguments().get(1))) {
+					return new FunctionNode(fn.getOperator(), Arguments.createArguments(fn.getArguments().get(0), n));
+				}
+			}
+		}
+
+		return fn;
 	}
 }
