@@ -22,7 +22,7 @@ public final class FunctionNode implements Node {
 	public FunctionNode(Operator operator, Arguments arguments) {
 		this.operator = operator;
 		this.arguments = arguments;
-		this.hashCode = (operator.getClass().hashCode() * 31) * arguments.hashCode();
+		this.hashCode = (operator.getClass().getName().hashCode() * 31) * arguments.hashCode();
 	}
 
 	public Operator getOperator() {

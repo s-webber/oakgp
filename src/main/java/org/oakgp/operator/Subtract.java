@@ -82,6 +82,10 @@ public final class Subtract extends ArithmeticOperator {
 			}
 		}
 
+		if (arg2 instanceof ConstantNode && ((int) arg2.evaluate(null)) < 0) {
+			return Optional.of(new FunctionNode(new Add(), Arguments.createArguments(arg1, createConstant(-((int) arg2.evaluate(null))))));
+		}
+
 		return Optional.empty();
 	}
 }

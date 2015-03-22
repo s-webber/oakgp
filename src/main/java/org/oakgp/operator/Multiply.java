@@ -3,7 +3,9 @@ package org.oakgp.operator;
 import java.util.Optional;
 
 import org.oakgp.Arguments;
+import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
+import org.oakgp.util.NodeComparator;
 
 /** Performs multiplication. */
 public final class Multiply extends ArithmeticOperator {
@@ -26,7 +28,13 @@ public final class Multiply extends ArithmeticOperator {
 		} else if (ONE.equals(arguments.get(1))) {
 			return Optional.of(arguments.get(0));
 		} else {
-			return Optional.empty();
+			Node arg1 = arguments.get(0);
+			Node arg2 = arguments.get(1);
+			if (new NodeComparator().compare(arg1, arg2) > 0) {
+				return Optional.of(new FunctionNode(this, Arguments.createArguments(arg2, arg1)));
+			} else {
+				return Optional.empty();
+			}
 		}
 	}
 }

@@ -17,6 +17,10 @@ public class AddTest extends AbstractOperatorTest {
 	protected void getCanSimplifyTests(SimplifyTestCases testCases) {
 		Object[][] assignedValues = { { 0, 0 }, { 1, 21 }, { 2, 14 }, { 3, -6 }, { 7, 3 }, { -1, 9 }, { -7, 0 } };
 
+		testCases.put("(+ v1 v0)", "(+ v0 v1)", assignedValues);
+		testCases.put("(+ v1 -7)", "(- v1 7)", assignedValues);
+		testCases.put("(+ -7 v1)", "(- v1 7)", assignedValues);
+
 		// anything plus zero is itself
 		testCases.put("(+ v1 0)", "v1", assignedValues);
 		testCases.put("(+ 0 v1)", "v1", assignedValues);
@@ -39,13 +43,17 @@ public class AddTest extends AbstractOperatorTest {
 		testCases.put("(+ v0 (+ v0 8))", "(+ (* 2 v0) 8)", assignedValues);
 		testCases.put("(+ v0 (+ 8 v0))", "(+ (* 2 v0) 8)", assignedValues);
 		testCases.put("(+ v0 (- v0 2))", "(- (* 2 v0) 2)", assignedValues);
-		testCases.put("(+ v0 (- 2 v0))", "(- (+ v0 2) v0)", assignedValues);
+		testCases.put("(+ v0 (- 2 v0))", "(- (+ 2 v0) v0)", assignedValues);
+
+		testCases.put("(+ 5 (+ v0 5))", "(+ 10 v0)", assignedValues);
+		testCases.put("(+ 5 (- v0 5))", "v0", assignedValues);
+		testCases.put("(+ 5 (- 5 v0))", "(- 10 v0)", assignedValues);
+		testCases.put("(+ 5 (- v0 2))", "(+ 3 v0)", assignedValues);
 	}
 
 	@Override
 	protected void getCannotSimplifyTests(List<String> testCases) {
-		testCases.add("(+ v0 1)");
-		testCases.add("(+ v0 -1)");
-		testCases.add("(+ v0 (* v1 v0))");
+		testCases.add("(+ 1 v0)");
+		testCases.add("(+ v0 (* v0 v1))");
 	}
 }

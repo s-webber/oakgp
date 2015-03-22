@@ -10,6 +10,7 @@ import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.serialize.NodeWriter;
+import org.oakgp.util.NodeComparator;
 
 /** Performs addition. */
 public final class Add extends ArithmeticOperator {
@@ -27,6 +28,15 @@ public final class Add extends ArithmeticOperator {
 	public Optional<Node> simplify(Arguments arguments) {
 		Node arg1 = arguments.get(0);
 		Node arg2 = arguments.get(1);
+		boolean shuffled = false;
+
+		if (new NodeComparator().compare(arg1, arg2) > 0) {
+			Node tmp = arg1;
+			arg1 = arg2;
+			arg2 = tmp;
+			shuffled = true;
+		}
+
 		if (ZERO.equals(arg1)) {
 			return Optional.of(arg2);
 		} else if (ZERO.equals(arg2)) {
@@ -79,11 +89,11 @@ public final class Add extends ArithmeticOperator {
 				}
 			} else if (arg1 instanceof ConstantNode && secondArg instanceof ConstantNode) {
 				if (fnOperator.getClass() == Add.class) {
-					return Optional.of(new FunctionNode(fnOperator, Arguments.createArguments(
+					return Optional.of(new FunctionNode(this, Arguments.createArguments(
 							createConstant(((int) arg1.evaluate(null)) + ((int) secondArg.evaluate(null))), firstArg)));
 				} else if (fnOperator.getClass() == Subtract.class) {
-					return Optional.of(new FunctionNode(fnOperator, Arguments.createArguments(
-							createConstant(((int) arg1.evaluate(null)) + ((int) secondArg.evaluate(null))), firstArg)));
+					return Optional.of(new NodeSimplifier().simplify(new FunctionNode(this, Arguments.createArguments(
+							createConstant(((int) arg1.evaluate(null)) - ((int) secondArg.evaluate(null))), firstArg))));
 				}
 			}
 		}
@@ -106,7 +116,14 @@ public final class Add extends ArithmeticOperator {
 			return Optional.of(new FunctionNode(fn.getOperator(), Arguments.createArguments(newFirstArg, fn.getArguments().get(1))));
 		}
 
-		return Optional.empty();
+		if (arg1 instanceof ConstantNode && ((int) arg1.evaluate(null)) < 0) {
+			return Optional.of(new FunctionNode(new Subtract(), Arguments.createArguments(arg2, createConstant(-((int) arg1.evaluate(null))))));
+		}
+		if (arg2 instanceof ConstantNode && ((int) arg2.evaluate(null)) < 0) {
+			return Optional.of(new FunctionNode(new Subtract(), Arguments.createArguments(arg1, createConstant(-((int) arg2.evaluate(null))))));
+		}
+
+		return shuffled ? Optional.of(new FunctionNode(this, Arguments.createArguments(arg1, arg2))) : Optional.empty();
 	}
 
 	private FunctionNode times2(Node arg) {
