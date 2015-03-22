@@ -5,7 +5,7 @@ import java.util.HashSet;
 import org.oakgp.NodeSimplifier;
 import org.oakgp.node.Node;
 
-public class NodeSet extends HashSet<Node> {
+public final class NodeSet extends HashSet<Node> {
 	private static final NodeSimplifier SIMPLIFIER = new NodeSimplifier();
 
 	@Override
