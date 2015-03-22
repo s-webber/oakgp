@@ -2,6 +2,8 @@ package org.oakgp;
 
 import static org.oakgp.Arguments.createArguments;
 
+import java.util.Optional;
+
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
@@ -67,6 +69,22 @@ public final class NodeSimplifier {
 		}
 
 		// try to simplify using operator
-		return input.getOperator().simplify(arguments).orElse(output);
+		// return input.getOperator().simplify(arguments).orElse(output);
+		Optional<Node> o = input.getOperator().simplify(arguments);
+		if (o.isPresent()) {
+			Node n = o.get();
+			Node previous = input;
+			int ctr = 0;
+			while (n instanceof FunctionNode && !previous.equals(n)) {
+				previous = n;
+				n = simplifyFunctionNode((FunctionNode) o.get());
+				if (ctr++ > 9) { // TODO
+					return n;
+				}
+			}
+			return n;
+		} else {
+			return output;
+		}
 	}
 }

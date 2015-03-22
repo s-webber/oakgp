@@ -18,7 +18,7 @@ public class SubtractTest extends AbstractOperatorTest {
 	protected void getCanSimplifyTests(SimplifyTestCases testCases) {
 		Object[][] assignedValues = { { 0, 0 }, { 1, 21 }, { 2, 14 }, { 3, -6 }, { 7, 3 }, { -1, 9 }, { -7, 0 } };
 
-		testCases.put("(- v0 -7)", "(+ v0 7)", assignedValues);
+		testCases.put("(- v0 -7)", "(+ 7 v0)", assignedValues);
 
 		// anything minus zero is itself
 		testCases.put("(- v0 0)", "v0", assignedValues);
@@ -26,7 +26,7 @@ public class SubtractTest extends AbstractOperatorTest {
 		testCases.put("(- v0 v0)", "0", assignedValues);
 
 		testCases.put("(- 1 (+ 1 v0))", "(- 0 v0)", assignedValues);
-		testCases.put("(- 1 (- 1 v0))", "(+ 0 v0)", assignedValues);
+		testCases.put("(- 1 (- 1 v0))", "v0", assignedValues);
 		testCases.put("(- 6 (+ 4 v0))", "(- 2 v0)", assignedValues);
 		testCases.put("(- 6 (- 4 v0))", "(+ 2 v0)", assignedValues);
 

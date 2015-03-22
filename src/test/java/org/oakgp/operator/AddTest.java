@@ -33,19 +33,19 @@ public class AddTest extends AbstractOperatorTest {
 		testCases.put("(+ 1 (- 1 v0))", "(- 2 v0)", assignedValues);
 		testCases.put("(+ 6 (+ 4 v0))", "(+ 10 v0)", assignedValues);
 		testCases.put("(+ 6 (- 4 v0))", "(- 10 v0)", assignedValues);
-		testCases.put("(+ (+ 1 v0) (+ 2 v0))", "(+ 3 (+ v0 v0))", assignedValues);
-		testCases.put("(+ (+ 3 v0) (+ 4 v0))", "(+ 7 (+ v0 v0))", assignedValues);
-		testCases.put("(+ (+ v0 3) (+ v0 4))", "(+ 7 (+ v0 v0))", assignedValues);
-		testCases.put("(+ (+ v0 3) (+ 4 v0))", "(+ 7 (+ v0 v0))", assignedValues);
-		testCases.put("(+ (+ 3 v0) (+ v0 4))", "(+ 7 (+ v0 v0))", assignedValues);
+		testCases.put("(+ (+ 1 v0) (+ 2 v0))", "(+ 3 (* 2 v0))", assignedValues);
+		testCases.put("(+ (+ 3 v0) (+ 4 v0))", "(+ 7 (* 2 v0))", assignedValues);
+		testCases.put("(+ (+ v0 3) (+ v0 4))", "(+ 7 (* 2 v0))", assignedValues);
+		testCases.put("(+ (+ v0 3) (+ 4 v0))", "(+ 7 (* 2 v0))", assignedValues);
+		testCases.put("(+ (+ 3 v0) (+ v0 4))", "(+ 7 (* 2 v0))", assignedValues);
 		testCases.put("(+ v0 (* 2 v0))", "(* 3 v0)", assignedValues);
 		testCases.put("(+ v0 (* 14 v0))", "(* 15 v0)", assignedValues);
 		testCases.put("(+ 2 (+ (* 2 v0) 8))", "(+ 10 (* 2 v0))", assignedValues);
 		testCases.put("(+ 2 (+ 8 (* 2 v0)))", "(+ 10 (* 2 v0))", assignedValues);
-		testCases.put("(+ v0 (+ v0 8))", "(+ (* 2 v0) 8)", assignedValues);
-		testCases.put("(+ v0 (+ 8 v0))", "(+ (* 2 v0) 8)", assignedValues);
+		testCases.put("(+ v0 (+ v0 8))", "(+ 8 (* 2 v0))", assignedValues);
+		testCases.put("(+ v0 (+ 8 v0))", "(+ 8 (* 2 v0))", assignedValues);
 		testCases.put("(+ v0 (- v0 2))", "(- (* 2 v0) 2)", assignedValues);
-		testCases.put("(+ v0 (- 2 v0))", "(- (+ 2 v0) v0)", assignedValues);
+		testCases.put("(+ v0 (- 2 v0))", "2", assignedValues);
 
 		testCases.put("(+ 5 (+ v0 5))", "(+ 10 v0)", assignedValues);
 		testCases.put("(+ 5 (- v0 5))", "v0", assignedValues);

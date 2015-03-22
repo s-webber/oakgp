@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.oakgp.Arguments;
-import org.oakgp.NodeSimplifier;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
@@ -53,16 +52,16 @@ public final class Subtract extends ArithmeticOperator {
 				Object fn1Value = fn1.getArguments().get(0).evaluate(null);
 				Object fn2Value = fn2.getArguments().get(0).evaluate(null);
 				FunctionNode newFunctionNode = new FunctionNode(this, Arguments.createArguments(fn1.getArguments().get(1), fn2.getArguments().get(1)));
-				return Optional.of(new NodeSimplifier().simplify(new FunctionNode(fn1.getOperator(), Arguments.createArguments(createConstant(((int) fn1Value)
-						- ((int) fn2Value)), newFunctionNode))));
+				return Optional.of(new FunctionNode(fn1.getOperator(), Arguments.createArguments(createConstant(((int) fn1Value) - ((int) fn2Value)),
+						newFunctionNode)));
 			} else if (fn1.getArguments().get(0) instanceof ConstantNode && fn2.getArguments().get(0) instanceof ConstantNode
 					&& fn1.getOperator().getClass() == Add.class && fn2.getOperator().getClass() == Subtract.class) {
 				Object fn1Value = fn1.getArguments().get(0).evaluate(null);
 				Object fn2Value = fn2.getArguments().get(0).evaluate(null);
 				FunctionNode newFunctionNode = new FunctionNode(fn1.getOperator(), Arguments.createArguments(fn1.getArguments().get(1),
 						fn2.getArguments().get(1)));
-				return Optional.of(new NodeSimplifier().simplify(new FunctionNode(fn1.getOperator(), Arguments.createArguments(createConstant(((int) fn1Value)
-						- ((int) fn2Value)), newFunctionNode))));
+				return Optional.of(new FunctionNode(fn1.getOperator(), Arguments.createArguments(createConstant(((int) fn1Value) - ((int) fn2Value)),
+						newFunctionNode)));
 			}
 		}
 

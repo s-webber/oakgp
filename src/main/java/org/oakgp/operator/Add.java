@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.oakgp.Arguments;
-import org.oakgp.NodeSimplifier;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
@@ -96,8 +95,8 @@ public final class Add extends ArithmeticOperator {
 					return Optional.of(new FunctionNode(this, Arguments.createArguments(
 							createConstant(((int) arg1.evaluate(null)) + ((int) secondArg.evaluate(null))), firstArg)));
 				} else if (fnOperator.getClass() == Subtract.class) {
-					return Optional.of(new NodeSimplifier().simplify(new FunctionNode(this, Arguments.createArguments(
-							createConstant(((int) arg1.evaluate(null)) - ((int) secondArg.evaluate(null))), firstArg))));
+					return Optional.of(new FunctionNode(this, Arguments.createArguments(
+							createConstant(((int) arg1.evaluate(null)) - ((int) secondArg.evaluate(null))), firstArg)));
 				}
 			}
 		}
@@ -116,7 +115,6 @@ public final class Add extends ArithmeticOperator {
 		if (arg2 instanceof FunctionNode && ((FunctionNode) arg2).getOperator().getClass() == Subtract.class) {
 			FunctionNode fn = (FunctionNode) arg2;
 			Node newFirstArg = new FunctionNode(this, Arguments.createArguments(arg1, fn.getArguments().get(0)));
-			newFirstArg = new NodeSimplifier().simplify(newFirstArg);
 			return Optional.of(new FunctionNode(fn.getOperator(), Arguments.createArguments(newFirstArg, fn.getArguments().get(1))));
 		}
 
