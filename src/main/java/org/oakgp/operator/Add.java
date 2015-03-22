@@ -74,6 +74,16 @@ public final class Add extends ArithmeticOperator {
 				Object fn2Value = fn2.getArguments().get(0).evaluate(null);
 				return Optional.of(new FunctionNode(this, Arguments.createArguments(createConstant(((int) fn1Value) + ((int) fn2Value)), new FunctionNode(this,
 						Arguments.createArguments(fn1.getArguments().get(0), fn2.getArguments().get(1))))));
+			} else if (fn1.getArguments().get(0).equals(fn2.getArguments().get(1)) && sameOperator(Add.class, fn1, fn2)) {
+				return Optional.of(new FunctionNode(this, Arguments.createArguments(
+						fn1.getArguments().get(1),
+						new FunctionNode(this, Arguments.createArguments(fn2.getArguments().get(0),
+								new FunctionNode(this, Arguments.createArguments(fn1.getArguments().get(0), fn2.getArguments().get(1))))))));
+			} else if (fn1.getArguments().get(1).equals(fn2.getArguments().get(0)) && sameOperator(Add.class, fn1, fn2)) {
+				return Optional.of(new FunctionNode(this, Arguments.createArguments(
+						fn1.getArguments().get(0),
+						new FunctionNode(this, Arguments.createArguments(fn2.getArguments().get(1),
+								new FunctionNode(this, Arguments.createArguments(fn1.getArguments().get(1), fn2.getArguments().get(0))))))));
 			}
 		} else if (arg2 instanceof FunctionNode) {
 			FunctionNode fn = (FunctionNode) arg2;
