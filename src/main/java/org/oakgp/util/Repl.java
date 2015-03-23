@@ -3,18 +3,26 @@ package org.oakgp.util;
 import java.io.IOException;
 import java.util.Scanner;
 
+import org.oakgp.Assignments;
+import org.oakgp.NodeSimplifier;
+import org.oakgp.Type;
 import org.oakgp.node.Node;
 import org.oakgp.serialize.NodeReader;
+import org.oakgp.serialize.NodeWriter;
 
 public class Repl {
 	public static void main(String[] args) throws IOException {
 		Scanner scanner = new Scanner(System.in);
+		Assignments assignments = Assignments.createAssignments(2, 3);
 		while (true) {
 			System.out.print("> ");
 			String input = scanner.nextLine();
-			Node expression = new NodeReader(input).readNode();
-			Object result = expression.evaluate(null);
-			System.out.println(result);
+			Node expression = new NodeReader(input, Type.INTEGER, Type.INTEGER).readNode();
+			Node simplifiedResult = new NodeSimplifier().simplify(expression);
+			System.out.println(new NodeWriter().writeNode(expression));
+			System.out.println(new NodeWriter().writeNode(simplifiedResult));
+			System.out.println(expression.evaluate(assignments));
+			System.out.println(simplifiedResult.evaluate(assignments));
 		}
 	}
 }
