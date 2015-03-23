@@ -81,8 +81,8 @@ public final class Subtract extends ArithmeticOperator {
 			}
 		}
 
-		if (arg1 instanceof FunctionNode) {
-			Node n = replace((FunctionNode) arg1, arg2);
+		if (arg1 instanceof FunctionNode && !(arg2 instanceof FunctionNode)) {
+			Node n = replace((FunctionNode) arg1, arg2, true);
 			if (!n.equals(arg1)) {
 				return Optional.of(n);
 			}
@@ -95,31 +95,42 @@ public final class Subtract extends ArithmeticOperator {
 		return Optional.empty();
 	}
 
-	private static Node replace(FunctionNode fn, Node nodeToReplace) {
+	public static Node replace(FunctionNode fn, Node nodeToReplace, boolean doReplace) {
 		if (!(fn.getOperator() instanceof ArithmeticOperator)) {
-			return nodeToReplace;
+			return fn;
 		}
 
 		if (sameOperator(Add.class, fn)) {
+			Node newArg;
+			if (doReplace) {
+				newArg = createConstant(0);
+			} else {
+				newArg = new FunctionNode(new Multiply(), Arguments.createArguments(createConstant(2), nodeToReplace));
+			}
 			if (fn.getArguments().get(0).equals(nodeToReplace)) {
-				return new FunctionNode(fn.getOperator(), Arguments.createArguments(createConstant(0), fn.getArguments().get(1)));
+				return new FunctionNode(fn.getOperator(), Arguments.createArguments(newArg, fn.getArguments().get(1)));
 			} else if (fn.getArguments().get(1).equals(nodeToReplace)) {
-				return new FunctionNode(fn.getOperator(), Arguments.createArguments(fn.getArguments().get(0), createConstant(0)));
+				return new FunctionNode(fn.getOperator(), Arguments.createArguments(fn.getArguments().get(0), newArg));
 			}
 		}
 		if (sameOperator(Multiply.class, fn) && fn.getArguments().get(0) instanceof ConstantNode && fn.getArguments().get(1).equals(nodeToReplace)) {
-			return new FunctionNode(fn.getOperator(), Arguments.createArguments(
-					createConstant((int) ((ConstantNode) fn.getArguments().get(0)).evaluate(null) - 1), nodeToReplace));
+			int inc = doReplace ? -1 : 1;
+			return new FunctionNode(fn.getOperator(), Arguments.createArguments(createConstant((int) ((ConstantNode) fn.getArguments().get(0)).evaluate(null)
+					+ inc), nodeToReplace));
 		}
-		if (sameOperator(Add.class, fn)) {
+		if (sameOperator(Add.class, fn) || sameOperator(Subtract.class, fn)) {
+			// doReplace = sameOperator(Add.class, fn);
 			if (fn.getArguments().get(0) instanceof FunctionNode) {
-				Node n = replace((FunctionNode) fn.getArguments().get(0), nodeToReplace);
+				Node n = replace((FunctionNode) fn.getArguments().get(0), nodeToReplace, doReplace);
 				if (!n.equals(fn.getArguments().get(0))) {
 					return new FunctionNode(fn.getOperator(), Arguments.createArguments(n, fn.getArguments().get(1)));
 				}
 			}
 			if (fn.getArguments().get(1) instanceof FunctionNode) {
-				Node n = replace((FunctionNode) fn.getArguments().get(1), nodeToReplace);
+				if (sameOperator(Subtract.class, fn)) {
+					doReplace = !doReplace;
+				}
+				Node n = replace((FunctionNode) fn.getArguments().get(1), nodeToReplace, doReplace);
 				if (!n.equals(fn.getArguments().get(1))) {
 					return new FunctionNode(fn.getOperator(), Arguments.createArguments(fn.getArguments().get(0), n));
 				}
