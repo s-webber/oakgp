@@ -105,30 +105,30 @@ public final class Subtract extends ArithmeticOperator {
 			}
 		}
 
-		if (arg2 instanceof FunctionNode) {
-			// if (!(arg1 instanceof FunctionNode)) {
-			// Node n = replace((FunctionNode) arg2, new FunctionNode(this, Arguments.createArguments(createConstant(0), arg1)), true);
-			// if (!n.equals(arg1)) {
-			// return Optional.of(n);
-			// }
-			// }
-			// else if (sameOperator(Subtract.class, (FunctionNode) arg2)) {
-			// FunctionNode fn2 = (FunctionNode) arg2;
-			// if (!(fn2.getArguments().get(1) instanceof FunctionNode)) {
-			// Node n = replace((FunctionNode) arg1, fn2.getArguments().get(1), true);
-			// if (!n.equals(arg1)) {
-			// return Optional.of(new FunctionNode(this, Arguments.createArguments(n, fn2.getArguments().get(0))));
-			// }
-			// }
-			// if (!(fn2.getArguments().get(0) instanceof FunctionNode)) {
-			// Node n = replace((FunctionNode) arg1, fn2.getArguments().get(0), true);
-			// if (!n.equals(arg1)) {
-			// return Optional.of(new FunctionNode(this, Arguments.createArguments(n,
-			// new FunctionNode(this, Arguments.createArguments(createConstant(0), fn2.getArguments().get(1))))));
-			// }
-			// }
-			// }
-		}
+		// if (arg2 instanceof FunctionNode) {
+		// if (!(arg1 instanceof FunctionNode)) {
+		// Node n = replace((FunctionNode) arg2, new FunctionNode(this, Arguments.createArguments(createConstant(0), arg1)), true);
+		// if (!n.equals(arg2)) {
+		// return Optional.of(n);
+		// }
+		// }
+		// else if (sameOperator(Subtract.class, (FunctionNode) arg2)) {
+		// FunctionNode fn2 = (FunctionNode) arg2;
+		// if (!(fn2.getArguments().get(1) instanceof FunctionNode)) {
+		// Node n = replace((FunctionNode) arg1, fn2.getArguments().get(1), true);
+		// if (!n.equals(arg1)) {
+		// return Optional.of(new FunctionNode(this, Arguments.createArguments(n, fn2.getArguments().get(0))));
+		// }
+		// }
+		// if (!(fn2.getArguments().get(0) instanceof FunctionNode)) {
+		// Node n = replace((FunctionNode) arg1, fn2.getArguments().get(0), true);
+		// if (!n.equals(arg1)) {
+		// return Optional.of(new FunctionNode(this, Arguments.createArguments(n,
+		// new FunctionNode(this, Arguments.createArguments(createConstant(0), fn2.getArguments().get(1))))));
+		// }
+		// }
+		// }
+		// }
 
 		if (arg2 instanceof ConstantNode && ((int) arg2.evaluate(null)) < 0) {
 			return Optional.of(new FunctionNode(new Add(), Arguments.createArguments(arg1, createConstant(-((int) arg2.evaluate(null))))));
