@@ -43,16 +43,16 @@ public abstract class AbstractOperatorTest {
 			// TODO assertSame(actualResult, new NodeSimplifier().simplify(input));
 			assertEquals(actualResult, new NodeSimplifier().simplify(input));
 
-			assertNodesEvaluateSameOutcome(test, expectedResult, actualResult);
+			assertNodesEvaluateSameOutcome(test, input, actualResult);
 		}
 	}
 
-	private void assertNodesEvaluateSameOutcome(SimplifyTest test, Node expectedResult, Node actualResult) {
+	private void assertNodesEvaluateSameOutcome(SimplifyTest test, Node input, Node actualResult) {
 		for (Object[] a : test.assignedValues) {
 			Assignments assignments = Assignments.createAssignments(a);
-			Object expectedOutcome = expectedResult.evaluate(assignments);
+			Object expectedOutcome = input.evaluate(assignments);
 			Object actualOutcome = actualResult.evaluate(assignments);
-			assertEquals(expectedOutcome, actualOutcome);
+			assertEquals(new NodeWriter().writeNode(actualResult), expectedOutcome, actualOutcome);
 		}
 	}
 
