@@ -54,14 +54,17 @@ public class SubtractTest extends AbstractOperatorTest {
 
 		testCases.put("(- (- (- (* 2 v0) 9) v1) v1)", "(+ (- (* 2 v0) 9) (* -2 v1))", assignedValues);
 
-		testCases.put("(- 5 (- (- (+ (* 2 v0) (* 2 v1)) 1) (- v0 2)))", "(- 5 (- (- (+ (* 2 v0) (* 2 v1)) 1) (- v0 2)))", assignedValues);
+		testCases.put("(- 5 (- (- (+ (* 2 v0) (* 2 v1)) 1) (- v0 2)))", "(- 4 (+ v0 (* 2 v1)))", assignedValues);
+		testCases.put("(- (* -2 v0) (- v1 v0))", "(- (* -3 v0) v1)", assignedValues);
 
 		// TODO
 		// (- (- 5 (- (- (+ (* 2 v0) (* 2 v1)) 1) (- v1 2))) (* 2 v1))
 		// (5-((((2*y)+(2*x))-1)-(x-2)))-(2 * x)
 		// -3x+4-2y
-		testCases.put("(- (- 5 (- (- (+ (* 2 v0) (* 2 v1)) 1) (- v1 2))) (* 2 v1))", "(- (- 5 (- (- (+ (* 2 v0) (* 2 v1)) 1) (- v1 2))) (* 2 v1))",
-				assignedValues);
+		testCases.put("(- (- 5 (- (- (+ (* 2 v0) (* 2 v1)) 1) (- v1 2))) (* 2 v1))", "(- (- 4 (+ v1 (* 2 v0))) (* 2 v1))", assignedValues);
+
+		testCases.put("(- (+ 9 (- v0 (+ 9 v1))) (- 8 v1))", "(- (- v0 v1) (- 8 v1))", assignedValues);
+		testCases.put("(- (+ 9 (- v0 (+ 9 v1))) (- v1 v0))", "(- (- v0 v1) (- v1 v0))", assignedValues); // TODO can this be simplified further?
 	}
 
 	@Test

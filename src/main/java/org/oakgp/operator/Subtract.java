@@ -81,10 +81,27 @@ public final class Subtract extends ArithmeticOperator {
 			}
 		}
 
-		if (arg1 instanceof FunctionNode && !(arg2 instanceof FunctionNode)) {
-			Node n = replace((FunctionNode) arg1, arg2, true);
-			if (!n.equals(arg1)) {
-				return Optional.of(n);
+		if (arg1 instanceof FunctionNode) {
+			if (!(arg2 instanceof FunctionNode)) {
+				Node n = replace((FunctionNode) arg1, arg2, true);
+				if (!n.equals(arg1)) {
+					return Optional.of(n);
+				}
+			} else if (sameOperator(Subtract.class, (FunctionNode) arg2)) {
+				FunctionNode fn2 = (FunctionNode) arg2;
+				if (!(fn2.getArguments().get(1) instanceof FunctionNode)) {
+					Node n = replace((FunctionNode) arg1, fn2.getArguments().get(1), true);
+					if (!n.equals(arg1)) {
+						return Optional.of(new FunctionNode(this, Arguments.createArguments(n, fn2.getArguments().get(0))));
+					}
+				}
+				if (!(fn2.getArguments().get(0) instanceof FunctionNode)) {
+					Node n = replace((FunctionNode) arg1, fn2.getArguments().get(0), true);
+					if (!n.equals(arg1)) {
+						return Optional.of(new FunctionNode(this, Arguments.createArguments(n,
+								new FunctionNode(this, Arguments.createArguments(createConstant(0), fn2.getArguments().get(1))))));
+					}
+				}
 			}
 		}
 
