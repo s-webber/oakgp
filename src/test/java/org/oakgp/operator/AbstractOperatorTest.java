@@ -38,7 +38,10 @@ public abstract class AbstractOperatorTest {
 			FunctionNode input = readInput(test.input);
 			Node expectedResult = readNode(test.expectedOutput);
 			Node actualResult = new NodeSimplifier().simplify(input);
+			assertEquals(new NodeWriter().writeNode(expectedResult), new NodeWriter().writeNode(actualResult));
 			assertEquals(new NodeWriter().writeNode(input), expectedResult, actualResult);
+			// TODO assertSame(actualResult, new NodeSimplifier().simplify(input));
+			assertEquals(actualResult, new NodeSimplifier().simplify(input));
 
 			assertNodesEvaluateSameOutcome(test, expectedResult, actualResult);
 		}
