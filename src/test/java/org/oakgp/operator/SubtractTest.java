@@ -55,7 +55,8 @@ public class SubtractTest extends AbstractOperatorTest {
 		testCases.put("(- (- (- (* 2 v0) 9) v1) v1)", "(+ (- (* 2 v0) 9) (* -2 v1))", assignedValues);
 
 		testCases.put("(- 5 (- (- (+ (* 2 v0) (* 2 v1)) 1) (- v0 2)))", "(- 4 (+ v0 (* 2 v1)))", assignedValues);
-		testCases.put("(- (* -2 v0) (- v1 v0))", "(- (* -3 v0) v1)", assignedValues);
+		testCases.put("(- (* 2 v0) (- v1 v0))", "(- (* 3 v0) v1)", assignedValues); // 3x-y
+		testCases.put("(- (* -2 v0) (- v1 v0))", "(- (* -1 v0) v1)", assignedValues); // 3x-y
 
 		// TODO
 		// (- (- 5 (- (- (+ (* 2 v0) (* 2 v1)) 1) (- v1 2))) (* 2 v1))
@@ -65,6 +66,16 @@ public class SubtractTest extends AbstractOperatorTest {
 
 		testCases.put("(- (+ 9 (- v0 (+ 9 v1))) (- 8 v1))", "(- (- v0 v1) (- 8 v1))", assignedValues);
 		testCases.put("(- (+ 9 (- v0 (+ 9 v1))) (- v1 v0))", "(- (- v0 v1) (- v1 v0))", assignedValues); // TODO can this be simplified further?
+
+		// NEW TEST
+		// testCases.put("(- v1 (- 5 (- (- (+ (* 2 v0) (* 2 v1)) 1) (- v1 2))))", "(+ v1 (* 2 v0))", assignedValues);
+		// testCases.put("(- v1 (- (* 2 v0) v1))", "(- (* 2 v0) v1)", assignedValues);
+		//
+		// testCases.put("(- (+ 9 (- v0 (+ 9 v1))) (- 8 v1))", "(+ 10 (* 2 v1))", assignedValues);
+		// testCases.put("(- (+ 9 (- v0 (+ 9 v1))) (- v1 v0))", "(+ 18 v0)", assignedValues);
+
+		// (- (- v0 v1) (- v1 v0)) TODO can this be simplified further? 2y-2x?
+		// testCases.put("(- (- v0 v1) (- v1 v0))", "(- (- v0 v1) (- v1 v0))", assignedValues);
 	}
 
 	@Test
