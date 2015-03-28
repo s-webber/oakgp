@@ -36,15 +36,20 @@ public final class Subtract extends ArithmeticOperator {
 		} else if (arg2 instanceof ConstantNode && ((int) arg2.evaluate(null)) < 0) {
 			return Optional.of(new FunctionNode(new Add(), Arguments.createArguments(arg1, createConstant(-((int) arg2.evaluate(null))))));
 		} else {
-			if (ZERO.equals(arg1) && arg2 instanceof FunctionNode && ((FunctionNode) arg2).getOperator().getClass() == Multiply.class) {
+			if (ZERO.equals(arg1) && arg2 instanceof FunctionNode) {// && ((FunctionNode) arg2).getOperator().getClass() == Multiply.class) {
 				FunctionNode fn = (FunctionNode) arg2;
 				Operator o = fn.getOperator();
 				Arguments args = fn.getArguments();
 				Node fnArg1 = args.get(0);
 				Node fnArg2 = args.get(1);
-				if (fnArg1 instanceof ConstantNode) {
+				if (fnArg1 instanceof ConstantNode && ((FunctionNode) arg2).getOperator().getClass() == Multiply.class) {
 					int i = (int) fnArg1.evaluate(null);
 					return Optional.of(new FunctionNode(o, Arguments.createArguments(createConstant(-i), fnArg2)));
+				} else if (o.getClass() == Add.class) {
+					// (- 0 (+ v0 v1) -> (+ (0 - v0 (0 - v1))
+					FunctionNode value = new FunctionNode(o, Arguments.createArguments(negate(fnArg1), negate(fnArg2)));// negate(fnArg2)));
+					System.out.println(value);
+					return Optional.of(value);
 				}
 			}
 
