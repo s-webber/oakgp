@@ -133,8 +133,17 @@ public class NodeSimplifierTest {
 	@Test
 	public void testDeeplyNestedTreeSimplifedToFunction14() {
 		assertCanSimplify(
-				"(- (+ 432 (* -108 v2)) (* 81 (* (- (- (+ (* 162 v0) (* 243 v2)) (* 162 v2)) (+ (- (- (* 162 v2) (- 819 (+ (* -162 v0) (* -243 v2)))) (* 12 v2)) (* -6 v2))) (- (* -3 v2) 3))))",
+				"(- (+ 432 (* -108 v2)) (* 81 (* (- (- (* 162 v0) (* -81 v2)) (+ (- (* -162 v0) 819) (* -99 v2))) (- (* -3 v2) 3))))",
 				"(- (+ 432 (* -108 v2)) (* 81 (* (+ -3 (* -3 v2)) (- (- (+ (* 162 v0) (* 243 v2)) (* 162 v2)) (+ (* -6 v2) (- (- (* 162 v2) (- 819 (+ (* -162 v0) (* -243 v2)))) (* 12 v2)))))))");
+	}
+
+	// (- (- (* 162 v0) (* -81 v2)) (+ (- (* -162 v0) 819) (* -99 v2))) =
+	// (((162x)-(-81z))-(((-162x)-819)+(-99z))) =
+	// 324x+180z+819
+	@Test
+	public void testDeeplyNestedTreeSimplifedToFunction15() {
+		assertCanSimplify("(- (- (* 162 v0) (* -81 v2)) (+ (- (* -162 v0) 819) (* -99 v2)))",
+				"(- (- (* 162 v0) (* -81 v2)) (+ (- (* -162 v0) 819) (* -99 v2)))");
 	}
 
 	@Test
@@ -162,7 +171,7 @@ public class NodeSimplifierTest {
 		Node output = nodeSimplifier.simplify(input);
 		Assignments assignments = Assignments.createAssignments(0, 1, 2, 3, 1);
 		assertEquals(input.evaluate(assignments), output.evaluate(assignments));
-		String expected = "(- (+ 432 (* -108 v2)) (* 81 (* (- (- (+ (* 162 v3) (* 243 v2)) (* 162 v2)) (+ (- (- (* 162 v2) (+ (* 162 v3) (* 243 v2))) (+ 819 (* 12 v2))) (* -6 v2))) (- (* -3 v2) 3))))";
+		String expected = "(- (+ 432 (* -108 v2)) (* 81 (* (- (- (+ 819 (* 162 v3)) (* -81 v2)) (+ (* -162 v3) (* -99 v2))) (- (* -3 v2) 3))))";
 		// TODO best: (* -27 (- (+ (* 3 (* (* 3 (- 0 (+ v2 1))) (* 3 (- 0 (- (- 0 (+ (* -54 (- (- (- -4 (+ v2 (* 2 v3))) (+ 1 (* 2 v2))) (- 0 (* 2 v2)))) (* 4
 		// v2))) (+ 3 (* 2 v2))))))) (* 4 v2)) 16))
 		String actual = new NodeWriter().writeNode(output);

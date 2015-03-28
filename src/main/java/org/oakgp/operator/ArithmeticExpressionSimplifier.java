@@ -69,25 +69,26 @@ public final class ArithmeticExpressionSimplifier {
 			}
 		}
 
-		if (isAdd || isSubtract) {
+		if (isAdd || isSubtract) {// || isMultiply) {
+			boolean isPos = !isSubtract;
 			if (firstArg instanceof FunctionNode && secondArg instanceof FunctionNode) {
-				Optional<NodePair> o = recursiveReplace(firstArg, secondArg, isAdd);
+				Optional<NodePair> o = recursiveReplace(firstArg, secondArg, isPos);
 				if (o.isPresent()) {
 					NodePair p = o.get();
 					return new FunctionNode(currentOperator, Arguments.createArguments(p.x, p.y));
 				}
-				o = recursiveReplace(secondArg, firstArg, isAdd);
+				o = recursiveReplace(secondArg, firstArg, isPos);
 				if (o.isPresent()) {
 					NodePair p = o.get();
 					return new FunctionNode(currentOperator, Arguments.createArguments(p.y, p.x));
 				}
 			} else if (firstArg instanceof FunctionNode && !(secondArg instanceof FunctionNode)) {
-				Node tmp = simplify(firstArg, secondArg, isAdd);
+				Node tmp = simplify(firstArg, secondArg, isPos);
 				if (!tmp.equals(firstArg)) {
 					return tmp;
 				}
 			} else if (secondArg instanceof FunctionNode && !(firstArg instanceof FunctionNode)) {
-				Node tmp = simplify(secondArg, firstArg, isAdd);
+				Node tmp = simplify(secondArg, firstArg, isPos);
 				if (!tmp.equals(secondArg)) {
 					return dealWithSubtract(currentOperator, tmp);
 				}
@@ -104,9 +105,27 @@ public final class ArithmeticExpressionSimplifier {
 			Operator op = fn.getOperator();
 			boolean isAdd = op.getClass() == Add.class;
 			boolean isSubtract = op.getClass() == Subtract.class;
+			boolean isMultiply = op.getClass() == Multiply.class;
+			Node firstArg = fn.getArguments().get(0);
+			Node secondArg = fn.getArguments().get(1);
+			if (isMultiply && nodeToUpdate instanceof FunctionNode) {
+				FunctionNode x = (FunctionNode) nodeToUpdate;
+				Arguments a = x.getArguments();
+				if (x.getOperator().getClass() == Multiply.class && firstArg instanceof ConstantNode && a.get(0) instanceof ConstantNode
+						&& secondArg.equals(a.get(1))) {
+					int i1 = (int) firstArg.evaluate(null);
+					int i2 = (int) a.get(0).evaluate(null);
+					int result;
+					if (isPos) {
+						result = i2 + i1;
+					} else {
+						result = i2 - i1;
+					}
+					Node tmp = new FunctionNode(op, Arguments.createArguments(createConstant(result), secondArg));
+					return Optional.of(new NodePair(ZERO, tmp));
+				}
+			}
 			if (isAdd || isSubtract) {
-				Node firstArg = fn.getArguments().get(0);
-				Node secondArg = fn.getArguments().get(1);
 				Optional<NodePair> o = recursiveReplace(firstArg, nodeToUpdate, isPos);
 				if (o.isPresent()) {
 					NodePair p = o.get();
