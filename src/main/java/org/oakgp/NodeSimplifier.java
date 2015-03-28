@@ -3,11 +3,14 @@ package org.oakgp;
 import static org.oakgp.Arguments.createArguments;
 import static org.oakgp.util.Utils.assertEvaluateToSameResult;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
+import org.oakgp.serialize.NodeWriter;
 
 /**
  * Simplifies tree structures by replacing expressions with their values.
@@ -30,13 +33,18 @@ import org.oakgp.node.Node;
 public final class NodeSimplifier {
 	public Node simplify(Node input) {
 		int ctr = 0;
+		Set<String> s = new HashSet<>();
 		Node previous;
 		Node output = input;
 		do {
 			previous = output;
 			output = _simplify(output);
-			if (ctr++ > 1001) { // TODO
+			if (!output.equals(previous) && !s.add(new NodeWriter().writeNode(output))) { // TODO
+				// throw new IllegalArgumentException(new NodeWriter().writeNode(output) + " " + new NodeWriter().writeNode(previous));
 				return output;
+			}
+			if (ctr++ > 10000) { // TODO
+				throw new IllegalArgumentException(new NodeWriter().writeNode(input));
 			}
 		} while (output instanceof FunctionNode && !output.equals(previous));
 		return output;
