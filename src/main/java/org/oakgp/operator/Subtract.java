@@ -34,26 +34,22 @@ public final class Subtract extends ArithmeticOperator {
 			Arguments fn2Arguments = fn2.getArguments();
 			return Optional.of(new FunctionNode(this, Arguments.createArguments(fn2Arguments.get(1), fn2Arguments.get(0))));
 		} else if (arg2 instanceof ConstantNode && ((int) arg2.evaluate(null)) < 0) {
-			return Optional.of(new FunctionNode(new Add(), Arguments.createArguments(arg1, negate(arg2))));
+			return Optional.of(new FunctionNode(new Add(), Arguments.createArguments(arg1, createConstant(-((int) arg2.evaluate(null))))));
 		} else {
-			if (arg2 instanceof FunctionNode) {// && ((FunctionNode) arg2).getOperator().getClass() == Multiply.class) {
+			if (ZERO.equals(arg1) && arg2 instanceof FunctionNode) {// && ((FunctionNode) arg2).getOperator().getClass() == Multiply.class) {
 				FunctionNode fn = (FunctionNode) arg2;
 				Operator o = fn.getOperator();
 				Arguments args = fn.getArguments();
 				Node fnArg1 = args.get(0);
 				Node fnArg2 = args.get(1);
-				if (ZERO.equals(arg1)) {
-					if (fnArg1 instanceof ConstantNode && ((FunctionNode) arg2).getOperator().getClass() == Multiply.class) {
-						int i = (int) fnArg1.evaluate(null);
-						return Optional.of(new FunctionNode(o, Arguments.createArguments(createConstant(-i), fnArg2)));
-					} else if (o.getClass() == Add.class) {
-						// (- 0 (+ v0 v1) -> (+ (0 - v0) (0 - v1))
-						FunctionNode value = new FunctionNode(o, Arguments.createArguments(negate(fnArg1), negate(fnArg2)));// negate(fnArg2)));
-						return Optional.of(value);
-					}
-					// } else if (o.getClass() == Add.class || o.getClass() == Multiply.class) {
-					// FunctionNode value = new FunctionNode(o, Arguments.createArguments(arg1, negate(arg2)));// negate(fnArg2)));
-					// return Optional.of(value);
+				if (fnArg1 instanceof ConstantNode && ((FunctionNode) arg2).getOperator().getClass() == Multiply.class) {
+					int i = (int) fnArg1.evaluate(null);
+					return Optional.of(new FunctionNode(o, Arguments.createArguments(createConstant(-i), fnArg2)));
+				} else if (o.getClass() == Add.class) {
+					// (- 0 (+ v0 v1) -> (+ (0 - v0 (0 - v1))
+					FunctionNode value = new FunctionNode(o, Arguments.createArguments(negate(fnArg1), negate(fnArg2)));// negate(fnArg2)));
+					System.out.println(value);
+					return Optional.of(value);
 				}
 			}
 
