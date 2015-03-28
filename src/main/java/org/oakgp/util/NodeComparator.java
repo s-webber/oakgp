@@ -6,7 +6,7 @@ import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 
-public class NodeComparator implements Comparator<Node> {
+public final class NodeComparator implements Comparator<Node> {
 	@Override
 	public int compare(Node o1, Node o2) {
 		if (o1.getClass() == o2.getClass()) {
@@ -25,17 +25,17 @@ public class NodeComparator implements Comparator<Node> {
 				return i;
 			}
 		}
-		if (o1 instanceof FunctionNode) {
-			return 1;
-		}
-		if (o2 instanceof FunctionNode) {
-			return -1;
-		}
 		if (o1 instanceof ConstantNode) {
 			return -1;
 		}
 		if (o2 instanceof ConstantNode) {
 			return 1;
+		}
+		if (o1 instanceof FunctionNode) {
+			return 1;
+		}
+		if (o2 instanceof FunctionNode) {
+			return -1;
 		}
 		throw new IllegalStateException();
 	}
