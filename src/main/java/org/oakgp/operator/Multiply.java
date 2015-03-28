@@ -1,5 +1,7 @@
 package org.oakgp.operator;
 
+import static org.oakgp.util.Utils.assertEvaluateToSameResult;
+
 import java.util.Optional;
 
 import org.oakgp.Arguments;
@@ -21,17 +23,25 @@ public final class Multiply extends ArithmeticOperator {
 
 	@Override
 	public Optional<Node> simplify(Arguments arguments) {
-		if (ZERO.equals(arguments.get(0)) || ZERO.equals(arguments.get(1))) {
+		Node arg1 = arguments.get(0);
+		Node arg2 = arguments.get(1);
+
+		if (new NodeComparator().compare(arg1, arg2) > 0) {
+			return Optional.of(new FunctionNode(this, Arguments.createArguments(arg2, arg1)));
+		} else if (ZERO.equals(arg1)) {
 			return Optional.of(ZERO);
-		} else if (ONE.equals(arguments.get(0))) {
-			return Optional.of(arguments.get(1));
-		} else if (ONE.equals(arguments.get(1))) {
-			return Optional.of(arguments.get(0));
+		} else if (ZERO.equals(arg2)) {
+			throw new IllegalArgumentException("arg1 " + arg1 + " arg2 " + arg2);
+		} else if (ONE.equals(arg1)) {
+			return Optional.of(arg2);
+		} else if (ONE.equals(arg2)) {
+			throw new IllegalArgumentException("arg1 " + arg1 + " arg2 " + arg2);
 		} else {
-			Node arg1 = arguments.get(0);
-			Node arg2 = arguments.get(1);
-			if (new NodeComparator().compare(arg1, arg2) > 0) {
-				return Optional.of(new FunctionNode(this, Arguments.createArguments(arg2, arg1)));
+			FunctionNode in = new FunctionNode(this, Arguments.createArguments(arg1, arg2));
+			Node out = new ArithmeticExpressionSimplifier().simplify(in);
+			if (!in.equals(out)) {
+				assertEvaluateToSameResult(in, out);
+				return Optional.of(out);
 			} else {
 				return Optional.empty();
 			}

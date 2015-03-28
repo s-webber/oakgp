@@ -29,7 +29,6 @@ public class MultiplyTest extends AbstractOperatorTest {
 
 	@Override
 	protected void getCannotSimplifyTests(List<String> t) {
-
 		t.add("(* 2 v1)");
 		t.add("(* -1 v1)");
 		t.add("(* v1 v2)");

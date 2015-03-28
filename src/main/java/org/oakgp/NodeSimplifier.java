@@ -1,6 +1,7 @@
 package org.oakgp;
 
 import static org.oakgp.Arguments.createArguments;
+import static org.oakgp.util.Utils.assertEvaluateToSameResult;
 
 import java.util.Optional;
 
@@ -28,14 +29,30 @@ import org.oakgp.node.Node;
  */
 public final class NodeSimplifier {
 	public Node simplify(Node input) {
+		int ctr = 0;
+		Node previous;
+		Node output = input;
+		do {
+			previous = output;
+			output = _simplify(output);
+			if (ctr++ > 1001) { // TODO
+				return output;
+			}
+		} while (output instanceof FunctionNode && !output.equals(previous));
+		return output;
+	}
+
+	private Node _simplify(Node input) {
 		if (input instanceof FunctionNode) {
-			return simplifyFunctionNode((FunctionNode) input);
+			Node output = simplifyFunctionNode((FunctionNode) input);
+			assertEvaluateToSameResult(input, output);
+			return output;
 		} else {
 			return input;
 		}
 	}
 
-	private Node simplifyFunctionNode(FunctionNode input) {
+	private Node simplifyFunctionNode(final FunctionNode input) {
 		// try to simplify each of the arguments
 		Arguments inputArgs = input.getArguments();
 		Node[] simplifiedArgs = new Node[inputArgs.length()];
@@ -43,7 +60,7 @@ public final class NodeSimplifier {
 		boolean constants = true;
 		for (int i = 0; i < simplifiedArgs.length; i++) {
 			Node originalArg = inputArgs.get(i);
-			simplifiedArgs[i] = simplify(originalArg);
+			simplifiedArgs[i] = _simplify(originalArg);
 			if (originalArg != simplifiedArgs[i]) {
 				modified = true;
 			}
@@ -72,17 +89,8 @@ public final class NodeSimplifier {
 		// return input.getOperator().simplify(arguments).orElse(output);
 		Optional<Node> o = input.getOperator().simplify(arguments);
 		if (o.isPresent()) {
-			Node n = o.get();
-			Node previous = input;
-			int ctr = 0;
-			while (n instanceof FunctionNode && !previous.equals(n)) {
-				previous = n;
-				n = simplifyFunctionNode((FunctionNode) o.get());
-				if (ctr++ > 9) { // TODO
-					return n;
-				}
-			}
-			return n;
+			assertEvaluateToSameResult(input, o.get());
+			return o.get();
 		} else {
 			return output;
 		}

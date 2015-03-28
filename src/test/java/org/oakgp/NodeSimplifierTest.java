@@ -46,7 +46,7 @@ public class NodeSimplifierTest {
 
 	@Test
 	public void testDeeplyNestedTreeSimplifedToConstant() {
-		Node input = readNode("(- (+ v6 3) (* 1 (- (+ v6 3) (* v7 (- v5 v5)))))");
+		Node input = readNode("(- (+ v0 3) (* 1 (- (+ v0 3) (* v2 (- v1 v1)))))");
 		Node output = nodeSimplifier.simplify(input);
 		assertSame(ConstantNode.class, output.getClass());
 		assertEquals("0", output.toString());
@@ -75,7 +75,7 @@ public class NodeSimplifierTest {
 	@Test
 	public void testDeeplyNestedTreeSimplifedToFunction4() {
 		// (- (- (+ 10 (* 2 v0)) v1) v1) = ((10 + (2 * v0)) - v1) - v1 = -2y+10+2x
-		assertCanSimplify("(+ (* -2 v1) (+ 10 (* 2 v0)))", "(- (- (+ 10 (* 2 v0)) v1) v1)");
+		assertCanSimplify("(- (+ 10 (* 2 v0)) (* 2 v1))", "(- (- (+ 10 (* 2 v0)) v1) v1)");
 	}
 
 	@Test
@@ -91,43 +91,61 @@ public class NodeSimplifierTest {
 	@Test
 	public void testDeeplyNestedTreeSimplifedToFunction6() {
 		// (+ 2 (+ (* 2 v0) (+ 8 v1))) = 2 + ((2 * x) + (8 + y)) = 10+2x+y
-		assertCanSimplify("(+ 10 (+ v1 (* 2 v0)))", "(+ 2 (+ (* 2 v0) (+ 8 v1)))");
+		assertCanSimplify("(+ (+ 10 v1) (* 2 v0))", "(+ 2 (+ (* 2 v0) (+ 8 v1)))");
 	}
 
 	@Test
 	public void testDeeplyNestedTreeSimplifedToFunction7() {
-		// TODO
-		// (- (- (+ (* 2 v1) (* 2 v0)) 1) (- v0 2)) =
-		// (((2 * y) + (2 * x)) - 1) - (x - 2) =
-		// x+1+2y
-		// (((2 * y) + (2 * x)) - 1) - x = x+2y-1
 		assertCanSimplify("(- (+ v1 (* 2 v0)) 1)", "(- (- (+ (* 2 v0) (* 2 v1)) 1) v1)");
+	}
+
+	@Test
+	public void testDeeplyNestedTreeSimplifedToFunction8() {
 		assertCanSimplify("(- (- (* 2 v0) (* 3 v1)) 1)", "(- (- (- (* 2 v0) (* 2 v1)) 1) v1)");
-		assertCanSimplify("(+ (- (* 2 v0) 9) (* -2 v1))", "(- (- (- (* 2 v0) 9) v1) v1)");
-		assertCanSimplify("(+ (* -2 v1) (+ 9 (* 2 v0)))", "(- (- (+ (* 2 v0) 9) v1) v1)");
+	}
+
+	@Test
+	public void testDeeplyNestedTreeSimplifedToFunction9() {
+		assertCanSimplify("(- (- (* 2 v0) 9) (* 2 v1))", "(- (- (- (* 2 v0) 9) v1) v1)");
+	}
+
+	@Test
+	public void testDeeplyNestedTreeSimplifedToFunction10() {
+		assertCanSimplify("(- (+ 9 (* 2 v0)) (* 2 v1))", "(- (- (+ (* 2 v0) 9) v1) v1)");
+	}
+
+	@Test
+	public void testDeeplyNestedTreeSimplifedToFunction11() {
 		assertCanSimplify("(- (+ v0 (* 2 v1)) 1)", "(- (- (+ (* 2 v0) (* 2 v1)) 1) v0)");
+	}
+
+	@Test
+	public void testDeeplyNestedTreeSimplifedToFunction12() {
 		assertCanSimplify("(+ 1 (+ v0 (* 2 v1)))", "(- (- (+ (* 2 v0) (* 2 v1)) 1) (- v0 2))");
 	}
 
 	@Test
+	public void testDeeplyNestedTreeSimplifedToFunction13() {
+		// (- (- (+ (* 2 v1) (* 2 v0)) 1) (- v0 2)) = (((2 * y) + (2 * x)) - 1) - (x - 2) = x+1+2y
+		assertCanSimplify("(+ 1 (+ v0 (* 2 v1)))", "(- (- (+ (* 2 v1) (* 2 v0)) 1) (- v0 2))");
+	}
+
+	@Test
 	public void testVeryDeeplyNestedTreeSimplifedByOperator1() {
-		// TODO keep trying to improve until get to 4y-3x
-		// note: (2+(2x+8)) = 10+2x
 		Node input = readNode("(- v1 (- (- v0 (- v1 (- (- (+ 2 (+ v0 (- (+ v0 (+ 8 v1)) v1))) v1) v1))) 10))");
 		Node output = nodeSimplifier.simplify(input);
 		Assignments assignments = Assignments.createAssignments(7, 12);
 		assertEquals(input.evaluate(assignments), output.evaluate(assignments));
-		assertEquals("(- v1 (- v0 (- v1 (+ (* 2 v0) (* -2 v1)))))", new NodeWriter().writeNode(output));
+		assertEquals("(- (* 4 v1) (* 3 v0))", new NodeWriter().writeNode(output));
 	}
 
 	@Test
 	public void testVeryDeeplyNestedTreeSimplifedByOperator2() {
-		// TODO keep trying to improve until get to 5y-3x-z
 		Node input = readNode("(- v1 (- (- v0 (- v1 (- (- (+ 2 (+ v0 (- (+ v0 (+ 8 v2)) v1))) v1) v1))) 10))");
 		Node output = nodeSimplifier.simplify(input);
 		Assignments assignments = Assignments.createAssignments(7, 12, 8);
 		assertEquals(input.evaluate(assignments), output.evaluate(assignments));
-		assertEquals("(- v1 (- v0 (- v1 (+ (+ v2 (* 2 v0)) (* -3 v1)))))", new NodeWriter().writeNode(output));
+		assertEquals("(- (* 5 v1) (+ v2 (* 3 v0)))", new NodeWriter().writeNode(output));
 	}
 
 	@Test
@@ -137,9 +155,11 @@ public class NodeSimplifierTest {
 		Node output = nodeSimplifier.simplify(input);
 		Assignments assignments = Assignments.createAssignments(0, 1, 2, 3, 1);
 		assertEquals(input.evaluate(assignments), output.evaluate(assignments));
-		assertEquals(
-				"(* 3 (* -3 (* 3 (- 1 (- (- 2 (- (+ (* 3 (* (* 3 (- 1 (- (- 3 (- (* 3 (* -3 (* 3 (- (- (- 2 (+ v2 (* 2 v3))) (* 2 v2)) (- 7 (* 2 v2)))))) (- (- 7 (- (+ v2 (+ (* 3 (* -3 (* 3 (- (- (- 2 (+ v2 (* 2 v3))) (* 2 v2)) (- 7 (* 2 v2)))))) (* 3 v2))) 2)) (+ 3 (* 2 v2))))) 11))) (* 3 (- -1 v2)))) (* 2 v2)) 4)) (- (* 2 v2) 11))))))",
-				new NodeWriter().writeNode(output));
+		String expected = "(* -27 (- (- (* 2 v2) 16) (- (* 2 (- 0 v2)) (* 3 (* (* 3 (- (- (* -27 (- (- (- -5 (* 2 v3)) (* 3 v2)) (- 0 (* 2 v2)))) (* 2 v2)) (+ (- 0 (* 2 v2)) (- (- (- -3 (* 4 v2)) (* -27 (- (- (- -5 (* 2 v3)) (* 3 v2)) (- 0 (* 2 v2))))) (* 2 v2))))) (* 3 (- 0 (+ 1 v2))))))))";
+		// TODO best: (* -27 (- (+ (* 3 (* (* 3 (- 0 (+ v2 1))) (* 3 (- 0 (- (- 0 (+ (* -54 (- (- (- -4 (+ v2 (* 2 v3))) (+ 1 (* 2 v2))) (- 0 (* 2 v2)))) (* 4
+		// v2))) (+ 3 (* 2 v2))))))) (* 4 v2)) 16))
+		String actual = new NodeWriter().writeNode(output);
+		assertEquals(expected.length() + " vs. " + actual.length(), expected, actual);
 	}
 
 	@Test
@@ -147,22 +167,22 @@ public class NodeSimplifierTest {
 		// TODO keep trying to improve
 		Node input = readNode("(+ (- v4 (- 3 v4)) (if (- 4 (+ v4 v2)) (+ (+ 1 (+ (- v1 (- v1 (- v1 (* v3 (* v0 v2))))) (* v4 (+ v3 v1)))) (if (- v4 (* 3 (- (if (- v3 (+ v3 (- v2 (* 3 v3)))) (+ (* (- (+ v3 (* v1 v2)) (if (- v3 (if (- (- v1 (- (- v1 4) (if (- 3 v4) v4 0))) (- (- v1 (- (- v1 1) v4)) (- v3 3))) (- v1 v4) v1)) (- (- v2 (- v3 (* v1 v2))) v4) v1)) (if (- v3 (+ 1 (+ v3 (* (+ v1 1) v2)))) 3 v1)) (if v1 v2 v1)) v4) (* 3 v2)))) 3 (+ (- 0 (- (* v1 (* v1 (- (- v1 v4) (* v3 (* v0 v2))))) (* v4 (- v3 v1)))) v1))) (+ (- v1 (- (- v1 v2) (if v4 v4 v1))) (if (* (- v3 (if (- v3 (- (if (* v3 (+ v3 (- (if (+ (- v3 (+ v1 v2)) (- (* v1 v4) (+ v4 (* (+ v1 (- v1 v4)) (if (- (* v4 (- v3 v1)) (- (- v3 (- v3 (if (- (* v1 (if (- v3 (+ v3 (- (if (* (- v3 (+ v1 v2)) (- (+ v1 v3) (* 4 (* 3 v2)))) (* (+ v1 (- (- v0 3) (* v3 v2))) (if (- (* v1 (+ v3 (+ v1 1))) (* (- v3 (- v3 (if (- (* v4 (- (- v1 1) (if (- 1 v4) v4 v1))) (- v3 (* 3 (* v1 v2)))) (- v1 v4) v1))) v2)) v2 v1)) (- (- v1 (- (- v1 1) (if (- (if (- v3 (+ v3 (- (if (+ (- v3 (+ v1 v2)) (- (+ v1 v4) (* 4 (* v1 v4)))) (- (+ v1 (- (- v1 v4) (- v3 (* v0 v2)))) (if (- (* v4 (- v3 v1)) (* (- v3 (- (+ (- v1 (- (- v1 v2) (if v4 v4 v1))) (if (* (- v3 (if (- v3 (- (if (* v3 (+ v3 (- (if (+ (- v3 (+ v1 v2)) (- (* v1 v4) (* v4 (* (+ v1 (- v1 v4)) (if (- (* v4 (- v3 v1)) (* (- v3 (- v3 (if (- (* v1 (if (- v3 (+ v3 (- (if (* (- v2 (+ v1 v2)) (- (+ v1 v3) (* 4 (* 3 v2)))) (* (+ v1 (- (- v0 3) (* v3 v2))) (if (- (* 3 (+ v3 v1)) (* (- v3 (- v3 (if (- (* v4 (- (- v1 1) (if (- 1 v4) v4 v1))) (- v3 (* 3 (* v1 v2)))) (- v1 v4) v1))) v2)) v2 v1)) (- (- v1 (- (- v1 1) (if (- (if (- v3 (+ v3 (- (if (+ (- v3 (+ v1 v2)) (- (+ v1 v4) (* 4 (* v1 v4)))) (- (+ v1 (- 0 (- v3 (* v0 v2)))) (if (- (* 2 (- v3 v1)) (* (- v3 (- v3 (if (+ (* v1 (- (- v1 1) v3)) (- v3 (* 3 (* v1 v2)))) (* v1 v4) v1))) v2)) v2 v1)) (- (- v1 (- (- v1 2) (if (- v1 v4) v4 v1))) (+ v3 3))) v3))) (* v2 (if v1 v2 v1)) v4) v4) v4 v1))) (- v3 3))) v3))) (* v2 (if v1 v4 v1)) v4)) (- v3 (* 3 (- (- 3 v4) (* 4 v2))))) (* v1 v4) v1))) v2)) v2 v4))))) (* (+ v1 (- (- v1 v2) (* v3 (* v0 v2)))) (if (- 3 (* (- v3 (- v3 (if (- (+ v1 (- (- v1 1) (if (- 1 v4) 1 v1))) (- v4 (* 3 (- (- 3 v4) (- 4 v2))))) (- v1 v4) v1))) v2)) v2 v1)) (- (- v1 (- (- v1 v3) (if (- v1 v3) 1 v1))) (- v3 3))) (* 3 v3)))) (* (if (- 1 v4) v4 0) (if v4 v2 v1)) v4) (+ v3 (* (- v1 1) 3)))) 3 v1)) (if v1 v2 v1)) (- v1 (* v1 v2)) v1)) (if (+ (* v1 (- (- v1 1) (if (- 1 v4) v4 v1))) (- v3 (* 3 (* v1 v2)))) (- v1 v4) v1))) v2)) v2 v1)) (- (- v1 (- (- v1 2) (if (- v1 v4) v4 v1))) (+ v3 3))) v3))) (* v2 (if v1 v4 v1)) v4) v4) v4 v1))) (- v3 3))) v3))) (* v2 (if v1 v4 v1)) v4)) (- v3 (* 3 (- (- 3 v4) (* 4 v2))))) (+ v1 v4) v1))) v2)) v2 v4))))) (* (* v1 (- (- v1 v2) (* v3 (* v0 v2)))) (if (- v3 (* (- v3 (- v3 (if (- (+ v1 (- (- v1 1) (if (- 1 v4) v4 v1))) (- v4 (* 3 (- (- 3 v4) (- 4 v2))))) (- v1 v4) v1))) v2)) v2 v1)) (- (- v1 (- (- v1 v3) (if (- v1 v3) 1 v1))) (- v3 3))) (* 3 v3)))) (* (if (- 1 v4) v4 0) (if v4 v2 v1)) v4) (+ v3 (* (- v1 1) 3)))) 3 v1)) (if v1 v2 v1)) (- v1 (* v1 v2)) v1))))");
 		Node output = nodeSimplifier.simplify(input);
-		assertEquals(
-				"(+ (- v4 (- 3 v4)) (if (- 4 (+ v2 v4)) (+ (+ 1 (+ (- v1 (- v1 (- v1 (* v3 (* v0 v2))))) (* v4 (+ v1 v3)))) (if (- v4 (* 3 (- (if (- v3 (- (+ v2 v3) (* 3 v3))) (+ (if v1 v2 v1) (* (if (- v3 (+ 1 (+ v3 (* v2 (+ 1 v1))))) 3 v1) (- (+ v3 (* v1 v2)) (if (- v3 (if (- (- v1 (- (- v1 4) (if (- 3 v4) v4 0))) (- (- v1 (- (- v1 1) v4)) (- v3 3))) (- v1 v4) v1)) (- (- v2 (- v3 (* v1 v2))) v4) v1)))) v4) (* 3 v2)))) 3 (- v1 (- (* v1 (* v1 (- (- v1 v4) (* v3 (* v0 v2))))) (* v4 (- v3 v1)))))) (- (+ v1 (if (* (if v1 v2 v1) (- v3 (if (- v3 (- (if (* v3 (- (+ v3 (if (- (- (+ v3 (* v1 v4)) (+ v4 (* (if (- (* v4 (- v3 v1)) (- (- v3 (- v3 (if (- (* v1 (if (- v3 (if (* (- (+ v1 v3) (* 4 (* 3 v2))) (- v3 (+ v1 v2))) (* (- (- (+ v0 v1) 3) (* v2 v3)) (if (- (* v1 (+ v3 (+ 1 v1))) (* v2 (- v3 (- v3 (if (- (* v4 (- (- v1 1) (if (- 1 v4) v4 v1))) (- v3 (* 3 (* v1 v2)))) (- v1 v4) v1))))) v2 v1)) (- (- v1 (- (- v1 1) (if (- (if (- v3 (if (- (- (+ v3 (+ v1 v4)) (* 4 (* v1 v4))) (+ v1 v2)) (- (- (- (* 2 v1) v4) (- v3 (* v0 v2))) (if (- (* v4 (- v3 v1)) (* v2 (- v3 (- (- (+ v1 (if (* (if v1 v2 v1) (- v3 (if (- v3 (- (if (* v3 (- (+ v3 (if (- (- (+ v3 (* v1 v4)) (* v4 (* (if (- (* v4 (- v3 v1)) (* v2 (- v3 (- v3 (if (- (* v1 (if (- v3 (if (* (- (+ v1 v3) (* 4 (* 3 v2))) (- v2 (+ v1 v2))) (* (if (- (* 3 (+ v1 v3)) (* v2 (- v3 (- v3 (if (- (* v4 (- (- v1 1) (if (- 1 v4) v4 v1))) (- v3 (* 3 (* v1 v2)))) (- v1 v4) v1))))) v2 v1) (- (- (+ v0 v1) 3) (* v2 v3))) (- (- v1 (- (- v1 1) (if (- (if (- v3 (if (- (- (+ v3 (+ v1 v4)) (* 4 (* v1 v4))) (+ v1 v2)) (- (- v1 (- v3 (* v0 v2))) (if (- (* 2 (- v3 v1)) (* v2 (- v3 (- v3 (if (- (+ v3 (* v1 (- (- v1 1) v3))) (* 3 (* v1 v2))) (* v1 v4) v1))))) v2 v1)) (- (- v1 (- (- v1 2) (if (- v1 v4) v4 v1))) (+ 3 v3)))) (* v2 (if v1 v2 v1)) v4) v4) v4 v1))) (- v3 3)))) (* v2 (if v1 v4 v1)) v4)) (- v3 (* 3 (- (- 3 v4) (* 4 v2))))) (* v1 v4) v1))))) v2 v4) (- (* 2 v1) v4)))) (+ v1 v2)) (* (- (- (* 2 v1) v2) (* v3 (* v0 v2))) (if (- 3 (* v2 (- v3 (- v3 (if (- (- (- (* 2 v1) 1) (if (- 1 v4) 1 v1)) (- v4 (* 3 (- (- 3 v4) (- 4 v2))))) (- v1 v4) v1))))) v2 v1)) (- (- v1 (- (- v1 v3) (if (- v1 v3) 1 v1))) (- v3 3)))) (* 3 v3))) (* (if v4 v2 v1) (if (- 1 v4) v4 0)) v4) (+ v3 (* 3 (- v1 1))))) 3 v1))) (- v1 (* v1 v2)) v1)) (- (- v1 v2) (if v4 v4 v1))) (if (+ (- v3 (* 3 (* v1 v2))) (* v1 (- (- v1 1) (if (- 1 v4) v4 v1)))) (- v1 v4) v1))))) v2 v1)) (- (- v1 (- (- v1 2) (if (- v1 v4) v4 v1))) (+ 3 v3)))) (* v2 (if v1 v4 v1)) v4) v4) v4 v1))) (- v3 3)))) (* v2 (if v1 v4 v1)) v4)) (- v3 (* 3 (- (- 3 v4) (* 4 v2))))) (+ v1 v4) v1))) v2)) v2 v4) (- (* 2 v1) v4)))) (+ v1 v2)) (* (* v1 (- (- v1 v2) (* v3 (* v0 v2)))) (if (- v3 (* v2 (- v3 (- v3 (if (- (- (- (* 2 v1) 1) (if (- 1 v4) v4 v1)) (- v4 (* 3 (- (- 3 v4) (- 4 v2))))) (- v1 v4) v1))))) v2 v1)) (- (- v1 (- (- v1 v3) (if (- v1 v3) 1 v1))) (- v3 3)))) (* 3 v3))) (* (if v4 v2 v1) (if (- 1 v4) v4 0)) v4) (+ v3 (* 3 (- v1 1))))) 3 v1))) (- v1 (* v1 v2)) v1)) (- (- v1 v2) (if v4 v4 v1)))))",
-				new NodeWriter().writeNode(output));
+		String expected = "(+ (- (* 2 v4) 3) (if (- 4 (+ v2 v4)) (+ (if (- v4 (* 3 (- (if (- (* 3 v3) v2) (+ (if v1 v2 v1) (* (- (+ v3 (* v1 v2)) (if (- v3 (if (- (if (- 3 v4) v4 0) (- v4 v3)) (- v1 v4) v1)) (- (- v2 (- v3 (* v1 v2))) v4) v1)) (if (- 0 (+ 1 (* v2 (+ 1 v1)))) 3 v1))) v4) (* 3 v2)))) 3 (+ v1 (- (* v4 (- v3 v1)) (* v1 (* v1 (- (- v1 v4) (* v3 (* v0 v2)))))))) (+ (- v1 (- (* v3 (* v0 v2)) 1)) (* v4 (+ v1 v3)))) (+ (if (* (if v1 v2 v1) (- v3 (if (- (+ (* 2 v3) (* 3 (- v1 1))) (if (* v3 (- (if (+ (- (* v1 v4) (+ v4 (* (if (- (* v4 (- v3 v1)) (- (if (- (* v1 (if (- v3 (if (* (- (+ v1 v3) (* 12 v2)) (- v3 (+ v1 v2))) (* (+ v1 (- (- v0 3) (* v2 v3))) (if (- (* v1 (+ v3 (+ 1 v1))) (* v2 (if (- (* v4 (- (- v1 1) (if (- 1 v4) v4 v1))) (- v3 (* 3 (* v1 v2)))) (- v1 v4) v1))) v2 v1)) (- (+ 4 (if (- (if (- v3 (if (+ (- v3 v2) (- v4 (* 4 (* v1 v4)))) (- (- (- (* 2 v1) v4) (- v3 (* v0 v2))) (if (- (* v4 (- v3 v1)) (* v2 (- v3 (- (+ (if (* (if v1 v2 v1) (- v3 (if (- (+ (* 2 v3) (* 3 (- v1 1))) (if (* v3 (- (if (+ (- (* v1 v4) (* v4 (* (if (- (* v4 (- v3 v1)) (* v2 (if (- (* v1 (if (- v3 (if (* (- (+ v1 v3) (* 12 v2)) (- 0 v1)) (* (+ v1 (- (- v0 3) (* v2 v3))) (if (- (* 3 (+ v1 v3)) (* v2 (if (- (* v4 (- (- v1 1) (if (- 1 v4) v4 v1))) (- v3 (* 3 (* v1 v2)))) (- v1 v4) v1))) v2 v1)) (- (+ 4 (if (- (if (- v3 (if (+ (- v3 v2) (- v4 (* 4 (* v1 v4)))) (- (+ v1 (- (* v0 v2) v3)) (if (- (* 2 (- v3 v1)) (* v2 (if (+ (* v1 (- (- v1 1) v3)) (- v3 (* 3 (* v1 v2)))) (* v1 v4) v1))) v2 v1)) (- (- (if (- v1 v4) v4 v1) 1) v3))) (* v2 (if v1 v2 v1)) v4) v4) v4 v1)) v3))) (* v2 (if v1 v4 v1)) v4)) (- v3 (* 3 (- (- 3 v4) (* 4 v2))))) (* v1 v4) v1))) v2 v4) (- (* 2 v1) v4)))) (- v3 (+ v1 v2))) (* (- (- (* 2 v1) v2) (* v3 (* v0 v2))) (if (- 3 (* v2 (if (- (- (- (* 2 v1) 1) (if (- 1 v4) 1 v1)) (- v4 (* 3 (- (- 0 v4) (- 1 v2))))) (- v1 v4) v1))) v2 v1)) (+ 3 (if (- v1 v3) 1 v1))) (* 2 v3))) (* (if v4 v2 v1) (if (- 1 v4) v4 0)) v4)) 3 v1))) (- v1 (* v1 v2)) v1) (- (if v4 v4 v1) (- 0 v2))) (if (+ (- v3 (* 3 (* v1 v2))) (* v1 (- (- v1 1) (if (- 1 v4) v4 v1)))) (- v1 v4) v1))))) v2 v1)) (- (- (if (- v1 v4) v4 v1) 1) v3))) (* v2 (if v1 v4 v1)) v4) v4) v4 v1)) v3))) (* v2 (if v1 v4 v1)) v4)) (- v3 (* 3 (- (- 3 v4) (* 4 v2))))) (+ v1 v4) v1) v2)) v2 v4) (- (* 2 v1) v4)))) (- v3 (+ v1 v2))) (* (if (- v3 (* v2 (if (- (- (- (* 2 v1) 1) (if (- 1 v4) v4 v1)) (- v4 (* 3 (- (- 0 v4) (- 1 v2))))) (- v1 v4) v1))) v2 v1) (* v1 (- (- v1 v2) (* v3 (* v0 v2))))) (+ 3 (if (- v1 v3) 1 v1))) (* 2 v3))) (* (if v4 v2 v1) (if (- 1 v4) v4 0)) v4)) 3 v1))) (- v1 (* v1 v2)) v1) (- (if v4 v4 v1) (- 0 v2)))))";
+		String actual = new NodeWriter().writeNode(output);
+		assertEquals(expected.length() + " vs. " + actual.length(), expected, actual);
 	}
 
 	private static void assertCanSimplify(String expected, String input) {
 		Node inputNode = readNode(input);
-		Node expectedNode = readNode(expected);
 		Node simpliedVersion = new NodeSimplifier().simplify(inputNode);
+		Object[][] assignedValues = { { 0, 0, 0 }, { 1, 21, 8 }, { 2, 14, 4 }, { 3, -6, 2 }, { 7, 3, -1 }, { -1, 9, 7 }, { -7, 0, -2 } };
+		for (Object[] assignedValue : assignedValues) {
+			Assignments assignments = Assignments.createAssignments(assignedValue);
+			assertEquals(new NodeWriter().writeNode(simpliedVersion), inputNode.evaluate(assignments), simpliedVersion.evaluate(assignments));
+		}
+		Node expectedNode = readNode(expected);
 		assertEquals(new NodeWriter().writeNode(expectedNode), new NodeWriter().writeNode(simpliedVersion));
 		assertEquals(new NodeWriter().writeNode(simpliedVersion), expectedNode.toString(), simpliedVersion.toString());
 		assertEquals(expectedNode, simpliedVersion);
-		int[][] assignedValues = { { 0, 0 }, { 1, 21 }, { 2, 14 }, { 3, -6 }, { 7, 3 }, { -1, 9 }, { -7, 0 } };
-		for (int[] assignedValue : assignedValues) {
-			Assignments assignments = Assignments.createAssignments(assignedValue[0], assignedValue[1]);
-			assertEquals(inputNode.evaluate(assignments), simpliedVersion.evaluate(assignments));
-		}
 	}
 }
