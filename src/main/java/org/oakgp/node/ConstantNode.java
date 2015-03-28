@@ -62,7 +62,7 @@ public final class ConstantNode implements Node {
 	public boolean equals(Object o) {
 		if (o instanceof ConstantNode) {
 			ConstantNode c = (ConstantNode) o;
-			return this.value == c.value && this.type == c.type;
+			return this.value.equals(c.value) && this.type == c.type;
 		} else {
 			return false;
 		}

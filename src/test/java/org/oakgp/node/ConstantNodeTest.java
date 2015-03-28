@@ -9,6 +9,7 @@ import static org.oakgp.TestUtils.createVariable;
 import static org.oakgp.Type.INTEGER;
 
 import org.junit.Test;
+import org.oakgp.Type;
 
 public class ConstantNodeTest {
 	@Test
@@ -40,9 +41,23 @@ public class ConstantNodeTest {
 	}
 
 	@Test
-	public void testEqualsAndHashCode() {
+	public void testEqualsAndHashCodeIntegers() {
 		final ConstantNode n1 = createConstant(7);
 		final ConstantNode n2 = createConstant(7);
+		assertNotSame(n1, n2);
+		assertEquals(n1, n1);
+		assertEquals(n1.hashCode(), n2.hashCode());
+		assertEquals(n1, n2);
+	}
+
+	@Test
+	public void testEqualsAndHashCodeStrings() {
+		String a = new String("hello");
+		String b = new String("hello");
+		assertNotSame(a, b);
+
+		final ConstantNode n1 = new ConstantNode(a, Type.STRING);
+		final ConstantNode n2 = new ConstantNode(b, Type.STRING);
 		assertNotSame(n1, n2);
 		assertEquals(n1, n1);
 		assertEquals(n1.hashCode(), n2.hashCode());
@@ -55,6 +70,7 @@ public class ConstantNodeTest {
 		assertNotEquals(n, createConstant(8));
 		assertNotEquals(n, createConstant(-7));
 		assertNotEquals(n, createVariable(7));
+		assertNotEquals(n, new ConstantNode("7", Type.STRING));
 		assertNotEquals(n, new Integer(7));
 	}
 }
