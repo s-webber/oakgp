@@ -51,8 +51,4 @@ public final class Add extends ArithmeticOperator {
 			}
 		}
 	}
-
-	private FunctionNode times2(Node arg) {
-		return new FunctionNode(new Multiply(), Arguments.createArguments(createConstant(2), arg));
-	}
 }

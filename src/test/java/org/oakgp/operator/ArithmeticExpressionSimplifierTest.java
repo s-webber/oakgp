@@ -40,11 +40,11 @@ public class ArithmeticExpressionSimplifierTest {
 		assertReplace("(- (+ 4 v0) 3)", "(+ 1 v0)");
 		assertReplace("(- (- v0 1) v1)", "(- (- v0 1) v1)");
 
-		assertReplace("(- (- v0 1) (- v0 1))", "(- (- 0 1) (- 0 1))");
-		assertReplace("(- (+ v0 1) (+ v0 1))", "(- (+ 0 1) (+ 0 1))");
-		assertReplace("(+ (- v0 1) (- v0 1))", "(+ (- 0 1) (- (* 2 v0) 1))");
-		assertReplace("(+ (+ v0 1) (+ v0 1))", "(+ (+ 0 1) (+ (* 2 v0) 1))");
-		assertReplace("(- (+ v0 1) (- v0 1))", "(- (+ 0 1) (- 0 1))");
+		assertReplace("(- (- v0 1) (- v0 1))", "(- (- 0 0) (- 1 1))");
+		assertReplace("(- (+ v0 1) (+ v0 1))", "(- (+ 0 0) (+ -1 1))");
+		assertReplace("(+ (- v0 1) (- v0 1))", "(+ (- 0 0) (- (* 2 v0) 2))");
+		assertReplace("(+ (+ v0 1) (+ v0 1))", "(+ (+ 0 0) (+ (* 2 v0) 2))");
+		assertReplace("(- (+ v0 1) (- v0 1))", "(- (+ 0 0) (- -1 1))");
 	}
 
 	private void assertAdditionSimplification(String firstArg, String secondArg, String expectedOutput) {

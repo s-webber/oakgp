@@ -25,6 +25,9 @@ public class MultiplyTest extends AbstractOperatorTest {
 		// anything multiplied by one is itself
 		t.put("(* v1 1)", "v1");
 		t.put("(* 1 v1)", "v1");
+
+		// TODO (* 3 (- 0 (+ 1 v2))) = 3*(0-(1+x)) = -3-3x
+		t.put("(* 3 (- 0 (+ 1 v2)))", "(* 3 (- 0 (+ 1 v2)))");
 	}
 
 	@Override

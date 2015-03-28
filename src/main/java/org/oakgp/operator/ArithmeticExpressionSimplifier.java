@@ -1,6 +1,8 @@
 package org.oakgp.operator;
 
+import static org.oakgp.operator.ArithmeticOperator.ZERO;
 import static org.oakgp.operator.ArithmeticOperator.createConstant;
+import static org.oakgp.operator.ArithmeticOperator.times2;
 
 import java.util.Optional;
 
@@ -34,7 +36,8 @@ public final class ArithmeticExpressionSimplifier {
 		// TODO move to Operator implementations
 		if (firstArg instanceof ConstantNode && secondArg instanceof FunctionNode) {
 			FunctionNode fn2 = (FunctionNode) secondArg;
-			if (fn2.getArguments().get(0) instanceof ConstantNode && (currentOperator.getClass() == fn2.getOperator().getClass() || (isAdd && sameOperator(Subtract.class, fn2)))) {
+			if (fn2.getArguments().get(0) instanceof ConstantNode
+					&& (currentOperator.getClass() == fn2.getOperator().getClass() || (isAdd && sameOperator(Subtract.class, fn2)))) {
 				int i1 = (int) firstArg.evaluate(null);
 				int i2 = (int) fn2.getArguments().get(0).evaluate(null);
 				int result;
@@ -101,13 +104,18 @@ public final class ArithmeticExpressionSimplifier {
 			Operator op = fn.getOperator();
 			boolean isAdd = op.getClass() == Add.class;
 			boolean isSubtract = op.getClass() == Subtract.class;
-			if (isAdd || isSubtract) {// op instanceof ArithmeticOperator) {
+			if (isAdd || isSubtract) {
 				Node firstArg = fn.getArguments().get(0);
 				Node secondArg = fn.getArguments().get(1);
 				Optional<NodePair> o = recursiveReplace(firstArg, nodeToUpdate, isPos);
 				if (o.isPresent()) {
 					NodePair p = o.get();
-					return Optional.of(new NodePair(new FunctionNode(op, Arguments.createArguments(p.x, secondArg)), p.y));
+					Optional<NodePair> o2 = recursiveReplace(secondArg, p.y, isSubtract ? !isPos : isPos);
+					if (o2.isPresent()) {
+						return Optional.of(new NodePair(new FunctionNode(op, Arguments.createArguments(p.x, o2.get().x)), o2.get().y));
+					} else {
+						return Optional.of(new NodePair(new FunctionNode(op, Arguments.createArguments(p.x, secondArg)), p.y));
+					}
 				}
 				o = recursiveReplace(secondArg, nodeToUpdate, isSubtract ? !isPos : isPos);
 				if (o.isPresent()) {
@@ -115,10 +123,11 @@ public final class ArithmeticExpressionSimplifier {
 					return Optional.of(new NodePair(new FunctionNode(op, Arguments.createArguments(firstArg, p.x)), p.y));
 				}
 			}
-		} else {
+		} else if (!ZERO.equals(nodeToSearch)) {
+			// TODO confirm this is not worth doing when nodeToSearch is 0
 			Node tmp = simplify(nodeToUpdate, nodeToSearch, isPos);
 			if (!tmp.equals(nodeToUpdate)) {
-				return Optional.of(new NodePair(createConstant(0), tmp));
+				return Optional.of(new NodePair(ZERO, tmp));
 			}
 		}
 		return Optional.empty();
@@ -134,7 +143,7 @@ public final class ArithmeticExpressionSimplifier {
 
 	private Node dealWithSubtract(Operator currentOperator, Node tmp) {
 		if (currentOperator.getClass() == Subtract.class) {
-			tmp = new FunctionNode(currentOperator, Arguments.createArguments(createConstant(0), tmp));
+			tmp = new FunctionNode(currentOperator, Arguments.createArguments(ZERO, tmp));
 		}
 		return tmp;
 	}
@@ -208,9 +217,9 @@ public final class ArithmeticExpressionSimplifier {
 			}
 		} else {
 			if (isPos) {
-				return new FunctionNode(new Multiply(), Arguments.createArguments(createConstant(2), nodeToReplace));
+				return times2(nodeToReplace);
 			} else {
-				return createConstant(0);
+				return ZERO;
 			}
 		}
 	}
