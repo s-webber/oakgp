@@ -63,6 +63,11 @@ public final class Multiply extends ArithmeticOperator {
 						Node n = new FunctionNode(o, Arguments.createArguments(new FunctionNode(this, Arguments.createArguments(arg1, fnArg1)),
 								new FunctionNode(this, Arguments.createArguments(arg1, fnArg2))));
 						return Optional.of(n);
+						// } else if (o.getClass() == Multiply.class) {
+						// Node n = new FunctionNode(this, Arguments.createArguments(new FunctionNode(this, Arguments.createArguments(arg1, fnArg1)),
+						// new FunctionNode(this, Arguments.createArguments(arg1, fnArg2))));
+						// assertEvaluateToSameResult(new FunctionNode(this, Arguments.createArguments(arg1, arg2)), n);
+						// return Optional.of(n);
 					}
 				}
 			}

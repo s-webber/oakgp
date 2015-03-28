@@ -31,8 +31,12 @@ abstract class ArithmeticOperator implements Operator {
 		return new FunctionNode(new Multiply(), Arguments.createArguments(createConstant(2), arg));
 	}
 
-	static FunctionNode negate(Node arg) { // TODO move to somewhere more suitable
-		return new FunctionNode(new Subtract(), Arguments.createArguments(ZERO, arg));
+	static Node negate(Node arg) { // TODO move to somewhere more suitable
+		if (arg instanceof ConstantNode) {
+			return createConstant(-(int) arg.evaluate(null));
+		} else {
+			return new FunctionNode(new Subtract(), Arguments.createArguments(ZERO, arg));
+		}
 	}
 
 	@Override
