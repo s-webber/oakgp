@@ -8,6 +8,7 @@ import static org.oakgp.Arguments.createArguments;
 import static org.oakgp.Assignments.createAssignments;
 import static org.oakgp.TestUtils.createConstant;
 import static org.oakgp.TestUtils.createVariable;
+import static org.oakgp.TestUtils.readNode;
 import static org.oakgp.Type.INTEGER;
 
 import java.util.function.Function;
@@ -74,6 +75,14 @@ public class FunctionNodeTest {
 		assertEquals(n1, n1);
 		assertEquals(n1.hashCode(), n2.hashCode());
 		assertEquals(n1, n2);
+	}
+
+	public void testEquals() {
+		Node n1 = readNode("(org.oakgp.operator.Multiply 288 v1)");
+		Node n2 = readNode("(org.oakgp.operator.Multiply 288 v1)");
+		assertEquals(n1, n1);
+		assertEquals(n1, n2);
+		assertEquals(n2, n1);
 	}
 
 	@Test
