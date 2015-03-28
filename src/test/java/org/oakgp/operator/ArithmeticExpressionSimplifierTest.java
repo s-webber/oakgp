@@ -11,7 +11,7 @@ import org.oakgp.serialize.NodeWriter;
 public class ArithmeticExpressionSimplifierTest {
 	@Test
 	public void test() {
-		assertReplace("(* 3 (* -3 v1))", "(* -9 v1)");
+		assertReplace("(* 3 (* v0 v1))", "(* 3 (* v0 v1))");
 
 		assertReplace("(+ 1 1)", "(+ 1 1)");
 

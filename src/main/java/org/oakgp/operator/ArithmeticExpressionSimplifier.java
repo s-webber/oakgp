@@ -61,7 +61,7 @@ public final class ArithmeticExpressionSimplifier {
 						result = i1 - i2;
 					}
 				} else if (isMultiply) {
-					result = i1 * i2;
+					throw new IllegalArgumentException();
 				} else {
 					throw new IllegalArgumentException();
 				}
@@ -110,6 +110,7 @@ public final class ArithmeticExpressionSimplifier {
 				Optional<NodePair> o = recursiveReplace(firstArg, nodeToUpdate, isPos);
 				if (o.isPresent()) {
 					NodePair p = o.get();
+					// TODO is performance better if we don't call recursiveReplace again here with the second arg?
 					Optional<NodePair> o2 = recursiveReplace(secondArg, p.y, isSubtract ? !isPos : isPos);
 					if (o2.isPresent()) {
 						return Optional.of(new NodePair(new FunctionNode(op, Arguments.createArguments(p.x, o2.get().x)), o2.get().y));

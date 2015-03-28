@@ -43,7 +43,7 @@ public final class NodeSimplifier {
 				// throw new IllegalArgumentException(new NodeWriter().writeNode(output) + " " + new NodeWriter().writeNode(previous));
 				return output;
 			}
-			if (ctr++ > 10000) { // TODO
+			if (ctr++ > 20) { // TODO
 				throw new IllegalArgumentException(new NodeWriter().writeNode(input));
 			}
 		} while (output instanceof FunctionNode && !output.equals(previous));
