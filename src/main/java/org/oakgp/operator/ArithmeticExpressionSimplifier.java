@@ -20,7 +20,7 @@ final class ArithmeticExpressionSimplifier {
 			return Optional.empty();
 		}
 
-		Node simplifiedVersion = getSimplifiedVerion(operator, firstArg, secondArg);
+		Node simplifiedVersion = getSimplifiedVersion(operator, firstArg, secondArg);
 		if (simplifiedVersion != null) {// TODO remove this block - only used to sanity check results
 			FunctionNode in = new FunctionNode(operator, Arguments.createArguments(firstArg, secondArg));
 			assertEvaluateToSameResult(in, simplifiedVersion);
@@ -28,7 +28,7 @@ final class ArithmeticExpressionSimplifier {
 		return Optional.ofNullable(simplifiedVersion);
 	}
 
-	private static Node getSimplifiedVerion(Operator operator, Node firstArg, Node secondArg) {
+	private static Node getSimplifiedVersion(Operator operator, Node firstArg, Node secondArg) {
 		boolean isAdd = isAdd(operator);
 		boolean isSubtract = isSubtract(operator);
 		boolean isMultiply = isMultiply(operator);
