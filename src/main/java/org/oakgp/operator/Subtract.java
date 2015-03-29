@@ -56,17 +56,33 @@ public final class Subtract extends ArithmeticOperator {
 					// (- 0 (+ v0 v1) -> (+ (0 - v0) (0 - v1))
 					FunctionNode value = new FunctionNode(o, Arguments.createArguments(negate(fnArg1), negate(fnArg2)));// negate(fnArg2)));
 					return Optional.of(value);
+				} else if (arg1 instanceof ConstantNode && fnArg1 instanceof ConstantNode && fn.getOperator().getClass() == Subtract.class) {
+					int i1 = (int) arg1.evaluate(null);
+					int i2 = (int) fnArg1.evaluate(null);
+					int result;
+					Operator op = fn.getOperator();
+					if (i1 == 0) {
+						// (- 0 (- 0 v0)) -> v0
+						// (- 0 (- 7 v0)) -> (- v0 7)
+						return Optional.of(new FunctionNode(op, Arguments.createArguments(fnArg2, fnArg1)));
+					} else if (i2 == 0) {
+						// (- 1 (- 0 v0)) -> (+ 1 v0)
+						return Optional.of(new FunctionNode(new Add(), Arguments.createArguments(arg1, fnArg2)));
+					} else {
+						result = i1 - i2;
+						return Optional.of(new FunctionNode(new Add(), Arguments.createArguments(createConstant(result), fnArg2)));
+					}
 				}
 			}
-		}
 
-		FunctionNode in = new FunctionNode(this, Arguments.createArguments(arg1, arg2));
-		Node out = new ArithmeticExpressionSimplifier().simplify(in);
-		if (!in.equals(out)) {
-			assertEvaluateToSameResult(in, out);
-			return Optional.of(out);
-		} else {
-			return Optional.empty();
+			FunctionNode in = new FunctionNode(this, Arguments.createArguments(arg1, arg2));
+			Node out = new ArithmeticExpressionSimplifier().simplify(in);
+			if (!in.equals(out)) {
+				assertEvaluateToSameResult(in, out);
+				return Optional.of(out);
+			} else {
+				return Optional.empty();
+			}
 		}
 	}
 

@@ -38,38 +38,40 @@ public final class ArithmeticExpressionSimplifier {
 			FunctionNode fn2 = (FunctionNode) secondArg;
 			if (fn2.getArguments().get(0) instanceof ConstantNode
 					&& (currentOperator.getClass() == fn2.getOperator().getClass() || (isAdd && sameOperator(Subtract.class, fn2)))) {
-				int i1 = (int) firstArg.evaluate(null);
-				int i2 = (int) fn2.getArguments().get(0).evaluate(null);
-				int result;
-				Operator op = fn2.getOperator();
-				if (isAdd) {
-					if (sameOperator(Subtract.class, fn2)) {
-						result = i1 + i2;
-					} else {
-						result = i1 + i2;
-					}
-				} else if (isSubtract) {
-					if (i1 == 0) {
-						// (- 0 (- 0 v0)) -> v0
-						// (- 0 (- 7 v0)) -> (- v0 7)
-						return new FunctionNode(fn2.getOperator(), Arguments.createArguments(fn2.getArguments().get(1), fn2.getArguments().get(0)));
-					} else if (i2 == 0) {
-						// (- 1 (- 0 v0)) -> (+ 1 v0)
-						return new FunctionNode(new Add(), Arguments.createArguments(firstArg, fn2.getArguments().get(1)));
-					} else {
-						op = new Add();
-						result = i1 - i2;
-					}
-				} else if (isMultiply) {
-					throw new IllegalArgumentException();
-				} else {
-					throw new IllegalArgumentException();
-				}
-				return new FunctionNode(op, Arguments.createArguments(createConstant(result), fn2.getArguments().get(1)));
+				throw new IllegalArgumentException();
+				// int i1 = (int) firstArg.evaluate(null);
+				// int i2 = (int) fn2.getArguments().get(0).evaluate(null);
+				// int result;
+				// Operator op = fn2.getOperator();
+				// if (isAdd) {
+				// throw new IllegalArgumentException();
+				// // if (sameOperator(Subtract.class, fn2)) {
+				// // result = i1 + i2;
+				// // } else {
+				// // result = i1 + i2;
+				// // }
+				// } else if (isSubtract) {
+				// if (i1 == 0) {
+				// // (- 0 (- 0 v0)) -> v0
+				// // (- 0 (- 7 v0)) -> (- v0 7)
+				// return new FunctionNode(fn2.getOperator(), Arguments.createArguments(fn2.getArguments().get(1), fn2.getArguments().get(0)));
+				// } else if (i2 == 0) {
+				// // (- 1 (- 0 v0)) -> (+ 1 v0)
+				// return new FunctionNode(new Add(), Arguments.createArguments(firstArg, fn2.getArguments().get(1)));
+				// } else {
+				// op = new Add();
+				// result = i1 - i2;
+				// }
+				// } else if (isMultiply) {
+				// throw new IllegalArgumentException();
+				// } else {
+				// throw new IllegalArgumentException();
+				// }
+				// return new FunctionNode(op, Arguments.createArguments(createConstant(result), fn2.getArguments().get(1)));
 			}
 		}
 
-		if (isAdd || isSubtract) {// || isMultiply) {
+		if (isAdd || isSubtract) {
 			boolean isPos = !isSubtract;
 			if (firstArg instanceof FunctionNode && secondArg instanceof FunctionNode) {
 				Optional<NodePair> o = recursiveReplace(firstArg, secondArg, isPos);
@@ -126,16 +128,11 @@ public final class ArithmeticExpressionSimplifier {
 					Node tmp = new FunctionNode(op, Arguments.createArguments(createConstant(result), secondArg));
 					return Optional.of(new NodePair(ZERO, tmp));
 				}
-				// really do this here?
+
 				Node tmp = simplify(nodeToUpdate, nodeToSearch, isPos);
 				if (!tmp.equals(nodeToUpdate)) {
 					return Optional.of(new NodePair(ZERO, tmp));
 				}
-				// if (sameMultiplyVariable(nodeToSearch, x.getArguments().get(1))) {
-				// // (org.oakgp.operator.Multiply -81 v2)
-				// // (org.oakgp.operator.Add (org.oakgp.operator.Subtract (org.oakgp.operator.Multiply -162 v0) 819) (org.oakgp.operator.Multiply -99 v2))
-				// throw new RuntimeException(nodeToSearch + " " + nodeToUpdate.toString());
-				// }
 			}
 			if (isAdd || isSubtract) {
 				Optional<NodePair> o = recursiveReplace(firstArg, nodeToUpdate, isPos);
