@@ -31,6 +31,8 @@ import org.oakgp.serialize.NodeWriter;
  * <b>Note:</b> relies on {@code Operator} implementations being referentially transparent.
  */
 public final class NodeSimplifier {
+	private static final int MAX_RETRIES = 100;
+
 	public Node simplify(Node input) {
 		int ctr = 0;
 		Set<String> s = new HashSet<>();
@@ -43,7 +45,7 @@ public final class NodeSimplifier {
 				// throw new IllegalArgumentException(new NodeWriter().writeNode(output) + " " + new NodeWriter().writeNode(previous));
 				return output;
 			}
-			if (ctr++ > 20) { // TODO
+			if (ctr++ > MAX_RETRIES) { // TODO
 				throw new IllegalArgumentException(new NodeWriter().writeNode(input));
 			}
 		} while (output instanceof FunctionNode && !output.equals(previous));
