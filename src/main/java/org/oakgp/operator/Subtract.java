@@ -1,7 +1,5 @@
 package org.oakgp.operator;
 
-import static org.oakgp.util.Utils.assertEvaluateToSameResult;
-
 import java.util.Optional;
 
 import org.oakgp.Arguments;
@@ -83,14 +81,7 @@ public final class Subtract extends ArithmeticOperator {
 				}
 			}
 
-			FunctionNode in = new FunctionNode(this, Arguments.createArguments(arg1, arg2));
-			Node out = new ArithmeticExpressionSimplifier().simplify(in);
-			if (!in.equals(out)) {
-				assertEvaluateToSameResult(in, out);
-				return Optional.of(out);
-			} else {
-				return Optional.empty();
-			}
+			return new ArithmeticExpressionSimplifier().simplify(this, arg1, arg2);
 		}
 	}
 }

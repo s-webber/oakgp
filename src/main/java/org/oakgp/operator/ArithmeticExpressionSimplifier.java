@@ -6,6 +6,7 @@ import static org.oakgp.operator.ArithmeticOperator.isAdd;
 import static org.oakgp.operator.ArithmeticOperator.isMultiply;
 import static org.oakgp.operator.ArithmeticOperator.isSubtract;
 import static org.oakgp.operator.ArithmeticOperator.times2;
+import static org.oakgp.util.Utils.assertEvaluateToSameResult;
 
 import java.util.Optional;
 
@@ -15,21 +16,24 @@ import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.util.NodeComparator;
 
-public final class ArithmeticExpressionSimplifier {
-	Node simplify(Node in) {
-		if (!(in instanceof FunctionNode)) {
-			return in;
+final class ArithmeticExpressionSimplifier {
+	Optional<Node> simplify(Operator operator, Node firstArg, Node secondArg) {
+		if (!(operator instanceof ArithmeticOperator)) {
+			return Optional.empty();
 		}
-		FunctionNode currentFunctionNode = (FunctionNode) in;
-		Operator currentOperator = currentFunctionNode.getOperator();
-		if (!(currentOperator instanceof ArithmeticOperator)) {
-			return in;
+
+		Node simplifiedVersion = getSimplifiedVerion(operator, firstArg, secondArg);
+		if (simplifiedVersion != null) {// TODO remove this block - only used to sanity check results
+			FunctionNode in = new FunctionNode(operator, Arguments.createArguments(firstArg, secondArg));
+			assertEvaluateToSameResult(in, simplifiedVersion);
 		}
-		boolean isAdd = isAdd(currentOperator);
-		boolean isSubtract = isSubtract(currentOperator);
-		boolean isMultiply = isMultiply(currentOperator);
-		Node firstArg = currentFunctionNode.getArguments().get(0);
-		Node secondArg = currentFunctionNode.getArguments().get(1);
+		return Optional.ofNullable(simplifiedVersion);
+	}
+
+	private Node getSimplifiedVerion(Operator operator, Node firstArg, Node secondArg) {
+		boolean isAdd = isAdd(operator);
+		boolean isSubtract = isSubtract(operator);
+		boolean isMultiply = isMultiply(operator);
 
 		// Ordering of arguments - TODO move to Add and Multiply
 		if ((isAdd || isMultiply) && new NodeComparator().compare(firstArg, secondArg) > 0) {
@@ -39,7 +43,7 @@ public final class ArithmeticExpressionSimplifier {
 		// TODO move to Operator implementations
 		if (firstArg instanceof ConstantNode && secondArg instanceof FunctionNode) {
 			FunctionNode fn2 = (FunctionNode) secondArg;
-			if (fn2.getArguments().get(0) instanceof ConstantNode && (currentOperator.getClass() == fn2.getOperator().getClass() || (isAdd && isSubtract(fn2)))) {
+			if (fn2.getArguments().get(0) instanceof ConstantNode && (operator.getClass() == fn2.getOperator().getClass() || (isAdd && isSubtract(fn2)))) {
 				throw new IllegalArgumentException();
 			}
 		}
@@ -50,12 +54,12 @@ public final class ArithmeticExpressionSimplifier {
 				Optional<NodePair> o = recursiveReplace(firstArg, secondArg, isPos);
 				if (o.isPresent()) {
 					NodePair p = o.get();
-					return new FunctionNode(currentOperator, Arguments.createArguments(p.x, p.y));
+					return new FunctionNode(operator, Arguments.createArguments(p.x, p.y));
 				}
 				o = recursiveReplace(secondArg, firstArg, isPos);
 				if (o.isPresent()) {
 					NodePair p = o.get();
-					return new FunctionNode(currentOperator, Arguments.createArguments(p.y, p.x));
+					return new FunctionNode(operator, Arguments.createArguments(p.y, p.x));
 				}
 			} else if (firstArg instanceof FunctionNode) {
 				Node tmp = simplify(firstArg, secondArg, isPos);
@@ -65,12 +69,12 @@ public final class ArithmeticExpressionSimplifier {
 			} else if (secondArg instanceof FunctionNode) {
 				Node tmp = simplify(secondArg, firstArg, isPos);
 				if (!tmp.equals(secondArg)) {
-					return dealWithSubtract(currentOperator, tmp);
+					return dealWithSubtract(operator, tmp);
 				}
 			}
 		}
 
-		return in;
+		return null;
 	}
 
 	// TODO order of args nodeToSearch,nodeToUpdate or nodeToUpdate,nodeToSearch ? be consistent with simplify

@@ -4,7 +4,9 @@ import static org.junit.Assert.assertEquals;
 import static org.oakgp.TestUtils.readNode;
 
 import org.junit.Test;
+import org.oakgp.Arguments;
 import org.oakgp.Assignments;
+import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.serialize.NodeWriter;
 
@@ -52,8 +54,9 @@ public class ArithmeticExpressionSimplifierTest {
 	}
 
 	private void assertReplace(String input, String expectedOutput) {
-		Node in = readNode(input);
-		Node simplifiedVersion = new ArithmeticExpressionSimplifier().simplify(in);
+		FunctionNode in = (FunctionNode) readNode(input);
+		Arguments args = in.getArguments();
+		Node simplifiedVersion = new ArithmeticExpressionSimplifier().simplify(in.getOperator(), args.get(0), args.get(1)).orElse(in);
 		String writeNode = new NodeWriter().writeNode(simplifiedVersion);
 		assertEquals(expectedOutput, writeNode);
 		if (!simplifiedVersion.equals(in)) {
