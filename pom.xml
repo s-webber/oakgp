@@ -70,6 +70,27 @@
 				</executions>
 			</plugin>
 			<plugin>
+			    <!-- To see bug detail using the Findbugs GUI, use the following command "mvn findbugs:gui" -->
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>findbugs-maven-plugin</artifactId>
+				<version>3.0.1</version>
+				<configuration>
+					<effort>Max</effort>
+					<threshold>Low</threshold>
+					<xmlOutput>true</xmlOutput>
+				</configuration>
+				<!-- To run as part of a "mvn clean install" uncomment the following:
+				<executions>
+					<execution>
+						<phase>verify</phase> 
+						<goals>
+							<goal>check</goal> 
+						</goals>
+					</execution>
+				</executions>
+				-->
+			</plugin>
+			<plugin>
 				<!-- To see the PMD report use the following command "mvn pmd:check" -->
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-pmd-plugin</artifactId>
