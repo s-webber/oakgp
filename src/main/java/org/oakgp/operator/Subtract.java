@@ -75,9 +75,11 @@ public final class Subtract extends ArithmeticOperator {
 					int result;
 					Operator op = fn.getOperator();
 					if (i1 == 0) {
+						// added exception to confirm we never actually get here
+						throw new IllegalArgumentException();
 						// (- 0 (- 0 v0)) -> v0
 						// (- 0 (- 7 v0)) -> (- v0 7)
-						return Optional.of(new FunctionNode(op, Arguments.createArguments(fnArg2, fnArg1)));
+						// return Optional.of(new FunctionNode(op, Arguments.createArguments(fnArg2, fnArg1)));
 					} else if (i2 == 0) {
 						// (- 1 (- 0 v0)) -> (+ 1 v0)
 						return Optional.of(new FunctionNode(new Add(), Arguments.createArguments(arg1, fnArg2)));
