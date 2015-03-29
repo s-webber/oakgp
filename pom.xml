@@ -69,11 +69,12 @@
 					</execution>
 				</executions>
 			</plugin>
-			<!--
 			<plugin>
+				<!-- To see the PMD report use the following command "mvn pmd:check" -->
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-pmd-plugin</artifactId>
 				<version>3.4</version>
+				<!-- To run as part of a "mvn clean install" uncomment the following:
 				<executions>
 					<execution>
 						<phase>verify</phase>
@@ -82,13 +83,16 @@
 						</goals>
 					</execution>
 				</executions>
+				-->
 				<configuration>
 					<verbose>true</verbose>
 					<minimumPriority>0</minimumPriority>
 					<targetJdk>1.8</targetJdk>
+					<rulesets>
+						<ruleset>src/test/resources/pmd-ruleset.xml</ruleset>
+					</rulesets>
 				</configuration>
 			</plugin>
-			-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
