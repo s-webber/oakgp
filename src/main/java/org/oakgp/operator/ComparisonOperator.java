@@ -18,7 +18,7 @@ abstract class ComparisonOperator implements Operator {
 	private static final ConstantNode FALSE_NODE = new ConstantNode(FALSE, BOOLEAN); // TODO share version used by NodeReader
 	private static final Signature SIGNATURE = Signature.createSignature(BOOLEAN, INTEGER, INTEGER);
 
-	private boolean equalsIsTrue;
+	private final boolean equalsIsTrue;
 
 	protected ComparisonOperator(boolean equalsIsTrue) {
 		this.equalsIsTrue = equalsIsTrue;
