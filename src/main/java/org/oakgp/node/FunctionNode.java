@@ -19,6 +19,18 @@ public final class FunctionNode implements Node {
 	 * @param arguments
 	 *            the arguments (i.e. operands) to apply to {@code operator} when evaluating this {@code FunctionNode}
 	 */
+	public FunctionNode(Operator operator, Node... arguments) {
+		this(operator, Arguments.createArguments(arguments));
+	}
+
+	/**
+	 * Constructs a new {@code FunctionNode} with the specified operator function and arguments.
+	 *
+	 * @param operator
+	 *            the operator to associate with this {@code FunctionNode}
+	 * @param arguments
+	 *            the arguments (i.e. operands) to apply to {@code operator} when evaluating this {@code FunctionNode}
+	 */
 	public FunctionNode(Operator operator, Arguments arguments) {
 		this.operator = operator;
 		this.arguments = arguments;

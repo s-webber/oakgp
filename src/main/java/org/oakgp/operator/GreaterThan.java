@@ -20,7 +20,7 @@ public final class GreaterThan extends ComparisonOperator {
 	public Optional<Node> simplify(Arguments arguments) {
 		Optional<Node> o = super.simplify(arguments);
 		if (!o.isPresent()) {
-			return Optional.of(new FunctionNode(new LessThan(), Arguments.createArguments(arguments.get(1), arguments.get(0))));
+			return Optional.of(new FunctionNode(new LessThan(), arguments.get(1), arguments.get(0)));
 		} else {
 			return o;
 		}

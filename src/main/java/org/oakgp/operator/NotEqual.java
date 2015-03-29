@@ -21,7 +21,7 @@ public final class NotEqual extends ComparisonOperator {
 	public Optional<Node> simplify(Arguments arguments) {
 		Optional<Node> o = super.simplify(arguments);
 		if (!o.isPresent() && new NodeComparator().compare(arguments.get(0), arguments.get(1)) > 0) {
-			return Optional.of(new FunctionNode(this, Arguments.createArguments(arguments.get(1), arguments.get(0))));
+			return Optional.of(new FunctionNode(this, arguments.get(1), arguments.get(0)));
 		} else {
 			return o;
 		}

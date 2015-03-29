@@ -34,7 +34,7 @@ public final class Add extends ArithmeticOperator {
 		if (new NodeComparator().compare(arg1, arg2) > 0) {
 			// as for addition the order of the arguments is not important, order arguments in a consistent way
 			// e.g. (+ v1 1) -> (+ 1 v1)
-			return Optional.of(new FunctionNode(this, Arguments.createArguments(arg2, arg1)));
+			return Optional.of(new FunctionNode(this, arg2, arg1));
 		} else if (ZERO.equals(arg1)) {
 			// anything plus zero is itself
 			// e.g. (+ 0 v0) -> v0
@@ -49,7 +49,7 @@ public final class Add extends ArithmeticOperator {
 		} else if (arg1 instanceof ConstantNode && ((int) arg1.evaluate(null)) < 0) {
 			// convert addition of negative numbers to subtraction
 			// e.g. (+ -3 x) -> (- x 3)
-			return Optional.of(new FunctionNode(new Subtract(), Arguments.createArguments(arg2, createConstant(-((int) arg1.evaluate(null))))));
+			return Optional.of(new FunctionNode(new Subtract(), arg2, createConstant(-((int) arg1.evaluate(null)))));
 		} else if (arg2 instanceof ConstantNode && ((int) arg2.evaluate(null)) < 0) {
 			// should never get here as, due to the earlier ordering of arguments,
 			// the only time the second argument will be a constant is when the first argument is also a constant -
@@ -68,7 +68,7 @@ public final class Add extends ArithmeticOperator {
 				} else {
 					result = i1 + i2;
 				}
-				return Optional.of(new FunctionNode(op, Arguments.createArguments(createConstant(result), fn2.getArguments().get(1))));
+				return Optional.of(new FunctionNode(op, createConstant(result), fn2.getArguments().get(1)));
 			}
 		}
 

@@ -22,7 +22,7 @@ final class ArithmeticExpressionSimplifier {
 
 		Node simplifiedVersion = getSimplifiedVersion(operator, firstArg, secondArg);
 		if (simplifiedVersion != null) {// TODO remove this block - only used to sanity check results
-			FunctionNode in = new FunctionNode(operator, Arguments.createArguments(firstArg, secondArg));
+			FunctionNode in = new FunctionNode(operator, firstArg, secondArg);
 			assertEvaluateToSameResult(in, simplifiedVersion);
 		}
 		return Optional.ofNullable(simplifiedVersion);
@@ -52,12 +52,12 @@ final class ArithmeticExpressionSimplifier {
 				Optional<NodePair> o = recursiveReplace(firstArg, secondArg, isPos);
 				if (o.isPresent()) {
 					NodePair p = o.get();
-					return new FunctionNode(operator, Arguments.createArguments(p.x, p.y));
+					return new FunctionNode(operator, p.x, p.y);
 				}
 				o = recursiveReplace(secondArg, firstArg, isPos);
 				if (o.isPresent()) {
 					NodePair p = o.get();
-					return new FunctionNode(operator, Arguments.createArguments(p.y, p.x));
+					return new FunctionNode(operator, p.y, p.x);
 				}
 			} else if (firstArg instanceof FunctionNode) {
 				Node tmp = simplify(firstArg, secondArg, isPos);
@@ -99,7 +99,7 @@ final class ArithmeticExpressionSimplifier {
 					} else {
 						result = i2 - i1;
 					}
-					Node tmp = new FunctionNode(op, Arguments.createArguments(createConstant(result), secondArg));
+					Node tmp = new FunctionNode(op, createConstant(result), secondArg);
 					return Optional.of(new NodePair(ZERO, tmp));
 				}
 
@@ -115,15 +115,15 @@ final class ArithmeticExpressionSimplifier {
 					// TODO is performance better if we don't call recursiveReplace again here with the second arg?
 					Optional<NodePair> o2 = recursiveReplace(secondArg, p.y, isSubtract ? !isPos : isPos);
 					if (o2.isPresent()) {
-						return Optional.of(new NodePair(new FunctionNode(op, Arguments.createArguments(p.x, o2.get().x)), o2.get().y));
+						return Optional.of(new NodePair(new FunctionNode(op, p.x, o2.get().x), o2.get().y));
 					} else {
-						return Optional.of(new NodePair(new FunctionNode(op, Arguments.createArguments(p.x, secondArg)), p.y));
+						return Optional.of(new NodePair(new FunctionNode(op, p.x, secondArg), p.y));
 					}
 				}
 				o = recursiveReplace(secondArg, nodeToUpdate, isSubtract ? !isPos : isPos);
 				if (o.isPresent()) {
 					NodePair p = o.get();
-					return Optional.of(new NodePair(new FunctionNode(op, Arguments.createArguments(firstArg, p.x)), p.y));
+					return Optional.of(new NodePair(new FunctionNode(op, firstArg, p.x), p.y));
 				}
 			}
 		} else if (!ZERO.equals(nodeToSearch)) {
@@ -157,22 +157,21 @@ final class ArithmeticExpressionSimplifier {
 				recursiveIsPos = !isPos;
 			}
 			if (isSuitableForReplacement(firstArg, nodeToReplace)) {
-				return new FunctionNode(currentOperator, Arguments.createArguments(replace(firstArg, nodeToReplace, isPos), secondArg));
+				return new FunctionNode(currentOperator, replace(firstArg, nodeToReplace, isPos), secondArg);
 			} else if (isSuitableForReplacement(secondArg, nodeToReplace)) {
-				return new FunctionNode(currentOperator, Arguments.createArguments(firstArg, replace(secondArg, nodeToReplace, recursiveIsPos)));
+				return new FunctionNode(currentOperator, firstArg, replace(secondArg, nodeToReplace, recursiveIsPos));
 			}
 			Node tmp = simplify(firstArg, nodeToReplace, isPos);
 			if (!tmp.equals(firstArg)) {
-				return returnWithSimplifiedArgument(currentOperator, tmp, secondArg);
+				return new FunctionNode(currentOperator, tmp, secondArg);
 			}
 			tmp = simplify(secondArg, nodeToReplace, recursiveIsPos);
 			if (!tmp.equals(secondArg)) {
-				return returnWithSimplifiedArgument(currentOperator, firstArg, tmp);
+				return new FunctionNode(currentOperator, firstArg, tmp);
 			}
 		} else if (isMultiply(currentOperator) && firstArg instanceof ConstantNode && secondArg.equals(nodeToReplace)) {
 			int inc = isPos ? 1 : -1;
-			return new FunctionNode(currentOperator, Arguments.createArguments(createConstant((int) ((ConstantNode) firstArg).evaluate(null) + inc),
-					nodeToReplace));
+			return new FunctionNode(currentOperator, createConstant((int) ((ConstantNode) firstArg).evaluate(null) + inc), nodeToReplace);
 		} else if (sameMultiplyVariable(current, nodeToReplace)) {
 			return addMulitplyVariables(current, nodeToReplace, isPos);
 		}
@@ -186,10 +185,6 @@ final class ArithmeticExpressionSimplifier {
 		} else {
 			return nodeToReplace.equals(currentNode);
 		}
-	}
-
-	private static FunctionNode returnWithSimplifiedArgument(Operator currentOperator, Node firstArg, Node secondArg) {
-		return new FunctionNode(currentOperator, Arguments.createArguments(firstArg, secondArg));
 	}
 
 	private static boolean sameMultiplyVariable(Node n1, Node n2) {
@@ -215,7 +210,7 @@ final class ArithmeticExpressionSimplifier {
 		} else {
 			result = i1 - i2;
 		}
-		return new FunctionNode(f1.getOperator(), Arguments.createArguments(createConstant(result), f1.getArguments().get(1)));
+		return new FunctionNode(f1.getOperator(), createConstant(result), f1.getArguments().get(1));
 	}
 
 	private static Node replace(Node currentNode, Node nodeToReplace, boolean isPos) {
@@ -242,7 +237,7 @@ final class ArithmeticExpressionSimplifier {
 
 	private static Node dealWithSubtract(Operator currentOperator, Node tmp) {
 		if (isSubtract(currentOperator)) {
-			return new FunctionNode(currentOperator, Arguments.createArguments(ZERO, tmp));
+			return new FunctionNode(currentOperator, ZERO, tmp);
 		} else {
 			return tmp;
 		}
@@ -253,14 +248,14 @@ final class ArithmeticExpressionSimplifier {
 	}
 
 	static FunctionNode multiplyByTwo(Node arg) {
-		return new FunctionNode(new Multiply(), Arguments.createArguments(createConstant(2), arg));
+		return new FunctionNode(new Multiply(), createConstant(2), arg);
 	}
 
 	static Node negate(Node arg) {
 		if (arg instanceof ConstantNode) {
 			return createConstant(-(int) arg.evaluate(null));
 		} else {
-			return new FunctionNode(new Subtract(), Arguments.createArguments(ZERO, arg));
+			return new FunctionNode(new Subtract(), ZERO, arg);
 		}
 	}
 

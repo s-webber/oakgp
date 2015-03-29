@@ -34,7 +34,7 @@ public final class Multiply extends ArithmeticOperator {
 		if (new NodeComparator().compare(arg1, arg2) > 0) {
 			// as for addition the order of the arguments is not important, order arguments in a consistent way
 			// e.g. (* v1 1) -> (* 1 v1)
-			return Optional.of(new FunctionNode(this, Arguments.createArguments(arg2, arg1)));
+			return Optional.of(new FunctionNode(this, arg2, arg1));
 		} else if (ZERO.equals(arg1)) {
 			// anything multiplied by zero is zero
 			// e.g. (* 0 v0) -> 0
@@ -62,17 +62,15 @@ public final class Multiply extends ArithmeticOperator {
 					int result;
 					if (isAddOrSubtract(o)) {
 						result = i1 * i2;
-						Node n = new FunctionNode(o, Arguments.createArguments(createConstant(result),
-								new FunctionNode(this, Arguments.createArguments(arg1, fnArg2))));
+						Node n = new FunctionNode(o, createConstant(result), new FunctionNode(this, arg1, fnArg2));
 						return Optional.of(n);
 					} else if (isMultiply(o)) {
-						return Optional.of(new FunctionNode(this, Arguments.createArguments(createConstant(i1 * i2), fnArg2)));
+						return Optional.of(new FunctionNode(this, createConstant(i1 * i2), fnArg2));
 					} else {
 						throw new IllegalArgumentException();
 					}
 				} else if (isAddOrSubtract(o)) {
-					Node n = new FunctionNode(o, Arguments.createArguments(new FunctionNode(this, Arguments.createArguments(arg1, fnArg1)), new FunctionNode(
-							this, Arguments.createArguments(arg1, fnArg2))));
+					Node n = new FunctionNode(o, new FunctionNode(this, arg1, fnArg1), new FunctionNode(this, arg1, fnArg2));
 					return Optional.of(n);
 				}
 			}

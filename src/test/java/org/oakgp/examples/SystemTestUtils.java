@@ -1,6 +1,5 @@
 package org.oakgp.examples;
 
-import static org.oakgp.Arguments.createArguments;
 import static org.oakgp.TestUtils.createConstant;
 
 import java.util.Collection;
@@ -66,7 +65,7 @@ public class SystemTestUtils {
 				Node arg = makeRandomTree(argType, functionSet, terminalSet, depth - 1);
 				args[i] = arg;
 			}
-			return new FunctionNode(operator, createArguments(args));
+			return new FunctionNode(operator, args);
 		} else {
 			return terminalSet.next();
 		}
