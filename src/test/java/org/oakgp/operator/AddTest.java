@@ -17,20 +17,30 @@ public class AddTest extends AbstractOperatorTest {
 	protected void getCanSimplifyTests(SimplifyTestCases testCases) {
 		Object[][] assignedValues = { { 0, 0 }, { 1, 21 }, { 2, 14 }, { 3, -6 }, { 7, 3 }, { -1, 9 }, { -7, 0 } };
 
+		// constants get simplified to the result of adding them together
+		testCases.put("(+ 8 3)", "11", assignedValues);
+
+		// arguments should be consistently ordered
 		testCases.put("(+ 4 v0)", "(+ 4 v0)", assignedValues);
 		testCases.put("(+ v0 4)", "(+ 4 v0)", assignedValues);
-		testCases.put("(+ v0 (- 7 3))", "(+ 4 v0)", assignedValues);
+		testCases.put("(+ v0 v1)", "(+ v0 v1)", assignedValues);
 		testCases.put("(+ v1 v0)", "(+ v0 v1)", assignedValues);
-		testCases.put("(+ v1 -7)", "(- v1 7)", assignedValues);
-		testCases.put("(+ -7 v1)", "(- v1 7)", assignedValues);
 
 		// anything plus zero is itself
 		testCases.put("(+ v1 0)", "v1", assignedValues);
 		testCases.put("(+ 0 v1)", "v1", assignedValues);
+
+		// anything plus itself is equal to itself multiplied by 2
+		testCases.put("(+ v1 v1)", "(* 2 v1)", assignedValues);
+
+		// convert addition of negative numbers to subtraction
+		testCases.put("(+ v1 -7)", "(- v1 7)", assignedValues);
+		testCases.put("(+ -7 v1)", "(- v1 7)", assignedValues);
+
+		testCases.put("(+ v0 (- 7 3))", "(+ 4 v0)", assignedValues);
+
 		testCases.put("(+ (+ v0 v1) 0)", "(+ v0 v1)", assignedValues);
 		testCases.put("(+ 0 (+ v0 v1))", "(+ v0 v1)", assignedValues);
-
-		testCases.put("(+ v1 v1)", "(* 2 v1)", assignedValues);
 
 		testCases.put("(+ (+ 4 v0) (+ v0 (* 2 v1)))", "(+ 4 (+ (* 2 v0) (* 2 v1)))", assignedValues);
 		testCases.put("(+ (- 10 v0) (+ 1 v0))", "11", assignedValues);

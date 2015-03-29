@@ -28,14 +28,22 @@ public final class Multiply extends ArithmeticOperator {
 		Node arg2 = arguments.get(1);
 
 		if (new NodeComparator().compare(arg1, arg2) > 0) {
+			// as for addition the order of the arguments is not important, order arguments in a consistent way
+			// e.g. (* v1 1) -> (* 1 v1)
 			return Optional.of(new FunctionNode(this, Arguments.createArguments(arg2, arg1)));
 		} else if (ZERO.equals(arg1)) {
+			// anything multiplied by zero is zero
+			// e.g. (* 0 v0) -> 0
 			return Optional.of(ZERO);
 		} else if (ZERO.equals(arg2)) {
+			// should never get here to to earlier ordering of arguments
 			throw new IllegalArgumentException("arg1 " + arg1 + " arg2 " + arg2);
 		} else if (ONE.equals(arg1)) {
+			// anything multiplied by one is itself
+			// e.g. (* 1 v0) -> v0
 			return Optional.of(arg2);
 		} else if (ONE.equals(arg2)) {
+			// should never get here to to earlier ordering of arguments
 			throw new IllegalArgumentException("arg1 " + arg1 + " arg2 " + arg2);
 		} else {
 			if (arg1 instanceof ConstantNode && arg2 instanceof FunctionNode) {

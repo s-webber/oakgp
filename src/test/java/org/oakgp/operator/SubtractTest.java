@@ -17,12 +17,20 @@ public class SubtractTest extends AbstractOperatorTest {
 	protected void getCanSimplifyTests(SimplifyTestCases testCases) {
 		Object[][] assignedValues = { { 0, 0 }, { 0, 1 }, { 1, 0 }, { 1, 21 }, { 2, 14 }, { 3, -6 }, { 7, 3 }, { -1, 9 }, { -7, 0 } };
 
-		testCases.put("(- v0 -7)", "(+ 7 v0)", assignedValues);
+		// constants get simplified to the result of subtracting the second from the first
+		testCases.put("(- 8 3)", "5", assignedValues);
 
 		// anything minus zero is itself
 		testCases.put("(- v0 0)", "v0", assignedValues);
+
 		// anything minus itself is zero
 		testCases.put("(- v0 v0)", "0", assignedValues);
+
+		// simplify "zero minus ?" expressions
+		testCases.put("(- 0 (- v0 v1))", "(- v1 v0)", assignedValues);
+
+		// convert double negatives to addition
+		testCases.put("(- v0 -7)", "(+ 7 v0)", assignedValues);
 
 		testCases.put("(- 1 (+ 1 v0))", "(- 0 v0)", assignedValues);
 		testCases.put("(- 1 (- 1 v0))", "v0", assignedValues);

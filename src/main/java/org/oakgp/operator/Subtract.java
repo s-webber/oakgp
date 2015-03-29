@@ -26,15 +26,23 @@ public final class Subtract extends ArithmeticOperator {
 		Node arg1 = arguments.get(0);
 		Node arg2 = arguments.get(1);
 		if (arg1.equals(arg2)) {
+			// anything minus itself is zero
+			// e.g. (- x x) -> 0
 			return Optional.of(ZERO);
 		} else if (ZERO.equals(arg2)) {
+			// anything minus zero is itself
+			// e.g. (- x 0) -> x
 			return Optional.of(arg1);
 		} else if (ZERO.equals(arg1) && isSubtract(arg2)) {
+			// simplify "zero minus ?" expressions
+			// e.g. (- 0 (- x y) -> (- y x)
 			FunctionNode fn2 = (FunctionNode) arg2;
 			Arguments fn2Arguments = fn2.getArguments();
 			return Optional.of(new FunctionNode(this, Arguments.createArguments(fn2Arguments.get(1), fn2Arguments.get(0))));
 		} else if (arg2 instanceof ConstantNode && ((int) arg2.evaluate(null)) < 0) {
-			return Optional.of(new FunctionNode(new Add(), Arguments.createArguments(arg1, negate(arg2))));
+			// convert double negatives to addition
+			// e.g. (- x -1) -> (+ 1 x)
+			return Optional.of(new FunctionNode(new Add(), Arguments.createArguments(negate(arg2), arg1)));
 		} else {
 			if (arg2 instanceof FunctionNode) {
 				FunctionNode fn = (FunctionNode) arg2;
