@@ -70,6 +70,7 @@ public final class NodeSimplifier {
 			Node originalArg = inputArgs.get(i);
 			simplifiedArgs[i] = _simplify(originalArg);
 			if (originalArg != simplifiedArgs[i]) {
+				assertEvaluateToSameResult(originalArg, simplifiedArgs[i]);
 				modified = true;
 			}
 			if (!(simplifiedArgs[i] instanceof ConstantNode)) {
@@ -83,6 +84,7 @@ public final class NodeSimplifier {
 		if (modified) {
 			arguments = createArguments(simplifiedArgs);
 			output = new FunctionNode(input.getOperator(), arguments);
+			assertEvaluateToSameResult(input, output);
 		} else {
 			arguments = inputArgs;
 			output = input;

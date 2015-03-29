@@ -99,6 +99,8 @@ public final class ArithmeticExpressionSimplifier {
 	}
 
 	// TODO order of args nodeToSearch,nodeToUpdate or nodeToUpdate,nodeToSearch ? be consistent with simplify
+	// nodeToSearch tree structure being walked
+	// nodeToUpdate item to add to nodeToSearch
 	private Optional<NodePair> recursiveReplace(Node nodeToSearch, Node nodeToUpdate, boolean isPos) {
 		if (nodeToSearch instanceof FunctionNode) {
 			FunctionNode fn = (FunctionNode) nodeToSearch;
@@ -129,9 +131,11 @@ public final class ArithmeticExpressionSimplifier {
 				if (!tmp.equals(nodeToUpdate)) {
 					return Optional.of(new NodePair(ZERO, tmp));
 				}
-				if (sameMultiplyVariable(nodeToSearch, x.getArguments().get(1))) {
-
-				}
+				// if (sameMultiplyVariable(nodeToSearch, x.getArguments().get(1))) {
+				// // (org.oakgp.operator.Multiply -81 v2)
+				// // (org.oakgp.operator.Add (org.oakgp.operator.Subtract (org.oakgp.operator.Multiply -162 v0) 819) (org.oakgp.operator.Multiply -99 v2))
+				// throw new RuntimeException(nodeToSearch + " " + nodeToUpdate.toString());
+				// }
 			}
 			if (isAdd || isSubtract) {
 				Optional<NodePair> o = recursiveReplace(firstArg, nodeToUpdate, isPos);
@@ -168,9 +172,9 @@ public final class ArithmeticExpressionSimplifier {
 		int i2 = (int) f2.getArguments().get(0).evaluate(null);
 		int result;
 		if (isPos) {
-			result = i2 + i1;
+			result = i1 + i2;
 		} else {
-			result = i2 - i1;
+			result = i1 - i2;
 		}
 		return new FunctionNode(f1.getOperator(), Arguments.createArguments(createConstant(result), f1.getArguments().get(1)));
 	}
@@ -240,6 +244,8 @@ public final class ArithmeticExpressionSimplifier {
 			int inc = isPos ? 1 : -1;
 			return new FunctionNode(currentOperator, Arguments.createArguments(createConstant((int) ((ConstantNode) firstArg).evaluate(null) + inc),
 					nodeToReplace));
+		} else if (sameMultiplyVariable(current, nodeToReplace)) {
+			return addMulitplyVariables(current, nodeToReplace, isPos);
 		}
 
 		return current;

@@ -36,35 +36,37 @@ public final class Subtract extends ArithmeticOperator {
 		} else if (arg2 instanceof ConstantNode && ((int) arg2.evaluate(null)) < 0) {
 			return Optional.of(new FunctionNode(new Add(), Arguments.createArguments(arg1, negate(arg2))));
 		} else {
-			if (arg2 instanceof FunctionNode) {// && ((FunctionNode) arg2).getOperator().getClass() == Multiply.class) {
+			if (arg2 instanceof FunctionNode) {
 				FunctionNode fn = (FunctionNode) arg2;
 				Operator o = fn.getOperator();
 				Arguments args = fn.getArguments();
 				Node fnArg1 = args.get(0);
 				Node fnArg2 = args.get(1);
-				if (ZERO.equals(arg1)) {
-					if (fnArg1 instanceof ConstantNode && ((FunctionNode) arg2).getOperator().getClass() == Multiply.class) {
+				if (fnArg1 instanceof ConstantNode && o.getClass() == Multiply.class) {
+					if (ZERO.equals(arg1)) {
 						int i = (int) fnArg1.evaluate(null);
-						return Optional.of(new FunctionNode(o, Arguments.createArguments(createConstant(-i), fnArg2)));
-					} else if (o.getClass() == Add.class) {
-						// (- 0 (+ v0 v1) -> (+ (0 - v0) (0 - v1))
-						FunctionNode value = new FunctionNode(o, Arguments.createArguments(negate(fnArg1), negate(fnArg2)));// negate(fnArg2)));
+						FunctionNode value = new FunctionNode(o, Arguments.createArguments(createConstant(-i), fnArg2));
+						return Optional.of(value);
+					} else if ((int) fnArg1.evaluate(null) < 0) {
+						FunctionNode value = new FunctionNode(new Add(), Arguments.createArguments(arg1,
+								new FunctionNode(o, Arguments.createArguments(createConstant(-(int) fnArg1.evaluate(null)), fnArg2))));
 						return Optional.of(value);
 					}
-					// } else if (o.getClass() == Add.class || o.getClass() == Multiply.class) {
-					// FunctionNode value = new FunctionNode(o, Arguments.createArguments(arg1, negate(arg2)));// negate(fnArg2)));
-					// return Optional.of(value);
+				} else if (ZERO.equals(arg1) && o.getClass() == Add.class) {
+					// (- 0 (+ v0 v1) -> (+ (0 - v0) (0 - v1))
+					FunctionNode value = new FunctionNode(o, Arguments.createArguments(negate(fnArg1), negate(fnArg2)));// negate(fnArg2)));
+					return Optional.of(value);
 				}
 			}
+		}
 
-			FunctionNode in = new FunctionNode(this, Arguments.createArguments(arg1, arg2));
-			Node out = new ArithmeticExpressionSimplifier().simplify(in);
-			if (!in.equals(out)) {
-				assertEvaluateToSameResult(in, out);
-				return Optional.of(out);
-			} else {
-				return Optional.empty();
-			}
+		FunctionNode in = new FunctionNode(this, Arguments.createArguments(arg1, arg2));
+		Node out = new ArithmeticExpressionSimplifier().simplify(in);
+		if (!in.equals(out)) {
+			assertEvaluateToSameResult(in, out);
+			return Optional.of(out);
+		} else {
+			return Optional.empty();
 		}
 	}
 
