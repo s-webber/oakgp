@@ -2,6 +2,9 @@ package org.oakgp.operator;
 
 import static org.oakgp.operator.ArithmeticOperator.ZERO;
 import static org.oakgp.operator.ArithmeticOperator.createConstant;
+import static org.oakgp.operator.ArithmeticOperator.isAdd;
+import static org.oakgp.operator.ArithmeticOperator.isMultiply;
+import static org.oakgp.operator.ArithmeticOperator.isSubtract;
 import static org.oakgp.operator.ArithmeticOperator.times2;
 
 import java.util.Optional;
@@ -22,9 +25,9 @@ public final class ArithmeticExpressionSimplifier {
 		if (!(currentOperator instanceof ArithmeticOperator)) {
 			return in;
 		}
-		boolean isAdd = currentOperator.getClass() == Add.class;
-		boolean isSubtract = currentOperator.getClass() == Subtract.class;
-		boolean isMultiply = currentOperator.getClass() == Multiply.class;
+		boolean isAdd = isAdd(currentOperator);
+		boolean isSubtract = isSubtract(currentOperator);
+		boolean isMultiply = isMultiply(currentOperator);
 		Node firstArg = currentFunctionNode.getArguments().get(0);
 		Node secondArg = currentFunctionNode.getArguments().get(1);
 
@@ -36,38 +39,8 @@ public final class ArithmeticExpressionSimplifier {
 		// TODO move to Operator implementations
 		if (firstArg instanceof ConstantNode && secondArg instanceof FunctionNode) {
 			FunctionNode fn2 = (FunctionNode) secondArg;
-			if (fn2.getArguments().get(0) instanceof ConstantNode
-					&& (currentOperator.getClass() == fn2.getOperator().getClass() || (isAdd && sameOperator(Subtract.class, fn2)))) {
+			if (fn2.getArguments().get(0) instanceof ConstantNode && (currentOperator.getClass() == fn2.getOperator().getClass() || (isAdd && isSubtract(fn2)))) {
 				throw new IllegalArgumentException();
-				// int i1 = (int) firstArg.evaluate(null);
-				// int i2 = (int) fn2.getArguments().get(0).evaluate(null);
-				// int result;
-				// Operator op = fn2.getOperator();
-				// if (isAdd) {
-				// throw new IllegalArgumentException();
-				// // if (sameOperator(Subtract.class, fn2)) {
-				// // result = i1 + i2;
-				// // } else {
-				// // result = i1 + i2;
-				// // }
-				// } else if (isSubtract) {
-				// if (i1 == 0) {
-				// // (- 0 (- 0 v0)) -> v0
-				// // (- 0 (- 7 v0)) -> (- v0 7)
-				// return new FunctionNode(fn2.getOperator(), Arguments.createArguments(fn2.getArguments().get(1), fn2.getArguments().get(0)));
-				// } else if (i2 == 0) {
-				// // (- 1 (- 0 v0)) -> (+ 1 v0)
-				// return new FunctionNode(new Add(), Arguments.createArguments(firstArg, fn2.getArguments().get(1)));
-				// } else {
-				// op = new Add();
-				// result = i1 - i2;
-				// }
-				// } else if (isMultiply) {
-				// throw new IllegalArgumentException();
-				// } else {
-				// throw new IllegalArgumentException();
-				// }
-				// return new FunctionNode(op, Arguments.createArguments(createConstant(result), fn2.getArguments().get(1)));
 			}
 		}
 
@@ -107,16 +80,15 @@ public final class ArithmeticExpressionSimplifier {
 		if (nodeToSearch instanceof FunctionNode) {
 			FunctionNode fn = (FunctionNode) nodeToSearch;
 			Operator op = fn.getOperator();
-			boolean isAdd = op.getClass() == Add.class;
-			boolean isSubtract = op.getClass() == Subtract.class;
-			boolean isMultiply = op.getClass() == Multiply.class;
+			boolean isAdd = isAdd(op);
+			boolean isSubtract = isSubtract(op);
+			boolean isMultiply = isMultiply(op);
 			Node firstArg = fn.getArguments().get(0);
 			Node secondArg = fn.getArguments().get(1);
 			if (isMultiply && nodeToUpdate instanceof FunctionNode) {
 				FunctionNode x = (FunctionNode) nodeToUpdate;
 				Arguments a = x.getArguments();
-				if (x.getOperator().getClass() == Multiply.class && firstArg instanceof ConstantNode && a.get(0) instanceof ConstantNode
-						&& secondArg.equals(a.get(1))) {
+				if (isMultiply(x) && firstArg instanceof ConstantNode && a.get(0) instanceof ConstantNode && secondArg.equals(a.get(1))) {
 					int i1 = (int) firstArg.evaluate(null);
 					int i2 = (int) a.get(0).evaluate(null);
 					int result;
@@ -180,8 +152,7 @@ public final class ArithmeticExpressionSimplifier {
 		if (n1 instanceof FunctionNode && n2 instanceof FunctionNode) {
 			FunctionNode f1 = (FunctionNode) n1;
 			FunctionNode f2 = (FunctionNode) n2;
-			if (f1.getOperator().getClass() == Multiply.class && f2.getOperator().getClass() == Multiply.class
-					&& f1.getArguments().get(0) instanceof ConstantNode && f2.getArguments().get(0) instanceof ConstantNode
+			if (isMultiply(f1) && isMultiply(f2) && f1.getArguments().get(0) instanceof ConstantNode && f2.getArguments().get(0) instanceof ConstantNode
 					&& f1.getArguments().get(1).equals(f2.getArguments().get(1))) {
 				return true;
 			}
@@ -189,16 +160,8 @@ public final class ArithmeticExpressionSimplifier {
 		return false;
 	}
 
-	static boolean sameOperator(Class<? extends Operator> operatorClass, FunctionNode fn1, FunctionNode fn2) {
-		return sameOperator(operatorClass, fn1) && sameOperator(operatorClass, fn2);
-	}
-
-	static boolean sameOperator(Class<? extends Operator> operatorClass, FunctionNode fn1) {
-		return fn1.getOperator().getClass() == operatorClass;
-	}
-
 	private Node dealWithSubtract(Operator currentOperator, Node tmp) {
-		if (currentOperator.getClass() == Subtract.class) {
+		if (isSubtract(currentOperator)) {
 			tmp = new FunctionNode(currentOperator, Arguments.createArguments(ZERO, tmp));
 		}
 		return tmp;
@@ -217,8 +180,8 @@ public final class ArithmeticExpressionSimplifier {
 		Node firstArg = currentFunctionNode.getArguments().get(0);
 		Node secondArg = currentFunctionNode.getArguments().get(1);
 		Operator currentOperator = currentFunctionNode.getOperator();
-		boolean isAdd = currentOperator.getClass() == Add.class;
-		boolean isSubtract = currentOperator.getClass() == Subtract.class;
+		boolean isAdd = isAdd(currentOperator);
+		boolean isSubtract = isSubtract(currentOperator);
 		if (isAdd || isSubtract) {
 			boolean recursiveIsPos = isPos;
 			if (isSubtract) {
@@ -237,7 +200,7 @@ public final class ArithmeticExpressionSimplifier {
 			if (!tmp.equals(secondArg)) {
 				return returnWithSimplifiedArgument(currentOperator, firstArg, tmp);
 			}
-		} else if (currentOperator.getClass() == Multiply.class && firstArg instanceof ConstantNode && secondArg.equals(nodeToReplace)) {
+		} else if (isMultiply(currentOperator) && firstArg instanceof ConstantNode && secondArg.equals(nodeToReplace)) {
 			int inc = isPos ? 1 : -1;
 			return new FunctionNode(currentOperator, Arguments.createArguments(createConstant((int) ((ConstantNode) firstArg).evaluate(null) + inc),
 					nodeToReplace));

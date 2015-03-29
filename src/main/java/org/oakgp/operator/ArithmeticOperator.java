@@ -39,6 +39,50 @@ abstract class ArithmeticOperator implements Operator {
 		}
 	}
 
+	static boolean isAddOrSubtract(Operator o) { // TODO move to somewhere more suitable
+		return isAdd(o) || isSubtract(o);
+	}
+
+	static boolean isAdd(Node n) { // TODO move to somewhere more suitable
+		return n instanceof FunctionNode && isSubtract((FunctionNode) n);
+	}
+
+	static boolean isAdd(FunctionNode n) { // TODO move to somewhere more suitable
+		return isSubtract(n.getOperator());
+	}
+
+	static boolean isAdd(Operator o) { // TODO move to somewhere more suitable
+		return isOperatorOfType(o, Add.class);
+	}
+
+	static boolean isSubtract(Node n) { // TODO move to somewhere more suitable
+		return n instanceof FunctionNode && isSubtract((FunctionNode) n);
+	}
+
+	static boolean isSubtract(FunctionNode n) { // TODO move to somewhere more suitable
+		return isSubtract(n.getOperator());
+	}
+
+	static boolean isSubtract(Operator o) { // TODO move to somewhere more suitable
+		return isOperatorOfType(o, Subtract.class);
+	}
+
+	static boolean isMultiply(Node n) { // TODO move to somewhere more suitable
+		return n instanceof FunctionNode && isMultiply((FunctionNode) n);
+	}
+
+	static boolean isMultiply(FunctionNode n) { // TODO move to somewhere more suitable
+		return isMultiply(n.getOperator());
+	}
+
+	static boolean isMultiply(Operator o) { // TODO move to somewhere more suitable
+		return isOperatorOfType(o, Multiply.class);
+	}
+
+	private static boolean isOperatorOfType(Operator o, Class<? extends Operator> operatorClass) { // TODO move to somewhere more suitable
+		return o.getClass() == operatorClass;
+	}
+
 	@Override
 	public final Signature getSignature() {
 		return SIGNATURE;

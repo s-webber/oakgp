@@ -48,17 +48,17 @@ public final class Multiply extends ArithmeticOperator {
 					int i1 = (int) arg1.evaluate(null);
 					int i2 = (int) fnArg1.evaluate(null);
 					int result;
-					if (o.getClass() == Add.class || o.getClass() == Subtract.class) {
+					if (isAddOrSubtract(o)) {
 						result = i1 * i2;
 						Node n = new FunctionNode(o, Arguments.createArguments(createConstant(result),
 								new FunctionNode(this, Arguments.createArguments(arg1, fnArg2))));
 						return Optional.of(n);
-					} else if (o.getClass() == Multiply.class) {
+					} else if (isMultiply(o)) {
 						return Optional.of(new FunctionNode(this, Arguments.createArguments(createConstant(i1 * i2), fnArg2)));
 					} else {
 						throw new IllegalArgumentException();
 					}
-				} else if (o.getClass() == Add.class || o.getClass() == Subtract.class) {
+				} else if (isAddOrSubtract(o)) {
 					Node n = new FunctionNode(o, Arguments.createArguments(new FunctionNode(this, Arguments.createArguments(arg1, fnArg1)), new FunctionNode(
 							this, Arguments.createArguments(arg1, fnArg2))));
 					return Optional.of(n);

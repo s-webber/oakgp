@@ -42,7 +42,7 @@ public final class Subtract extends ArithmeticOperator {
 				Arguments args = fn.getArguments();
 				Node fnArg1 = args.get(0);
 				Node fnArg2 = args.get(1);
-				if (fnArg1 instanceof ConstantNode && o.getClass() == Multiply.class) {
+				if (fnArg1 instanceof ConstantNode && isMultiply(o)) {
 					if (ZERO.equals(arg1)) {
 						int i = (int) fnArg1.evaluate(null);
 						FunctionNode value = new FunctionNode(o, Arguments.createArguments(createConstant(-i), fnArg2));
@@ -52,11 +52,11 @@ public final class Subtract extends ArithmeticOperator {
 								new FunctionNode(o, Arguments.createArguments(createConstant(-(int) fnArg1.evaluate(null)), fnArg2))));
 						return Optional.of(value);
 					}
-				} else if (ZERO.equals(arg1) && o.getClass() == Add.class) {
+				} else if (ZERO.equals(arg1) && isAdd(o)) {
 					// (- 0 (+ v0 v1) -> (+ (0 - v0) (0 - v1))
-					FunctionNode value = new FunctionNode(o, Arguments.createArguments(negate(fnArg1), negate(fnArg2)));// negate(fnArg2)));
+					FunctionNode value = new FunctionNode(o, Arguments.createArguments(negate(fnArg1), negate(fnArg2)));
 					return Optional.of(value);
-				} else if (arg1 instanceof ConstantNode && fnArg1 instanceof ConstantNode && fn.getOperator().getClass() == Subtract.class) {
+				} else if (arg1 instanceof ConstantNode && fnArg1 instanceof ConstantNode && isSubtract(fn)) {
 					int i1 = (int) arg1.evaluate(null);
 					int i2 = (int) fnArg1.evaluate(null);
 					int result;
@@ -84,9 +84,5 @@ public final class Subtract extends ArithmeticOperator {
 				return Optional.empty();
 			}
 		}
-	}
-
-	private boolean isSubtract(Node arg2) { // TODO share
-		return arg2 instanceof FunctionNode && ((FunctionNode) arg2).getOperator().getClass() == Subtract.class;
 	}
 }
