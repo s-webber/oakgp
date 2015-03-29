@@ -100,12 +100,10 @@ public final class FunctionNode implements Node {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append('(');
-		sb.append(operator.getClass().getName());
+		sb.append('(').append(operator.getClass().getName());
 		for (int i = 0; i < arguments.length(); i++) {
-			sb.append(' ');
-			sb.append(arguments.get(i));
+			sb.append(' ').append(arguments.get(i));
 		}
-		return sb + ")";
+		return sb.append(')').toString();
 	}
 }
