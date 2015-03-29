@@ -1,5 +1,11 @@
 package org.oakgp.operator;
 
+import static org.oakgp.operator.ArithmeticExpressionSimplifier.ONE;
+import static org.oakgp.operator.ArithmeticExpressionSimplifier.ZERO;
+import static org.oakgp.operator.ArithmeticExpressionSimplifier.createConstant;
+import static org.oakgp.operator.ArithmeticExpressionSimplifier.isAddOrSubtract;
+import static org.oakgp.operator.ArithmeticExpressionSimplifier.isMultiply;
+
 import java.util.Optional;
 
 import org.oakgp.Arguments;
@@ -71,7 +77,7 @@ public final class Multiply extends ArithmeticOperator {
 				}
 			}
 
-			return new ArithmeticExpressionSimplifier().simplify(this, arg1, arg2);
+			return ArithmeticExpressionSimplifier.simplify(this, arg1, arg2);
 		}
 	}
 }

@@ -1,5 +1,11 @@
 package org.oakgp.operator;
 
+import static org.oakgp.operator.ArithmeticExpressionSimplifier.ZERO;
+import static org.oakgp.operator.ArithmeticExpressionSimplifier.createConstant;
+import static org.oakgp.operator.ArithmeticExpressionSimplifier.isAddOrSubtract;
+import static org.oakgp.operator.ArithmeticExpressionSimplifier.isSubtract;
+import static org.oakgp.operator.ArithmeticExpressionSimplifier.multiplyByTwo;
+
 import java.util.Optional;
 
 import org.oakgp.Arguments;
@@ -39,7 +45,7 @@ public final class Add extends ArithmeticOperator {
 		} else if (arg1.equals(arg2)) {
 			// anything plus itself is equal to itself multiplied by two
 			// e.g. (+ x x) -> (* 2 x)
-			return Optional.of(times2(arg1));
+			return Optional.of(multiplyByTwo(arg1));
 		} else if (arg1 instanceof ConstantNode && ((int) arg1.evaluate(null)) < 0) {
 			// convert addition of negative numbers to subtraction
 			// e.g. (+ -3 x) -> (- x 3)
@@ -52,13 +58,12 @@ public final class Add extends ArithmeticOperator {
 			throw new IllegalArgumentException("arg1 " + arg1 + " arg2 " + arg2);
 		} else if (arg1 instanceof ConstantNode && arg2 instanceof FunctionNode) {
 			FunctionNode fn2 = (FunctionNode) arg2;
-			if (fn2.getArguments().get(0) instanceof ConstantNode
-					&& (fn2.getOperator().getClass() == Add.class || fn2.getOperator().getClass() == Subtract.class)) {
+			if (fn2.getArguments().get(0) instanceof ConstantNode && isAddOrSubtract(fn2.getOperator())) {
 				int i1 = (int) arg1.evaluate(null);
 				int i2 = (int) fn2.getArguments().get(0).evaluate(null);
 				int result;
 				Operator op = fn2.getOperator();
-				if (fn2.getOperator().getClass() == Subtract.class) {
+				if (isSubtract(op)) {
 					result = i1 + i2;
 				} else {
 					result = i1 + i2;
@@ -67,6 +72,6 @@ public final class Add extends ArithmeticOperator {
 			}
 		}
 
-		return new ArithmeticExpressionSimplifier().simplify(this, arg1, arg2);
+		return ArithmeticExpressionSimplifier.simplify(this, arg1, arg2);
 	}
 }

@@ -1,11 +1,6 @@
 package org.oakgp.operator;
 
-import static org.oakgp.operator.ArithmeticOperator.ZERO;
-import static org.oakgp.operator.ArithmeticOperator.createConstant;
-import static org.oakgp.operator.ArithmeticOperator.isAdd;
-import static org.oakgp.operator.ArithmeticOperator.isMultiply;
-import static org.oakgp.operator.ArithmeticOperator.isSubtract;
-import static org.oakgp.operator.ArithmeticOperator.times2;
+import static org.oakgp.Type.INTEGER;
 import static org.oakgp.util.Utils.assertEvaluateToSameResult;
 
 import java.util.Optional;
@@ -17,7 +12,10 @@ import org.oakgp.node.Node;
 import org.oakgp.util.NodeComparator;
 
 final class ArithmeticExpressionSimplifier {
-	Optional<Node> simplify(Operator operator, Node firstArg, Node secondArg) {
+	static final ConstantNode ZERO = createConstant(0);
+	static final ConstantNode ONE = createConstant(1);
+
+	static Optional<Node> simplify(Operator operator, Node firstArg, Node secondArg) {
 		if (!(operator instanceof ArithmeticOperator)) {
 			return Optional.empty();
 		}
@@ -30,7 +28,7 @@ final class ArithmeticExpressionSimplifier {
 		return Optional.ofNullable(simplifiedVersion);
 	}
 
-	private Node getSimplifiedVerion(Operator operator, Node firstArg, Node secondArg) {
+	private static Node getSimplifiedVerion(Operator operator, Node firstArg, Node secondArg) {
 		boolean isAdd = isAdd(operator);
 		boolean isSubtract = isSubtract(operator);
 		boolean isMultiply = isMultiply(operator);
@@ -80,7 +78,7 @@ final class ArithmeticExpressionSimplifier {
 	// TODO order of args nodeToSearch,nodeToUpdate or nodeToUpdate,nodeToSearch ? be consistent with simplify
 	// nodeToSearch tree structure being walked
 	// nodeToUpdate item to add to nodeToSearch
-	private Optional<NodePair> recursiveReplace(Node nodeToSearch, Node nodeToUpdate, boolean isPos) {
+	private static Optional<NodePair> recursiveReplace(Node nodeToSearch, Node nodeToUpdate, boolean isPos) {
 		if (nodeToSearch instanceof FunctionNode) {
 			FunctionNode fn = (FunctionNode) nodeToSearch;
 			Operator op = fn.getOperator();
@@ -138,41 +136,8 @@ final class ArithmeticExpressionSimplifier {
 		return Optional.empty();
 	}
 
-	private Node addMulitplyVariables(Node n1, Node n2, boolean isPos) {
-		FunctionNode f1 = (FunctionNode) n1;
-		FunctionNode f2 = (FunctionNode) n2;
-		int i1 = (int) f1.getArguments().get(0).evaluate(null);
-		int i2 = (int) f2.getArguments().get(0).evaluate(null);
-		int result;
-		if (isPos) {
-			result = i1 + i2;
-		} else {
-			result = i1 - i2;
-		}
-		return new FunctionNode(f1.getOperator(), Arguments.createArguments(createConstant(result), f1.getArguments().get(1)));
-	}
-
-	private boolean sameMultiplyVariable(Node n1, Node n2) {
-		if (n1 instanceof FunctionNode && n2 instanceof FunctionNode) {
-			FunctionNode f1 = (FunctionNode) n1;
-			FunctionNode f2 = (FunctionNode) n2;
-			if (isMultiply(f1) && isMultiply(f2) && f1.getArguments().get(0) instanceof ConstantNode && f2.getArguments().get(0) instanceof ConstantNode
-					&& f1.getArguments().get(1).equals(f2.getArguments().get(1))) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	private Node dealWithSubtract(Operator currentOperator, Node tmp) {
-		if (isSubtract(currentOperator)) {
-			tmp = new FunctionNode(currentOperator, Arguments.createArguments(ZERO, tmp));
-		}
-		return tmp;
-	}
-
 	// TODO return Optional<Node>
-	private Node simplify(final Node current, final Node nodeToReplace, boolean isPos) {
+	private static Node simplify(final Node current, final Node nodeToReplace, boolean isPos) {
 		if (current.equals(nodeToReplace)) {
 			return replace(current, nodeToReplace, isPos);
 		}
@@ -215,11 +180,7 @@ final class ArithmeticExpressionSimplifier {
 		return current;
 	}
 
-	private FunctionNode returnWithSimplifiedArgument(Operator currentOperator, Node firstArg, Node secondArg) {
-		return new FunctionNode(currentOperator, Arguments.createArguments(firstArg, secondArg));
-	}
-
-	private boolean isSuitableForReplacement(Node currentNode, Node nodeToReplace) {
+	private static boolean isSuitableForReplacement(Node currentNode, Node nodeToReplace) {
 		if (nodeToReplace instanceof ConstantNode) {
 			return currentNode instanceof ConstantNode;
 		} else {
@@ -227,7 +188,37 @@ final class ArithmeticExpressionSimplifier {
 		}
 	}
 
-	private Node replace(Node currentNode, Node nodeToReplace, boolean isPos) {
+	private static FunctionNode returnWithSimplifiedArgument(Operator currentOperator, Node firstArg, Node secondArg) {
+		return new FunctionNode(currentOperator, Arguments.createArguments(firstArg, secondArg));
+	}
+
+	private static boolean sameMultiplyVariable(Node n1, Node n2) {
+		if (n1 instanceof FunctionNode && n2 instanceof FunctionNode) {
+			FunctionNode f1 = (FunctionNode) n1;
+			FunctionNode f2 = (FunctionNode) n2;
+			if (isMultiply(f1) && isMultiply(f2) && f1.getArguments().get(0) instanceof ConstantNode && f2.getArguments().get(0) instanceof ConstantNode
+					&& f1.getArguments().get(1).equals(f2.getArguments().get(1))) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private static Node addMulitplyVariables(Node n1, Node n2, boolean isPos) {
+		FunctionNode f1 = (FunctionNode) n1;
+		FunctionNode f2 = (FunctionNode) n2;
+		int i1 = (int) f1.getArguments().get(0).evaluate(null);
+		int i2 = (int) f2.getArguments().get(0).evaluate(null);
+		int result;
+		if (isPos) {
+			result = i1 + i2;
+		} else {
+			result = i1 - i2;
+		}
+		return new FunctionNode(f1.getOperator(), Arguments.createArguments(createConstant(result), f1.getArguments().get(1)));
+	}
+
+	private static Node replace(Node currentNode, Node nodeToReplace, boolean isPos) {
 		if (nodeToReplace.getClass() != currentNode.getClass()) {
 			throw new IllegalArgumentException(nodeToReplace.getClass().getName() + " " + currentNode.getClass().getName());
 		}
@@ -242,11 +233,71 @@ final class ArithmeticExpressionSimplifier {
 			}
 		} else {
 			if (isPos) {
-				return times2(nodeToReplace);
+				return multiplyByTwo(nodeToReplace);
 			} else {
 				return ZERO;
 			}
 		}
+	}
+
+	private static Node dealWithSubtract(Operator currentOperator, Node tmp) {
+		if (isSubtract(currentOperator)) {
+			return new FunctionNode(currentOperator, Arguments.createArguments(ZERO, tmp));
+		} else {
+			return tmp;
+		}
+	}
+
+	static ConstantNode createConstant(int i) {
+		return new ConstantNode(i, INTEGER);
+	}
+
+	static FunctionNode multiplyByTwo(Node arg) {
+		return new FunctionNode(new Multiply(), Arguments.createArguments(createConstant(2), arg));
+	}
+
+	static Node negate(Node arg) {
+		if (arg instanceof ConstantNode) {
+			return createConstant(-(int) arg.evaluate(null));
+		} else {
+			return new FunctionNode(new Subtract(), Arguments.createArguments(ZERO, arg));
+		}
+	}
+
+	static boolean isAddOrSubtract(Operator o) {
+		return isAdd(o) || isSubtract(o);
+	}
+
+	static boolean isAdd(FunctionNode n) {
+		return isAdd(n.getOperator());
+	}
+
+	static boolean isAdd(Operator o) {
+		return isOperatorOfType(o, Add.class);
+	}
+
+	static boolean isSubtract(Node n) {
+		return n instanceof FunctionNode && isSubtract((FunctionNode) n);
+	}
+
+	static boolean isSubtract(FunctionNode n) {
+		return isSubtract(n.getOperator());
+	}
+
+	static boolean isSubtract(Operator o) {
+		return isOperatorOfType(o, Subtract.class);
+	}
+
+	static boolean isMultiply(FunctionNode n) {
+		return isMultiply(n.getOperator());
+	}
+
+	static boolean isMultiply(Operator o) {
+		return isOperatorOfType(o, Multiply.class);
+	}
+
+	private static boolean isOperatorOfType(Operator o, Class<? extends Operator> operatorClass) {
+		return o.getClass() == operatorClass;
 	}
 
 	private static class NodePair {

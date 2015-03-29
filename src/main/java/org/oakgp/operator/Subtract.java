@@ -1,5 +1,12 @@
 package org.oakgp.operator;
 
+import static org.oakgp.operator.ArithmeticExpressionSimplifier.ZERO;
+import static org.oakgp.operator.ArithmeticExpressionSimplifier.createConstant;
+import static org.oakgp.operator.ArithmeticExpressionSimplifier.isAdd;
+import static org.oakgp.operator.ArithmeticExpressionSimplifier.isMultiply;
+import static org.oakgp.operator.ArithmeticExpressionSimplifier.isSubtract;
+import static org.oakgp.operator.ArithmeticExpressionSimplifier.negate;
+
 import java.util.Optional;
 
 import org.oakgp.Arguments;
@@ -81,7 +88,7 @@ public final class Subtract extends ArithmeticOperator {
 				}
 			}
 
-			return new ArithmeticExpressionSimplifier().simplify(this, arg1, arg2);
+			return ArithmeticExpressionSimplifier.simplify(this, arg1, arg2);
 		}
 	}
 }
