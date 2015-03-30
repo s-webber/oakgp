@@ -2,6 +2,7 @@ package org.oakgp.operator;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.oakgp.TestUtils.readNode;
@@ -130,10 +131,70 @@ public class ArithmeticExpressionSimplifierTest {
 	}
 
 	@Test
-	public void testSimplify() {
-		assertReplace("(* 3 (* v0 v1))", "(* 3 (* v0 v1))");
+	public void testCombineWithChildNodes() {
+		// constants
+		assertCombineWithChildNodes("3", "7", true, "10");
+		assertCombineWithChildNodes("3", "7", false, "-4");
 
-		assertReplace("(+ 1 1)", "(+ 1 1)");
+		// adding constant to a function
+		assertCombineWithChildNodes("(+ 1 v0)", "7", true, "(+ 8 v0)");
+		assertCombineWithChildNodes("(+ 1 v0)", "7", false, "(+ -6 v0)");
+		assertCombineWithChildNodes("(+ 1 (- (- v0 9) 8))", "7", true, "(+ 8 (- (- v0 9) 8))");
+		assertCombineWithChildNodes("(- 1 v0)", "7", true, "(- 8 v0)");
+		assertCombineWithChildNodes("(- 1 v0)", "7", false, "(- -6 v0)");
+		assertCombineWithChildNodes("(- 1 (- (- v0 9) 8))", "7", true, "(- 8 (- (- v0 9) 8))");
+
+		// adding variable to function
+		assertCombineWithChildNodes("(+ 1 (- v0 9))", "v0", true, "(+ 1 (- (* 2 v0) 9))");
+		assertCombineWithChildNodes("(+ 1 (- v0 9))", "v0", false, "(+ 1 (- 0 9))");
+
+		// multiplication of variable
+		assertCombineWithChildNodes("(* 3 v0)", "v0", true, "(* 4 v0)");
+		assertCombineWithChildNodes("(* 3 v0)", "v0", false, "(* 2 v0)");
+		assertCombineWithChildNodes("(* -3 v0)", "v0", true, "(* -2 v0)");
+		assertCombineWithChildNodes("(* -3 v0)", "v0", false, "(* -4 v0)");
+
+		// combination of multiplication of the same variable
+		assertCombineWithChildNodes("(* 3 v0)", "(* 7 v0)", true, "(* 10 v0)");
+		assertCombineWithChildNodes("(* 3 v0)", "(* -7 v0)", true, "(* -4 v0)");
+		assertCombineWithChildNodes("(* -3 v0)", "(* 7 v0)", true, "(* 4 v0)");
+		assertCombineWithChildNodes("(* -3 v0)", "(* -7 v0)", true, "(* -10 v0)");
+		assertCombineWithChildNodes("(* 3 v0)", "(* 7 v0)", false, "(* -4 v0)");
+		assertCombineWithChildNodes("(* 3 v0)", "(* -7 v0)", false, "(* 10 v0)");
+		assertCombineWithChildNodes("(* -3 v0)", "(* 7 v0)", false, "(* -10 v0)");
+		assertCombineWithChildNodes("(* -3 v0)", "(* -7 v0)", false, "(* 4 v0)");
+
+		// adding to a sub-node of a function
+		assertCombineWithChildNodes("(+ 1 (- v0 9))", "v0", true, "(+ 1 (- (* 2 v0) 9))");
+		assertCombineWithChildNodes("(+ 1 (- v0 9))", "v0", false, "(+ 1 (- 0 9))");
+		assertCombineWithChildNodes("(+ 1 (* 2 v0))", "v0", true, "(+ 1 (* 3 v0))");
+		assertCombineWithChildNodes("(+ 1 (* 2 v0))", "v0", false, "(+ 1 (* 1 v0))");
+		assertCombineWithChildNodes("(+ 1 (* 2 v0))", "(* 3 v0)", true, "(+ 1 (* 5 v0))");
+		assertCombineWithChildNodes("(+ 1 (* 2 v0))", "(* 3 v0)", false, "(+ 1 (* -1 v0))");
+		assertCombineWithChildNodes("(+ 1 (- v0 9))", "(- v0 9)", true, "(+ 1 (* 2 (- v0 9)))");
+		assertCombineWithChildNodes("(+ 1 (- 8 (- v0 9)))", "(- v0 9)", true, "(+ 1 (- 8 0))");
+		assertCombineWithChildNodes("(+ 1 (- (- v0 9) 8))", "(- v0 9)", true, "(+ 1 (- (* 2 (- v0 9)) 8))");
+
+		assertCannotCombineWithChildNodes("(- v0 9)", "(+ 1 (- v0 9))");
+		assertCannotCombineWithChildNodes("(* 3 v0)", "v1");
+		assertCannotCombineWithChildNodes("(* v0 v1)", "7");
+	}
+
+	private void assertCombineWithChildNodes(String first, String second, boolean isPos, String expected) {
+		Node result = ArithmeticExpressionSimplifier.combineWithChildNodes(readNode(first), readNode(second), isPos);
+		assertEquals(expected, writeNode(result));
+	}
+
+	private void assertCannotCombineWithChildNodes(String first, String second) {
+		assertNull(ArithmeticExpressionSimplifier.combineWithChildNodes(readNode(first), readNode(second), true));
+		assertNull(ArithmeticExpressionSimplifier.combineWithChildNodes(readNode(first), readNode(second), false));
+	}
+
+	@Test
+	public void testSimplify() {
+		assertSimplify("(* 3 (* v0 v1))", "(* 3 (* v0 v1))");
+
+		assertSimplify("(+ 1 1)", "(+ 1 1)");
 
 		assertAdditionSimplification("v0", "(+ 1 v0)", "(+ 1 (* 2 v0))");
 
@@ -143,35 +204,35 @@ public class ArithmeticExpressionSimplifierTest {
 
 		assertAdditionSimplification("v0", "(* 1 v0)", "(* 2 v0)");
 
-		assertReplace("(- 1 1)", "(- 1 1)");
+		assertSimplify("(- 1 1)", "(- 1 1)");
 
-		assertReplace("(+ v0 (- 1 v0))", "(- 1 0)");
+		assertSimplify("(+ v0 (- 1 v0))", "(- 1 0)");
 
-		assertReplace("(- v0 (- v1 (- v0 9)))", "(- 0 (- v1 (- (* 2 v0) 9)))");
-		assertReplace("(- v0 (- v1 (- v1 (- v0 9))))", "(- 0 (- v1 (- v1 (- 0 9))))");
+		assertSimplify("(- v0 (- v1 (- v0 9)))", "(- 0 (- v1 (- (* 2 v0) 9)))");
+		assertSimplify("(- v0 (- v1 (- v1 (- v0 9))))", "(- 0 (- v1 (- v1 (- 0 9))))");
 
 		assertAdditionSimplification("9", "(+ v0 3)", "(+ v0 12)");
 
 		assertAdditionSimplification("9", "(- v0 3)", "(- v0 -6)");
 
-		assertReplace("(- 4 (- v1 (- v0 9)))", "(- 0 (- v1 (- v0 5)))");
-		assertReplace("(- 4 (- v1 (+ v0 9)))", "(- 0 (- v1 (+ v0 13)))");
+		assertSimplify("(- 4 (- v1 (- v0 9)))", "(- 0 (- v1 (- v0 5)))");
+		assertSimplify("(- 4 (- v1 (+ v0 9)))", "(- 0 (- v1 (+ v0 13)))");
 
-		assertReplace("(- (+ 4 v0) 3)", "(+ 1 v0)");
-		assertReplace("(- (- v0 1) v1)", "(- (- v0 1) v1)");
+		assertSimplify("(- (+ 4 v0) 3)", "(+ 1 v0)");
+		assertSimplify("(- (- v0 1) v1)", "(- (- v0 1) v1)");
 
-		assertReplace("(- (- v0 1) (- v0 1))", "(- (- 0 0) (- 1 1))");
-		assertReplace("(- (+ v0 1) (+ v0 1))", "(- (+ 0 0) (+ -1 1))");
-		assertReplace("(+ (- v0 1) (- v0 1))", "(+ (- 0 0) (- (* 2 v0) 2))");
-		assertReplace("(+ (+ v0 1) (+ v0 1))", "(+ (+ 0 0) (+ (* 2 v0) 2))");
-		assertReplace("(- (+ v0 1) (- v0 1))", "(- (+ 0 0) (- -1 1))");
+		assertSimplify("(- (- v0 1) (- v0 1))", "(- (- 0 0) (- 1 1))");
+		assertSimplify("(- (+ v0 1) (+ v0 1))", "(- (+ 0 0) (+ -1 1))");
+		assertSimplify("(+ (- v0 1) (- v0 1))", "(+ (- 0 0) (- (* 2 v0) 2))");
+		assertSimplify("(+ (+ v0 1) (+ v0 1))", "(+ (+ 0 0) (+ (* 2 v0) 2))");
+		assertSimplify("(- (+ v0 1) (- v0 1))", "(- (+ 0 0) (- -1 1))");
 	}
 
 	private void assertAdditionSimplification(String firstArg, String secondArg, String expectedOutput) {
-		assertReplace("(+ " + firstArg + " " + secondArg + ")", expectedOutput);
+		assertSimplify("(+ " + firstArg + " " + secondArg + ")", expectedOutput);
 	}
 
-	private void assertReplace(String input, String expectedOutput) {
+	private void assertSimplify(String input, String expectedOutput) {
 		FunctionNode in = (FunctionNode) readNode(input);
 		Arguments args = in.getArguments();
 		Node simplifiedVersion = simplify(in, args).orElse(in);
