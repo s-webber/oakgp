@@ -38,23 +38,23 @@ final class ArithmeticExpressionSimplifier {
 		if (isAdd || isSubtract) {
 			boolean isPos = !isSubtract;
 			if (firstArg instanceof FunctionNode && secondArg instanceof FunctionNode) {
-				Optional<NodePair> o = recursiveReplace(firstArg, secondArg, isPos);
+				Optional<NodePair> o = removeFromChildNodes(firstArg, secondArg, isPos);
 				if (o.isPresent()) {
 					NodePair p = o.get();
 					return new FunctionNode(operator, p.x, p.y);
 				}
-				o = recursiveReplace(secondArg, firstArg, isPos);
+				o = removeFromChildNodes(secondArg, firstArg, isPos);
 				if (o.isPresent()) {
 					NodePair p = o.get();
 					return new FunctionNode(operator, p.y, p.x);
 				}
 			} else if (firstArg instanceof FunctionNode) {
-				Node tmp = simplify(firstArg, secondArg, isPos);
+				Node tmp = combineWithChildNodes(firstArg, secondArg, isPos);
 				if (tmp != null) {
 					return tmp;
 				}
 			} else if (secondArg instanceof FunctionNode) {
-				Node tmp = simplify(secondArg, firstArg, isPos);
+				Node tmp = combineWithChildNodes(secondArg, firstArg, isPos);
 				if (tmp != null) {
 					return dealWithSubtract(operator, tmp);
 				}
@@ -64,20 +64,26 @@ final class ArithmeticExpressionSimplifier {
 		return null;
 	}
 
-	// TODO order of args nodeToSearch,nodeToUpdate or nodeToUpdate,nodeToSearch ? be consistent with simplify
-	// nodeToSearch tree structure being walked
-	// nodeToUpdate item to add to nodeToSearch
-	private static Optional<NodePair> recursiveReplace(Node nodeToSearch, Node nodeToUpdate, boolean isPos) {
-		if (nodeToSearch instanceof FunctionNode) {
-			FunctionNode fn = (FunctionNode) nodeToSearch;
+	/**
+	 * Returns the result of removing the second argument from the first argument.
+	 *
+	 * @param nodeToWalk
+	 *            tree structure to walk and remove the node from
+	 * @param nodeToRemove
+	 *            the node to remove from {@code nodeToWalk}
+	 * @param isPos
+	 *            {@code true} to indicate that {@code nodeToRemove} should be removed from {@code nodeToWalk}, else {@code false} to indicate that
+	 *            {@code nodeToAdd} should be added to {@code nodeToWalk}
+	 * @return {@code null} if it was not possible to remove (@code nodeToRemove} from {@code nodeToWalk}
+	 */
+	private static Optional<NodePair> removeFromChildNodes(final Node nodeToWalk, final Node nodeToRemove, final boolean isPos) {
+		if (nodeToWalk instanceof FunctionNode) {
+			FunctionNode fn = (FunctionNode) nodeToWalk;
 			Operator op = fn.getOperator();
-			boolean isAdd = isAdd(op);
-			boolean isSubtract = isSubtract(op);
-			boolean isMultiply = isMultiply(op);
 			Node firstArg = fn.getArguments().get(0);
 			Node secondArg = fn.getArguments().get(1);
-			if (isMultiply && nodeToUpdate instanceof FunctionNode) {
-				FunctionNode x = (FunctionNode) nodeToUpdate;
+			if (isMultiply(op) && nodeToRemove instanceof FunctionNode) {
+				FunctionNode x = (FunctionNode) nodeToRemove;
 				Arguments a = x.getArguments();
 				if (isMultiply(x) && firstArg instanceof ConstantNode && a.get(0) instanceof ConstantNode && secondArg.equals(a.get(1))) {
 					int i1 = (int) firstArg.evaluate(null);
@@ -92,32 +98,34 @@ final class ArithmeticExpressionSimplifier {
 					return Optional.of(new NodePair(ZERO, tmp));
 				}
 
-				Node tmp = simplify(nodeToUpdate, nodeToSearch, isPos);
+				Node tmp = combineWithChildNodes(nodeToRemove, nodeToWalk, isPos);
 				if (tmp != null) {
 					return Optional.of(new NodePair(ZERO, tmp));
 				}
 			}
-			if (isAdd || isSubtract) {
-				Optional<NodePair> o = recursiveReplace(firstArg, nodeToUpdate, isPos);
+
+			boolean isSubtract = isSubtract(op);
+			if (isAdd(op) || isSubtract) {
+				Optional<NodePair> o = removeFromChildNodes(firstArg, nodeToRemove, isPos);
 				if (o.isPresent()) {
 					NodePair p = o.get();
 					// TODO is performance better if we don't call recursiveReplace again here with the second arg?
-					Optional<NodePair> o2 = recursiveReplace(secondArg, p.y, isSubtract ? !isPos : isPos);
+					Optional<NodePair> o2 = removeFromChildNodes(secondArg, p.y, isSubtract ? !isPos : isPos);
 					if (o2.isPresent()) {
 						return Optional.of(new NodePair(new FunctionNode(op, p.x, o2.get().x), o2.get().y));
 					} else {
 						return Optional.of(new NodePair(new FunctionNode(op, p.x, secondArg), p.y));
 					}
 				}
-				o = recursiveReplace(secondArg, nodeToUpdate, isSubtract ? !isPos : isPos);
+				o = removeFromChildNodes(secondArg, nodeToRemove, isSubtract ? !isPos : isPos);
 				if (o.isPresent()) {
 					NodePair p = o.get();
 					return Optional.of(new NodePair(new FunctionNode(op, firstArg, p.x), p.y));
 				}
 			}
-		} else if (!ZERO.equals(nodeToSearch)) {
+		} else if (!ZERO.equals(nodeToWalk)) {
 			// TODO confirm this is not worth doing when nodeToSearch is 0
-			Node tmp = simplify(nodeToUpdate, nodeToSearch, isPos);
+			Node tmp = combineWithChildNodes(nodeToRemove, nodeToWalk, isPos);
 			if (tmp != null) {
 				return Optional.of(new NodePair(ZERO, tmp));
 			}
@@ -125,16 +133,27 @@ final class ArithmeticExpressionSimplifier {
 		return Optional.empty();
 	}
 
-	// TODO return Optional<Node>
-	private static Node simplify(final Node current, final Node nodeToReplace, boolean isPos) {
-		if (current.equals(nodeToReplace)) {
-			return replace(current, nodeToReplace, isPos);
+	/**
+	 * Returns the result of merging the second argument into the first argument.
+	 *
+	 * @param nodeToWalk
+	 *            tree structure to walk and remove the node to
+	 * @param nodeToAdd
+	 *            the node to remove from {@code nodeToWalk}
+	 * @param isPos
+	 *            {@code true} to indicate that {@code nodeToAdd} should be added to {@code nodeToWalk}, else {@code false} to indicate that {@code nodeToAdd}
+	 *            should be subtracted from {@code nodeToWalk}
+	 * @return {@code null} if it was not possible to merge (@code nodeToAdd} into {@code nodeToWalk}
+	 */
+	static Node combineWithChildNodes(final Node nodeToWalk, final Node nodeToAdd, final boolean isPos) {
+		if (isSuitableForCombining(nodeToWalk, nodeToAdd)) {// nodeToWalk.equals(nodeToAdd)) {
+			return combine(nodeToWalk, nodeToAdd, isPos);
 		}
-		if (!(current instanceof FunctionNode)) {
+		if (!(nodeToWalk instanceof FunctionNode)) {
 			return null;
 		}
 
-		FunctionNode currentFunctionNode = (FunctionNode) current;
+		FunctionNode currentFunctionNode = (FunctionNode) nodeToWalk;
 		Node firstArg = currentFunctionNode.getArguments().get(0);
 		Node secondArg = currentFunctionNode.getArguments().get(1);
 		Operator currentOperator = currentFunctionNode.getOperator();
@@ -145,30 +164,40 @@ final class ArithmeticExpressionSimplifier {
 			if (isSubtract) {
 				recursiveIsPos = !isPos;
 			}
-			if (isSuitableForReplacement(firstArg, nodeToReplace)) {
-				return new FunctionNode(currentOperator, replace(firstArg, nodeToReplace, isPos), secondArg);
-			} else if (isSuitableForReplacement(secondArg, nodeToReplace)) {
-				return new FunctionNode(currentOperator, firstArg, replace(secondArg, nodeToReplace, recursiveIsPos));
+			if (isSuitableForCombining(firstArg, nodeToAdd)) {
+				return new FunctionNode(currentOperator, combine(firstArg, nodeToAdd, isPos), secondArg);
+			} else if (isSuitableForCombining(secondArg, nodeToAdd)) {
+				return new FunctionNode(currentOperator, firstArg, combine(secondArg, nodeToAdd, recursiveIsPos));
 			}
-			Node tmp = simplify(firstArg, nodeToReplace, isPos);
+			Node tmp = combineWithChildNodes(firstArg, nodeToAdd, isPos);
 			if (tmp != null) {
 				return new FunctionNode(currentOperator, tmp, secondArg);
 			}
-			tmp = simplify(secondArg, nodeToReplace, recursiveIsPos);
+			tmp = combineWithChildNodes(secondArg, nodeToAdd, recursiveIsPos);
 			if (tmp != null) {
 				return new FunctionNode(currentOperator, firstArg, tmp);
 			}
-		} else if (isMultiply(currentOperator) && firstArg instanceof ConstantNode && secondArg.equals(nodeToReplace)) {
+		} else if (isMultiply(currentOperator) && firstArg instanceof ConstantNode && secondArg.equals(nodeToAdd)) {
 			int inc = isPos ? 1 : -1;
-			return new FunctionNode(currentOperator, createConstant((int) ((ConstantNode) firstArg).evaluate(null) + inc), nodeToReplace);
-		} else if (sameMultiplyVariable(current, nodeToReplace)) {
-			return addMulitplyVariables(current, nodeToReplace, isPos);
+			return new FunctionNode(currentOperator, createConstant((int) ((ConstantNode) firstArg).evaluate(null) + inc), nodeToAdd);
+		} else if (isMultiplyingTheSameValue(nodeToWalk, nodeToAdd)) {
+			return combineMultipliers(nodeToWalk, nodeToAdd, isPos);
 		}
 
 		return null;
 	}
 
-	private static boolean isSuitableForReplacement(Node currentNode, Node nodeToReplace) {
+	/**
+	 * Returns {@code true} if the specified nodes can be combined into a single node.
+	 * <p>
+	 * Two constants (even if they have different values) can be combined. e.g. {@code 9} and {@code 12} can be combined to form {@code 21}
+	 * </p>
+	 * <p>
+	 * Any two node that are {@code equal} can be combined. e.g. {@code v0} and {@code v0} can be combined to form {@code (* 2 v0)}, {@code (- 8 v0)} and
+	 * {@code (- 8 v0)} can be combined to form {@code (* 2 (- 8 v0))}
+	 * </p>
+	 */
+	private static boolean isSuitableForCombining(Node currentNode, Node nodeToReplace) {
 		if (nodeToReplace instanceof ConstantNode) {
 			return currentNode instanceof ConstantNode;
 		} else {
@@ -176,7 +205,45 @@ final class ArithmeticExpressionSimplifier {
 		}
 	}
 
-	private static boolean sameMultiplyVariable(Node n1, Node n2) {
+	/**
+	 * Returns a node that is the result of combining the two specified nodes.
+	 * <p>
+	 * e.g. {@code 9} and {@code 12} can be combined to form {@code 21}, {@code v0} and {@code v0} can be combined to form {@code (* 2 v0)}
+	 * </p>
+	 *
+	 * @param isPos
+	 *            {@code true} to indicate that {@code second} should be added to {@code first}, else {@code false} to indicate that {@code second} should be
+	 *            subtracted from {@code first}
+	 */
+	private static Node combine(Node first, Node second, boolean isPos) {
+		assertSameClass(first, second);
+
+		if (second instanceof ConstantNode) {
+			int currentNodeValue = (int) first.evaluate(null);
+			int nodeToReplaceValue = (int) second.evaluate(null);
+			if (isPos) {
+				return createConstant(currentNodeValue + nodeToReplaceValue);
+			} else {
+				return createConstant(currentNodeValue - nodeToReplaceValue);
+			}
+		} else {
+			if (isPos) {
+				return multiplyByTwo(second);
+			} else {
+				return ZERO;
+			}
+		}
+	}
+
+	/**
+	 * <p>
+	 * Examples of arguments that would return true: {@code (* 3 v0), (* 7 v0)} or {@code (* 1 v0), (* -8 v0)}
+	 * </p>
+	 * <p>
+	 * Examples of arguments that would return false: {@code (* 3 v0), (+ 7 v0)} or {@code (* 1 v0), (* -8 v1)}
+	 * </p>
+	 */
+	private static boolean isMultiplyingTheSameValue(Node n1, Node n2) {
 		if (n1 instanceof FunctionNode && n2 instanceof FunctionNode) {
 			FunctionNode f1 = (FunctionNode) n1;
 			FunctionNode f2 = (FunctionNode) n2;
@@ -188,7 +255,8 @@ final class ArithmeticExpressionSimplifier {
 		return false;
 	}
 
-	private static Node addMulitplyVariables(Node n1, Node n2, boolean isPos) {
+	/** e.g. arguments: {@code (* 3 v0), (* 7 v0)} would produce: {@code (* 10 v0)} */
+	private static Node combineMultipliers(Node n1, Node n2, boolean isPos) {
 		FunctionNode f1 = (FunctionNode) n1;
 		FunctionNode f2 = (FunctionNode) n2;
 		int i1 = (int) f1.getArguments().get(0).evaluate(null);
@@ -200,26 +268,6 @@ final class ArithmeticExpressionSimplifier {
 			result = i1 - i2;
 		}
 		return new FunctionNode(f1.getOperator(), createConstant(result), f1.getArguments().get(1));
-	}
-
-	private static Node replace(Node currentNode, Node nodeToReplace, boolean isPos) {
-		assertSameClass(currentNode, nodeToReplace);
-
-		if (nodeToReplace instanceof ConstantNode) {
-			int currentNodeValue = (int) currentNode.evaluate(null);
-			int nodeToReplaceValue = (int) nodeToReplace.evaluate(null);
-			if (isPos) {
-				return createConstant(currentNodeValue + nodeToReplaceValue);
-			} else {
-				return createConstant(currentNodeValue - nodeToReplaceValue);
-			}
-		} else {
-			if (isPos) {
-				return multiplyByTwo(nodeToReplace);
-			} else {
-				return ZERO;
-			}
-		}
 	}
 
 	private static Node dealWithSubtract(Operator currentOperator, Node tmp) {
