@@ -70,7 +70,7 @@ public final class Multiply extends ArithmeticOperator {
 				}
 			}
 
-			return ArithmeticExpressionSimplifier.simplify(this, arg1, arg2);
+			return null;
 		}
 	}
 

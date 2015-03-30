@@ -192,9 +192,8 @@ public class ArithmeticExpressionSimplifierTest {
 
 	@Test
 	public void testSimplify() {
-		assertSimplify("(* 3 (* v0 v1))", "(* 3 (* v0 v1))");
-
 		assertSimplify("(+ 1 1)", "(+ 1 1)");
+		assertSimplify("(- 1 1)", "(- 1 1)");
 
 		assertAdditionSimplification("v0", "(+ 1 v0)", "(+ 1 (* 2 v0))");
 

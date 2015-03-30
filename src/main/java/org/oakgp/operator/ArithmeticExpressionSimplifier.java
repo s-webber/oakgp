@@ -14,16 +14,17 @@ import org.oakgp.util.Utils;
 final class ArithmeticExpressionSimplifier {
 	static final ConstantNode ZERO = createConstant(0);
 	static final ConstantNode ONE = createConstant(1);
+	static final ConstantNode TWO = createConstant(2);
 
 	/** Private constructor as all methods are static. */
 	private ArithmeticExpressionSimplifier() {
 		// do nothing
 	}
 
+	/** @return {@code null} if it was not possible to simplify the expression. */
 	static Node simplify(Operator operator, Node firstArg, Node secondArg) {
-		if (!(operator instanceof ArithmeticOperator)) {
-			return null;
-		}
+		assertAddOrSubtract(operator);
+		assertArgumentsOrdered(operator, firstArg, secondArg);
 
 		Node simplifiedVersion = getSimplifiedVersion(operator, firstArg, secondArg);
 		assertEvaluateToSameResult(simplifiedVersion, operator, firstArg, secondArg);
@@ -31,33 +32,42 @@ final class ArithmeticExpressionSimplifier {
 	}
 
 	private static Node getSimplifiedVersion(Operator operator, Node firstArg, Node secondArg) {
-		assertArgumentsOrdered(operator, firstArg, secondArg);
+		// TODO consider just doing:
+		// test removing from second arg first as, due to ordering, more likely that second arg is a function node
+		// boolean isPos = isAdd(operator);
+		// Optional<NodePair> o = removeFromChildNodes(secondArg, firstArg, isPos);
+		// if (o.isPresent()) {
+		// NodePair p = o.get();
+		// return new FunctionNode(operator, p.y, p.x);
+		// }
+		// o = removeFromChildNodes(firstArg, secondArg, isPos);
+		// if (o.isPresent()) {
+		// NodePair p = o.get();
+		// return new FunctionNode(operator, p.x, p.y);
+		// }
+		// return null;
 
-		boolean isAdd = isAdd(operator);
-		boolean isSubtract = isSubtract(operator);
-		if (isAdd || isSubtract) {
-			boolean isPos = !isSubtract;
-			if (firstArg instanceof FunctionNode && secondArg instanceof FunctionNode) {
-				Optional<NodePair> o = removeFromChildNodes(firstArg, secondArg, isPos);
-				if (o.isPresent()) {
-					NodePair p = o.get();
-					return new FunctionNode(operator, p.x, p.y);
-				}
-				o = removeFromChildNodes(secondArg, firstArg, isPos);
-				if (o.isPresent()) {
-					NodePair p = o.get();
-					return new FunctionNode(operator, p.y, p.x);
-				}
-			} else if (firstArg instanceof FunctionNode) {
-				Node tmp = combineWithChildNodes(firstArg, secondArg, isPos);
-				if (tmp != null) {
-					return tmp;
-				}
-			} else if (secondArg instanceof FunctionNode) {
-				Node tmp = combineWithChildNodes(secondArg, firstArg, isPos);
-				if (tmp != null) {
-					return dealWithSubtract(operator, tmp);
-				}
+		boolean isPos = isAdd(operator);
+		if (firstArg instanceof FunctionNode && secondArg instanceof FunctionNode) {
+			Optional<NodePair> o = removeFromChildNodes(firstArg, secondArg, isPos);
+			if (o.isPresent()) {
+				NodePair p = o.get();
+				return new FunctionNode(operator, p.x, p.y);
+			}
+			o = removeFromChildNodes(secondArg, firstArg, isPos);
+			if (o.isPresent()) {
+				NodePair p = o.get();
+				return new FunctionNode(operator, p.y, p.x);
+			}
+		} else if (firstArg instanceof FunctionNode) {
+			Node tmp = combineWithChildNodes(firstArg, secondArg, isPos);
+			if (tmp != null) {
+				return tmp;
+			}
+		} else if (secondArg instanceof FunctionNode) {
+			Node tmp = combineWithChildNodes(secondArg, firstArg, isPos);
+			if (tmp != null) {
+				return dealWithSubtract(operator, tmp);
 			}
 		}
 
@@ -146,7 +156,7 @@ final class ArithmeticExpressionSimplifier {
 	 * @return {@code null} if it was not possible to merge (@code nodeToAdd} into {@code nodeToWalk}
 	 */
 	static Node combineWithChildNodes(final Node nodeToWalk, final Node nodeToAdd, final boolean isPos) {
-		if (isSuitableForCombining(nodeToWalk, nodeToAdd)) {// nodeToWalk.equals(nodeToAdd)) {
+		if (isSuitableForCombining(nodeToWalk, nodeToAdd)) {// TODO is it OK to instead just do nodeToWalk.equals(nodeToAdd)) {
 			return combine(nodeToWalk, nodeToAdd, isPos);
 		}
 		if (!(nodeToWalk instanceof FunctionNode)) {
@@ -278,6 +288,13 @@ final class ArithmeticExpressionSimplifier {
 		}
 	}
 
+	private static void assertAddOrSubtract(Operator o) {
+		// TODO remove this method - only here to sanity check input during development
+		if (!isAddOrSubtract(o)) {
+			throw new IllegalArgumentException(o.getClass().getName());
+		}
+	}
+
 	private static void assertArgumentsOrdered(Operator o, Node firstArg, Node secondArg) {
 		// TODO remove this method - only here to sanity check input during development
 		if (!isSubtract(o) && NODE_COMPARATOR.compare(firstArg, secondArg) > 0) {
@@ -305,7 +322,7 @@ final class ArithmeticExpressionSimplifier {
 	}
 
 	static FunctionNode multiplyByTwo(Node arg) {
-		return new FunctionNode(new Multiply(), createConstant(2), arg);
+		return new FunctionNode(new Multiply(), TWO, arg);
 	}
 
 	static Node negate(Node arg) {
