@@ -61,7 +61,7 @@ public final class SymbolMap {
 		try {
 			return (Class<? extends Operator>) Class.forName(className);
 		} catch (ClassNotFoundException e) {
-			throw new IllegalArgumentException("Could not find class: " + className);
+			throw new IllegalArgumentException("Could not find class: " + className, e);
 		}
 	}
 
@@ -69,7 +69,7 @@ public final class SymbolMap {
 		try {
 			return operatorClass.newInstance();
 		} catch (InstantiationException | IllegalAccessException e) {
-			throw new IllegalArgumentException("Could not create new instance of class: " + operatorClass);
+			throw new IllegalArgumentException("Could not create new instance of class: " + operatorClass, e);
 		}
 	}
 }
