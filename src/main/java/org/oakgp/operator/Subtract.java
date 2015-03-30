@@ -72,7 +72,6 @@ public final class Subtract extends ArithmeticOperator {
 					int i1 = (int) arg1.evaluate(null);
 					int i2 = (int) fnArg1.evaluate(null);
 					int result;
-					Operator op = fn.getOperator();
 					if (i1 == 0) {
 						// added exception to confirm we never actually get here
 						throw new IllegalArgumentException();
