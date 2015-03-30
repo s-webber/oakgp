@@ -191,13 +191,15 @@ public class NodeSimplifierTest {
 		Node simpliedVersion = nodeSimplifier.simplify(inputNode);
 		Object[][] assignedValues = { { 0, 0, 0, 0, 0 }, { 1, 21, 8, -3, 3 }, { 2, 14, 4, 5, 6 }, { 3, -6, 2, 12, 4 }, { 7, 3, -1, 0, -6 }, { -1, 9, 7, 4, 0 },
 				{ -7, 0, -2, -3, 8 } };
+		String simplifiedVersionString = writeNode(simpliedVersion);
 		for (Object[] assignedValue : assignedValues) {
 			Assignments assignments = Assignments.createAssignments(assignedValue);
-			assertEquals(writeNode(simpliedVersion), inputNode.evaluate(assignments), simpliedVersion.evaluate(assignments));
+			assertEquals(simplifiedVersionString, inputNode.evaluate(assignments), simpliedVersion.evaluate(assignments));
 		}
 		Node expectedNode = readNode(expected);
-		assertEquals(writeNode(expectedNode), writeNode(simpliedVersion));
-		assertEquals(writeNode(simpliedVersion), expectedNode.toString(), simpliedVersion.toString());
+		String expectedVersionString = writeNode(expectedNode);
+		assertEquals(expectedVersionString.length() + " vs. " + simplifiedVersionString.length(), expectedVersionString, simplifiedVersionString);
+		assertEquals(simplifiedVersionString, expectedNode.toString(), simpliedVersion.toString());
 		assertEquals(expectedNode, simpliedVersion);
 	}
 }
