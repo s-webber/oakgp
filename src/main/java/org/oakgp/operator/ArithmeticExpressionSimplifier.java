@@ -15,6 +15,11 @@ final class ArithmeticExpressionSimplifier {
 	static final ConstantNode ZERO = createConstant(0);
 	static final ConstantNode ONE = createConstant(1);
 
+	/** Private constructor as all methods are static. */
+	private ArithmeticExpressionSimplifier() {
+		// do nothing
+	}
+
 	static Optional<Node> simplify(Operator operator, Node firstArg, Node secondArg) {
 		if (!(operator instanceof ArithmeticOperator)) {
 			return Optional.empty();
