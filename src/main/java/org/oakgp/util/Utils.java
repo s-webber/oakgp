@@ -4,25 +4,34 @@ import org.oakgp.Assignments;
 import org.oakgp.node.Node;
 import org.oakgp.serialize.NodeWriter;
 
+/** Utility methods that support the functionality provided by the rest of the framework. */
 public final class Utils {
 	private static final Object[][] TEST_DATA = { { 2, 14, 4, 9, 7 } };
+	private static final NodeWriter WRITER = new NodeWriter();
 
 	/** Private constructor as all methods are static. */
 	private Utils() {
 		// do nothing
 	}
 
-	public static void assertEvaluateToSameResult(Node input, Node output) {
+	/**
+	 * Asserts that the specified nodes evaluate to the same results.
+	 *
+	 * @throws IllegalArgumentException
+	 *             if the specified nodes evaluate to different results
+	 */
+	public static void assertEvaluateToSameResult(Node first, Node second) {
 		for (Object[] assignedValues : TEST_DATA) {
-			assertEvaluateToSameResult(input, output, assignedValues);
+			assertEvaluateToSameResult(first, second, assignedValues);
 		}
 	}
 
-	private static void assertEvaluateToSameResult(Node input, Node output, Object[] assignedValues) {
+	private static void assertEvaluateToSameResult(Node first, Node second, Object[] assignedValues) {
 		Assignments assignments = Assignments.createAssignments(assignedValues);
-		if (!input.evaluate(assignments).equals(output.evaluate(assignments))) {
-			throw new IllegalArgumentException(new NodeWriter().writeNode(input) + " = " + input.evaluate(assignments) + " "
-					+ new NodeWriter().writeNode(output) + " = " + output.evaluate(assignments));
+		Object firstResult = first.evaluate(assignments);
+		Object secondResult = second.evaluate(assignments);
+		if (!firstResult.equals(secondResult)) {
+			throw new IllegalArgumentException(WRITER.writeNode(first) + " = " + firstResult + " " + WRITER.writeNode(second) + " = " + secondResult);
 		}
 	}
 }
