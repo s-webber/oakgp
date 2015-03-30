@@ -21,6 +21,21 @@ public final class RankedCandidate implements Comparable<RankedCandidate> { // T
 	}
 
 	@Override
+	public boolean equals(Object o) {
+		if (o instanceof RankedCandidate) {
+			RankedCandidate r = (RankedCandidate) o;
+			return this.node.equals(r.node) && this.fitness == r.fitness;
+		} else {
+			return false;
+		}
+	}
+
+	@Override
+	public int hashCode() {
+		return node.hashCode();
+	}
+
+	@Override
 	public int compareTo(RankedCandidate o) {
 		return Double.compare(fitness, o.fitness);
 	}
