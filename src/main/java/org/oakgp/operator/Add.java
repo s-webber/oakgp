@@ -3,7 +3,6 @@ package org.oakgp.operator;
 import static org.oakgp.operator.ArithmeticExpressionSimplifier.ZERO;
 import static org.oakgp.operator.ArithmeticExpressionSimplifier.createConstant;
 import static org.oakgp.operator.ArithmeticExpressionSimplifier.isAddOrSubtract;
-import static org.oakgp.operator.ArithmeticExpressionSimplifier.isSubtract;
 import static org.oakgp.operator.ArithmeticExpressionSimplifier.multiplyByTwo;
 import static org.oakgp.util.NodeComparator.NODE_COMPARATOR;
 
@@ -28,28 +27,29 @@ public final class Add extends ArithmeticOperator {
 
 	@Override
 	public Optional<Node> simplify(Arguments arguments) {
-		Node arg1 = arguments.get(0);
-		Node arg2 = arguments.get(1);
+		return Optional.ofNullable(simplify(arguments.get(0), arguments.get(1)));
+	}
 
+	private Node simplify(Node arg1, Node arg2) {
 		if (NODE_COMPARATOR.compare(arg1, arg2) > 0) {
 			// as for addition the order of the arguments is not important, order arguments in a consistent way
 			// e.g. (+ v1 1) -> (+ 1 v1)
-			return Optional.of(new FunctionNode(this, arg2, arg1));
+			return new FunctionNode(this, arg2, arg1);
 		} else if (ZERO.equals(arg1)) {
 			// anything plus zero is itself
 			// e.g. (+ 0 v0) -> v0
-			return Optional.of(arg2);
+			return arg2;
 		} else if (ZERO.equals(arg2)) {
 			// should never get here to to earlier ordering of arguments
 			throw new IllegalArgumentException("arg1 " + arg1 + " arg2 " + arg2);
 		} else if (arg1.equals(arg2)) {
 			// anything plus itself is equal to itself multiplied by two
 			// e.g. (+ x x) -> (* 2 x)
-			return Optional.of(multiplyByTwo(arg1));
+			return multiplyByTwo(arg1);
 		} else if (arg1 instanceof ConstantNode && ((int) arg1.evaluate(null)) < 0) {
 			// convert addition of negative numbers to subtraction
 			// e.g. (+ -3 x) -> (- x 3)
-			return Optional.of(new FunctionNode(new Subtract(), arg2, createConstant(-((int) arg1.evaluate(null)))));
+			return new FunctionNode(new Subtract(), arg2, createConstant(-((int) arg1.evaluate(null))));
 		} else if (arg2 instanceof ConstantNode && ((int) arg2.evaluate(null)) < 0) {
 			// should never get here as, due to the earlier ordering of arguments,
 			// the only time the second argument will be a constant is when the first argument is also a constant -
@@ -61,14 +61,8 @@ public final class Add extends ArithmeticOperator {
 			if (fn2.getArguments().get(0) instanceof ConstantNode && isAddOrSubtract(fn2.getOperator())) {
 				int i1 = (int) arg1.evaluate(null);
 				int i2 = (int) fn2.getArguments().get(0).evaluate(null);
-				int result;
 				Operator op = fn2.getOperator();
-				if (isSubtract(op)) {
-					result = i1 + i2;
-				} else {
-					result = i1 + i2;
-				}
-				return Optional.of(new FunctionNode(op, createConstant(result), fn2.getArguments().get(1)));
+				return new FunctionNode(op, createConstant(i1 + i2), fn2.getArguments().get(1));
 			}
 		}
 

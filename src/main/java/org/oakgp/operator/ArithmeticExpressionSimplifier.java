@@ -20,14 +20,14 @@ final class ArithmeticExpressionSimplifier {
 		// do nothing
 	}
 
-	static Optional<Node> simplify(Operator operator, Node firstArg, Node secondArg) {
+	static Node simplify(Operator operator, Node firstArg, Node secondArg) {
 		if (!(operator instanceof ArithmeticOperator)) {
-			return Optional.empty();
+			return null;
 		}
 
 		Node simplifiedVersion = getSimplifiedVersion(operator, firstArg, secondArg);
 		assertEvaluateToSameResult(simplifiedVersion, operator, firstArg, secondArg);
-		return Optional.ofNullable(simplifiedVersion);
+		return simplifiedVersion;
 	}
 
 	private static Node getSimplifiedVersion(Operator operator, Node firstArg, Node secondArg) {
@@ -50,12 +50,12 @@ final class ArithmeticExpressionSimplifier {
 				}
 			} else if (firstArg instanceof FunctionNode) {
 				Node tmp = simplify(firstArg, secondArg, isPos);
-				if (!tmp.equals(firstArg)) {
+				if (tmp != null) {
 					return tmp;
 				}
 			} else if (secondArg instanceof FunctionNode) {
 				Node tmp = simplify(secondArg, firstArg, isPos);
-				if (!tmp.equals(secondArg)) {
+				if (tmp != null) {
 					return dealWithSubtract(operator, tmp);
 				}
 			}
@@ -93,7 +93,7 @@ final class ArithmeticExpressionSimplifier {
 				}
 
 				Node tmp = simplify(nodeToUpdate, nodeToSearch, isPos);
-				if (!tmp.equals(nodeToUpdate)) {
+				if (tmp != null) {
 					return Optional.of(new NodePair(ZERO, tmp));
 				}
 			}
@@ -118,7 +118,7 @@ final class ArithmeticExpressionSimplifier {
 		} else if (!ZERO.equals(nodeToSearch)) {
 			// TODO confirm this is not worth doing when nodeToSearch is 0
 			Node tmp = simplify(nodeToUpdate, nodeToSearch, isPos);
-			if (!tmp.equals(nodeToUpdate)) {
+			if (tmp != null) {
 				return Optional.of(new NodePair(ZERO, tmp));
 			}
 		}
@@ -131,7 +131,7 @@ final class ArithmeticExpressionSimplifier {
 			return replace(current, nodeToReplace, isPos);
 		}
 		if (!(current instanceof FunctionNode)) {
-			return current;
+			return null;
 		}
 
 		FunctionNode currentFunctionNode = (FunctionNode) current;
@@ -151,11 +151,11 @@ final class ArithmeticExpressionSimplifier {
 				return new FunctionNode(currentOperator, firstArg, replace(secondArg, nodeToReplace, recursiveIsPos));
 			}
 			Node tmp = simplify(firstArg, nodeToReplace, isPos);
-			if (!tmp.equals(firstArg)) {
+			if (tmp != null) {
 				return new FunctionNode(currentOperator, tmp, secondArg);
 			}
 			tmp = simplify(secondArg, nodeToReplace, recursiveIsPos);
-			if (!tmp.equals(secondArg)) {
+			if (tmp != null) {
 				return new FunctionNode(currentOperator, firstArg, tmp);
 			}
 		} else if (isMultiply(currentOperator) && firstArg instanceof ConstantNode && secondArg.equals(nodeToReplace)) {
@@ -165,7 +165,7 @@ final class ArithmeticExpressionSimplifier {
 			return addMulitplyVariables(current, nodeToReplace, isPos);
 		}
 
-		return current;
+		return null;
 	}
 
 	private static boolean isSuitableForReplacement(Node currentNode, Node nodeToReplace) {

@@ -28,24 +28,25 @@ public final class Multiply extends ArithmeticOperator {
 
 	@Override
 	public Optional<Node> simplify(Arguments arguments) {
-		Node arg1 = arguments.get(0);
-		Node arg2 = arguments.get(1);
+		return Optional.ofNullable(simplify(arguments.get(0), arguments.get(1)));
+	}
 
+	private Node simplify(Node arg1, Node arg2) {
 		if (NODE_COMPARATOR.compare(arg1, arg2) > 0) {
 			// as for addition the order of the arguments is not important, order arguments in a consistent way
 			// e.g. (* v1 1) -> (* 1 v1)
-			return Optional.of(new FunctionNode(this, arg2, arg1));
+			return new FunctionNode(this, arg2, arg1);
 		} else if (ZERO.equals(arg1)) {
 			// anything multiplied by zero is zero
 			// e.g. (* 0 v0) -> 0
-			return Optional.of(ZERO);
+			return ZERO;
 		} else if (ZERO.equals(arg2)) {
 			// should never get here to to earlier ordering of arguments
 			throw new IllegalArgumentException("arg1 " + arg1 + " arg2 " + arg2);
 		} else if (ONE.equals(arg1)) {
 			// anything multiplied by one is itself
 			// e.g. (* 1 v0) -> v0
-			return Optional.of(arg2);
+			return arg2;
 		} else if (ONE.equals(arg2)) {
 			// should never get here to to earlier ordering of arguments
 			throw new IllegalArgumentException("arg1 " + arg1 + " arg2 " + arg2);
@@ -57,25 +58,25 @@ public final class Multiply extends ArithmeticOperator {
 				Node fnArg1 = args.get(0);
 				Node fnArg2 = args.get(1);
 				if (fnArg1 instanceof ConstantNode) {
-					int i1 = (int) arg1.evaluate(null);
-					int i2 = (int) fnArg1.evaluate(null);
-					int result;
 					if (isAddOrSubtract(o)) {
-						result = i1 * i2;
-						Node n = new FunctionNode(o, createConstant(result), new FunctionNode(this, arg1, fnArg2));
-						return Optional.of(n);
+						return new FunctionNode(o, multiply(arg1, fnArg1), new FunctionNode(this, arg1, fnArg2));
 					} else if (isMultiply(o)) {
-						return Optional.of(new FunctionNode(this, createConstant(i1 * i2), fnArg2));
+						return new FunctionNode(this, multiply(arg1, fnArg1), fnArg2);
 					} else {
 						throw new IllegalArgumentException();
 					}
 				} else if (isAddOrSubtract(o)) {
-					Node n = new FunctionNode(o, new FunctionNode(this, arg1, fnArg1), new FunctionNode(this, arg1, fnArg2));
-					return Optional.of(n);
+					return new FunctionNode(o, new FunctionNode(this, arg1, fnArg1), new FunctionNode(this, arg1, fnArg2));
 				}
 			}
 
 			return ArithmeticExpressionSimplifier.simplify(this, arg1, arg2);
 		}
+	}
+
+	private ConstantNode multiply(Node n1, Node n2) {
+		int i1 = (int) n1.evaluate(null);
+		int i2 = (int) n2.evaluate(null);
+		return createConstant(i1 * i2);
 	}
 }

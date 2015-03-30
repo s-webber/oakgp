@@ -28,26 +28,28 @@ public final class Subtract extends ArithmeticOperator {
 
 	@Override
 	public Optional<Node> simplify(Arguments arguments) {
-		Node arg1 = arguments.get(0);
-		Node arg2 = arguments.get(1);
+		return Optional.ofNullable(simplify(arguments.get(0), arguments.get(1)));
+	}
+
+	private Node simplify(Node arg1, Node arg2) {
 		if (arg1.equals(arg2)) {
 			// anything minus itself is zero
 			// e.g. (- x x) -> 0
-			return Optional.of(ZERO);
+			return ZERO;
 		} else if (ZERO.equals(arg2)) {
 			// anything minus zero is itself
 			// e.g. (- x 0) -> x
-			return Optional.of(arg1);
+			return arg1;
 		} else if (ZERO.equals(arg1) && isSubtract(arg2)) {
 			// simplify "zero minus ?" expressions
 			// e.g. (- 0 (- x y) -> (- y x)
 			FunctionNode fn2 = (FunctionNode) arg2;
 			Arguments fn2Arguments = fn2.getArguments();
-			return Optional.of(new FunctionNode(this, fn2Arguments.get(1), fn2Arguments.get(0)));
+			return new FunctionNode(this, fn2Arguments.get(1), fn2Arguments.get(0));
 		} else if (arg2 instanceof ConstantNode && ((int) arg2.evaluate(null)) < 0) {
 			// convert double negatives to addition
 			// e.g. (- x -1) -> (+ 1 x)
-			return Optional.of(new FunctionNode(new Add(), negate(arg2), arg1));
+			return new FunctionNode(new Add(), negate(arg2), arg1);
 		} else {
 			if (arg2 instanceof FunctionNode) {
 				FunctionNode fn = (FunctionNode) arg2;
@@ -58,16 +60,13 @@ public final class Subtract extends ArithmeticOperator {
 				if (fnArg1 instanceof ConstantNode && isMultiply(o)) {
 					if (ZERO.equals(arg1)) {
 						int i = (int) fnArg1.evaluate(null);
-						FunctionNode value = new FunctionNode(o, createConstant(-i), fnArg2);
-						return Optional.of(value);
+						return new FunctionNode(o, createConstant(-i), fnArg2);
 					} else if ((int) fnArg1.evaluate(null) < 0) {
-						FunctionNode value = new FunctionNode(new Add(), arg1, new FunctionNode(o, createConstant(-(int) fnArg1.evaluate(null)), fnArg2));
-						return Optional.of(value);
+						return new FunctionNode(new Add(), arg1, new FunctionNode(o, createConstant(-(int) fnArg1.evaluate(null)), fnArg2));
 					}
 				} else if (ZERO.equals(arg1) && isAdd(o)) {
 					// (- 0 (+ v0 v1) -> (+ (0 - v0) (0 - v1))
-					FunctionNode value = new FunctionNode(o, negate(fnArg1), negate(fnArg2));
-					return Optional.of(value);
+					return new FunctionNode(o, negate(fnArg1), negate(fnArg2));
 				} else if (arg1 instanceof ConstantNode && fnArg1 instanceof ConstantNode && isSubtract(fn)) {
 					int i1 = (int) arg1.evaluate(null);
 					int i2 = (int) fnArg1.evaluate(null);
@@ -80,10 +79,10 @@ public final class Subtract extends ArithmeticOperator {
 						// return Optional.of(new FunctionNode(op, Arguments.createArguments(fnArg2, fnArg1)));
 					} else if (i2 == 0) {
 						// (- 1 (- 0 v0)) -> (+ 1 v0)
-						return Optional.of(new FunctionNode(new Add(), arg1, fnArg2));
+						return new FunctionNode(new Add(), arg1, fnArg2);
 					} else {
 						result = i1 - i2;
-						return Optional.of(new FunctionNode(new Add(), createConstant(result), fnArg2));
+						return new FunctionNode(new Add(), createConstant(result), fnArg2);
 					}
 				}
 			}

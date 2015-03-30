@@ -7,6 +7,8 @@ import static org.junit.Assert.assertTrue;
 import static org.oakgp.TestUtils.readNode;
 import static org.oakgp.TestUtils.writeNode;
 
+import java.util.Optional;
+
 import org.junit.Test;
 import org.oakgp.Arguments;
 import org.oakgp.Assignments;
@@ -172,7 +174,7 @@ public class ArithmeticExpressionSimplifierTest {
 	private void assertReplace(String input, String expectedOutput) {
 		FunctionNode in = (FunctionNode) readNode(input);
 		Arguments args = in.getArguments();
-		Node simplifiedVersion = ArithmeticExpressionSimplifier.simplify(in.getOperator(), args.get(0), args.get(1)).orElse(in);
+		Node simplifiedVersion = simplify(in, args).orElse(in);
 		String writeNode = writeNode(simplifiedVersion);
 		assertEquals(expectedOutput, writeNode);
 		if (!simplifiedVersion.equals(in)) {
@@ -184,5 +186,9 @@ public class ArithmeticExpressionSimplifierTest {
 				}
 			}
 		}
+	}
+
+	private Optional<Node> simplify(FunctionNode in, Arguments args) {
+		return Optional.ofNullable(ArithmeticExpressionSimplifier.simplify(in.getOperator(), args.get(0), args.get(1)));
 	}
 }
