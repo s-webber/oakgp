@@ -1,6 +1,8 @@
 package org.oakgp.util;
 
 import static org.junit.Assert.assertEquals;
+import static org.oakgp.TestUtils.createConstant;
+import static org.oakgp.TestUtils.createVariable;
 import static org.oakgp.TestUtils.readNode;
 
 import java.util.ArrayList;
@@ -11,23 +13,69 @@ import org.junit.Test;
 import org.oakgp.node.Node;
 
 public class NodeComparatorTest {
+	private static final NodeComparator COMPARATOR = new NodeComparator();
+
 	@Test
-	public void test() {
-		NodeComparator comparator = new NodeComparator();
+	public void testCompareVariables() {
+		assertOrdered(createVariable(0), createVariable(1));
+	}
+
+	@Test
+	public void testCompareConstants() {
+		assertOrdered(createConstant(3), createConstant(7));
+	}
+
+	@Test
+	public void testCompareFunctions() {
+		// ordering of function nodes is a bit arbitrary (relies on hashCode of Operator class name and arguments)
+		// the important thing is that it is consistent
+		assertOrdered(readNode("(- 1 1)"), readNode("(+ 1 1)"));
+		assertOrdered(readNode("(* 3 3)"), readNode("(* 3 4)"));
+	}
+
+	@Test
+	public void testCompareConstantsToVariables() {
+		assertOrdered(createConstant(7), createVariable(3));
+		assertOrdered(createConstant(3), createVariable(7));
+	}
+
+	@Test
+	public void testCompareConstantsToFunctions() {
+		assertOrdered(createConstant(7), readNode("(+ 1 1)"));
+	}
+
+	@Test
+	public void testCompareVariablesToFunctions() {
+		assertOrdered(createVariable(7), readNode("(+ 1 1)"));
+	}
+
+	private void assertOrdered(Node n1, Node n2) {
+		assertEquals(0, COMPARATOR.compare(n1, n1));
+		assertEquals(-1, COMPARATOR.compare(n1, n2));
+		assertEquals(1, COMPARATOR.compare(n2, n1));
+	}
+
+	@Test
+	public void testSort() {
+		Node f1 = readNode("(+ 1 1)");
+		Node f2 = readNode("(- 1 1)");
+		Node f3 = readNode("(* 1 1)");
 		List<Node> nodes = new ArrayList<>();
-		nodes.add(readNode("(+ 1 1)"));
-		nodes.add(readNode("(- 1 1)"));
+		nodes.add(f1);
+		nodes.add(f2);
 		nodes.add(readNode("-1"));
 		nodes.add(readNode("v1"));
 		nodes.add(readNode("3"));
-		nodes.add(readNode("(* 1 1)"));
+		nodes.add(f3);
 		nodes.add(readNode("v0"));
-		Collections.sort(nodes, comparator);
+		Collections.sort(nodes, COMPARATOR);
 
 		assertEquals("-1", nodes.get(0).toString());
 		assertEquals("3", nodes.get(1).toString());
 		assertEquals("v0", nodes.get(2).toString());
 		assertEquals("v1", nodes.get(3).toString());
-		// TODO check order of function nodes
+		assertEquals(f2, nodes.get(4));
+		assertEquals(f3, nodes.get(5));
+		assertEquals(f1, nodes.get(6));
 	}
 }
