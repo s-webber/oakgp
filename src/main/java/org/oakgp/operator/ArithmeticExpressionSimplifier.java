@@ -2,7 +2,6 @@ package org.oakgp.operator;
 
 import static org.oakgp.Type.INTEGER;
 import static org.oakgp.util.NodeComparator.NODE_COMPARATOR;
-import static org.oakgp.util.Utils.assertEvaluateToSameResult;
 
 import java.util.Optional;
 
@@ -10,6 +9,7 @@ import org.oakgp.Arguments;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
+import org.oakgp.util.Utils;
 
 final class ArithmeticExpressionSimplifier {
 	static final ConstantNode ZERO = createConstant(0);
@@ -26,31 +26,15 @@ final class ArithmeticExpressionSimplifier {
 		}
 
 		Node simplifiedVersion = getSimplifiedVersion(operator, firstArg, secondArg);
-		if (simplifiedVersion != null) {// TODO remove this block - only used to sanity check results
-			FunctionNode in = new FunctionNode(operator, firstArg, secondArg);
-			assertEvaluateToSameResult(in, simplifiedVersion);
-		}
+		assertEvaluateToSameResult(simplifiedVersion, operator, firstArg, secondArg);
 		return Optional.ofNullable(simplifiedVersion);
 	}
 
 	private static Node getSimplifiedVersion(Operator operator, Node firstArg, Node secondArg) {
+		assertArgumentsOrdered(operator, firstArg, secondArg);
+
 		boolean isAdd = isAdd(operator);
 		boolean isSubtract = isSubtract(operator);
-		boolean isMultiply = isMultiply(operator);
-
-		// Ordering of arguments - TODO move to Add and Multiply
-		if ((isAdd || isMultiply) && NODE_COMPARATOR.compare(firstArg, secondArg) > 0) {
-			throw new IllegalArgumentException("arg1 " + firstArg + " arg2 " + secondArg);
-		}
-
-		// TODO move to Operator implementations
-		if (firstArg instanceof ConstantNode && secondArg instanceof FunctionNode) {
-			FunctionNode fn2 = (FunctionNode) secondArg;
-			if (fn2.getArguments().get(0) instanceof ConstantNode && (operator.getClass() == fn2.getOperator().getClass() || (isAdd && isSubtract(fn2)))) {
-				throw new IllegalArgumentException();
-			}
-		}
-
 		if (isAdd || isSubtract) {
 			boolean isPos = !isSubtract;
 			if (firstArg instanceof FunctionNode && secondArg instanceof FunctionNode) {
@@ -219,9 +203,7 @@ final class ArithmeticExpressionSimplifier {
 	}
 
 	private static Node replace(Node currentNode, Node nodeToReplace, boolean isPos) {
-		if (nodeToReplace.getClass() != currentNode.getClass()) {
-			throw new IllegalArgumentException(nodeToReplace.getClass().getName() + " " + currentNode.getClass().getName());
-		}
+		assertSameClass(currentNode, nodeToReplace);
 
 		if (nodeToReplace instanceof ConstantNode) {
 			int currentNodeValue = (int) currentNode.evaluate(null);
@@ -245,6 +227,28 @@ final class ArithmeticExpressionSimplifier {
 			return new FunctionNode(currentOperator, ZERO, tmp);
 		} else {
 			return tmp;
+		}
+	}
+
+	private static void assertArgumentsOrdered(Operator o, Node firstArg, Node secondArg) {
+		// TODO remove this method - only here to sanity check input during development
+		if (!isSubtract(o) && NODE_COMPARATOR.compare(firstArg, secondArg) > 0) {
+			throw new IllegalArgumentException("arg1 " + firstArg + " arg2 " + secondArg);
+		}
+	}
+
+	private static void assertEvaluateToSameResult(Node simplifiedVersion, Operator operator, Node firstArg, Node secondArg) {
+		// TODO remove this method - only here to sanity check output during development
+		if (simplifiedVersion != null) {
+			FunctionNode in = new FunctionNode(operator, firstArg, secondArg);
+			Utils.assertEvaluateToSameResult(in, simplifiedVersion);
+		}
+	}
+
+	private static void assertSameClass(Node currentNode, Node nodeToReplace) {
+		// TODO remove this method - only here to sanity check input during development
+		if (nodeToReplace.getClass() != currentNode.getClass()) {
+			throw new IllegalArgumentException(nodeToReplace.getClass().getName() + " " + currentNode.getClass().getName());
 		}
 	}
 
