@@ -7,6 +7,11 @@ import org.oakgp.serialize.NodeWriter;
 public final class Utils {
 	private static final Object[][] TEST_DATA = { { 2, 14, 4, 9, 7 } };
 
+	/** Private constructor as all methods are static. */
+	private Utils() {
+		// do nothing
+	}
+
 	public static void assertEvaluateToSameResult(Node input, Node output) {
 		for (Object[] assignedValues : TEST_DATA) {
 			assertEvaluateToSameResult(input, output, assignedValues);
