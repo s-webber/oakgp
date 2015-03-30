@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.oakgp.TestUtils.createConstant;
 import static org.oakgp.TestUtils.createVariable;
 import static org.oakgp.TestUtils.readNode;
+import static org.oakgp.util.NodeComparator.NODE_COMPARATOR;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,8 +14,6 @@ import org.junit.Test;
 import org.oakgp.node.Node;
 
 public class NodeComparatorTest {
-	private static final NodeComparator COMPARATOR = new NodeComparator();
-
 	@Test
 	public void testCompareVariables() {
 		assertOrdered(createVariable(0), createVariable(1));
@@ -50,9 +49,9 @@ public class NodeComparatorTest {
 	}
 
 	private void assertOrdered(Node n1, Node n2) {
-		assertEquals(0, COMPARATOR.compare(n1, n1));
-		assertEquals(-1, COMPARATOR.compare(n1, n2));
-		assertEquals(1, COMPARATOR.compare(n2, n1));
+		assertEquals(0, NODE_COMPARATOR.compare(n1, n1));
+		assertEquals(-1, NODE_COMPARATOR.compare(n1, n2));
+		assertEquals(1, NODE_COMPARATOR.compare(n2, n1));
 	}
 
 	@Test
@@ -68,7 +67,7 @@ public class NodeComparatorTest {
 		nodes.add(readNode("3"));
 		nodes.add(f3);
 		nodes.add(readNode("v0"));
-		Collections.sort(nodes, COMPARATOR);
+		Collections.sort(nodes, NODE_COMPARATOR);
 
 		assertEquals("-1", nodes.get(0).toString());
 		assertEquals("3", nodes.get(1).toString());

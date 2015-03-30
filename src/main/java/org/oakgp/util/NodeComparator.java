@@ -6,7 +6,16 @@ import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 
+/** An implementation of {@code Comparator} for comparing instances of {@link Node}. */
 public final class NodeComparator implements Comparator<Node> {
+	/** Singleton instance */
+	public static final NodeComparator NODE_COMPARATOR = new NodeComparator();
+
+	/** Private constructor to force use of {@link #notify()} */
+	private NodeComparator() {
+		// do nothing
+	}
+
 	@Override
 	public int compare(Node o1, Node o2) {
 		if (o1.getClass() == o2.getClass()) {
@@ -24,19 +33,16 @@ public final class NodeComparator implements Comparator<Node> {
 			} else {
 				return i;
 			}
-		}
-		if (o1 instanceof ConstantNode) {
+		} else if (o1 instanceof ConstantNode) {
 			return -1;
-		}
-		if (o2 instanceof ConstantNode) {
+		} else if (o2 instanceof ConstantNode) {
 			return 1;
-		}
-		if (o1 instanceof FunctionNode) {
+		} else if (o1 instanceof FunctionNode) {
 			return 1;
-		}
-		if (o2 instanceof FunctionNode) {
+		} else if (o2 instanceof FunctionNode) {
 			return -1;
+		} else {
+			throw new IllegalStateException();
 		}
-		throw new IllegalStateException();
 	}
 }

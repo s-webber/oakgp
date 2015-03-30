@@ -1,6 +1,7 @@
 package org.oakgp.operator;
 
 import static org.oakgp.Type.INTEGER;
+import static org.oakgp.util.NodeComparator.NODE_COMPARATOR;
 import static org.oakgp.util.Utils.assertEvaluateToSameResult;
 
 import java.util.Optional;
@@ -9,7 +10,6 @@ import org.oakgp.Arguments;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
-import org.oakgp.util.NodeComparator;
 
 final class ArithmeticExpressionSimplifier {
 	static final ConstantNode ZERO = createConstant(0);
@@ -34,7 +34,7 @@ final class ArithmeticExpressionSimplifier {
 		boolean isMultiply = isMultiply(operator);
 
 		// Ordering of arguments - TODO move to Add and Multiply
-		if ((isAdd || isMultiply) && new NodeComparator().compare(firstArg, secondArg) > 0) {
+		if ((isAdd || isMultiply) && NODE_COMPARATOR.compare(firstArg, secondArg) > 0) {
 			throw new IllegalArgumentException("arg1 " + firstArg + " arg2 " + secondArg);
 		}
 

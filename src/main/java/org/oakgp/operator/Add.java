@@ -5,6 +5,7 @@ import static org.oakgp.operator.ArithmeticExpressionSimplifier.createConstant;
 import static org.oakgp.operator.ArithmeticExpressionSimplifier.isAddOrSubtract;
 import static org.oakgp.operator.ArithmeticExpressionSimplifier.isSubtract;
 import static org.oakgp.operator.ArithmeticExpressionSimplifier.multiplyByTwo;
+import static org.oakgp.util.NodeComparator.NODE_COMPARATOR;
 
 import java.util.Optional;
 
@@ -12,7 +13,6 @@ import org.oakgp.Arguments;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
-import org.oakgp.util.NodeComparator;
 
 /** Performs addition. */
 public final class Add extends ArithmeticOperator {
@@ -31,7 +31,7 @@ public final class Add extends ArithmeticOperator {
 		Node arg1 = arguments.get(0);
 		Node arg2 = arguments.get(1);
 
-		if (new NodeComparator().compare(arg1, arg2) > 0) {
+		if (NODE_COMPARATOR.compare(arg1, arg2) > 0) {
 			// as for addition the order of the arguments is not important, order arguments in a consistent way
 			// e.g. (+ v1 1) -> (+ 1 v1)
 			return Optional.of(new FunctionNode(this, arg2, arg1));
