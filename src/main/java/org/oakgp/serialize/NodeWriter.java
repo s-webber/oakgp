@@ -19,11 +19,9 @@ public final class NodeWriter {
 			FunctionNode functionNode = (FunctionNode) node;
 			Operator operator = functionNode.getOperator();
 			Arguments arguments = functionNode.getArguments();
-			sb.append('(');
-			sb.append(symbolMap.getDisplayName(operator));
+			sb.append('(').append(symbolMap.getDisplayName(operator));
 			for (int i = 0; i < arguments.length(); i++) {
-				sb.append(' ');
-				sb.append(writeNode(arguments.get(i)));
+				sb.append(' ').append(writeNode(arguments.get(i)));
 			}
 			sb.append(')');
 		} else {
