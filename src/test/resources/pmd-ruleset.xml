@@ -8,7 +8,9 @@
 	<rule ref="rulesets/java/controversial.xml"/>
 	<rule ref="rulesets/java/coupling.xml"/>
 	-->
-	<rule ref="rulesets/java/design.xml"/>
+	<rule ref="rulesets/java/design.xml">
+		<exclude name="UseVarargs"/>
+	</rule>
 	<rule ref="rulesets/java/empty.xml"/>
 	<rule ref="rulesets/java/finalizers.xml"/>
 	<rule ref="rulesets/java/imports.xml">
