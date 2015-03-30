@@ -5,6 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.oakgp.TestUtils.readNode;
+import static org.oakgp.TestUtils.writeNode;
 
 import org.junit.Test;
 import org.oakgp.Arguments;
@@ -13,7 +14,6 @@ import org.oakgp.Type;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
-import org.oakgp.serialize.NodeWriter;
 
 public class ArithmeticExpressionSimplifierTest {
 	@Test
@@ -173,7 +173,7 @@ public class ArithmeticExpressionSimplifierTest {
 		FunctionNode in = (FunctionNode) readNode(input);
 		Arguments args = in.getArguments();
 		Node simplifiedVersion = ArithmeticExpressionSimplifier.simplify(in.getOperator(), args.get(0), args.get(1)).orElse(in);
-		String writeNode = new NodeWriter().writeNode(simplifiedVersion);
+		String writeNode = writeNode(simplifiedVersion);
 		assertEquals(expectedOutput, writeNode);
 		if (!simplifiedVersion.equals(in)) {
 			int[][] assignedValues = { { 0, 0 }, { 1, 21 }, { 2, 14 }, { 3, -6 }, { 7, 3 }, { -1, 9 }, { -7, 0 } };

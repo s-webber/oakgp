@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.oakgp.TestUtils.createTypeArray;
 import static org.oakgp.TestUtils.readNode;
+import static org.oakgp.TestUtils.writeNode;
 import static org.oakgp.Type.INTEGER;
 import static org.oakgp.examples.SystemTestUtils.ARITHMETIC_FUNCTION_SET;
 import static org.oakgp.examples.SystemTestUtils.RANDOM;
@@ -26,7 +27,6 @@ import org.oakgp.Signature;
 import org.oakgp.TerminalSet;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
-import org.oakgp.serialize.NodeWriter;
 
 public class ArithmeticOperatorTest {
 	private static final File TEST_DATA_FILE = new File("src/test/resources/ArithmeticOperatorTest.txt");
@@ -73,7 +73,7 @@ public class ArithmeticOperatorTest {
 		try (FileWriter fw = new FileWriter(outputFile)) {
 			while (examples.size() < size) {
 				Node node = makeRandomTree(ARITHMETIC_FUNCTION_SET, terminalSet, 16);
-				String example = new NodeWriter().writeNode(node);
+				String example = writeNode(node);
 				if (node.getNodeCount() > 7 && examples.add(example)) {
 					fw.write(example);
 					fw.write('\n');

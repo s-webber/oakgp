@@ -5,12 +5,12 @@ import static org.junit.Assert.assertSame;
 import static org.oakgp.TestUtils.createConstant;
 import static org.oakgp.TestUtils.createVariable;
 import static org.oakgp.TestUtils.readNode;
+import static org.oakgp.TestUtils.writeNode;
 
 import org.junit.Test;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
-import org.oakgp.serialize.NodeWriter;
 
 public class NodeSimplifierTest {
 	private final NodeSimplifier nodeSimplifier = new NodeSimplifier();
@@ -193,11 +193,11 @@ public class NodeSimplifierTest {
 				{ -7, 0, -2, -3, 8 } };
 		for (Object[] assignedValue : assignedValues) {
 			Assignments assignments = Assignments.createAssignments(assignedValue);
-			assertEquals(new NodeWriter().writeNode(simpliedVersion), inputNode.evaluate(assignments), simpliedVersion.evaluate(assignments));
+			assertEquals(writeNode(simpliedVersion), inputNode.evaluate(assignments), simpliedVersion.evaluate(assignments));
 		}
 		Node expectedNode = readNode(expected);
-		assertEquals(new NodeWriter().writeNode(expectedNode), new NodeWriter().writeNode(simpliedVersion));
-		assertEquals(new NodeWriter().writeNode(simpliedVersion), expectedNode.toString(), simpliedVersion.toString());
+		assertEquals(writeNode(expectedNode), writeNode(simpliedVersion));
+		assertEquals(writeNode(simpliedVersion), expectedNode.toString(), simpliedVersion.toString());
 		assertEquals(expectedNode, simpliedVersion);
 	}
 }

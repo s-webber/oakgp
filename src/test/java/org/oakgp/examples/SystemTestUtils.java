@@ -1,6 +1,7 @@
 package org.oakgp.examples;
 
 import static org.oakgp.TestUtils.createConstant;
+import static org.oakgp.TestUtils.writeNode;
 
 import java.util.Collection;
 import java.util.Set;
@@ -27,7 +28,6 @@ import org.oakgp.operator.Operator;
 import org.oakgp.operator.Subtract;
 import org.oakgp.selector.NodeSelectorFactory;
 import org.oakgp.selector.WeightedNodeSelectorFactory;
-import org.oakgp.serialize.NodeWriter;
 import org.oakgp.util.JavaUtilRandomAdapter;
 import org.oakgp.util.NodeSet;
 import org.oakgp.util.Random;
@@ -81,6 +81,6 @@ public class SystemTestUtils {
 
 	public static void printRankedCandidate(RankedCandidate candidate) {
 		System.out.println("Best: " + candidate);
-		System.out.println(new NodeWriter().writeNode(new NodeSimplifier().simplify(candidate.getNode())));
+		System.out.println(writeNode(new NodeSimplifier().simplify(candidate.getNode())));
 	}
 }

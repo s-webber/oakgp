@@ -12,6 +12,7 @@ import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
 import org.oakgp.node.VariableNode;
 import org.oakgp.serialize.NodeReader;
+import org.oakgp.serialize.NodeWriter;
 
 public class TestUtils {
 	public static void assertVariable(int expectedId, Node node) {
@@ -22,6 +23,10 @@ public class TestUtils {
 	public static void assertConstant(Object expectedValue, Node node) {
 		assertTrue(node instanceof ConstantNode);
 		assertEquals(expectedValue, ((ConstantNode) node).evaluate(null));
+	}
+
+	public static String writeNode(Node input) {
+		return new NodeWriter().writeNode(input);
 	}
 
 	public static Node readNode(String input) {

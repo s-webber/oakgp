@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
 import static org.oakgp.TestUtils.readNode;
+import static org.oakgp.TestUtils.writeNode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +14,6 @@ import org.oakgp.Assignments;
 import org.oakgp.NodeSimplifier;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
-import org.oakgp.serialize.NodeWriter;
 
 public abstract class AbstractOperatorTest {
 	@Test
@@ -38,8 +38,8 @@ public abstract class AbstractOperatorTest {
 			FunctionNode input = readInput(test.input);
 			Node expectedResult = readNode(test.expectedOutput);
 			Node actualResult = new NodeSimplifier().simplify(input);
-			assertEquals(new NodeWriter().writeNode(expectedResult), new NodeWriter().writeNode(actualResult));
-			assertEquals(new NodeWriter().writeNode(input), expectedResult, actualResult);
+			assertEquals(writeNode(expectedResult), writeNode(actualResult));
+			assertEquals(writeNode(input), expectedResult, actualResult);
 			assertSame(actualResult, new NodeSimplifier().simplify(actualResult));
 			assertEquals(actualResult, new NodeSimplifier().simplify(input));
 
@@ -52,7 +52,7 @@ public abstract class AbstractOperatorTest {
 			Assignments assignments = Assignments.createAssignments(a);
 			Object expectedOutcome = input.evaluate(assignments);
 			Object actualOutcome = actualResult.evaluate(assignments);
-			assertEquals(new NodeWriter().writeNode(actualResult), expectedOutcome, actualOutcome);
+			assertEquals(writeNode(actualResult), expectedOutcome, actualOutcome);
 		}
 	}
 
