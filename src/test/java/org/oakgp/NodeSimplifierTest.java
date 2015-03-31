@@ -58,7 +58,7 @@ public class NodeSimplifierTest {
 		Node output = nodeSimplifier.simplify(input);
 		assertSame(FunctionNode.class, output.getClass());
 		assertEquals("(org.oakgp.operator.math.Subtract (org.oakgp.operator.math.Multiply 37 v0) 1)", output.toString());
-		assertEquals(73, output.evaluate(Assignments.createAssignments(2)));
+		assertEquals(73, (int) output.evaluate(Assignments.createAssignments(2)));
 	}
 
 	@Test
@@ -189,18 +189,26 @@ public class NodeSimplifierTest {
 
 	private void assertCanSimplify(String expected, String input) { // TODO switch argument order? input/expected
 		Node inputNode = readNode(input);
-		Node simpliedVersion = nodeSimplifier.simplify(inputNode);
+		Node simplifiedVersion = nodeSimplifier.simplify(inputNode);
+
+		// test simplified version produces the same results as original (i.e. unsimplified) version
 		Object[][] assignedValues = { { 0, 0, 0, 0, 0 }, { 1, 21, 8, -3, 3 }, { 2, 14, 4, 5, 6 }, { 3, -6, 2, 12, 4 }, { 7, 3, -1, 0, -6 }, { -1, 9, 7, 4, 0 },
 				{ -7, 0, -2, -3, 8 } };
-		String simplifiedVersionString = writeNode(simpliedVersion);
+		String simplifiedVersionString = writeNode(simplifiedVersion);
 		for (Object[] assignedValue : assignedValues) {
 			Assignments assignments = Assignments.createAssignments(assignedValue);
-			assertEquals(simplifiedVersionString, inputNode.evaluate(assignments), simpliedVersion.evaluate(assignments));
+			assertEquals(simplifiedVersionString, evaluate(inputNode, assignments), evaluate(simplifiedVersion, assignments));
 		}
+
+		// test actual simplified version matches expected
 		Node expectedNode = readNode(expected);
 		String expectedVersionString = writeNode(expectedNode);
 		assertEquals(expectedVersionString.length() + " vs. " + simplifiedVersionString.length(), expectedVersionString, simplifiedVersionString);
-		assertEquals(simplifiedVersionString, expectedNode.toString(), simpliedVersion.toString());
-		assertEquals(expectedNode, simpliedVersion);
+		assertEquals(simplifiedVersionString, expectedNode.toString(), simplifiedVersion.toString());
+		assertEquals(expectedNode, simplifiedVersion);
+	}
+
+	private Object evaluate(Node n, Assignments assignments) {
+		return n.evaluate(assignments);
 	}
 }

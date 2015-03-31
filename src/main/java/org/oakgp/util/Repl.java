@@ -21,8 +21,8 @@ public class Repl {
 			Node simplifiedResult = new NodeSimplifier().simplify(expression);
 			System.out.println(new NodeWriter().writeNode(expression));
 			System.out.println(new NodeWriter().writeNode(simplifiedResult));
-			System.out.println(expression.evaluate(assignments));
-			System.out.println(simplifiedResult.evaluate(assignments));
+			System.out.println(expression.evaluate(assignments).toString());
+			System.out.println(simplifiedResult.evaluate(assignments).toString());
 		}
 	}
 }

@@ -66,7 +66,7 @@ public class SubtreeCrossoverTest {
 
 		Node result = c.evolve(dummySelector);
 		assertEquals("(org.oakgp.operator.math.Add 9 5)", result.toString());
-		assertEquals(14, result.evaluate(null));
+		assertEquals(14, (int) result.evaluate(null));
 		assertTrue(dummySelector.isEmpty());
 	}
 }
