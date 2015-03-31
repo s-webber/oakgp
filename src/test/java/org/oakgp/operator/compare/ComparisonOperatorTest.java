@@ -1,4 +1,4 @@
-package org.oakgp.operator;
+package org.oakgp.operator.compare;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
@@ -7,6 +7,7 @@ import static org.oakgp.Type.INTEGER;
 
 import org.junit.Test;
 import org.oakgp.Signature;
+import org.oakgp.operator.Operator;
 
 public class ComparisonOperatorTest {
 	@Test

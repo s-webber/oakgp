@@ -1,4 +1,4 @@
-package org.oakgp.operator;
+package org.oakgp.operator.compare;
 
 import org.oakgp.Arguments;
 import org.oakgp.node.FunctionNode;

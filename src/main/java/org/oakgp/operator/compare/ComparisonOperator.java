@@ -1,4 +1,4 @@
-package org.oakgp.operator;
+package org.oakgp.operator.compare;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
@@ -10,6 +10,7 @@ import org.oakgp.Assignments;
 import org.oakgp.Signature;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
+import org.oakgp.operator.Operator;
 
 abstract class ComparisonOperator implements Operator {
 	private static final ConstantNode TRUE_NODE = new ConstantNode(TRUE, BOOLEAN); // TODO share version used by NodeReader

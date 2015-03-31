@@ -3,16 +3,16 @@ package org.oakgp.serialize;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.oakgp.operator.math.Add;
-import org.oakgp.operator.Equal;
-import org.oakgp.operator.GreaterThan;
-import org.oakgp.operator.GreaterThanOrEqual;
 import org.oakgp.operator.If;
-import org.oakgp.operator.LessThan;
-import org.oakgp.operator.LessThanOrEqual;
-import org.oakgp.operator.math.Multiply;
-import org.oakgp.operator.NotEqual;
 import org.oakgp.operator.Operator;
+import org.oakgp.operator.compare.Equal;
+import org.oakgp.operator.compare.GreaterThan;
+import org.oakgp.operator.compare.GreaterThanOrEqual;
+import org.oakgp.operator.compare.LessThan;
+import org.oakgp.operator.compare.LessThanOrEqual;
+import org.oakgp.operator.compare.NotEqual;
+import org.oakgp.operator.math.Add;
+import org.oakgp.operator.math.Multiply;
 import org.oakgp.operator.math.Subtract;
 
 public final class SymbolMap {

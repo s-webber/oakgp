@@ -1,4 +1,4 @@
-package org.oakgp.operator;
+package org.oakgp.operator.compare;
 
 public final class LessThanOrEqual extends ComparisonOperator {
 	public LessThanOrEqual() {

@@ -1,4 +1,4 @@
-package org.oakgp.operator;
+package org.oakgp.operator.compare;
 
 import static org.oakgp.util.NodeComparator.NODE_COMPARATOR;
 
