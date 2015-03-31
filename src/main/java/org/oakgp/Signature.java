@@ -1,6 +1,6 @@
 package org.oakgp;
 
-public final class Signature {
+public final class Signature { // TODO move to org.oakgp.operator?
 	private final Type returnType;
 	private final Type[] argumentTypes;
 
