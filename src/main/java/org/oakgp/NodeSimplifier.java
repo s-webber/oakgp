@@ -29,6 +29,7 @@ import org.oakgp.serialize.NodeWriter;
  * <b>Note:</b> relies on {@code Operator} implementations being referentially transparent.
  */
 public final class NodeSimplifier {
+	// TODO have a public static final instance with a private constructor? or make simplify(Node) static?
 	private static final int MAX_RETRIES = 100;
 
 	public Node simplify(Node input) {
