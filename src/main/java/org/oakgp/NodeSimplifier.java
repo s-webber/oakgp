@@ -62,6 +62,7 @@ public final class NodeSimplifier {
 	}
 
 	private Node simplifyFunctionNode(final FunctionNode input) {
+		// TODO have a isSimplified method on FunctionNode to indicate that if it has already been simplified? (so no need to try again here)
 		// try to simplify each of the arguments
 		Arguments inputArgs = input.getArguments();
 		Node[] simplifiedArgs = new Node[inputArgs.length()];
