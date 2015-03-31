@@ -11,7 +11,7 @@ import org.oakgp.node.Node;
 import org.oakgp.selector.DummyNodeSelector;
 import org.oakgp.util.Random;
 
-public class CrossoverTest { // TODO rename SubtreeCrossoverTest
+public class SubtreeCrossoverTest {
 	@Test
 	public void testFunctionNodes() {
 		Random mockRandom = mock(Random.class);
