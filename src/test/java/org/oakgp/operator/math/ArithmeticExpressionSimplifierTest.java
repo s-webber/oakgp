@@ -17,7 +17,7 @@ import org.oakgp.Type;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
-import org.oakgp.operator.If;
+import org.oakgp.operator.choice.If;
 
 public class ArithmeticExpressionSimplifierTest {
 	@Test

@@ -1,4 +1,4 @@
-package org.oakgp.operator;
+package org.oakgp.operator.choice;
 
 import static java.lang.Boolean.TRUE;
 import static org.oakgp.Type.BOOLEAN;
@@ -9,6 +9,7 @@ import org.oakgp.Assignments;
 import org.oakgp.Signature;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
+import org.oakgp.operator.Operator;
 
 public final class If implements Operator {
 	private static final Signature SIGNATURE = Signature.createSignature(INTEGER, BOOLEAN, INTEGER, INTEGER);

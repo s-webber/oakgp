@@ -1,4 +1,4 @@
-package org.oakgp.operator;
+package org.oakgp.operator.choice;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
@@ -9,6 +9,8 @@ import java.util.List;
 
 import org.junit.Test;
 import org.oakgp.Signature;
+import org.oakgp.operator.AbstractOperatorTest;
+import org.oakgp.operator.Operator;
 
 public class IfTest extends AbstractOperatorTest {
 	@Override

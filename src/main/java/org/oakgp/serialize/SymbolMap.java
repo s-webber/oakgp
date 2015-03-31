@@ -3,8 +3,8 @@ package org.oakgp.serialize;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.oakgp.operator.If;
 import org.oakgp.operator.Operator;
+import org.oakgp.operator.choice.If;
 import org.oakgp.operator.compare.Equal;
 import org.oakgp.operator.compare.GreaterThan;
 import org.oakgp.operator.compare.GreaterThanOrEqual;
