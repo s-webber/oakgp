@@ -16,6 +16,9 @@ import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.node.VariableNode;
+import org.oakgp.operator.Operator;
+import org.oakgp.operator.math.Add;
+import org.oakgp.operator.math.Subtract;
 
 public class NodeReaderTest {
 	// TODO test error conditions
@@ -58,6 +61,16 @@ public class NodeReaderTest {
 	@Test
 	public void testMultiWordString() {
 		assertParseLiteral("\"Hello, world!\"", "Hello, world!");
+	}
+
+	@Test
+	public void testOperatorSymbol() {
+		assertParseOperator("+", Add.class);
+	}
+
+	@Test
+	public void testOperatorClassName() {
+		assertParseOperator("org.oakgp.operator.math.Subtract", Subtract.class);
 	}
 
 	@Test
@@ -137,6 +150,13 @@ public class NodeReaderTest {
 		assertSame(ConstantNode.class, output.getClass());
 		assertEquals(expected.toString(), output.toString());
 		assertEquals(expected, ((ConstantNode) output).evaluate(null));
+	}
+
+	private void assertParseOperator(String input, Class<? extends Operator> expected) {
+		Node output = readNode(input);
+		assertSame(ConstantNode.class, output.getClass());
+		assertSame(Type.OPERATOR, output.getType());
+		assertEquals(expected, ((ConstantNode) output).evaluate(null).getClass());
 	}
 
 	private void assertParseVariable(int id) {

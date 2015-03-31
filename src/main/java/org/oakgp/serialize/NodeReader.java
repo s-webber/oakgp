@@ -3,6 +3,7 @@ package org.oakgp.serialize;
 import static org.oakgp.Type.ARRAY;
 import static org.oakgp.Type.BOOLEAN;
 import static org.oakgp.Type.INTEGER;
+import static org.oakgp.Type.OPERATOR;
 import static org.oakgp.Type.STRING;
 
 import java.io.BufferedReader;
@@ -101,15 +102,24 @@ public final class NodeReader implements Closeable {
 		return Arguments.createArguments(arguments.toArray(new Node[arguments.size()]));
 	}
 
-	private ConstantNode parseLiteral(String firstToken) {
-		switch (firstToken) {
+	private ConstantNode parseLiteral(String token) {
+		switch (token) {
 		case "true":
 			return TRUE_NODE;
 		case "false":
 			return FALSE_NODE;
 		default:
-			return new ConstantNode(Integer.parseInt(firstToken), INTEGER);
+			if (isNumber(token)) {
+				return new ConstantNode(Integer.parseInt(token), INTEGER);
+			} else {
+				return new ConstantNode(symbolMap.getOperator(token), OPERATOR);
+			}
 		}
+	}
+
+	private boolean isNumber(String token) {
+		int c = token.charAt(0);
+		return c == '-' || (c >= '0' && c <= '9');
 	}
 
 	private String nextToken() throws IOException {
