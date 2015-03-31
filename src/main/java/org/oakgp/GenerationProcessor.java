@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.oakgp.node.Node;
 
-/** Ranks and sorts the fitness of {@code Node} instances using a {@code FitnessFunction}. */
+/** Ranks and sorts the fitness of {@code Node}. */
 @FunctionalInterface
 public interface GenerationProcessor {
 	/**
