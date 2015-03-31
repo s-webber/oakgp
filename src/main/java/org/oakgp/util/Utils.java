@@ -17,6 +17,10 @@ public final class Utils {
 	/**
 	 * Asserts that the specified nodes evaluate to the same results.
 	 *
+	 * @param first
+	 *            the node to compare to {@code second}
+	 * @param second
+	 *            the node to compare to {@code first}
 	 * @throws IllegalArgumentException
 	 *             if the specified nodes evaluate to different results
 	 */

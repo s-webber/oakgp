@@ -41,6 +41,8 @@ public final class FunctionSet {
 	/**
 	 * Returns a randomly selected {@code Operator} of the specified {@code Type}.
 	 *
+	 * @param type
+	 *            the required return type of the {@code Operator}
 	 * @return a randomly selected {@code Operator} with a return type of {@code type}
 	 */
 	public Operator next(Type type) {

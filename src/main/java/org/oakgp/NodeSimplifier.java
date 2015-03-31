@@ -26,7 +26,6 @@ import org.oakgp.serialize.NodeWriter;
  * 25
  * </pre>
  *
- * </p>
  * <b>Note:</b> relies on {@code Operator} implementations being referentially transparent.
  */
 public final class NodeSimplifier {

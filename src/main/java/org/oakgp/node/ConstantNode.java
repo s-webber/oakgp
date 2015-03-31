@@ -19,6 +19,8 @@ public final class ConstantNode implements Node {
 	 *
 	 * @param value
 	 *            the value to be represented by the {@code ConstantNode}
+	 * @param type
+	 *            the {@code Type} that the value represented by this node is of
 	 */
 	public ConstantNode(Object value, Type type) {
 		this.value = value;

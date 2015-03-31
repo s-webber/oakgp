@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.oakgp.node.Node;
 
+/** Wraps a {@code FitnessFunction} to provide caching of results. */
 public final class FitnessFunctionCache implements FitnessFunction {
 	private final FitnessFunction fitnessFunction;
 	private final Map<Node, Double> cache;

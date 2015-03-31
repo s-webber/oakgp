@@ -5,6 +5,22 @@ import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.operator.Operator;
 
+/**
+ * Creates {@code String} representations of {@code Node} instances.
+ * <p>
+ * e.g. The {@code Node}:
+ *
+ * <pre>
+ * new FunctionNode(new Add(), createArguments(new ConstantNode(9), new ConstantNode(5))
+ * </pre>
+ *
+ * will produce the {@code String}:
+ *
+ * <pre>
+ * (+ 9 5)
+ * </pre>
+ */
+
 public final class NodeWriter {
 	private final SymbolMap symbolMap = new SymbolMap();
 

@@ -11,6 +11,7 @@ import org.oakgp.GenerationProcessor;
 import org.oakgp.RankedCandidate;
 import org.oakgp.node.Node;
 
+/** Ranks and sorts the fitness of {@code Node} instances using a {@code TwoPlayerGame} in a round-robin tournament. */
 public final class RoundRobinTournament implements GenerationProcessor {
 	private final TwoPlayerGame game;
 

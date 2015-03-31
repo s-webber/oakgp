@@ -19,6 +19,8 @@ public final class VariableNode implements Node {
 	 *
 	 * @param id
 	 *            represents the index to specify when getting the value for this variable from an {@link Assignments}
+	 * @param type
+	 *            the {@code Type} that the values represented by this node are of
 	 */
 	public VariableNode(int id, Type type) {
 		this.id = id;

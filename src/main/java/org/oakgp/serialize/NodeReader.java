@@ -20,6 +20,21 @@ import org.oakgp.node.Node;
 import org.oakgp.node.VariableNode;
 import org.oakgp.operator.Operator;
 
+/**
+ * Creates {@code Node} instances from {@code String} representations.
+ * <p>
+ * e.g. The {@code String}:
+ *
+ * <pre>
+ * (+ 9 5)
+ * </pre>
+ *
+ * will produce the {@code Node}:
+ *
+ * <pre>
+ * new FunctionNode(new Add(), createArguments(new ConstantNode(9), new ConstantNode(5))
+ * </pre>
+ */
 public final class NodeReader implements Closeable {
 	private static final ConstantNode TRUE_NODE = new ConstantNode(Boolean.TRUE, BOOLEAN); // TODO move somewhere it can be shared
 	private static final ConstantNode FALSE_NODE = new ConstantNode(Boolean.FALSE, BOOLEAN); // TODO move somewhere it can be shared

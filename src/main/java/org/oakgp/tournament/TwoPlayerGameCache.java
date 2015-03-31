@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.oakgp.node.Node;
 
+/** Wraps a {@code TwoPlayerGame} to provide caching of results. */
 public final class TwoPlayerGameCache implements TwoPlayerGame {
 	private final TwoPlayerGame twoPlayerGame;
 	private final Map<NodePair, Double> cache;
