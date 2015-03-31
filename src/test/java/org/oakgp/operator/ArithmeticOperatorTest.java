@@ -51,11 +51,18 @@ public class ArithmeticOperatorTest {
 	public void testSimplification() throws IOException {
 		List<String> tests = getTestData();
 		assertEquals(TEST_DATA_SIZE, tests.size());
+		long inputNodeCtr = 0;
+		long outputNodeCtr = 0;
+		long start = System.currentTimeMillis();
 		for (String test : tests) {
 			Node input = readNode(test);
 			Node output = new NodeSimplifier().simplify(input);
 			assertEvaluateToSameResult(input, output);
+			inputNodeCtr += input.getNodeCount();
+			outputNodeCtr += output.getNodeCount();
 		}
+		long end = System.currentTimeMillis();
+		System.out.println("from " + inputNodeCtr + " to " + outputNodeCtr + " in " + (end - start) + "ms");
 	}
 
 	private List<String> getTestData() throws IOException {
