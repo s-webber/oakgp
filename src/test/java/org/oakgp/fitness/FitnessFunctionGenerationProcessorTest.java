@@ -1,4 +1,4 @@
-package org.oakgp;
+package org.oakgp.fitness;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
@@ -9,6 +9,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Test;
+import org.oakgp.GenerationProcessor;
+import org.oakgp.RankedCandidate;
 import org.oakgp.node.Node;
 
 public class FitnessFunctionGenerationProcessorTest {

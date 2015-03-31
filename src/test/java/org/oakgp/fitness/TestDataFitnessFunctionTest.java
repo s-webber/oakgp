@@ -1,4 +1,4 @@
-package org.oakgp;
+package org.oakgp.fitness;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Test;
+import org.oakgp.Assignments;
 import org.oakgp.node.Node;
 
 public class TestDataFitnessFunctionTest {

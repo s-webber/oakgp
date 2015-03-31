@@ -1,7 +1,8 @@
-package org.oakgp;
+package org.oakgp.fitness;
 
 import java.util.Map;
 
+import org.oakgp.Assignments;
 import org.oakgp.node.Node;
 
 /** Calculates the fitness of a potential solution by comparing its results against the expected values. */

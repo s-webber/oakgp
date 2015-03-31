@@ -1,10 +1,12 @@
-package org.oakgp;
+package org.oakgp.fitness;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import org.oakgp.GenerationProcessor;
+import org.oakgp.RankedCandidate;
 import org.oakgp.node.Node;
 
 /** Ranks and sorts the fitness of {@code Node} instances using a {@code FitnessFunction}. */

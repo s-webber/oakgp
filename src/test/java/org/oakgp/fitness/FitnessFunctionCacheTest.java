@@ -1,4 +1,4 @@
-package org.oakgp;
+package org.oakgp.fitness;
 
 import static org.junit.Assert.assertEquals;
 import static org.oakgp.TestUtils.createConstant;

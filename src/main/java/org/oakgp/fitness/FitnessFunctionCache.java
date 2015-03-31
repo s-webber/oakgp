@@ -1,4 +1,4 @@
-package org.oakgp;
+package org.oakgp.fitness;
 
 import static org.oakgp.util.CacheMap.createCache;
 
