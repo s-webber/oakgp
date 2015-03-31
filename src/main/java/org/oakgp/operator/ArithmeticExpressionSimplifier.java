@@ -3,8 +3,6 @@ package org.oakgp.operator;
 import static org.oakgp.Type.INTEGER;
 import static org.oakgp.util.NodeComparator.NODE_COMPARATOR;
 
-import java.util.Optional;
-
 import org.oakgp.Arguments;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
@@ -32,42 +30,26 @@ final class ArithmeticExpressionSimplifier {
 	}
 
 	private static Node getSimplifiedVersion(Operator operator, Node firstArg, Node secondArg) {
-		// TODO consider just doing:
-		// test removing from second arg first as, due to ordering, more likely that second arg is a function node
-		// boolean isPos = isAdd(operator);
-		// Optional<NodePair> o = removeFromChildNodes(secondArg, firstArg, isPos);
-		// if (o.isPresent()) {
-		// NodePair p = o.get();
-		// return new FunctionNode(operator, p.y, p.x);
-		// }
-		// o = removeFromChildNodes(firstArg, secondArg, isPos);
-		// if (o.isPresent()) {
-		// NodePair p = o.get();
-		// return new FunctionNode(operator, p.x, p.y);
-		// }
-		// return null;
-
 		boolean isPos = isAdd(operator);
 		if (firstArg instanceof FunctionNode && secondArg instanceof FunctionNode) {
-			Optional<NodePair> o = removeFromChildNodes(firstArg, secondArg, isPos);
-			if (o.isPresent()) {
-				NodePair p = o.get();
+			NodePair p = removeFromChildNodes(firstArg, secondArg, isPos);
+			if (p != null) {
 				return new FunctionNode(operator, p.x, p.y);
 			}
-			o = removeFromChildNodes(secondArg, firstArg, isPos);
-			if (o.isPresent()) {
-				NodePair p = o.get();
+			p = removeFromChildNodes(secondArg, firstArg, isPos);
+			if (p != null) {
 				return new FunctionNode(operator, p.y, p.x);
 			}
 		} else if (firstArg instanceof FunctionNode) {
-			Node tmp = combineWithChildNodes(firstArg, secondArg, isPos);
-			if (tmp != null) {
-				return tmp;
-			}
+			return combineWithChildNodes(firstArg, secondArg, isPos);
 		} else if (secondArg instanceof FunctionNode) {
+			// 3, (+ (* 12 v2) 30) -> (+ (* 12 v2) 33)
 			Node tmp = combineWithChildNodes(secondArg, firstArg, isPos);
-			if (tmp != null) {
-				return dealWithSubtract(operator, tmp);
+			if (tmp != null && isSubtract(operator)) {
+				// 3, (- (* 12 v2) 30) -> (- (* 12 v2) 33) -> (0 - (- (* 12 v2) 33))
+				return new FunctionNode(operator, ZERO, tmp);
+			} else {
+				return tmp;
 			}
 		}
 
@@ -86,7 +68,7 @@ final class ArithmeticExpressionSimplifier {
 	 *            {@code nodeToAdd} should be added to {@code nodeToWalk}
 	 * @return {@code null} if it was not possible to remove (@code nodeToRemove} from {@code nodeToWalk}
 	 */
-	private static Optional<NodePair> removeFromChildNodes(final Node nodeToWalk, final Node nodeToRemove, final boolean isPos) {
+	private static NodePair removeFromChildNodes(final Node nodeToWalk, final Node nodeToRemove, final boolean isPos) {
 		if (nodeToWalk instanceof FunctionNode) {
 			FunctionNode fn = (FunctionNode) nodeToWalk;
 			Operator op = fn.getOperator();
@@ -105,42 +87,38 @@ final class ArithmeticExpressionSimplifier {
 						result = i2 - i1;
 					}
 					Node tmp = new FunctionNode(op, createConstant(result), secondArg);
-					return Optional.of(new NodePair(ZERO, tmp));
+					return new NodePair(ZERO, tmp);
 				}
 
 				Node tmp = combineWithChildNodes(nodeToRemove, nodeToWalk, isPos);
 				if (tmp != null) {
-					return Optional.of(new NodePair(ZERO, tmp));
+					return new NodePair(ZERO, tmp);
 				}
 			}
 
 			boolean isSubtract = isSubtract(op);
 			if (isAdd(op) || isSubtract) {
-				Optional<NodePair> o = removeFromChildNodes(firstArg, nodeToRemove, isPos);
-				if (o.isPresent()) {
-					NodePair p = o.get();
-					// TODO is performance better if we don't call recursiveReplace again here with the second arg?
-					Optional<NodePair> o2 = removeFromChildNodes(secondArg, p.y, isSubtract ? !isPos : isPos);
-					if (o2.isPresent()) {
-						return Optional.of(new NodePair(new FunctionNode(op, p.x, o2.get().x), o2.get().y));
+				NodePair p = removeFromChildNodes(firstArg, nodeToRemove, isPos);
+				if (p != null) {
+					NodePair p2 = removeFromChildNodes(secondArg, p.y, isSubtract ? !isPos : isPos);
+					if (p2 == null) {
+						return new NodePair(new FunctionNode(op, p.x, secondArg), p.y);
 					} else {
-						return Optional.of(new NodePair(new FunctionNode(op, p.x, secondArg), p.y));
+						return new NodePair(new FunctionNode(op, p.x, p2.x), p2.y);
 					}
 				}
-				o = removeFromChildNodes(secondArg, nodeToRemove, isSubtract ? !isPos : isPos);
-				if (o.isPresent()) {
-					NodePair p = o.get();
-					return Optional.of(new NodePair(new FunctionNode(op, firstArg, p.x), p.y));
+				p = removeFromChildNodes(secondArg, nodeToRemove, isSubtract ? !isPos : isPos);
+				if (p != null) {
+					return new NodePair(new FunctionNode(op, firstArg, p.x), p.y);
 				}
 			}
 		} else if (!ZERO.equals(nodeToWalk)) {
-			// TODO confirm this is not worth doing when nodeToSearch is 0
 			Node tmp = combineWithChildNodes(nodeToRemove, nodeToWalk, isPos);
 			if (tmp != null) {
-				return Optional.of(new NodePair(ZERO, tmp));
+				return new NodePair(ZERO, tmp);
 			}
 		}
-		return Optional.empty();
+		return null;
 	}
 
 	/**
@@ -280,14 +258,6 @@ final class ArithmeticExpressionSimplifier {
 		return new FunctionNode(f1.getOperator(), createConstant(result), f1.getArguments().get(1));
 	}
 
-	private static Node dealWithSubtract(Operator currentOperator, Node tmp) {
-		if (isSubtract(currentOperator)) {
-			return new FunctionNode(currentOperator, ZERO, tmp);
-		} else {
-			return tmp;
-		}
-	}
-
 	private static void assertAddOrSubtract(Operator o) {
 		// TODO remove this method - only here to sanity check input during development
 		if (!isAddOrSubtract(o)) {
@@ -322,6 +292,7 @@ final class ArithmeticExpressionSimplifier {
 	}
 
 	static FunctionNode multiplyByTwo(Node arg) {
+		// TODO don't create a new Multiply each time - reuse the same instance (and do the same for other operators)
 		return new FunctionNode(new Multiply(), TWO, arg);
 	}
 
