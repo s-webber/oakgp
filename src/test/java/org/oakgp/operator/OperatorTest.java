@@ -1,7 +1,7 @@
 package org.oakgp.operator;
 
 import static java.nio.file.FileVisitResult.CONTINUE;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -35,7 +35,7 @@ public class OperatorTest {
 				throw new UnsupportedOperationException();
 			}
 		};
-		assertFalse(o.simplify(null).isPresent());
+		assertNull(o.simplify(null));
 	}
 
 	@Test

@@ -4,8 +4,6 @@ import static java.lang.Boolean.TRUE;
 import static org.oakgp.Type.BOOLEAN;
 import static org.oakgp.Type.INTEGER;
 
-import java.util.Optional;
-
 import org.oakgp.Arguments;
 import org.oakgp.Assignments;
 import org.oakgp.Signature;
@@ -27,14 +25,14 @@ public final class If implements Operator {
 	}
 
 	@Override
-	public Optional<Node> simplify(Arguments arguments) {
+	public Node simplify(Arguments arguments) {
 		if (arguments.get(1).equals(arguments.get(2))) {
-			return Optional.of(arguments.get(1));
+			return arguments.get(1);
 		} else if (arguments.get(0) instanceof ConstantNode) {
 			int index = getOutcomeArgumentIndex(arguments, null);
-			return Optional.of(arguments.get(index));
+			return arguments.get(index);
 		} else {
-			return Optional.empty();
+			return null;
 		}
 	}
 

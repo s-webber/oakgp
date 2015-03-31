@@ -1,7 +1,5 @@
 package org.oakgp.operator;
 
-import java.util.Optional;
-
 import org.oakgp.Arguments;
 import org.oakgp.Assignments;
 import org.oakgp.Signature;
@@ -22,7 +20,7 @@ public interface Operator {
 
 	Signature getSignature();
 
-	default Optional<Node> simplify(Arguments arguments) {
-		return Optional.empty();
+	default Node simplify(Arguments arguments) {
+		return null;
 	}
 }

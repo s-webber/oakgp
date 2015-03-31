@@ -4,7 +4,6 @@ import static org.oakgp.Arguments.createArguments;
 import static org.oakgp.util.Utils.assertEvaluateToSameResult;
 
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
 import org.oakgp.node.ConstantNode;
@@ -97,14 +96,13 @@ public final class NodeSimplifier {
 			return new ConstantNode(output.evaluate(null), output.getType());
 		}
 
-		// try to simplify using operator
-		// return input.getOperator().simplify(arguments).orElse(output);
-		Optional<Node> o = input.getOperator().simplify(arguments);
-		if (o.isPresent()) {
-			assertEvaluateToSameResult(input, o.get());
-			return o.get();
-		} else {
+		// try to simplify using operator specific logic
+		Node simplifiedByOperatorVersion = input.getOperator().simplify(arguments);
+		if (simplifiedByOperatorVersion == null) {
 			return output;
+		} else {
+			assertEvaluateToSameResult(input, simplifiedByOperatorVersion);
+			return simplifiedByOperatorVersion;
 		}
 	}
 }

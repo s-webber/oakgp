@@ -7,8 +7,6 @@ import static org.oakgp.operator.ArithmeticExpressionSimplifier.isMultiply;
 import static org.oakgp.operator.ArithmeticExpressionSimplifier.isSubtract;
 import static org.oakgp.operator.ArithmeticExpressionSimplifier.negate;
 
-import java.util.Optional;
-
 import org.oakgp.Arguments;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
@@ -27,11 +25,10 @@ public final class Subtract extends ArithmeticOperator {
 	}
 
 	@Override
-	public Optional<Node> simplify(Arguments arguments) {
-		return Optional.ofNullable(simplify(arguments.get(0), arguments.get(1)));
-	}
+	public Node simplify(Arguments arguments) {
+		Node arg1 = arguments.get(0);
+		Node arg2 = arguments.get(1);
 
-	private Node simplify(Node arg1, Node arg2) {
 		if (arg1.equals(arg2)) {
 			// anything minus itself is zero
 			// e.g. (- x x) -> 0

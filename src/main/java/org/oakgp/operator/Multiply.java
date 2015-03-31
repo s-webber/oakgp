@@ -7,8 +7,6 @@ import static org.oakgp.operator.ArithmeticExpressionSimplifier.isAddOrSubtract;
 import static org.oakgp.operator.ArithmeticExpressionSimplifier.isMultiply;
 import static org.oakgp.util.NodeComparator.NODE_COMPARATOR;
 
-import java.util.Optional;
-
 import org.oakgp.Arguments;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
@@ -27,11 +25,10 @@ public final class Multiply extends ArithmeticOperator {
 	}
 
 	@Override
-	public Optional<Node> simplify(Arguments arguments) {
-		return Optional.ofNullable(simplify(arguments.get(0), arguments.get(1)));
-	}
+	public Node simplify(Arguments arguments) {
+		Node arg1 = arguments.get(0);
+		Node arg2 = arguments.get(1);
 
-	private Node simplify(Node arg1, Node arg2) {
 		if (NODE_COMPARATOR.compare(arg1, arg2) > 0) {
 			// as for addition the order of the arguments is not important, order arguments in a consistent way
 			// e.g. (* v1 1) -> (* 1 v1)

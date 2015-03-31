@@ -5,8 +5,6 @@ import static java.lang.Boolean.TRUE;
 import static org.oakgp.Type.BOOLEAN;
 import static org.oakgp.Type.INTEGER;
 
-import java.util.Optional;
-
 import org.oakgp.Arguments;
 import org.oakgp.Assignments;
 import org.oakgp.Signature;
@@ -43,11 +41,11 @@ abstract class ComparisonOperator implements Operator {
 	}
 
 	@Override
-	public Optional<Node> simplify(Arguments arguments) {
+	public Node simplify(Arguments arguments) {
 		if (arguments.get(0).equals(arguments.get(1))) {
-			return Optional.of(equalsIsTrue ? TRUE_NODE : FALSE_NODE);
+			return equalsIsTrue ? TRUE_NODE : FALSE_NODE;
 		} else {
-			return Optional.empty();
+			return null;
 		}
 	}
 }
