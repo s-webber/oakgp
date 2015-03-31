@@ -15,7 +15,7 @@ import org.oakgp.operator.math.Add;
 import org.oakgp.operator.math.Multiply;
 import org.oakgp.operator.math.Subtract;
 
-public final class SymbolMap {
+final class SymbolMap {
 	private static final Map<String, Class<? extends Operator>> SYMBOL_TO_CLASS_MAPPINGS = new HashMap<>();
 	private static final Map<Class<? extends Operator>, String> CLASS_TO_SYMBOL_MAPPINGS = new HashMap<>();
 	static {
