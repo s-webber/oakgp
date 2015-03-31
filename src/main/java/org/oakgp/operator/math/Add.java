@@ -1,9 +1,9 @@
-package org.oakgp.operator;
+package org.oakgp.operator.math;
 
-import static org.oakgp.operator.ArithmeticExpressionSimplifier.ZERO;
-import static org.oakgp.operator.ArithmeticExpressionSimplifier.createConstant;
-import static org.oakgp.operator.ArithmeticExpressionSimplifier.isAddOrSubtract;
-import static org.oakgp.operator.ArithmeticExpressionSimplifier.multiplyByTwo;
+import static org.oakgp.operator.math.ArithmeticExpressionSimplifier.ZERO;
+import static org.oakgp.operator.math.ArithmeticExpressionSimplifier.createConstant;
+import static org.oakgp.operator.math.ArithmeticExpressionSimplifier.isAddOrSubtract;
+import static org.oakgp.operator.math.ArithmeticExpressionSimplifier.multiplyByTwo;
 import static org.oakgp.util.NodeComparator.NODE_COMPARATOR;
 
 import org.oakgp.Arguments;
@@ -58,8 +58,7 @@ public final class Add extends ArithmeticOperator {
 			if (fn2.getArguments().get(0) instanceof ConstantNode && isAddOrSubtract(fn2.getOperator())) {
 				int i1 = (int) arg1.evaluate(null);
 				int i2 = (int) fn2.getArguments().get(0).evaluate(null);
-				Operator op = fn2.getOperator();
-				return new FunctionNode(op, createConstant(i1 + i2), fn2.getArguments().get(1));
+				return new FunctionNode(fn2.getOperator(), createConstant(i1 + i2), fn2.getArguments().get(1));
 			}
 		}
 

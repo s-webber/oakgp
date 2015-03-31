@@ -1,6 +1,9 @@
-package org.oakgp.operator;
+package org.oakgp.operator.math;
 
 import java.util.List;
+
+import org.oakgp.operator.AbstractOperatorTest;
+import org.oakgp.operator.Operator;
 
 public class SubtractTest extends AbstractOperatorTest {
 	@Override
@@ -65,7 +68,7 @@ public class SubtractTest extends AbstractOperatorTest {
 		testCases.put("(- (+ 9 (- v0 (+ 9 v1))) (- v1 v0))", "(- (* 2 v0) (* 2 v1))", assignedValues);
 
 		// (- v0 (- v1 (+ (* 2 v0) (* -2 v1)))) = x-(y-((2*x)+(-2*y))) = 3x-3y = (+ (* 3 v0) (* -3 v1))
-		testCases.put("(- v0 (- v1 (+ (* 2 v0) (* -2 v1))))", "(+ (* 3 v0) (* -3 v1))", assignedValues);
+		testCases.put("(- v0 (- v1 (+ (* 2 v0) (* -2 v1))))", "(+ (* -3 v1) (* 3 v0))", assignedValues);
 
 		testCases.put("(- v1 (- (* 2 v0) v1))", "(- (* 2 v1) (* 2 v0))", assignedValues);
 		testCases.put("(- v1 (- 4 (+ v1 (* 2 v0))))", "(- (+ (* 2 v0) (* 2 v1)) 4)", assignedValues);

@@ -1,4 +1,4 @@
-package org.oakgp.operator;
+package org.oakgp.operator.math;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -17,6 +17,7 @@ import org.oakgp.Type;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
+import org.oakgp.operator.If;
 
 public class ArithmeticExpressionSimplifierTest {
 	@Test

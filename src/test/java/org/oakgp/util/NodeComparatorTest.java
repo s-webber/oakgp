@@ -73,8 +73,8 @@ public class NodeComparatorTest {
 		assertEquals("3", nodes.get(1).toString());
 		assertEquals("v0", nodes.get(2).toString());
 		assertEquals("v1", nodes.get(3).toString());
-		assertEquals(f2, nodes.get(4));
-		assertEquals(f3, nodes.get(5));
+		assertEquals(f3, nodes.get(4));
+		assertEquals(f2, nodes.get(5));
 		assertEquals(f1, nodes.get(6));
 	}
 }

@@ -1,6 +1,9 @@
-package org.oakgp.operator;
+package org.oakgp.operator.math;
 
 import java.util.List;
+
+import org.oakgp.operator.AbstractOperatorTest;
+import org.oakgp.operator.Operator;
 
 public class AddTest extends AbstractOperatorTest {
 	@Override
@@ -42,7 +45,7 @@ public class AddTest extends AbstractOperatorTest {
 		testCases.put("(+ (+ v0 v1) 0)", "(+ v0 v1)", assignedValues);
 		testCases.put("(+ 0 (+ v0 v1))", "(+ v0 v1)", assignedValues);
 
-		testCases.put("(+ (+ 4 v0) (+ v0 (* 2 v1)))", "(+ 4 (+ (* 2 v0) (* 2 v1)))", assignedValues);
+		testCases.put("(+ (+ 4 v0) (+ v0 (* 2 v1)))", "(+ (+ 4 (* 2 v0)) (* 2 v1))", assignedValues);
 		testCases.put("(+ (- 10 v0) (+ 1 v0))", "11", assignedValues);
 		testCases.put("(+ (+ 10 v0) (- 1 v0))", "11", assignedValues);
 		testCases.put("(+ (- 10 v0) (+ 1 v1))", "(+ v1 (- 11 v0))", assignedValues);

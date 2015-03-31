@@ -1,6 +1,9 @@
-package org.oakgp.operator;
+package org.oakgp.operator.math;
 
 import java.util.List;
+
+import org.oakgp.operator.AbstractOperatorTest;
+import org.oakgp.operator.Operator;
 
 public class MultiplyTest extends AbstractOperatorTest {
 	@Override

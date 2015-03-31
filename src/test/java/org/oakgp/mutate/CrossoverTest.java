@@ -23,7 +23,7 @@ public class CrossoverTest { // TODO rename SubtreeCrossoverTest
 		NodeEvolver c = new SubtreeCrossover(mockRandom);
 
 		Node result = c.evolve(dummySelector);
-		assertEquals("(org.oakgp.operator.Add 9 (org.oakgp.operator.Subtract 8 v5))", result.toString());
+		assertEquals("(org.oakgp.operator.math.Add 9 (org.oakgp.operator.math.Subtract 8 v5))", result.toString());
 		assertTrue(dummySelector.isEmpty());
 	}
 
@@ -65,7 +65,7 @@ public class CrossoverTest { // TODO rename SubtreeCrossoverTest
 		NodeEvolver c = new SubtreeCrossover(mockRandom);
 
 		Node result = c.evolve(dummySelector);
-		assertEquals("(org.oakgp.operator.Add 9 5)", result.toString());
+		assertEquals("(org.oakgp.operator.math.Add 9 5)", result.toString());
 		assertEquals(14, result.evaluate(null));
 		assertTrue(dummySelector.isEmpty());
 	}

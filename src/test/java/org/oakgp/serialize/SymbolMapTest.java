@@ -5,10 +5,10 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.fail;
 
 import org.junit.Test;
-import org.oakgp.operator.Add;
-import org.oakgp.operator.Multiply;
+import org.oakgp.operator.math.Add;
+import org.oakgp.operator.math.Multiply;
 import org.oakgp.operator.Operator;
-import org.oakgp.operator.Subtract;
+import org.oakgp.operator.math.Subtract;
 
 public class SymbolMapTest {
 	// TODO test getDisplayName when no symbol mapping exists for the specified Operator

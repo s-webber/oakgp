@@ -3,17 +3,17 @@ package org.oakgp.serialize;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.oakgp.operator.Add;
+import org.oakgp.operator.math.Add;
 import org.oakgp.operator.Equal;
 import org.oakgp.operator.GreaterThan;
 import org.oakgp.operator.GreaterThanOrEqual;
 import org.oakgp.operator.If;
 import org.oakgp.operator.LessThan;
 import org.oakgp.operator.LessThanOrEqual;
-import org.oakgp.operator.Multiply;
+import org.oakgp.operator.math.Multiply;
 import org.oakgp.operator.NotEqual;
 import org.oakgp.operator.Operator;
-import org.oakgp.operator.Subtract;
+import org.oakgp.operator.math.Subtract;
 
 public final class SymbolMap {
 	private static final Map<String, Class<? extends Operator>> SYMBOL_TO_CLASS_MAPPINGS = new HashMap<>();

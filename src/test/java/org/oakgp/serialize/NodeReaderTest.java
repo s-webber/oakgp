@@ -84,17 +84,17 @@ public class NodeReaderTest {
 
 	@Test
 	public void testFunctionNodeSpecifiedByClassName() {
-		assertParseFunction("(org.oakgp.operator.Add 7 21)");
+		assertParseFunction("(org.oakgp.operator.math.Add 7 21)");
 	}
 
 	@Test
 	public void testFunctionNodeSpecifiedBySymbol() {
-		assertParseFunction("(+ 7 21)", "(org.oakgp.operator.Add 7 21)");
+		assertParseFunction("(+ 7 21)", "(org.oakgp.operator.math.Add 7 21)");
 	}
 
 	@Test
 	public void testFunctionNodeWithFunctionNodeArguments() {
-		assertParseFunction("(org.oakgp.operator.Add (org.oakgp.operator.Subtract v0 587) (org.oakgp.operator.Multiply 43 v1))");
+		assertParseFunction("(org.oakgp.operator.math.Add (org.oakgp.operator.math.Subtract v0 587) (org.oakgp.operator.math.Multiply 43 v1))");
 	}
 
 	@Test
@@ -119,7 +119,7 @@ public class NodeReaderTest {
 
 	@Test
 	public void testMulipleNodes() {
-		String[] inputs = { "6", "(org.oakgp.operator.Add v0 v1)", "42", "v0", "(org.oakgp.operator.Add 1 2)", "v98" };
+		String[] inputs = { "6", "(org.oakgp.operator.math.Add v0 v1)", "42", "v0", "(org.oakgp.operator.math.Add 1 2)", "v98" };
 		String combinedInput = " " + inputs[0] + inputs[1] + inputs[2] + " " + inputs[3] + "\n\r\t\t\t" + inputs[4] + "       \n   " + inputs[5] + "\r\n";
 		List<Node> outputs = readNodes(combinedInput);
 		assertEquals(inputs.length, outputs.size());
