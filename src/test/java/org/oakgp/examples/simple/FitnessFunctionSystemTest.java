@@ -30,12 +30,12 @@ import org.oakgp.NodeEvolver;
 import org.oakgp.RankedCandidate;
 import org.oakgp.Runner;
 import org.oakgp.TerminalSet;
+import org.oakgp.crossover.SubtreeCrossover;
 import org.oakgp.fitness.FitnessFunction;
 import org.oakgp.fitness.FitnessFunctionCache;
 import org.oakgp.fitness.FitnessFunctionGenerationProcessor;
 import org.oakgp.fitness.TestDataFitnessFunction;
 import org.oakgp.mutate.PointMutation;
-import org.oakgp.mutate.SubtreeCrossover;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
 
