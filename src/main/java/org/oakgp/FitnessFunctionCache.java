@@ -1,6 +1,6 @@
 package org.oakgp;
 
-import static org.oakgp.CacheMap.createCache;
+import static org.oakgp.util.CacheMap.createCache;
 
 import java.util.Map;
 
