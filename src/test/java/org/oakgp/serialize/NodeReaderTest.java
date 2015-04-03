@@ -15,8 +15,7 @@ import java.util.List;
 import org.junit.Test;
 import org.oakgp.Arguments;
 import org.oakgp.function.Function;
-import org.oakgp.function.math.Add;
-import org.oakgp.function.math.Subtract;
+import org.oakgp.function.classify.IsPositive;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
@@ -67,12 +66,8 @@ public class NodeReaderTest {
 
    @Test
    public void testFunctionSymbol() {
-      assertParseFunction("+", Add.class);
-   }
-
-   @Test
-   public void testFunctionClassName() {
-      assertParseFunction("org.oakgp.function.math.Subtract", Subtract.class);
+      // TODO test functions with other types. e.g. +/Add
+      assertParseFunction("pos?", IsPositive.class);
    }
 
    @Test
@@ -103,18 +98,14 @@ public class NodeReaderTest {
    }
 
    @Test
-   public void testFunctionNodeSpecifiedByClassName() {
-      assertParseFunction("(org.oakgp.function.math.Add 7 21)");
-   }
-
-   @Test
    public void testFunctionNodeSpecifiedBySymbol() {
       assertParseFunction("(+ 7 21)", "(org.oakgp.function.math.Add 7 21)");
    }
 
    @Test
    public void testFunctionNodeWithFunctionNodeArguments() {
-      assertParseFunction("(org.oakgp.function.math.Add (org.oakgp.function.math.Subtract v0 587) (org.oakgp.function.math.Multiply 43 v1))");
+      assertParseFunction("(+ (- v0 587) (* 43 v1))",
+            "(org.oakgp.function.math.Add (org.oakgp.function.math.Subtract v0 587) (org.oakgp.function.math.Multiply 43 v1))");
    }
 
    @Test
@@ -139,12 +130,12 @@ public class NodeReaderTest {
 
    @Test
    public void testMulipleNodes() {
-      String[] inputs = { "6", "(org.oakgp.function.math.Add v0 v1)", "42", "v0", "(org.oakgp.function.math.Add 1 2)", "v98" };
+      String[] inputs = { "6", "(+ v0 v1)", "42", "v0", "(+ 1 2)", "v98" };
       String combinedInput = " " + inputs[0] + inputs[1] + inputs[2] + " " + inputs[3] + "\n\r\t\t\t" + inputs[4] + "       \n   " + inputs[5] + "\r\n";
       List<Node> outputs = readNodes(combinedInput);
       assertEquals(inputs.length, outputs.size());
       for (int i = 0; i < inputs.length; i++) {
-         assertEquals(inputs[i].toString(), outputs.get(i).toString());
+         assertEquals(inputs[i].toString().replace("+", "org.oakgp.function.math.Add"), outputs.get(i).toString());
       }
    }
 
@@ -172,10 +163,6 @@ public class NodeReaderTest {
       assertSame(VariableNode.class, output.getClass());
       assertEquals(id, ((VariableNode) output).getId());
       assertEquals(input, output.toString());
-   }
-
-   private void assertParseFunction(String input) {
-      assertParseFunction(input, input);
    }
 
    private void assertParseFunction(String input, String expected) {

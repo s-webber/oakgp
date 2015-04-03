@@ -54,7 +54,6 @@ public class ArithmeticExpressionSimplifierTest {
       assertIsAdd("(+ 1 2)", true);
       assertIsAdd("(- 1 2)", false);
       assertIsAdd("(* 1 2)", false);
-      assertIsAdd("(if 1 2)", false);
       assertIsAdd("1", false);
       assertIsAdd("true", false);
    }
@@ -74,7 +73,6 @@ public class ArithmeticExpressionSimplifierTest {
       assertIsSubtract("(- 1 2)", true);
       assertIsSubtract("(+ 1 2)", false);
       assertIsSubtract("(* 1 2)", false);
-      assertIsSubtract("(if 1 2)", false);
       assertIsSubtract("1", false);
       assertIsSubtract("true", false);
    }
@@ -95,7 +93,6 @@ public class ArithmeticExpressionSimplifierTest {
       assertIsMultiply("(* 1 2)", true);
       assertIsMultiply("(+ 1 2)", false);
       assertIsMultiply("(- 1 2)", false);
-      assertIsMultiply("(if 1 2)", false);
       assertIsMultiply("1", false);
       assertIsMultiply("true", false);
    }

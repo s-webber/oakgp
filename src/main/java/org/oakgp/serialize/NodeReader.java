@@ -11,6 +11,7 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.oakgp.Arguments;
@@ -67,42 +68,61 @@ public final class NodeReader implements Closeable {
 
    private Node nextNode(String firstToken) throws IOException {
       if (firstToken == FUNCTION_START_STRING) {
-         String functionName = nextToken();
-         Function function = symbolMap.getFunction(functionName);
-         List<Node> arguments = new ArrayList<>();
-         String nextToken;
-         while ((nextToken = nextToken()) != FUNCTION_END_STRING) {
-            arguments.add(nextNode(nextToken));
-         }
-         return new FunctionNode(function, createArgumentsFromList(arguments));
+         return nextFunctionNode();
       } else if (firstToken == STRING_STRING) {
-         StringBuilder sb = new StringBuilder();
-         int next;
-         while ((next = cr.next()) != STRING_CHAR) {
-            assertNotEndOfStream(next);
-            sb.append((char) next);
-         }
-         return new ConstantNode(sb.toString(), stringType());
+         return nextConstantNode();
       } else if (firstToken == ARRAY_START_STRING) {
-         List<Node> arguments = new ArrayList<>();
-         String nextToken;
-         Type t = null;
-         while ((nextToken = nextToken()) != ARRAY_END_STRING) {
-            Node n = nextNode(nextToken);
-            if (t == null) {
-               t = n.getType();
-            } else if (t != n.getType()) {
-               throw new RuntimeException("Mixed type array elements: " + t + " and " + n.getType());
-            }
-            arguments.add(n);
-         }
-         return new ConstantNode(createArgumentsFromList(arguments), arrayType(t));
+         return nextArrayConstantNode();
       } else if (firstToken.charAt(0) == 'v') {
-         int id = Integer.parseInt(firstToken.substring(1));
-         return new VariableNode(id, variableTypes[id]);
+         return nextVariable(firstToken);
       } else {
-         return parseLiteral(firstToken);
+         return nextLiteral(firstToken);
       }
+   }
+
+   private Node nextFunctionNode() throws IOException {
+      String functionName = nextToken();
+      List<Node> arguments = new ArrayList<>();
+      List<Type> types = new ArrayList<>();
+      String nextToken;
+      while ((nextToken = nextToken()) != FUNCTION_END_STRING) {
+         Node n = nextNode(nextToken);
+         arguments.add(n);
+         types.add(n.getType());
+      }
+      Function function = symbolMap.getFunction(functionName, types);
+      return new FunctionNode(function, createArgumentsFromList(arguments));
+   }
+
+   private Node nextConstantNode() throws IOException {
+      StringBuilder sb = new StringBuilder();
+      int next;
+      while ((next = cr.next()) != STRING_CHAR) {
+         assertNotEndOfStream(next);
+         sb.append((char) next);
+      }
+      return new ConstantNode(sb.toString(), stringType());
+   }
+
+   private Node nextArrayConstantNode() throws IOException {
+      List<Node> arguments = new ArrayList<>();
+      String nextToken;
+      Type t = null;
+      while ((nextToken = nextToken()) != ARRAY_END_STRING) {
+         Node n = nextNode(nextToken);
+         if (t == null) {
+            t = n.getType();
+         } else if (t != n.getType()) {
+            throw new RuntimeException("Mixed type array elements: " + t + " and " + n.getType());
+         }
+         arguments.add(n);
+      }
+      return new ConstantNode(createArgumentsFromList(arguments), arrayType(t));
+   }
+
+   private Node nextVariable(String firstToken) {
+      int id = Integer.parseInt(firstToken.substring(1));
+      return new VariableNode(id, variableTypes[id]);
    }
 
    // TODO move to Arguments
@@ -110,7 +130,7 @@ public final class NodeReader implements Closeable {
       return Arguments.createArguments(arguments.toArray(new Node[arguments.size()]));
    }
 
-   private ConstantNode parseLiteral(String token) {
+   private ConstantNode nextLiteral(String token) {
       switch (token) {
       case "true":
          return TRUE_NODE;
@@ -121,7 +141,13 @@ public final class NodeReader implements Closeable {
             return new ConstantNode(Integer.parseInt(token), integerType());
          } else {
             Type functionType = integerToBooleanFunctionType(); // TODO
-            return new ConstantNode(symbolMap.getFunction(token), functionType);
+            List<Type> types;
+            if ("+".equals(token) || "*".equals(token) || "-".equals(token)) {
+               types = Arrays.asList(integerType(), integerType()); // TODO
+            } else {
+               types = Arrays.asList(integerType()); // TODO
+            }
+            return new ConstantNode(symbolMap.getFunction(token, types), functionType);
          }
       }
    }

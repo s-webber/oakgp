@@ -1,6 +1,8 @@
 package org.oakgp;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public final class Signature { // TODO move to org.oakgp.function?
    private final Type returnType;
@@ -29,6 +31,10 @@ public final class Signature { // TODO move to org.oakgp.function?
 
    public int getArgumentTypesLength() { // TODO rename?
       return argumentTypes.length;
+   }
+
+   public List<Type> getArgumentTypes() { // TODO test
+      return Collections.unmodifiableList(Arrays.asList(argumentTypes));
    }
 
    @Override
