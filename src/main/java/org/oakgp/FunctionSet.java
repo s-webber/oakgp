@@ -12,30 +12,36 @@ import org.oakgp.util.Random;
 public final class FunctionSet {
    private final Random random;
    private final Map<Type, List<Operator>> operatorsByType;
-   private final Map<TypeArgumentCountPair, List<Operator>> operatorsByTypeArgumentCountPair;
+   private final Map<Signature, List<Operator>> operatorsBySignature;
 
-   // TODO refactor
    public FunctionSet(Random random, Operator[] operators) {
       this.random = random;
       operatorsByType = new HashMap<>();
-      operatorsByTypeArgumentCountPair = new HashMap<>();
+      operatorsBySignature = new HashMap<>();
       for (Operator operator : operators) {
-         Signature signature = operator.getSignature();
-         Type type = signature.getReturnType();
-         List<Operator> typeOperators = operatorsByType.get(type);
-         if (typeOperators == null) {
-            typeOperators = new ArrayList<>();
-            operatorsByType.put(type, typeOperators);
-         }
-         TypeArgumentCountPair p = new TypeArgumentCountPair(type, signature.getArgumentTypesLength());
-         List<Operator> typeArgumentCountPairOperators = operatorsByTypeArgumentCountPair.get(p);
-         if (typeArgumentCountPairOperators == null) {
-            typeArgumentCountPairOperators = new ArrayList<>();
-            operatorsByTypeArgumentCountPair.put(p, typeArgumentCountPairOperators);
-         }
-         typeOperators.add(operator);
-         typeArgumentCountPairOperators.add(operator);
+         addOperatorByType(operator);
+         addOperatorBySignature(operator);
       }
+   }
+
+   private void addOperatorByType(Operator operator) {
+      Type type = operator.getSignature().getReturnType();
+      List<Operator> typeOperators = operatorsByType.get(type);
+      if (typeOperators == null) {
+         typeOperators = new ArrayList<>();
+         operatorsByType.put(type, typeOperators);
+      }
+      typeOperators.add(operator);
+   }
+
+   private void addOperatorBySignature(Operator operator) {
+      Signature signature = operator.getSignature();
+      List<Operator> typeArgumentCountPairOperators = operatorsBySignature.get(signature);
+      if (typeArgumentCountPairOperators == null) {
+         typeArgumentCountPairOperators = new ArrayList<>();
+         operatorsBySignature.put(signature, typeArgumentCountPairOperators);
+      }
+      typeArgumentCountPairOperators.add(operator);
    }
 
    /**
@@ -47,6 +53,9 @@ public final class FunctionSet {
     */
    public Operator next(Type type) {
       List<Operator> typeOperators = operatorsByType.get(type);
+      if (typeOperators == null) { // TODO remove this check?
+         throw new RuntimeException("No " + type);
+      }
       int index = random.nextInt(typeOperators.size());
       return typeOperators.get(index);
    }
@@ -60,8 +69,11 @@ public final class FunctionSet {
     */
    public Operator nextAlternative(Operator current) {
       Signature signature = current.getSignature();
-      TypeArgumentCountPair p = new TypeArgumentCountPair(signature.getReturnType(), signature.getArgumentTypesLength());
-      List<Operator> operators = operatorsByTypeArgumentCountPair.get(p);
+      List<Operator> operators = operatorsBySignature.get(signature);
+      if (operators == null) {
+         // TODO remove this check?
+         throw new RuntimeException("no match " + current + " " + current.getSignature() + " " + operatorsBySignature);
+      }
       int operatorsSize = operators.size();
       if (operatorsSize == 1) {
          // TODO return Optional.empty() instead - so calling called can try something different
@@ -79,27 +91,6 @@ public final class FunctionSet {
          }
       } else {
          return next;
-      }
-   }
-
-   private static class TypeArgumentCountPair {
-      final Type type;
-      final int argumentCount;
-
-      public TypeArgumentCountPair(Type type, int argumentCount) {
-         this.type = type;
-         this.argumentCount = argumentCount;
-      }
-
-      @Override
-      public int hashCode() {
-         return type.hashCode() + argumentCount;
-      }
-
-      @Override
-      public boolean equals(Object o) {
-         TypeArgumentCountPair p = (TypeArgumentCountPair) o;
-         return type == p.type && argumentCount == p.argumentCount;
       }
    }
 }

@@ -22,7 +22,7 @@ import org.oakgp.util.Random;
 
 public class FunctionSetTest {
    private static final Operator[] OPERATORS = new Operator[] { new Add(), new Subtract(), new Multiply(), new If(), new LessThan(), new LessThanOrEqual(),
-         new GreaterThan(), new GreaterThanOrEqual(), new Equal(), new NotEqual() };
+      new GreaterThan(), new GreaterThanOrEqual(), new Equal(), new NotEqual() };
 
    @Test
    public void testNext() {
@@ -34,6 +34,7 @@ public class FunctionSetTest {
 
       FunctionSet functionSet = new FunctionSet(mockRandom, OPERATORS);
 
+      // TODO test with more than just INTEGER
       assertSame(OPERATORS[1], functionSet.next(INTEGER));
       assertSame(OPERATORS[0], functionSet.next(INTEGER));
       assertSame(OPERATORS[2], functionSet.next(INTEGER));
