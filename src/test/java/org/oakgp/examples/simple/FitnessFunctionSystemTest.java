@@ -4,8 +4,8 @@ import static org.oakgp.Assignments.createAssignments;
 import static org.oakgp.TestUtils.createArguments;
 import static org.oakgp.TestUtils.createTypeArray;
 import static org.oakgp.Type.booleanType;
-import static org.oakgp.Type.functionType;
 import static org.oakgp.Type.integerArrayType;
+import static org.oakgp.Type.integerToBooleanFunctionType;
 import static org.oakgp.Type.integerType;
 import static org.oakgp.examples.SystemTestUtils.ARITHMETIC_FUNCTION_SET;
 import static org.oakgp.examples.SystemTestUtils.COMPARISON_FUNCTION_SET;
@@ -110,8 +110,9 @@ public class FitnessFunctionSystemTest {
       IsZero isZero = new IsZero();
       // TODO add to TestUtils: operatorConstant(); integerConstant(); trueConstant(); falseConstant(); arrayConstant();
       ConstantNode[] constants = { new ConstantNode(Boolean.TRUE, booleanType()), new ConstantNode(Boolean.FALSE, booleanType()),
-            new ConstantNode(isPositive, functionType()), new ConstantNode(isNegative, functionType()), new ConstantNode(isZero, functionType()),
-            new ConstantNode(Arguments.createArguments(), integerArrayType()), new ConstantNode(0, integerType()) };
+            new ConstantNode(isPositive, integerToBooleanFunctionType()), new ConstantNode(isNegative, integerToBooleanFunctionType()),
+            new ConstantNode(isZero, integerToBooleanFunctionType()), new ConstantNode(Arguments.createArguments(), integerArrayType()),
+            new ConstantNode(0, integerType()) };
       TerminalSet terminalSet = new TerminalSet(RANDOM, RATIO_VARIABLES, new Type[] { integerArrayType() }, constants);
       Map<Assignments, Integer> testData = new HashMap<>();
       testData.put(createAssignments(createArguments("0", "0", "0", "0", "0", "0", "0", "0")), 8);
@@ -124,7 +125,7 @@ public class FitnessFunctionSystemTest {
       testData.put(createAssignments(createArguments("0", "0", "0")), 3);
       FitnessFunction fitnessFunction = new TestDataFitnessFunction(testData);
       FunctionSet hofFunctionSet = new FunctionSet(RANDOM, new Function[] { isNegative, isPositive, isZero, new Filter(), new Count(),
-            createIdentity(integerArrayType()), createIdentity(integerType()), createIdentity(functionType()) });
+            createIdentity(integerArrayType()), createIdentity(integerType()), createIdentity(integerToBooleanFunctionType()) });
       Collection<Node> initialGeneration = createInitialGeneration(hofFunctionSet, terminalSet, GENERATION_SIZE);
       doIt(hofFunctionSet, terminalSet, fitnessFunction, initialGeneration);
    }

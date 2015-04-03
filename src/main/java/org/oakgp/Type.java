@@ -27,8 +27,15 @@ public class Type implements Comparable<Type> {
       return add(new Type("integer"));
    }
 
-   public static Type functionType() {
-      return add(new Type("function"));
+   public static Type integerToBooleanFunctionType() {
+      return functionType(booleanType(), integerType());
+   }
+
+   public static Type functionType(Type... signature) {
+      if (signature.length < 2) {
+         throw new IllegalArgumentException();
+      }
+      return add(new Type("function", signature));
    }
 
    public static Type integerArrayType() {

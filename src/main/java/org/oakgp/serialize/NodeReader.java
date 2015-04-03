@@ -2,7 +2,7 @@ package org.oakgp.serialize;
 
 import static org.oakgp.Type.arrayType;
 import static org.oakgp.Type.booleanType;
-import static org.oakgp.Type.functionType;
+import static org.oakgp.Type.integerToBooleanFunctionType;
 import static org.oakgp.Type.integerType;
 import static org.oakgp.Type.stringType;
 
@@ -54,6 +54,7 @@ public final class NodeReader implements Closeable {
    private final CharReader cr;
    private final Type[] variableTypes;
 
+   // TODO accept array of VariableNode instead of Type
    public NodeReader(String input, Type... variableTypes) {
       StringReader sr = new StringReader(input);
       this.cr = new CharReader(new BufferedReader(sr));
@@ -119,7 +120,8 @@ public final class NodeReader implements Closeable {
          if (isNumber(token)) {
             return new ConstantNode(Integer.parseInt(token), integerType());
          } else {
-            return new ConstantNode(symbolMap.getFunction(token), functionType());
+            Type functionType = integerToBooleanFunctionType(); // TODO
+            return new ConstantNode(symbolMap.getFunction(token), functionType);
          }
       }
    }
