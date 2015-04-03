@@ -5,43 +5,43 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.fail;
 
 import org.junit.Test;
-import org.oakgp.function.Operator;
+import org.oakgp.function.Function;
 import org.oakgp.function.math.Add;
 import org.oakgp.function.math.Multiply;
 import org.oakgp.function.math.Subtract;
 
 public class SymbolMapTest {
-   // TODO test getDisplayName when no symbol mapping exists for the specified Operator
+   // TODO test getDisplayName when no symbol mapping exists for the specified Function
 
    private final SymbolMap symbolMap = new SymbolMap();
 
    @Test
-   public void testGetOperatorBySymbol() {
-      assertSame(Add.class, symbolMap.getOperator("+").getClass());
-      assertSame(Subtract.class, symbolMap.getOperator("-").getClass());
-      assertSame(Multiply.class, symbolMap.getOperator("*").getClass());
+   public void testGetFunctionBySymbol() {
+      assertSame(Add.class, symbolMap.getFunction("+").getClass());
+      assertSame(Subtract.class, symbolMap.getFunction("-").getClass());
+      assertSame(Multiply.class, symbolMap.getFunction("*").getClass());
    }
 
    @Test
-   public void testGetOperatorByClassName() {
-      Operator operator = symbolMap.getOperator(Add.class.getName());
+   public void testGetFunctionByClassName() {
+      Function operator = symbolMap.getFunction(Add.class.getName());
       assertSame(Add.class, operator.getClass());
    }
 
    @Test
-   public void testGetOperatorClassCastException() {
+   public void testGetFunctionClassCastException() {
       try {
-         symbolMap.getOperator("java.lang.String");
+         symbolMap.getFunction("java.lang.String");
          fail();
       } catch (ClassCastException e) {
-         assertEquals("java.lang.String cannot be cast to org.oakgp.function.Operator", e.getMessage());
+         assertEquals("java.lang.String cannot be cast to org.oakgp.function.Function", e.getMessage());
       }
    }
 
    @Test
-   public void testGetOperatorClassDoesNotExist() {
+   public void testGetFunctionClassDoesNotExist() {
       try {
-         symbolMap.getOperator("a.made.up.class.Xyz");
+         symbolMap.getFunction("a.made.up.class.Xyz");
          fail();
       } catch (IllegalArgumentException e) {
          assertEquals("Could not find class: a.made.up.class.Xyz", e.getMessage());
@@ -49,9 +49,9 @@ public class SymbolMapTest {
    }
 
    @Test
-   public void testGetOperatorSymbolDoesNotExist() {
+   public void testGetFunctionSymbolDoesNotExist() {
       try {
-         symbolMap.getOperator("^");
+         symbolMap.getFunction("^");
          fail();
       } catch (IllegalArgumentException e) {
          assertEquals("Could not find class: ^", e.getMessage());

@@ -18,7 +18,7 @@ import org.oakgp.Type;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
-import org.oakgp.function.Operator;
+import org.oakgp.function.Function;
 import org.oakgp.function.math.Add;
 import org.oakgp.function.math.Multiply;
 import org.oakgp.function.math.Subtract;
@@ -31,7 +31,7 @@ public class PointMutationTest {
    private static final double VARIABLE_RATIO = .6;
    private static final Type[] VARIABLE_TYPES = createTypeArray(9);
    private static final ConstantNode[] CONSTANTS = { createConstant(7), createConstant(8), createConstant(9) };
-   private static final Operator[] OPERATORS = { new Add(), new Subtract(), new Multiply() };
+   private static final Function[] OPERATORS = { new Add(), new Subtract(), new Multiply() };
 
    @Test
    public void testTerminalMutation() {
@@ -56,9 +56,9 @@ public class PointMutationTest {
 
    @Test
    public void testFunctionMutation() {
-      int expectedOperatorIndex = 2;
+      int expectedFunctionIndex = 2;
       Random mockRandom = mock(Random.class);
-      given(mockRandom.nextInt(OPERATORS.length)).willReturn(expectedOperatorIndex);
+      given(mockRandom.nextInt(OPERATORS.length)).willReturn(expectedFunctionIndex);
 
       Arguments arguments = createArguments(createConstant(3), createConstant(7));
       FunctionNode originalFunctionNode = new FunctionNode(OPERATORS[0], arguments);
@@ -67,7 +67,7 @@ public class PointMutationTest {
       PointMutation pointMutation = createPointMutation(mockRandom);
 
       FunctionNode offspring = (FunctionNode) pointMutation.evolve(dummySelector);
-      assertSame(OPERATORS[expectedOperatorIndex], offspring.getOperator());
+      assertSame(OPERATORS[expectedFunctionIndex], offspring.getFunction());
       assertSame(arguments, offspring.getArguments());
       assertTrue(dummySelector.isEmpty());
    }

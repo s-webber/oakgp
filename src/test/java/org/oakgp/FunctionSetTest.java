@@ -7,7 +7,7 @@ import static org.oakgp.Type.BOOLEAN;
 import static org.oakgp.Type.INTEGER;
 
 import org.junit.Test;
-import org.oakgp.function.Operator;
+import org.oakgp.function.Function;
 import org.oakgp.function.choice.If;
 import org.oakgp.function.compare.Equal;
 import org.oakgp.function.compare.GreaterThan;
@@ -21,7 +21,7 @@ import org.oakgp.function.math.Subtract;
 import org.oakgp.util.Random;
 
 public class FunctionSetTest {
-   private static final Operator[] OPERATORS = new Operator[] { new Add(), new Subtract(), new Multiply(), new If(), new LessThan(), new LessThanOrEqual(),
+   private static final Function[] OPERATORS = new Function[] { new Add(), new Subtract(), new Multiply(), new If(), new LessThan(), new LessThanOrEqual(),
       new GreaterThan(), new GreaterThanOrEqual(), new Equal(), new NotEqual() };
 
    @Test

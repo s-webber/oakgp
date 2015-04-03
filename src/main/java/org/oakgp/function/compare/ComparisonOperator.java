@@ -8,11 +8,11 @@ import static org.oakgp.Type.INTEGER;
 import org.oakgp.Arguments;
 import org.oakgp.Assignments;
 import org.oakgp.Signature;
+import org.oakgp.function.Function;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
-import org.oakgp.function.Operator;
 
-abstract class ComparisonOperator implements Operator {
+abstract class ComparisonOperator implements Function {
    private static final ConstantNode TRUE_NODE = new ConstantNode(TRUE, BOOLEAN); // TODO share version used by NodeReader
    private static final ConstantNode FALSE_NODE = new ConstantNode(FALSE, BOOLEAN); // TODO share version used by NodeReader
    private static final Signature SIGNATURE = Signature.createSignature(BOOLEAN, INTEGER, INTEGER);

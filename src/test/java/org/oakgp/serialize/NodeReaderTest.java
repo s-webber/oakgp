@@ -16,7 +16,7 @@ import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.node.VariableNode;
-import org.oakgp.function.Operator;
+import org.oakgp.function.Function;
 import org.oakgp.function.math.Add;
 import org.oakgp.function.math.Subtract;
 
@@ -64,13 +64,13 @@ public class NodeReaderTest {
    }
 
    @Test
-   public void testOperatorSymbol() {
-      assertParseOperator("+", Add.class);
+   public void testFunctionSymbol() {
+      assertParseFunction("+", Add.class);
    }
 
    @Test
-   public void testOperatorClassName() {
-      assertParseOperator("org.oakgp.function.math.Subtract", Subtract.class);
+   public void testFunctionClassName() {
+      assertParseFunction("org.oakgp.function.math.Subtract", Subtract.class);
    }
 
    @Test
@@ -152,7 +152,7 @@ public class NodeReaderTest {
       assertEquals(expected, ((ConstantNode) output).evaluate(null));
    }
 
-   private void assertParseOperator(String input, Class<? extends Operator> expected) {
+   private void assertParseFunction(String input, Class<? extends Function> expected) {
       Node output = readNode(input);
       assertSame(ConstantNode.class, output.getClass());
       assertSame(Type.OPERATOR, output.getType());

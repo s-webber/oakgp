@@ -6,11 +6,11 @@ import static java.lang.Boolean.TRUE;
 import java.util.List;
 
 import org.oakgp.function.AbstractOperatorTest;
-import org.oakgp.function.Operator;
+import org.oakgp.function.Function;
 
 public class GreaterThanOrEqualTest extends AbstractOperatorTest {
    @Override
-   protected Operator getOperator() {
+   protected Function getFunction() {
       return new GreaterThanOrEqual();
    }
 

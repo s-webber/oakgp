@@ -71,11 +71,11 @@ public abstract class AbstractOperatorTest {
       Node node = readNode(input);
       assertSame(node.toString(), FunctionNode.class, node.getClass());
       FunctionNode functionNode = (FunctionNode) node;
-      assertSame(getOperator().getClass(), functionNode.getOperator().getClass());
+      assertSame(getFunction().getClass(), functionNode.getFunction().getClass());
       return functionNode;
    }
 
-   protected abstract Operator getOperator();
+   protected abstract Function getFunction();
 
    protected abstract void getEvaluateTests(EvaluateTestCases testCases);
 

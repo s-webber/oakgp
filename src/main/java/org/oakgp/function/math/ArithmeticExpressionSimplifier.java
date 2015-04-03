@@ -7,7 +7,7 @@ import org.oakgp.Arguments;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
-import org.oakgp.function.Operator;
+import org.oakgp.function.Function;
 import org.oakgp.util.Utils;
 
 final class ArithmeticExpressionSimplifier {
@@ -21,7 +21,7 @@ final class ArithmeticExpressionSimplifier {
    }
 
    /** @return {@code null} if it was not possible to simplify the expression. */
-   static Node simplify(Operator operator, Node firstArg, Node secondArg) {
+   static Node simplify(Function operator, Node firstArg, Node secondArg) {
       assertAddOrSubtract(operator);
       assertArgumentsOrdered(operator, firstArg, secondArg);
 
@@ -30,7 +30,7 @@ final class ArithmeticExpressionSimplifier {
       return simplifiedVersion;
    }
 
-   private static Node getSimplifiedVersion(Operator operator, Node firstArg, Node secondArg) {
+   private static Node getSimplifiedVersion(Function operator, Node firstArg, Node secondArg) {
       boolean isPos = isAdd(operator);
       if (firstArg instanceof FunctionNode && secondArg instanceof FunctionNode) {
          NodePair p = removeFromChildNodes(firstArg, secondArg, isPos);
@@ -72,7 +72,7 @@ final class ArithmeticExpressionSimplifier {
    private static NodePair removeFromChildNodes(final Node nodeToWalk, final Node nodeToRemove, final boolean isPos) {
       if (nodeToWalk instanceof FunctionNode) {
          FunctionNode fn = (FunctionNode) nodeToWalk;
-         Operator op = fn.getOperator();
+         Function op = fn.getFunction();
          Node firstArg = fn.getArguments().get(0);
          Node secondArg = fn.getArguments().get(1);
          if (isMultiply(op) && nodeToRemove instanceof FunctionNode) {
@@ -146,30 +146,30 @@ final class ArithmeticExpressionSimplifier {
       FunctionNode currentFunctionNode = (FunctionNode) nodeToWalk;
       Node firstArg = currentFunctionNode.getArguments().get(0);
       Node secondArg = currentFunctionNode.getArguments().get(1);
-      Operator currentOperator = currentFunctionNode.getOperator();
-      boolean isAdd = isAdd(currentOperator);
-      boolean isSubtract = isSubtract(currentOperator);
+      Function currentFunction = currentFunctionNode.getFunction();
+      boolean isAdd = isAdd(currentFunction);
+      boolean isSubtract = isSubtract(currentFunction);
       if (isAdd || isSubtract) {
          boolean recursiveIsPos = isPos;
          if (isSubtract) {
             recursiveIsPos = !isPos;
          }
          if (isSuitableForCombining(firstArg, nodeToAdd)) {
-            return new FunctionNode(currentOperator, combine(firstArg, nodeToAdd, isPos), secondArg);
+            return new FunctionNode(currentFunction, combine(firstArg, nodeToAdd, isPos), secondArg);
          } else if (isSuitableForCombining(secondArg, nodeToAdd)) {
-            return new FunctionNode(currentOperator, firstArg, combine(secondArg, nodeToAdd, recursiveIsPos));
+            return new FunctionNode(currentFunction, firstArg, combine(secondArg, nodeToAdd, recursiveIsPos));
          }
          Node tmp = combineWithChildNodes(firstArg, nodeToAdd, isPos);
          if (tmp != null) {
-            return new FunctionNode(currentOperator, tmp, secondArg);
+            return new FunctionNode(currentFunction, tmp, secondArg);
          }
          tmp = combineWithChildNodes(secondArg, nodeToAdd, recursiveIsPos);
          if (tmp != null) {
-            return new FunctionNode(currentOperator, firstArg, tmp);
+            return new FunctionNode(currentFunction, firstArg, tmp);
          }
-      } else if (isMultiply(currentOperator) && firstArg instanceof ConstantNode && secondArg.equals(nodeToAdd)) {
+      } else if (isMultiply(currentFunction) && firstArg instanceof ConstantNode && secondArg.equals(nodeToAdd)) {
          int inc = isPos ? 1 : -1;
-         return new FunctionNode(currentOperator, createConstant((int) ((ConstantNode) firstArg).evaluate(null) + inc), nodeToAdd);
+         return new FunctionNode(currentFunction, createConstant((int) ((ConstantNode) firstArg).evaluate(null) + inc), nodeToAdd);
       } else if (isMultiplyingTheSameValue(nodeToWalk, nodeToAdd)) {
          return combineMultipliers(nodeToWalk, nodeToAdd, isPos);
       }
@@ -257,24 +257,24 @@ final class ArithmeticExpressionSimplifier {
       } else {
          result = i1 - i2;
       }
-      return new FunctionNode(f1.getOperator(), createConstant(result), f1.getArguments().get(1));
+      return new FunctionNode(f1.getFunction(), createConstant(result), f1.getArguments().get(1));
    }
 
-   private static void assertAddOrSubtract(Operator o) {
+   private static void assertAddOrSubtract(Function o) {
       // TODO remove this method - only here to sanity check input during development
       if (!isAddOrSubtract(o)) {
          throw new IllegalArgumentException(o.getClass().getName());
       }
    }
 
-   private static void assertArgumentsOrdered(Operator o, Node firstArg, Node secondArg) {
+   private static void assertArgumentsOrdered(Function o, Node firstArg, Node secondArg) {
       // TODO remove this method - only here to sanity check input during development
       if (!isSubtract(o) && NODE_COMPARATOR.compare(firstArg, secondArg) > 0) {
          throw new IllegalArgumentException("arg1 " + firstArg + " arg2 " + secondArg);
       }
    }
 
-   private static void assertEvaluateToSameResult(Node simplifiedVersion, Operator operator, Node firstArg, Node secondArg) {
+   private static void assertEvaluateToSameResult(Node simplifiedVersion, Function operator, Node firstArg, Node secondArg) {
       // TODO remove this method - only here to sanity check output during development
       if (simplifiedVersion != null) {
          FunctionNode in = new FunctionNode(operator, firstArg, secondArg);
@@ -306,16 +306,16 @@ final class ArithmeticExpressionSimplifier {
       }
    }
 
-   static boolean isAddOrSubtract(Operator o) {
+   static boolean isAddOrSubtract(Function o) {
       return isAdd(o) || isSubtract(o);
    }
 
    static boolean isAdd(FunctionNode n) {
-      return isAdd(n.getOperator());
+      return isAdd(n.getFunction());
    }
 
-   static boolean isAdd(Operator o) {
-      return isOperatorOfType(o, Add.class);
+   static boolean isAdd(Function o) {
+      return isFunctionOfType(o, Add.class);
    }
 
    static boolean isSubtract(Node n) {
@@ -323,22 +323,22 @@ final class ArithmeticExpressionSimplifier {
    }
 
    static boolean isSubtract(FunctionNode n) {
-      return isSubtract(n.getOperator());
+      return isSubtract(n.getFunction());
    }
 
-   static boolean isSubtract(Operator o) {
-      return isOperatorOfType(o, Subtract.class);
+   static boolean isSubtract(Function o) {
+      return isFunctionOfType(o, Subtract.class);
    }
 
    static boolean isMultiply(FunctionNode n) {
-      return isMultiply(n.getOperator());
+      return isMultiply(n.getFunction());
    }
 
-   static boolean isMultiply(Operator o) {
-      return isOperatorOfType(o, Multiply.class);
+   static boolean isMultiply(Function o) {
+      return isFunctionOfType(o, Multiply.class);
    }
 
-   private static boolean isOperatorOfType(Operator o, Class<? extends Operator> operatorClass) {
+   private static boolean isFunctionOfType(Function o, Class<? extends Function> operatorClass) {
       return o.getClass() == operatorClass;
    }
 

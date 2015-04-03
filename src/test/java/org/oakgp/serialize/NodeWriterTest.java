@@ -11,7 +11,7 @@ import org.oakgp.function.math.Multiply;
 import org.oakgp.function.math.Subtract;
 
 public class NodeWriterTest {
-   // TODO test writeNode when no symbol exists in SymbolMap for the specified Operator
+   // TODO test writeNode when no symbol exists in SymbolMap for the specified Function
 
    @Test
    public void testConstantNode() {

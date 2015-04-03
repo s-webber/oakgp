@@ -26,7 +26,7 @@ import org.oakgp.serialize.NodeWriter;
  * 25
  * </pre>
  *
- * <b>Note:</b> relies on {@code Operator} implementations being referentially transparent.
+ * <b>Note:</b> relies on {@code Function} implementations being referentially transparent.
  */
 public final class NodeSimplifier {
    // TODO have a public static final instance with a private constructor? or make simplify(Node) static?
@@ -85,7 +85,7 @@ public final class NodeSimplifier {
       FunctionNode output;
       if (modified) {
          arguments = createArguments(simplifiedArgs);
-         output = new FunctionNode(input.getOperator(), arguments);
+         output = new FunctionNode(input.getFunction(), arguments);
          assertEvaluateToSameResult(input, output);
       } else {
          arguments = inputArgs;
@@ -98,12 +98,12 @@ public final class NodeSimplifier {
       }
 
       // try to simplify using operator specific logic
-      Node simplifiedByOperatorVersion = input.getOperator().simplify(arguments);
-      if (simplifiedByOperatorVersion == null) {
+      Node simplifiedByFunctionVersion = input.getFunction().simplify(arguments);
+      if (simplifiedByFunctionVersion == null) {
          return output;
       } else {
-         assertEvaluateToSameResult(input, simplifiedByOperatorVersion);
-         return simplifiedByOperatorVersion;
+         assertEvaluateToSameResult(input, simplifiedByFunctionVersion);
+         return simplifiedByFunctionVersion;
       }
    }
 }

@@ -25,9 +25,9 @@ import org.junit.Test;
 import org.oakgp.NodeSimplifier;
 import org.oakgp.Signature;
 import org.oakgp.TerminalSet;
+import org.oakgp.function.Function;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
-import org.oakgp.function.Operator;
 
 public class ArithmeticOperatorTest {
    private static final File TEST_DATA_FILE = new File("src/test/resources/ArithmeticOperatorTest.txt");
@@ -35,7 +35,7 @@ public class ArithmeticOperatorTest {
 
    @Test
    public void testGetSignature() {
-      Operator o = new ArithmeticOperator() {
+      Function o = new ArithmeticOperator() {
          @Override
          protected int evaluate(int arg1, int arg2) {
             throw new UnsupportedOperationException();

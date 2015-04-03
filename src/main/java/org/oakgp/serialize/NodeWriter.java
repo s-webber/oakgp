@@ -3,7 +3,7 @@ package org.oakgp.serialize;
 import org.oakgp.Arguments;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
-import org.oakgp.function.Operator;
+import org.oakgp.function.Function;
 
 /**
  * Creates {@code String} representations of {@code Node} instances.
@@ -32,7 +32,7 @@ public final class NodeWriter {
    private void writeNode(Node node, StringBuilder sb) {
       if (node instanceof FunctionNode) {
          FunctionNode functionNode = (FunctionNode) node;
-         Operator operator = functionNode.getOperator();
+         Function operator = functionNode.getFunction();
          Arguments arguments = functionNode.getArguments();
          sb.append('(').append(symbolMap.getDisplayName(operator));
          for (int i = 0; i < arguments.length(); i++) {

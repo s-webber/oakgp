@@ -21,10 +21,10 @@ import org.oakgp.Arguments;
 import org.oakgp.Assignments;
 import org.oakgp.Signature;
 
-public class OperatorTest {
+public class FunctionTest {
    @Test
    public void testSimplify() {
-      Operator o = new Operator() {
+      Function o = new Function() {
          @Override
          public Signature getSignature() {
             throw new UnsupportedOperationException();
@@ -40,11 +40,11 @@ public class OperatorTest {
 
    @Test
    public void test() throws Exception {
-      List<Class<?>> operatorClasses = SubClassFinder.find(Operator.class, "src/main/java");
+      List<Class<?>> operatorClasses = SubClassFinder.find(Function.class, "src/main/java");
       List<Class<?>> operatorTestClasses = SubClassFinder.find(AbstractOperatorTest.class, "src/test/java");
       for (Class<?> operatorTest : operatorTestClasses) {
          AbstractOperatorTest t = (AbstractOperatorTest) operatorTest.newInstance();
-         Class<?> operatorClass = t.getOperator().getClass();
+         Class<?> operatorClass = t.getFunction().getClass();
          assertTrue("Tested more than once: " + operatorClass, operatorClasses.contains(operatorClass));
          operatorClasses.remove(operatorClass);
       }

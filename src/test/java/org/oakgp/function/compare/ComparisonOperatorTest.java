@@ -7,12 +7,12 @@ import static org.oakgp.Type.INTEGER;
 
 import org.junit.Test;
 import org.oakgp.Signature;
-import org.oakgp.function.Operator;
+import org.oakgp.function.Function;
 
 public class ComparisonOperatorTest {
    @Test
    public void testGetSignature() {
-      Operator o = new ComparisonOperator(true) {
+      Function o = new ComparisonOperator(true) {
          @Override
          protected boolean evaluate(int arg1, int arg2) {
             throw new UnsupportedOperationException();

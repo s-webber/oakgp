@@ -6,7 +6,7 @@ import org.oakgp.Signature;
 import org.oakgp.node.Node;
 
 /** Represents an operation. */
-public interface Operator {
+public interface Function {
    /**
     * Returns the result of applying this operation to the specified {@code Arguments} and {@code Assignments}.
     *

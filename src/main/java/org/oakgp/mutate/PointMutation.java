@@ -5,7 +5,7 @@ import org.oakgp.NodeEvolver;
 import org.oakgp.TerminalSet;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
-import org.oakgp.function.Operator;
+import org.oakgp.function.Function;
 import org.oakgp.selector.NodeSelector;
 import org.oakgp.util.Random;
 
@@ -28,7 +28,7 @@ public final class PointMutation implements NodeEvolver {
       return root.replaceAt(mutationPoint, node -> {
          if (node instanceof FunctionNode) {
             FunctionNode functionNode = (FunctionNode) node;
-            Operator operator = functionSet.nextAlternative(functionNode.getOperator());
+            Function operator = functionSet.nextAlternative(functionNode.getFunction());
             return new FunctionNode(operator, functionNode.getArguments());
          } else {
             return terminalSet.nextAlternative(node);

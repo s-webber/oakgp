@@ -3,7 +3,7 @@ package org.oakgp.serialize;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.oakgp.function.Operator;
+import org.oakgp.function.Function;
 import org.oakgp.function.choice.If;
 import org.oakgp.function.compare.Equal;
 import org.oakgp.function.compare.GreaterThan;
@@ -16,8 +16,8 @@ import org.oakgp.function.math.Multiply;
 import org.oakgp.function.math.Subtract;
 
 final class SymbolMap {
-   private static final Map<String, Class<? extends Operator>> SYMBOL_TO_CLASS_MAPPINGS = new HashMap<>();
-   private static final Map<Class<? extends Operator>, String> CLASS_TO_SYMBOL_MAPPINGS = new HashMap<>();
+   private static final Map<String, Class<? extends Function>> SYMBOL_TO_CLASS_MAPPINGS = new HashMap<>();
+   private static final Map<Class<? extends Function>, String> CLASS_TO_SYMBOL_MAPPINGS = new HashMap<>();
    static {
       addMapping("+", Add.class);
       addMapping("-", Subtract.class);
@@ -33,13 +33,13 @@ final class SymbolMap {
       addMapping("if", If.class);
    }
 
-   private static void addMapping(String symbol, Class<? extends Operator> operatorClass) {
+   private static void addMapping(String symbol, Class<? extends Function> operatorClass) {
       SYMBOL_TO_CLASS_MAPPINGS.put(symbol, operatorClass);
       CLASS_TO_SYMBOL_MAPPINGS.put(operatorClass, symbol);
    }
 
-   public String getDisplayName(Operator operator) {
-      Class<? extends Operator> operatorClass = operator.getClass();
+   public String getDisplayName(Function operator) {
+      Class<? extends Function> operatorClass = operator.getClass();
       String displayName = CLASS_TO_SYMBOL_MAPPINGS.get(operatorClass);
       if (displayName != null) {
          return displayName;
@@ -48,8 +48,8 @@ final class SymbolMap {
       }
    }
 
-   public Operator getOperator(String symbol) {
-      Class<? extends Operator> operatorClass = SYMBOL_TO_CLASS_MAPPINGS.get(symbol);
+   public Function getFunction(String symbol) {
+      Class<? extends Function> operatorClass = SYMBOL_TO_CLASS_MAPPINGS.get(symbol);
       if (operatorClass == null) {
          operatorClass = findClass(symbol);
       }
@@ -57,15 +57,15 @@ final class SymbolMap {
    }
 
    @SuppressWarnings("unchecked")
-   private Class<? extends Operator> findClass(String className) {
+   private Class<? extends Function> findClass(String className) {
       try {
-         return (Class<? extends Operator>) Class.forName(className);
+         return (Class<? extends Function>) Class.forName(className);
       } catch (ClassNotFoundException e) {
          throw new IllegalArgumentException("Could not find class: " + className, e);
       }
    }
 
-   private Operator newInstance(Class<? extends Operator> operatorClass) {
+   private Function newInstance(Class<? extends Function> operatorClass) {
       try {
          return operatorClass.newInstance();
       } catch (InstantiationException | IllegalAccessException e) {

@@ -3,11 +3,11 @@ package org.oakgp.node;
 import org.oakgp.Arguments;
 import org.oakgp.Assignments;
 import org.oakgp.Type;
-import org.oakgp.function.Operator;
+import org.oakgp.function.Function;
 
 /** Contains a function (operator) and the arguments (operands) to apply to it. */
 public final class FunctionNode implements Node {
-   private final Operator operator;
+   private final Function operator;
    private final Arguments arguments;
    private final int hashCode;
 
@@ -19,7 +19,7 @@ public final class FunctionNode implements Node {
     * @param arguments
     *           the arguments (i.e. operands) to apply to {@code operator} when evaluating this {@code FunctionNode}
     */
-   public FunctionNode(Operator operator, Node... arguments) {
+   public FunctionNode(Function operator, Node... arguments) {
       this(operator, Arguments.createArguments(arguments));
    }
 
@@ -31,13 +31,13 @@ public final class FunctionNode implements Node {
     * @param arguments
     *           the arguments (i.e. operands) to apply to {@code operator} when evaluating this {@code FunctionNode}
     */
-   public FunctionNode(Operator operator, Arguments arguments) {
+   public FunctionNode(Function operator, Arguments arguments) {
       this.operator = operator;
       this.arguments = arguments;
       this.hashCode = (operator.getClass().getName().hashCode() * 31) * arguments.hashCode();
    }
 
-   public Operator getOperator() {
+   public Function getFunction() {
       return operator;
    }
 

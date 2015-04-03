@@ -55,10 +55,10 @@ public final class Add extends ArithmeticOperator {
          throw new IllegalArgumentException("arg1 " + arg1 + " arg2 " + arg2);
       } else if (arg1 instanceof ConstantNode && arg2 instanceof FunctionNode) {
          FunctionNode fn2 = (FunctionNode) arg2;
-         if (fn2.getArguments().get(0) instanceof ConstantNode && isAddOrSubtract(fn2.getOperator())) {
+         if (fn2.getArguments().get(0) instanceof ConstantNode && isAddOrSubtract(fn2.getFunction())) {
             int i1 = (int) arg1.evaluate(null);
             int i2 = (int) fn2.getArguments().get(0).evaluate(null);
-            return new FunctionNode(fn2.getOperator(), createConstant(i1 + i2), fn2.getArguments().get(1));
+            return new FunctionNode(fn2.getFunction(), createConstant(i1 + i2), fn2.getArguments().get(1));
          }
       }
 

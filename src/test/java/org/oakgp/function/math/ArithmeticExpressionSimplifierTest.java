@@ -63,7 +63,7 @@ public class ArithmeticExpressionSimplifierTest {
       Node n = readNode(input);
       if (n instanceof FunctionNode) {
          assertEquals(expectedResult, ArithmeticExpressionSimplifier.isAdd((FunctionNode) n));
-         assertEquals(expectedResult, ArithmeticExpressionSimplifier.isAdd(((FunctionNode) n).getOperator()));
+         assertEquals(expectedResult, ArithmeticExpressionSimplifier.isAdd(((FunctionNode) n).getFunction()));
       } else {
          assertFalse(expectedResult);
       }
@@ -84,7 +84,7 @@ public class ArithmeticExpressionSimplifierTest {
       assertEquals(expectedResult, ArithmeticExpressionSimplifier.isSubtract(n));
       if (n instanceof FunctionNode) {
          assertEquals(expectedResult, ArithmeticExpressionSimplifier.isSubtract((FunctionNode) n));
-         assertEquals(expectedResult, ArithmeticExpressionSimplifier.isSubtract(((FunctionNode) n).getOperator()));
+         assertEquals(expectedResult, ArithmeticExpressionSimplifier.isSubtract(((FunctionNode) n).getFunction()));
       } else {
          assertFalse(expectedResult);
       }
@@ -104,7 +104,7 @@ public class ArithmeticExpressionSimplifierTest {
       Node n = readNode(input);
       if (n instanceof FunctionNode) {
          assertEquals(expectedResult, ArithmeticExpressionSimplifier.isMultiply((FunctionNode) n));
-         assertEquals(expectedResult, ArithmeticExpressionSimplifier.isMultiply(((FunctionNode) n).getOperator()));
+         assertEquals(expectedResult, ArithmeticExpressionSimplifier.isMultiply(((FunctionNode) n).getFunction()));
       } else {
          assertFalse(expectedResult);
       }
@@ -250,6 +250,6 @@ public class ArithmeticExpressionSimplifierTest {
    }
 
    private Optional<Node> simplify(FunctionNode in, Arguments args) {
-      return Optional.ofNullable(ArithmeticExpressionSimplifier.simplify(in.getOperator(), args.get(0), args.get(1)));
+      return Optional.ofNullable(ArithmeticExpressionSimplifier.simplify(in.getFunction(), args.get(0), args.get(1)));
    }
 }

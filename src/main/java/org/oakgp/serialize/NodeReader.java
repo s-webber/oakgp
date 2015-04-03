@@ -19,7 +19,7 @@ import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.node.VariableNode;
-import org.oakgp.function.Operator;
+import org.oakgp.function.Function;
 
 /**
  * Creates {@code Node} instances from {@code String} representations.
@@ -67,7 +67,7 @@ public final class NodeReader implements Closeable {
    private Node nextNode(String firstToken) throws IOException {
       if (firstToken == FUNCTION_START_STRING) {
          String functionName = nextToken();
-         Operator operator = symbolMap.getOperator(functionName);
+         Function operator = symbolMap.getFunction(functionName);
          List<Node> arguments = new ArrayList<>();
          String nextToken;
          while ((nextToken = nextToken()) != FUNCTION_END_STRING) {
@@ -112,7 +112,7 @@ public final class NodeReader implements Closeable {
          if (isNumber(token)) {
             return new ConstantNode(Integer.parseInt(token), INTEGER);
          } else {
-            return new ConstantNode(symbolMap.getOperator(token), OPERATOR);
+            return new ConstantNode(symbolMap.getFunction(token), OPERATOR);
          }
       }
    }

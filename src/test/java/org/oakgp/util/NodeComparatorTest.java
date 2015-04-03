@@ -26,7 +26,7 @@ public class NodeComparatorTest {
 
    @Test
    public void testCompareFunctions() {
-      // ordering of function nodes is a bit arbitrary (relies on hashCode of Operator class name and arguments)
+      // ordering of function nodes is a bit arbitrary (relies on hashCode of Function class name and arguments)
       // the important thing is that it is consistent
       assertOrdered(readNode("(- 1 1)"), readNode("(+ 1 1)"));
       assertOrdered(readNode("(* 3 3)"), readNode("(* 3 4)"));

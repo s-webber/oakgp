@@ -147,43 +147,43 @@ public class NodeSimplifierTest {
    }
 
    @Test
-   public void testVeryDeeplyNestedTreeSimplifedByOperator1() {
+   public void testVeryDeeplyNestedTreeSimplifedByFunction1() {
       String input = "(- v1 (- (- v0 (- v1 (- (- (+ 2 (+ v0 (- (+ v0 (+ 8 v1)) v1))) v1) v1))) 10))";
       String expected = "(- (* 4 v1) (* 3 v0))";
-      assertDeeplyNestedTreeSimplifedByOperator(input, expected);
+      assertDeeplyNestedTreeSimplifedByFunction(input, expected);
    }
 
    @Test
-   public void testVeryDeeplyNestedTreeSimplifedByOperator2() {
+   public void testVeryDeeplyNestedTreeSimplifedByFunction2() {
       String input = "(- v1 (- (- v0 (- v1 (- (- (+ 2 (+ v0 (- (+ v0 (+ 8 v2)) v1))) v1) v1))) 10))";
       String expected = "(- (* 5 v1) (+ v2 (* 3 v0)))";
-      assertDeeplyNestedTreeSimplifedByOperator(input, expected);
+      assertDeeplyNestedTreeSimplifedByFunction(input, expected);
    }
 
    @Test
-   public void testVeryDeeplyNestedTreeSimplifedByOperator3() {
+   public void testVeryDeeplyNestedTreeSimplifedByFunction3() {
       // TODO keep trying to improve
       String input = "(* 3 (* (* 3 (- 1 (- (- 2 (- 1 (- 1 (- 1 (+ 1 (- 1 (- (+ 2 (* 3 (* (* 3 (- 1 (- (+ 2 (- 1 (- 1 (- 1 (+ 1 (+ 1 (- (+ 2 (+ 1 (- 1 (- 1 (- 1 (- 1 (- (+ 1 (- 1 (- 1 (- (+ 2 (* 3 (* (* 3 (- 1 (- (+ 2 (- 1 (- 1 (- 1 (+ 1 (- 0 (- 1 (- (+ 2 (+ 1 (- 1 (- 1 (- 1 (- 1 (- (+ 1 (- 1 (+ 1 (- 1 (- 4 (- (+ (+ (- v3 3) (+ v2 v3)) (+ 3 (- 1 (- 1 (+ 1 v2))))) (- 1 (- 3 v2)))))))) (+ (- 1 (- 1 (+ 1 v2))) (+ -1 (- 1 (- 1 (+ 1 v2)))))))))))) (+ (- 3 (- 1 (- 1 v2))) (+ 1 (- 3 (- 1 (- 1 v2))))))))))))) 1))) -3))) (+ (- 3 (- 1 (- 1 v2))) (+ 1 (- 1 (- 1 (- 1 v2))))))))) (+ (- 1 (- 1 (+ 1 v2))) (+ 1 (- 1 (- 1 (+ 1 v2)))))))))))) (+ (- 3 (- 1 (- 1 v2))) (+ 1 (- 1 (- 1 (- (+ 2 (+ 1 (- 1 (- 1 (- 1 (- 1 (- (- 0 (+ 1 (- 1 (- 1 (- (+ 2 (* 3 (* (* 3 (- 1 (- (+ 2 (- 1 (- 1 (- 1 (+ 1 (- 0 (- 1 (- (+ 2 (+ 1 (- 1 (- 1 (- 1 (- 1 (- (+ 1 (- 1 (+ 1 (- 1 (- 4 (- (+ (+ (- v3 3) (+ v2 v3)) (+ 3 (- 1 (- 1 (+ 1 v2))))) (- 1 (- 3 v2)))))))) (+ (- 1 (- 1 (+ 1 v2))) (+ -1 (- 1 (- 1 (+ 1 v2)))))))))))) (+ (- 3 (- 1 (- 1 v2))) (+ 1 (- 3 (- 1 (- 1 v2))))))))))))) 1))) -3))) (+ (- 3 (- 1 (- 1 v2))) (+ 1 (- 1 (- 1 (- 1 v2)))))))))) (+ (- 1 (- 1 (+ 1 v2))) (+ 1 (- 1 (- 1 (+ 1 v2)))))))))))) v2)))))))))))) (+ (- 1 (- 1 (+ 1 v2))) (+ 9 (+ 1 (- 1 (+ 1 v2))))))))	(* 3 (- 0 (+ v2 1)))))) (+ (- 3 (- 1 (- 1 v2))) (+ 1 (- 1 (- 1 (- 1 v2)))))))))))) (- (- 1 (- 1 (+ 1 v2))) (+ 9 (+ 3 (- 1 (+ 1 v2)))))))) -3))";
       String expected = "(- (+ 432 (* -108 v2)) (* 81 (* (- (* -3 v2) 3) (+ 819 (+ (* 324 v3) (* 180 v2))))))";
-      assertDeeplyNestedTreeSimplifedByOperator(input, expected);
+      assertDeeplyNestedTreeSimplifedByFunction(input, expected);
    }
 
    @Test
-   public void testVeryDeeplyNestedTreeSimplifedByOperator4() {
+   public void testVeryDeeplyNestedTreeSimplifedByFunction4() {
       // TODO keep trying to improve
       String input = "(+ (- v4 (- 3 v4)) (if (- 4 (+ v4 v2)) (+ (+ 1 (+ (- v1 (- v1 (- v1 (* v3 (* v0 v2))))) (* v4 (+ v3 v1)))) (if (- v4 (* 3 (- (if (- v3 (+ v3 (- v2 (* 3 v3)))) (+ (* (- (+ v3 (* v1 v2)) (if (- v3 (if (- (- v1 (- (- v1 4) (if (- 3 v4) v4 0))) (- (- v1 (- (- v1 1) v4)) (- v3 3))) (- v1 v4) v1)) (- (- v2 (- v3 (* v1 v2))) v4) v1)) (if (- v3 (+ 1 (+ v3 (* (+ v1 1) v2)))) 3 v1)) (if v1 v2 v1)) v4) (* 3 v2)))) 3 (+ (- 0 (- (* v1 (* v1 (- (- v1 v4) (* v3 (* v0 v2))))) (* v4 (- v3 v1)))) v1))) (+ (- v1 (- (- v1 v2) (if v4 v4 v1))) (if (* (- v3 (if (- v3 (- (if (* v3 (+ v3 (- (if (+ (- v3 (+ v1 v2)) (- (* v1 v4) (+ v4 (* (+ v1 (- v1 v4)) (if (- (* v4 (- v3 v1)) (- (- v3 (- v3 (if (- (* v1 (if (- v3 (+ v3 (- (if (* (- v3 (+ v1 v2)) (- (+ v1 v3) (* 4 (* 3 v2)))) (* (+ v1 (- (- v0 3) (* v3 v2))) (if (- (* v1 (+ v3 (+ v1 1))) (* (- v3 (- v3 (if (- (* v4 (- (- v1 1) (if (- 1 v4) v4 v1))) (- v3 (* 3 (* v1 v2)))) (- v1 v4) v1))) v2)) v2 v1)) (- (- v1 (- (- v1 1) (if (- (if (- v3 (+ v3 (- (if (+ (- v3 (+ v1 v2)) (- (+ v1 v4) (* 4 (* v1 v4)))) (- (+ v1 (- (- v1 v4) (- v3 (* v0 v2)))) (if (- (* v4 (- v3 v1)) (* (- v3 (- (+ (- v1 (- (- v1 v2) (if v4 v4 v1))) (if (* (- v3 (if (- v3 (- (if (* v3 (+ v3 (- (if (+ (- v3 (+ v1 v2)) (- (* v1 v4) (* v4 (* (+ v1 (- v1 v4)) (if (- (* v4 (- v3 v1)) (* (- v3 (- v3 (if (- (* v1 (if (- v3 (+ v3 (- (if (* (- v2 (+ v1 v2)) (- (+ v1 v3) (* 4 (* 3 v2)))) (* (+ v1 (- (- v0 3) (* v3 v2))) (if (- (* 3 (+ v3 v1)) (* (- v3 (- v3 (if (- (* v4 (- (- v1 1) (if (- 1 v4) v4 v1))) (- v3 (* 3 (* v1 v2)))) (- v1 v4) v1))) v2)) v2 v1)) (- (- v1 (- (- v1 1) (if (- (if (- v3 (+ v3 (- (if (+ (- v3 (+ v1 v2)) (- (+ v1 v4) (* 4 (* v1 v4)))) (- (+ v1 (- 0 (- v3 (* v0 v2)))) (if (- (* 2 (- v3 v1)) (* (- v3 (- v3 (if (+ (* v1 (- (- v1 1) v3)) (- v3 (* 3 (* v1 v2)))) (* v1 v4) v1))) v2)) v2 v1)) (- (- v1 (- (- v1 2) (if (- v1 v4) v4 v1))) (+ v3 3))) v3))) (* v2 (if v1 v2 v1)) v4) v4) v4 v1))) (- v3 3))) v3))) (* v2 (if v1 v4 v1)) v4)) (- v3 (* 3 (- (- 3 v4) (* 4 v2))))) (* v1 v4) v1))) v2)) v2 v4))))) (* (+ v1 (- (- v1 v2) (* v3 (* v0 v2)))) (if (- 3 (* (- v3 (- v3 (if (- (+ v1 (- (- v1 1) (if (- 1 v4) 1 v1))) (- v4 (* 3 (- (- 3 v4) (- 4 v2))))) (- v1 v4) v1))) v2)) v2 v1)) (- (- v1 (- (- v1 v3) (if (- v1 v3) 1 v1))) (- v3 3))) (* 3 v3)))) (* (if (- 1 v4) v4 0) (if v4 v2 v1)) v4) (+ v3 (* (- v1 1) 3)))) 3 v1)) (if v1 v2 v1)) (- v1 (* v1 v2)) v1)) (if (+ (* v1 (- (- v1 1) (if (- 1 v4) v4 v1))) (- v3 (* 3 (* v1 v2)))) (- v1 v4) v1))) v2)) v2 v1)) (- (- v1 (- (- v1 2) (if (- v1 v4) v4 v1))) (+ v3 3))) v3))) (* v2 (if v1 v4 v1)) v4) v4) v4 v1))) (- v3 3))) v3))) (* v2 (if v1 v4 v1)) v4)) (- v3 (* 3 (- (- 3 v4) (* 4 v2))))) (+ v1 v4) v1))) v2)) v2 v4))))) (* (* v1 (- (- v1 v2) (* v3 (* v0 v2)))) (if (- v3 (* (- v3 (- v3 (if (- (+ v1 (- (- v1 1) (if (- 1 v4) v4 v1))) (- v4 (* 3 (- (- 3 v4) (- 4 v2))))) (- v1 v4) v1))) v2)) v2 v1)) (- (- v1 (- (- v1 v3) (if (- v1 v3) 1 v1))) (- v3 3))) (* 3 v3)))) (* (if (- 1 v4) v4 0) (if v4 v2 v1)) v4) (+ v3 (* (- v1 1) 3)))) 3 v1)) (if v1 v2 v1)) (- v1 (* v1 v2)) v1))))";
       String expected = "(+ (- (* 2 v4) 3) (if (- 4 (+ v2 v4)) (+ (if (- v4 (- (* 3 (if (- (* 3 v3) v2) (+ (if v1 v2 v1) (* (if (- -1 (* v2 (+ 1 v1))) 3 v1) (- (+ v3 (* v1 v2)) (if (- v3 (if (- (if (- 3 v4) v4 0) (- v4 v3)) (- v1 v4) v1)) (- (- v2 (- v3 (* v1 v2))) v4) v1)))) v4)) (* 9 v2))) 3 (+ v1 (- (* v4 (- v3 v1)) (* v1 (* v1 (- (- v1 v4) (* v3 (* v0 v2)))))))) (+ (* v4 (+ v1 v3)) (- v1 (- (* v3 (* v0 v2)) 1)))) (+ (if (* (- v3 (if (- (+ (- (* 3 v1) 3) (* 2 v3)) (if (* v3 (- (if (+ (- v3 (+ v1 v2)) (- (* v1 v4) (+ v4 (* (- (* 2 v1) v4) (if (- (* v4 (- v3 v1)) (- (if (- (* v1 (if (- v3 (if (* (- (+ v1 v3) (* 12 v2)) (- v3 (+ v1 v2))) (* (if (- (* v1 (+ v3 (+ 1 v1))) (* v2 (if (- (* v4 (- (- v1 1) (if (- 1 v4) v4 v1))) (- v3 (* 3 (* v1 v2)))) (- v1 v4) v1))) v2 v1) (+ v1 (- (- v0 3) (* v2 v3)))) (- (+ 4 (if (- (if (- v3 (if (+ (- v4 (* 4 (* v1 v4))) (- v3 v2)) (- (- (- (* 2 v1) v4) (- v3 (* v0 v2))) (if (- (* v4 (- v3 v1)) (* v2 (- v3 (- (+ (if (* (- v3 (if (- (+ (- (* 3 v1) 3) (* 2 v3)) (if (* v3 (- (if (+ (- (* v1 v4) (* v4 (* (if (- (* v4 (- v3 v1)) (* v2 (if (- (* v1 (if (- v3 (if (* (- (+ v1 v3) (* 12 v2)) (- 0 v1)) (* (+ v1 (- (- v0 3) (* v2 v3))) (if (- (+ (* 3 v1) (* 3 v3)) (* v2 (if (- (* v4 (- (- v1 1) (if (- 1 v4) v4 v1))) (- v3 (* 3 (* v1 v2)))) (- v1 v4) v1))) v2 v1)) (- (+ 4 (if (- (if (- v3 (if (+ (- v4 (* 4 (* v1 v4))) (- v3 v2)) (- (+ v1 (- (* v0 v2) v3)) (if (- (- (* 2 v3) (* 2 v1)) (* v2 (if (+ (- v3 (* 3 (* v1 v2))) (* v1 (- (- v1 1) v3))) (* v1 v4) v1))) v2 v1)) (- (- (if (- v1 v4) v4 v1) 1) v3))) (* v2 (if v1 v2 v1)) v4) v4) v4 v1)) v3))) (* v2 (if v1 v4 v1)) v4)) (- v3 (- (- 9 (* 3 v4)) (* 12 v2)))) (* v1 v4) v1))) v2 v4) (- (* 2 v1) v4)))) (- v3 (+ v1 v2))) (* (- (- (* 2 v1) v2) (* v3 (* v0 v2))) (if (- 3 (* v2 (if (- (- (* 2 v1) (if (- 1 v4) 1 v1)) (+ (+ 4 (* 4 v4)) (* -3 v2))) (- v1 v4) v1))) v2 v1)) (+ 3 (if (- v1 v3) 1 v1))) (* 2 v3))) (* (if v4 v2 v1) (if (- 1 v4) v4 0)) v4)) 3 v1)) (if v1 v2 v1)) (- v1 (* v1 v2)) v1) (- (if v4 v4 v1) (- 0 v2))) (if (+ (- v3 (* 3 (* v1 v2))) (* v1 (- (- v1 1) (if (- 1 v4) v4 v1)))) (- v1 v4) v1))))) v2 v1)) (- (- (if (- v1 v4) v4 v1) 1) v3))) (* v2 (if v1 v4 v1)) v4) v4) v4 v1)) v3))) (* v2 (if v1 v4 v1)) v4)) (- v3 (- (- 9 (* 3 v4)) (* 12 v2)))) (+ v1 v4) v1) v2)) v2 v4))))) (* (* v1 (- (- v1 v2) (* v3 (* v0 v2)))) (if (- v3 (* v2 (if (- (- (* 2 v1) (if (- 1 v4) v4 v1)) (+ (+ 4 (* 4 v4)) (* -3 v2))) (- v1 v4) v1))) v2 v1)) (+ 3 (if (- v1 v3) 1 v1))) (* 2 v3))) (* (if v4 v2 v1) (if (- 1 v4) v4 0)) v4)) 3 v1)) (if v1 v2 v1)) (- v1 (* v1 v2)) v1) (- (if v4 v4 v1) (- 0 v2)))))";
-      assertDeeplyNestedTreeSimplifedByOperator(input, expected);
+      assertDeeplyNestedTreeSimplifedByFunction(input, expected);
    }
 
    @Test
-   public void testVeryDeeplyNestedTreeSimplifedByOperator5() {
+   public void testVeryDeeplyNestedTreeSimplifedByFunction5() {
       String input = "(- 1 (* v2 (* (* v2 (* v2 (* v2 (* (* v2 (* v2 (* (* v2 (* (* 3 (* v2 (* v2 (* v2 (* (* v2 (* v2 (* v2 (* 3 v2)))) (* (* (* v2 (* v2 (* v2 (* v2 (* v2 (* v2 (* v2 (* (* 3 v2) (* 3 (* v2 v2)))))))))) (* 3 (* v2 v2))) (* v2 v2))))))) (* v2 (* v2 (* v2 (* v2 (* v2 (* v2 (* v2 (* (* v2 (* v2 (* v2 (* v2 (* v2 (* (* 3 v2) (* 3 (* v2 v2)))))))) (* 3 v2))))))))))) (* v2 (* v2 (* v2 (* v2 (* v2 (* (* v2 (* 3 (* v2 (* v2 (* (* v2 (* v2 (* v2 (* v2 (* v2 (* v2 (* v2 (* (* (* v2 (* v2 (* v2 (* (* 3 v2) (* 3 (- v2 v2)))))) (* v2 v2)) (* 3 v2))))))))) (* 3 (* v2 v2))))))) (* 3 v2)))))))))) (* (* v2 v2) (* v2 v2)))))) (* v2 v2))))";
       String expected = "1";
-      assertDeeplyNestedTreeSimplifedByOperator(input, expected);
+      assertDeeplyNestedTreeSimplifedByFunction(input, expected);
    }
 
-   private void assertDeeplyNestedTreeSimplifedByOperator(String before, String expectedOutput) { // TODO call assertCanSimplify directly instead
+   private void assertDeeplyNestedTreeSimplifedByFunction(String before, String expectedOutput) { // TODO call assertCanSimplify directly instead
       assertCanSimplify(expectedOutput, before);
    }
 

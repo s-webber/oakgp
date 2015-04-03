@@ -10,11 +10,11 @@ import java.util.List;
 import org.junit.Test;
 import org.oakgp.Signature;
 import org.oakgp.function.AbstractOperatorTest;
-import org.oakgp.function.Operator;
+import org.oakgp.function.Function;
 
 public class IfTest extends AbstractOperatorTest {
    @Override
-   protected Operator getOperator() {
+   protected Function getFunction() {
       return new If();
    }
 
@@ -38,7 +38,7 @@ public class IfTest extends AbstractOperatorTest {
 
    @Test
    public void testGetSignature() {
-      Signature signature = getOperator().getSignature();
+      Signature signature = getFunction().getSignature();
       assertSame(INTEGER, signature.getReturnType());
       assertEquals(3, signature.getArgumentTypesLength());
       assertSame(BOOLEAN, signature.getArgumentType(0));

@@ -5,9 +5,9 @@ import static org.oakgp.Type.INTEGER;
 import org.oakgp.Arguments;
 import org.oakgp.Assignments;
 import org.oakgp.Signature;
-import org.oakgp.function.Operator;
+import org.oakgp.function.Function;
 
-abstract class ArithmeticOperator implements Operator {
+abstract class ArithmeticOperator implements Function {
    private static final Signature SIGNATURE = Signature.createSignature(INTEGER, INTEGER, INTEGER);
 
    @Override

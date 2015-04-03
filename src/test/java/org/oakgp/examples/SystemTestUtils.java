@@ -15,7 +15,7 @@ import org.oakgp.Type;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
-import org.oakgp.function.Operator;
+import org.oakgp.function.Function;
 import org.oakgp.function.choice.If;
 import org.oakgp.function.compare.Equal;
 import org.oakgp.function.compare.GreaterThan;
@@ -36,8 +36,8 @@ import org.oakgp.util.Random;
 public class SystemTestUtils {
    public static final Random RANDOM = new JavaUtilRandomAdapter();
    public static final NodeSelectorFactory SELECTOR_FACTORY = new WeightedNodeSelectorFactory(RANDOM);
-   public static final FunctionSet ARITHMETIC_FUNCTION_SET = new FunctionSet(RANDOM, new Operator[] { new Add(), new Subtract(), new Multiply() });
-   public static final FunctionSet COMPARISON_FUNCTION_SET = new FunctionSet(RANDOM, new Operator[] { new Add(), new Subtract(), new Multiply(),
+   public static final FunctionSet ARITHMETIC_FUNCTION_SET = new FunctionSet(RANDOM, new Function[] { new Add(), new Subtract(), new Multiply() });
+   public static final FunctionSet COMPARISON_FUNCTION_SET = new FunctionSet(RANDOM, new Function[] { new Add(), new Subtract(), new Multiply(),
          new LessThan(), new LessThanOrEqual(), new GreaterThan(), new GreaterThanOrEqual(), new Equal(), new NotEqual(), new If() });
    public static final int GENERATION_SIZE = 50;
    public static final int ELITISM_SIZE = 3;
@@ -65,7 +65,7 @@ public class SystemTestUtils {
 
    private static Node makeRandomTree(FunctionSet functionSet, TerminalSet terminalSet, int depth, Type type) {
       if (depth > 0 && RANDOM.nextDouble() < .5) {
-         Operator operator = functionSet.next(type);
+         Function operator = functionSet.next(type);
          Signature signature = operator.getSignature();
          Node[] args = new Node[signature.getArgumentTypesLength()];
          for (int i = 0; i < args.length; i++) {

@@ -11,7 +11,7 @@ import org.oakgp.Arguments;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
-import org.oakgp.function.Operator;
+import org.oakgp.function.Function;
 
 /** Performs multiplication. */
 public final class Multiply extends ArithmeticOperator {
@@ -51,7 +51,7 @@ public final class Multiply extends ArithmeticOperator {
       } else {
          if (arg1 instanceof ConstantNode && arg2 instanceof FunctionNode) {
             FunctionNode fn = (FunctionNode) arg2;
-            Operator o = fn.getOperator();
+            Function o = fn.getFunction();
             Arguments args = fn.getArguments();
             Node fnArg1 = args.get(0);
             Node fnArg2 = args.get(1);
