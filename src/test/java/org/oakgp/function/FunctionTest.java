@@ -41,9 +41,9 @@ public class FunctionTest {
    @Test
    public void test() throws Exception {
       List<Class<?>> functionClasses = SubClassFinder.find(Function.class, "src/main/java");
-      List<Class<?>> functionTestClasses = SubClassFinder.find(AbstractOperatorTest.class, "src/test/java");
+      List<Class<?>> functionTestClasses = SubClassFinder.find(AbstractFunctionTest.class, "src/test/java");
       for (Class<?> functionTest : functionTestClasses) {
-         AbstractOperatorTest t = (AbstractOperatorTest) functionTest.newInstance();
+         AbstractFunctionTest t = (AbstractFunctionTest) functionTest.newInstance();
          Class<?> functionClass = t.getFunction().getClass();
          assertTrue("Tested more than once: " + functionClass, functionClasses.contains(functionClass));
          functionClasses.remove(functionClass);

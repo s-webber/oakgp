@@ -9,10 +9,10 @@ import java.util.List;
 
 import org.junit.Test;
 import org.oakgp.Signature;
-import org.oakgp.function.AbstractOperatorTest;
+import org.oakgp.function.AbstractFunctionTest;
 import org.oakgp.function.Function;
 
-public class IfTest extends AbstractOperatorTest {
+public class IfTest extends AbstractFunctionTest {
    @Override
    protected Function getFunction() {
       return new If();

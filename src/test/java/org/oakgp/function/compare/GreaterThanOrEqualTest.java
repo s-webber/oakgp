@@ -5,10 +5,10 @@ import static java.lang.Boolean.TRUE;
 
 import java.util.List;
 
-import org.oakgp.function.AbstractOperatorTest;
+import org.oakgp.function.AbstractFunctionTest;
 import org.oakgp.function.Function;
 
-public class GreaterThanOrEqualTest extends AbstractOperatorTest {
+public class GreaterThanOrEqualTest extends AbstractFunctionTest {
    @Override
    protected Function getFunction() {
       return new GreaterThanOrEqual();

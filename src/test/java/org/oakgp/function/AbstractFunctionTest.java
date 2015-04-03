@@ -15,7 +15,7 @@ import org.oakgp.NodeSimplifier;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 
-public abstract class AbstractOperatorTest {
+public abstract class AbstractFunctionTest {
    @Test
    public final void testEvaluate() {
       EvaluateTestCases testCases = new EvaluateTestCases();
