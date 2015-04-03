@@ -56,17 +56,17 @@ public class TestUtils {
    }
 
    public static ConstantNode createConstant(int value) {
-      return new ConstantNode(value, Type.INTEGER);
+      return new ConstantNode(value, Type.integerType());
    }
 
    public static VariableNode createVariable(int id) {
-      return new VariableNode(id, Type.INTEGER);
+      return new VariableNode(id, Type.integerType());
    }
 
    public static Type[] createTypeArray(int size) {
       Type[] a = new Type[size];
       for (int i = 0; i < size; i++) {
-         a[i] = Type.INTEGER;
+         a[i] = Type.integerType();
       }
       return a;
    }

@@ -5,7 +5,7 @@ import static org.junit.Assert.assertSame;
 import static org.oakgp.TestUtils.createTypeArray;
 import static org.oakgp.TestUtils.readNode;
 import static org.oakgp.TestUtils.writeNode;
-import static org.oakgp.Type.INTEGER;
+import static org.oakgp.Type.integerType;
 import static org.oakgp.examples.SystemTestUtils.ARITHMETIC_FUNCTION_SET;
 import static org.oakgp.examples.SystemTestUtils.RANDOM;
 import static org.oakgp.examples.SystemTestUtils.RATIO_VARIABLES;
@@ -42,10 +42,10 @@ public class ArithmeticOperatorTest {
          }
       };
       Signature signature = f.getSignature();
-      assertSame(INTEGER, signature.getReturnType());
+      assertSame(integerType(), signature.getReturnType());
       assertEquals(2, signature.getArgumentTypesLength());
-      assertSame(INTEGER, signature.getArgumentType(0));
-      assertSame(INTEGER, signature.getArgumentType(1));
+      assertSame(integerType(), signature.getArgumentType(0));
+      assertSame(integerType(), signature.getArgumentType(1));
    }
 
    @Test

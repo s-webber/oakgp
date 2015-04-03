@@ -6,17 +6,17 @@ import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
 import static org.oakgp.TestUtils.createConstant;
 import static org.oakgp.TestUtils.createVariable;
-import static org.oakgp.Type.INTEGER;
+import static org.oakgp.Type.integerType;
+import static org.oakgp.Type.stringType;
 
 import org.junit.Test;
-import org.oakgp.Type;
 
 public class ConstantNodeTest {
    @Test
    public void testGetters() {
       final ConstantNode n = createConstant(7);
       assertEquals(1, n.getNodeCount());
-      assertSame(INTEGER, n.getType());
+      assertSame(integerType(), n.getType());
    }
 
    @Test
@@ -56,8 +56,8 @@ public class ConstantNodeTest {
       String b = new String("hello");
       assertNotSame(a, b);
 
-      final ConstantNode n1 = new ConstantNode(a, Type.STRING);
-      final ConstantNode n2 = new ConstantNode(b, Type.STRING);
+      final ConstantNode n1 = new ConstantNode(a, stringType());
+      final ConstantNode n2 = new ConstantNode(b, stringType());
       assertNotSame(n1, n2);
       assertEquals(n1, n1);
       assertEquals(n1.hashCode(), n2.hashCode());
@@ -70,7 +70,7 @@ public class ConstantNodeTest {
       assertNotEquals(n, createConstant(8));
       assertNotEquals(n, createConstant(-7));
       assertNotEquals(n, createVariable(7));
-      assertNotEquals(n, new ConstantNode("7", Type.STRING));
+      assertNotEquals(n, new ConstantNode("7", stringType()));
       assertNotEquals(n, new Integer(7));
    }
 }

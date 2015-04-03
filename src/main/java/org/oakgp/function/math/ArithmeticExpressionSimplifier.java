@@ -1,6 +1,6 @@
 package org.oakgp.function.math;
 
-import static org.oakgp.Type.INTEGER;
+import static org.oakgp.Type.integerType;
 import static org.oakgp.util.NodeComparator.NODE_COMPARATOR;
 
 import org.oakgp.Arguments;
@@ -290,7 +290,7 @@ final class ArithmeticExpressionSimplifier {
    }
 
    static ConstantNode createConstant(int i) {
-      return new ConstantNode(i, INTEGER);
+      return new ConstantNode(i, integerType());
    }
 
    static FunctionNode multiplyByTwo(Node arg) {

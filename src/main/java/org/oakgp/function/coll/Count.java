@@ -1,7 +1,7 @@
 package org.oakgp.function.coll;
 
-import static org.oakgp.Type.ARRAY;
-import static org.oakgp.Type.INTEGER;
+import static org.oakgp.Type.arrayType;
+import static org.oakgp.Type.integerType;
 
 import org.oakgp.Arguments;
 import org.oakgp.Assignments;
@@ -9,7 +9,7 @@ import org.oakgp.Signature;
 import org.oakgp.function.Function;
 
 public class Count implements Function {
-   private static final Signature SIGNATURE = Signature.createSignature(INTEGER, ARRAY);
+   private static final Signature SIGNATURE = Signature.createSignature(integerType(), arrayType());
 
    @Override
    public Object evaluate(Arguments arguments, Assignments assignments) {

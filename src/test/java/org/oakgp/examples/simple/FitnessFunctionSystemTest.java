@@ -3,6 +3,10 @@ package org.oakgp.examples.simple;
 import static org.oakgp.Assignments.createAssignments;
 import static org.oakgp.TestUtils.createArguments;
 import static org.oakgp.TestUtils.createTypeArray;
+import static org.oakgp.Type.arrayType;
+import static org.oakgp.Type.booleanType;
+import static org.oakgp.Type.functionType;
+import static org.oakgp.Type.integerType;
 import static org.oakgp.examples.SystemTestUtils.ARITHMETIC_FUNCTION_SET;
 import static org.oakgp.examples.SystemTestUtils.COMPARISON_FUNCTION_SET;
 import static org.oakgp.examples.SystemTestUtils.ELITISM_SIZE;
@@ -105,10 +109,10 @@ public class FitnessFunctionSystemTest {
       IsNegative isNegative = new IsNegative();
       IsZero isZero = new IsZero();
       // TODO add to TestUtils: operatorConstant(); integerConstant(); trueConstant(); falseConstant(); arrayConstant();
-      ConstantNode[] constants = { new ConstantNode(Boolean.TRUE, Type.BOOLEAN), new ConstantNode(Boolean.FALSE, Type.BOOLEAN),
-            new ConstantNode(isPositive, Type.FUNCTION), new ConstantNode(isNegative, Type.FUNCTION), new ConstantNode(isZero, Type.FUNCTION),
-            new ConstantNode(Arguments.createArguments(), Type.ARRAY), new ConstantNode(0, Type.INTEGER) };
-      TerminalSet terminalSet = new TerminalSet(RANDOM, RATIO_VARIABLES, new Type[] { Type.ARRAY }, constants);
+      ConstantNode[] constants = { new ConstantNode(Boolean.TRUE, booleanType()), new ConstantNode(Boolean.FALSE, booleanType()),
+            new ConstantNode(isPositive, functionType()), new ConstantNode(isNegative, functionType()), new ConstantNode(isZero, functionType()),
+            new ConstantNode(Arguments.createArguments(), arrayType()), new ConstantNode(0, integerType()) };
+      TerminalSet terminalSet = new TerminalSet(RANDOM, RATIO_VARIABLES, new Type[] { arrayType() }, constants);
       Map<Assignments, Integer> testData = new HashMap<>();
       testData.put(createAssignments(createArguments("0", "0", "0", "0", "0", "0", "0", "0")), 8);
       testData.put(createAssignments(createArguments("6", "3", "4", "0", "2", "4", "1", "3")), 1);
@@ -119,8 +123,8 @@ public class FitnessFunctionSystemTest {
       testData.put(createAssignments(createArguments("-2", "0", "8", "7", "0", "-3", "0")), 3);
       testData.put(createAssignments(createArguments("0", "0", "0")), 3);
       FitnessFunction fitnessFunction = new TestDataFitnessFunction(testData);
-      FunctionSet hofFunctionSet = new FunctionSet(RANDOM, new Function[] { isNegative, isPositive, isZero, new Filter(), new Count(),
-            createIdentity(Type.ARRAY), createIdentity(Type.INTEGER), createIdentity(Type.FUNCTION) });
+      FunctionSet hofFunctionSet = new FunctionSet(RANDOM, new Function[] { isNegative, isPositive, isZero, new Filter(), new Count(), createIdentity(arrayType()),
+            createIdentity(integerType()), createIdentity(functionType()) });
       Collection<Node> initialGeneration = createInitialGeneration(hofFunctionSet, terminalSet, GENERATION_SIZE);
       doIt(hofFunctionSet, terminalSet, fitnessFunction, initialGeneration);
    }

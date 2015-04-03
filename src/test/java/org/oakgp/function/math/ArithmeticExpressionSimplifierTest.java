@@ -7,17 +7,17 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.oakgp.TestUtils.readNode;
 import static org.oakgp.TestUtils.writeNode;
+import static org.oakgp.Type.integerType;
 
 import java.util.Optional;
 
 import org.junit.Test;
 import org.oakgp.Arguments;
 import org.oakgp.Assignments;
-import org.oakgp.Type;
+import org.oakgp.function.choice.If;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
-import org.oakgp.function.choice.If;
 
 public class ArithmeticExpressionSimplifierTest {
    @Test
@@ -34,7 +34,7 @@ public class ArithmeticExpressionSimplifierTest {
    private void assertCreateConstant(int value) {
       ConstantNode n = ArithmeticExpressionSimplifier.createConstant(value);
       assertEquals(value, (int) n.evaluate(null));
-      assertSame(Type.INTEGER, n.getType());
+      assertSame(integerType(), n.getType());
    }
 
    @Test

@@ -9,7 +9,7 @@ import static org.oakgp.Assignments.createAssignments;
 import static org.oakgp.TestUtils.createConstant;
 import static org.oakgp.TestUtils.createVariable;
 import static org.oakgp.TestUtils.readNode;
-import static org.oakgp.Type.INTEGER;
+import static org.oakgp.Type.integerType;
 
 import org.junit.Test;
 import org.oakgp.Arguments;
@@ -83,7 +83,7 @@ public class FunctionNodeTest {
    @Test
    public void testGetType() {
       FunctionNode n = createFunctionNode();
-      assertSame(INTEGER, n.getType());
+      assertSame(integerType(), n.getType());
    }
 
    @Test

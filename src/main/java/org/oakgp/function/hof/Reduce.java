@@ -1,17 +1,19 @@
 package org.oakgp.function.hof;
 
 import static org.oakgp.Arguments.createArguments;
+import static org.oakgp.Type.arrayType;
+import static org.oakgp.Type.functionType;
+import static org.oakgp.Type.integerType;
 
 import org.oakgp.Arguments;
 import org.oakgp.Assignments;
 import org.oakgp.Signature;
-import org.oakgp.Type;
+import org.oakgp.function.Function;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
-import org.oakgp.function.Function;
 
 public class Reduce implements Function {
-   private static final Signature SIGNATURE = Signature.createSignature(Type.INTEGER, Type.FUNCTION, Type.INTEGER, Type.ARRAY);
+   private static final Signature SIGNATURE = Signature.createSignature(integerType(), functionType(), integerType(), arrayType());
 
    @Override
    public Object evaluate(Arguments arguments, Assignments assignments) {

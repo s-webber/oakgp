@@ -2,8 +2,8 @@ package org.oakgp.function.compare;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
-import static org.oakgp.Type.BOOLEAN;
-import static org.oakgp.Type.INTEGER;
+import static org.oakgp.Type.booleanType;
+import static org.oakgp.Type.integerType;
 
 import org.junit.Test;
 import org.oakgp.Signature;
@@ -19,9 +19,9 @@ public class ComparisonOperatorTest {
          }
       };
       Signature signature = f.getSignature();
-      assertSame(BOOLEAN, signature.getReturnType());
+      assertSame(booleanType(), signature.getReturnType());
       assertEquals(2, signature.getArgumentTypesLength());
-      assertSame(INTEGER, signature.getArgumentType(0));
-      assertSame(INTEGER, signature.getArgumentType(1));
+      assertSame(integerType(), signature.getArgumentType(0));
+      assertSame(integerType(), signature.getArgumentType(1));
    }
 }

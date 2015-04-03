@@ -1,6 +1,6 @@
 package org.oakgp.function.math;
 
-import static org.oakgp.Type.INTEGER;
+import static org.oakgp.Type.integerType;
 
 import org.oakgp.Arguments;
 import org.oakgp.Assignments;
@@ -8,7 +8,7 @@ import org.oakgp.Signature;
 import org.oakgp.function.Function;
 
 abstract class ArithmeticOperator implements Function {
-   private static final Signature SIGNATURE = Signature.createSignature(INTEGER, INTEGER, INTEGER);
+   private static final Signature SIGNATURE = Signature.createSignature(integerType(), integerType(), integerType());
 
    @Override
    public final Object evaluate(Arguments arguments, Assignments assignments) {

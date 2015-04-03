@@ -2,6 +2,8 @@ package org.oakgp.examples;
 
 import static org.oakgp.TestUtils.createConstant;
 import static org.oakgp.TestUtils.writeNode;
+import static org.oakgp.Type.booleanType;
+import static org.oakgp.Type.integerType;
 
 import java.util.Collection;
 import java.util.Set;
@@ -12,9 +14,6 @@ import org.oakgp.RankedCandidate;
 import org.oakgp.Signature;
 import org.oakgp.TerminalSet;
 import org.oakgp.Type;
-import org.oakgp.node.ConstantNode;
-import org.oakgp.node.FunctionNode;
-import org.oakgp.node.Node;
 import org.oakgp.function.Function;
 import org.oakgp.function.choice.If;
 import org.oakgp.function.compare.Equal;
@@ -26,6 +25,9 @@ import org.oakgp.function.compare.NotEqual;
 import org.oakgp.function.math.Add;
 import org.oakgp.function.math.Multiply;
 import org.oakgp.function.math.Subtract;
+import org.oakgp.node.ConstantNode;
+import org.oakgp.node.FunctionNode;
+import org.oakgp.node.Node;
 import org.oakgp.selector.NodeSelectorFactory;
 import org.oakgp.selector.WeightedNodeSelectorFactory;
 import org.oakgp.util.JavaUtilRandomAdapter;
@@ -44,7 +46,7 @@ public class SystemTestUtils {
    public static final double RATIO_VARIABLES = .6;
 
    public static Collection<Node> createInitialGeneration(FunctionSet functionSet, TerminalSet terminalSet, int size) {
-      return createInitialGeneration(functionSet, terminalSet, size, Type.INTEGER);
+      return createInitialGeneration(functionSet, terminalSet, size, integerType());
    }
 
    public static Collection<Node> createInitialGeneration(FunctionSet functionSet, TerminalSet terminalSet, int size, Type type) {
@@ -60,7 +62,7 @@ public class SystemTestUtils {
    }
 
    public static Node makeRandomTree(FunctionSet functionSet, TerminalSet terminalSet, int depth) {
-      return makeRandomTree(functionSet, terminalSet, depth, Type.INTEGER);
+      return makeRandomTree(functionSet, terminalSet, depth, integerType());
    }
 
    private static Node makeRandomTree(FunctionSet functionSet, TerminalSet terminalSet, int depth, Type type) {
@@ -84,8 +86,8 @@ public class SystemTestUtils {
       for (int i = 0; i < numberOfConstants; i++) {
          constants[i] = createConstant(i);
       }
-      constants[numberOfConstants] = new ConstantNode(Boolean.TRUE, Type.BOOLEAN);
-      constants[numberOfConstants + 1] = new ConstantNode(Boolean.FALSE, Type.BOOLEAN);
+      constants[numberOfConstants] = new ConstantNode(Boolean.TRUE, booleanType());
+      constants[numberOfConstants + 1] = new ConstantNode(Boolean.FALSE, booleanType());
       return constants;
    }
 

@@ -7,7 +7,7 @@ import static org.oakgp.TestUtils.assertVariable;
 import static org.oakgp.TestUtils.createConstant;
 import static org.oakgp.TestUtils.createTypeArray;
 import static org.oakgp.TestUtils.createVariable;
-import static org.oakgp.Type.INTEGER;
+import static org.oakgp.Type.integerType;
 
 import org.junit.Test;
 import org.oakgp.node.ConstantNode;
@@ -28,13 +28,13 @@ public class TerminalSetTest {
 
       TerminalSet terminalSet = new TerminalSet(mockRandom, VARIABLE_RATIO, VARIABLE_TYPES, CONSTANTS);
 
-      // TODO test with more than just INTEGER
-      assertVariable(1, terminalSet.next(INTEGER));
-      assertConstant(7, terminalSet.next(INTEGER));
-      assertConstant(9, terminalSet.next(INTEGER));
-      assertConstant(8, terminalSet.next(INTEGER));
-      assertVariable(0, terminalSet.next(INTEGER));
-      assertConstant(9, terminalSet.next(INTEGER));
+      // TODO test with more than just integerType()
+      assertVariable(1, terminalSet.next(integerType()));
+      assertConstant(7, terminalSet.next(integerType()));
+      assertConstant(9, terminalSet.next(integerType()));
+      assertConstant(8, terminalSet.next(integerType()));
+      assertVariable(0, terminalSet.next(integerType()));
+      assertConstant(9, terminalSet.next(integerType()));
    }
 
    @Test

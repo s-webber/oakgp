@@ -1,5 +1,8 @@
 package org.oakgp.function.hof;
 
+import static org.oakgp.Type.arrayType;
+import static org.oakgp.Type.functionType;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +15,7 @@ import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
 
 public class Map implements Function {
-   private static final Signature SIGNATURE = Signature.createSignature(Type.ARRAY, Type.FUNCTION, Type.ARRAY);
+   private static final Signature SIGNATURE = Signature.createSignature(arrayType(), functionType(), arrayType());
 
    @Override
    public Object evaluate(Arguments arguments, Assignments assignments) {

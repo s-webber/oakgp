@@ -2,8 +2,8 @@ package org.oakgp.function.choice;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
-import static org.oakgp.Type.BOOLEAN;
-import static org.oakgp.Type.INTEGER;
+import static org.oakgp.Type.booleanType;
+import static org.oakgp.Type.integerType;
 
 import java.util.List;
 
@@ -39,10 +39,10 @@ public class IfTest extends AbstractFunctionTest {
    @Test
    public void testGetSignature() {
       Signature signature = getFunction().getSignature();
-      assertSame(INTEGER, signature.getReturnType());
+      assertSame(integerType(), signature.getReturnType());
       assertEquals(3, signature.getArgumentTypesLength());
-      assertSame(BOOLEAN, signature.getArgumentType(0));
-      assertSame(INTEGER, signature.getArgumentType(1));
-      assertSame(INTEGER, signature.getArgumentType(2));
+      assertSame(booleanType(), signature.getArgumentType(0));
+      assertSame(integerType(), signature.getArgumentType(1));
+      assertSame(integerType(), signature.getArgumentType(2));
    }
 }

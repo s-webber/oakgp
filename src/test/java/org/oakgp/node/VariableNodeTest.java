@@ -7,7 +7,7 @@ import static org.junit.Assert.assertSame;
 import static org.oakgp.Assignments.createAssignments;
 import static org.oakgp.TestUtils.createConstant;
 import static org.oakgp.TestUtils.createVariable;
-import static org.oakgp.Type.INTEGER;
+import static org.oakgp.Type.integerType;
 
 import org.junit.Test;
 import org.oakgp.Assignments;
@@ -19,7 +19,7 @@ public class VariableNodeTest {
       final VariableNode v = createVariable(id);
       assertEquals(id, v.getId());
       assertEquals(1, v.getNodeCount());
-      assertSame(INTEGER, v.getType());
+      assertSame(integerType(), v.getType());
    }
 
    @Test

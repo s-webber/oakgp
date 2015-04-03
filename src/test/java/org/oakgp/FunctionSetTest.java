@@ -3,8 +3,8 @@ package org.oakgp;
 import static org.junit.Assert.assertSame;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
-import static org.oakgp.Type.BOOLEAN;
-import static org.oakgp.Type.INTEGER;
+import static org.oakgp.Type.booleanType;
+import static org.oakgp.Type.integerType;
 
 import org.junit.Test;
 import org.oakgp.function.Function;
@@ -22,7 +22,7 @@ import org.oakgp.util.Random;
 
 public class FunctionSetTest {
    private static final Function[] FUNCTIONS = new Function[] { new Add(), new Subtract(), new Multiply(), new If(), new LessThan(), new LessThanOrEqual(),
-      new GreaterThan(), new GreaterThanOrEqual(), new Equal(), new NotEqual() };
+         new GreaterThan(), new GreaterThanOrEqual(), new Equal(), new NotEqual() };
 
    @Test
    public void testNext() {
@@ -34,19 +34,19 @@ public class FunctionSetTest {
 
       FunctionSet functionSet = new FunctionSet(mockRandom, FUNCTIONS);
 
-      // TODO test with more than just INTEGER
-      assertSame(FUNCTIONS[1], functionSet.next(INTEGER));
-      assertSame(FUNCTIONS[0], functionSet.next(INTEGER));
-      assertSame(FUNCTIONS[2], functionSet.next(INTEGER));
-      assertSame(FUNCTIONS[1], functionSet.next(INTEGER));
-      assertSame(FUNCTIONS[2], functionSet.next(INTEGER));
-      assertSame(FUNCTIONS[0], functionSet.next(INTEGER));
-      assertSame(FUNCTIONS[3], functionSet.next(INTEGER));
+      // TODO test with more than just integerType()
+      assertSame(FUNCTIONS[1], functionSet.next(integerType()));
+      assertSame(FUNCTIONS[0], functionSet.next(integerType()));
+      assertSame(FUNCTIONS[2], functionSet.next(integerType()));
+      assertSame(FUNCTIONS[1], functionSet.next(integerType()));
+      assertSame(FUNCTIONS[2], functionSet.next(integerType()));
+      assertSame(FUNCTIONS[0], functionSet.next(integerType()));
+      assertSame(FUNCTIONS[3], functionSet.next(integerType()));
 
-      assertSame(FUNCTIONS[5], functionSet.next(BOOLEAN));
-      assertSame(FUNCTIONS[4], functionSet.next(BOOLEAN));
-      assertSame(FUNCTIONS[9], functionSet.next(BOOLEAN));
-      assertSame(FUNCTIONS[8], functionSet.next(BOOLEAN));
+      assertSame(FUNCTIONS[5], functionSet.next(booleanType()));
+      assertSame(FUNCTIONS[4], functionSet.next(booleanType()));
+      assertSame(FUNCTIONS[9], functionSet.next(booleanType()));
+      assertSame(FUNCTIONS[8], functionSet.next(booleanType()));
    }
 
    @Test
