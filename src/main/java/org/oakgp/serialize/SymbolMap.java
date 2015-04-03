@@ -39,6 +39,7 @@ final class SymbolMap {
 
       addMapping("reduce", Reduce.class);
       addMapping("filter", Filter.class);
+      addMapping("map", org.oakgp.function.hof.Map.class);
 
       addMapping("pos?", IsPositive.class);
       addMapping("neg?", IsNegative.class);
