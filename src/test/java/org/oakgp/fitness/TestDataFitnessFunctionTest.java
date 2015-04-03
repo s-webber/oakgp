@@ -13,28 +13,28 @@ import org.oakgp.Assignments;
 import org.oakgp.node.Node;
 
 public class TestDataFitnessFunctionTest {
-	@Test
-	public void test() {
-		// test data
-		Map<Assignments, Integer> testData = new HashMap<>();
-		Assignments assignments1 = createAssignments(1);
-		testData.put(assignments1, 9);
-		Assignments assignments2 = createAssignments(2);
-		testData.put(assignments2, 2);
-		Assignments assignments3 = createAssignments(3);
-		testData.put(assignments3, 7);
+   @Test
+   public void test() {
+      // test data
+      Map<Assignments, Integer> testData = new HashMap<>();
+      Assignments assignments1 = createAssignments(1);
+      testData.put(assignments1, 9);
+      Assignments assignments2 = createAssignments(2);
+      testData.put(assignments2, 2);
+      Assignments assignments3 = createAssignments(3);
+      testData.put(assignments3, 7);
 
-		// mock
-		Node mockNode = mock(Node.class);
-		given(mockNode.evaluate(assignments1)).willReturn(12);
-		given(mockNode.evaluate(assignments2)).willReturn(-1);
-		given(mockNode.evaluate(assignments3)).willReturn(5);
+      // mock
+      Node mockNode = mock(Node.class);
+      given(mockNode.evaluate(assignments1)).willReturn(12);
+      given(mockNode.evaluate(assignments2)).willReturn(-1);
+      given(mockNode.evaluate(assignments3)).willReturn(5);
 
-		// invoke evaluate method
-		FitnessFunction fitnessFunction = new TestDataFitnessFunction(testData);
-		double result = fitnessFunction.evaluate(mockNode);
+      // invoke evaluate method
+      FitnessFunction fitnessFunction = new TestDataFitnessFunction(testData);
+      double result = fitnessFunction.evaluate(mockNode);
 
-		// assert result
-		assertEquals(8d, result, 0d);
-	}
+      // assert result
+      assertEquals(8d, result, 0d);
+   }
 }

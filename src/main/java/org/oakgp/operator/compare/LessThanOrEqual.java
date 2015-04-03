@@ -1,12 +1,12 @@
 package org.oakgp.operator.compare;
 
 public final class LessThanOrEqual extends ComparisonOperator {
-	public LessThanOrEqual() {
-		super(true);
-	}
+   public LessThanOrEqual() {
+      super(true);
+   }
 
-	@Override
-	protected boolean evaluate(int arg1, int arg2) {
-		return arg1 <= arg2;
-	}
+   @Override
+   protected boolean evaluate(int arg1, int arg2) {
+      return arg1 <= arg2;
+   }
 }

@@ -47,103 +47,103 @@ import org.oakgp.node.Node;
  * </p>
  */
 public class FitnessFunctionSystemTest {
-	@Test
-	public void testTwoVariableArithmeticExpression() {
-		ConstantNode[] constants = createConstants(11);
-		int numVariables = 2;
-		TerminalSet terminalSet = new TerminalSet(RANDOM, RATIO_VARIABLES, createTypeArray(numVariables), constants);
-		FitnessFunction fitnessFunction = new TestDataFitnessFunction(createTests(numVariables, a -> {
-			int x = (int) a.get(0);
-			int y = (int) a.get(1);
-			return (x * x) + 2 * y + 3 * x + 5;
-		}));
-		Collection<Node> initialGeneration = createInitialGeneration(ARITHMETIC_FUNCTION_SET, terminalSet, GENERATION_SIZE);
-		doIt(ARITHMETIC_FUNCTION_SET, terminalSet, fitnessFunction, initialGeneration);
-	}
+   @Test
+   public void testTwoVariableArithmeticExpression() {
+      ConstantNode[] constants = createConstants(11);
+      int numVariables = 2;
+      TerminalSet terminalSet = new TerminalSet(RANDOM, RATIO_VARIABLES, createTypeArray(numVariables), constants);
+      FitnessFunction fitnessFunction = new TestDataFitnessFunction(createTests(numVariables, a -> {
+         int x = (int) a.get(0);
+         int y = (int) a.get(1);
+         return (x * x) + 2 * y + 3 * x + 5;
+      }));
+      Collection<Node> initialGeneration = createInitialGeneration(ARITHMETIC_FUNCTION_SET, terminalSet, GENERATION_SIZE);
+      doIt(ARITHMETIC_FUNCTION_SET, terminalSet, fitnessFunction, initialGeneration);
+   }
 
-	@Test
-	public void testThreeVariableArithmeticExpression() {
-		ConstantNode[] constants = createConstants(11);
-		int numVariables = 3;
-		TerminalSet terminalSet = new TerminalSet(RANDOM, RATIO_VARIABLES, createTypeArray(numVariables), constants);
-		FitnessFunction fitnessFunction = new TestDataFitnessFunction(createTests(numVariables, a -> {
-			int x = (int) a.get(0);
-			int y = (int) a.get(1);
-			int z = (int) a.get(2);
-			return (x * -3) + (y * 5) - z;
-		}));
-		Collection<Node> initialGeneration = createInitialGeneration(ARITHMETIC_FUNCTION_SET, terminalSet, GENERATION_SIZE);
-		doIt(ARITHMETIC_FUNCTION_SET, terminalSet, fitnessFunction, initialGeneration);
-	}
+   @Test
+   public void testThreeVariableArithmeticExpression() {
+      ConstantNode[] constants = createConstants(11);
+      int numVariables = 3;
+      TerminalSet terminalSet = new TerminalSet(RANDOM, RATIO_VARIABLES, createTypeArray(numVariables), constants);
+      FitnessFunction fitnessFunction = new TestDataFitnessFunction(createTests(numVariables, a -> {
+         int x = (int) a.get(0);
+         int y = (int) a.get(1);
+         int z = (int) a.get(2);
+         return (x * -3) + (y * 5) - z;
+      }));
+      Collection<Node> initialGeneration = createInitialGeneration(ARITHMETIC_FUNCTION_SET, terminalSet, GENERATION_SIZE);
+      doIt(ARITHMETIC_FUNCTION_SET, terminalSet, fitnessFunction, initialGeneration);
+   }
 
-	@Test
-	public void testTwoVariableBooleanLogicExpression() {
-		ConstantNode[] constants = createConstants(5);
-		int numVariables = 2;
-		TerminalSet terminalSet = new TerminalSet(RANDOM, RATIO_VARIABLES, createTypeArray(numVariables), constants);
-		FitnessFunction fitnessFunction = new TestDataFitnessFunction(createTests(numVariables, a -> {
-			int x = (int) a.get(0);
-			int y = (int) a.get(1);
-			return x > 20 ? x : y;
-		}));
-		Collection<Node> initialGeneration = createInitialGeneration(COMPARISON_FUNCTION_SET, terminalSet, GENERATION_SIZE);
-		doIt(COMPARISON_FUNCTION_SET, terminalSet, fitnessFunction, initialGeneration);
-	}
+   @Test
+   public void testTwoVariableBooleanLogicExpression() {
+      ConstantNode[] constants = createConstants(5);
+      int numVariables = 2;
+      TerminalSet terminalSet = new TerminalSet(RANDOM, RATIO_VARIABLES, createTypeArray(numVariables), constants);
+      FitnessFunction fitnessFunction = new TestDataFitnessFunction(createTests(numVariables, a -> {
+         int x = (int) a.get(0);
+         int y = (int) a.get(1);
+         return x > 20 ? x : y;
+      }));
+      Collection<Node> initialGeneration = createInitialGeneration(COMPARISON_FUNCTION_SET, terminalSet, GENERATION_SIZE);
+      doIt(COMPARISON_FUNCTION_SET, terminalSet, fitnessFunction, initialGeneration);
+   }
 
-	private static Map<Assignments, Integer> createTests(int numVariables, Function<Assignments, Integer> f) {
-		Map<Assignments, Integer> tests = new HashMap<>();
-		for (int i = 0; i < 200; i++) {
-			Object[] inputs = createInputs(numVariables);
-			Assignments assignments = createAssignments(inputs);
-			tests.put(assignments, f.apply(assignments));
-		}
-		return tests;
-	}
+   private static Map<Assignments, Integer> createTests(int numVariables, Function<Assignments, Integer> f) {
+      Map<Assignments, Integer> tests = new HashMap<>();
+      for (int i = 0; i < 200; i++) {
+         Object[] inputs = createInputs(numVariables);
+         Assignments assignments = createAssignments(inputs);
+         tests.put(assignments, f.apply(assignments));
+      }
+      return tests;
+   }
 
-	private static Object[] createInputs(int numVariables) {
-		Object[] variables = new Object[numVariables];
-		for (int i = 0; i < numVariables; i++) {
-			variables[i] = RANDOM.nextInt(40);
-		}
-		return variables;
-	}
+   private static Object[] createInputs(int numVariables) {
+      Object[] variables = new Object[numVariables];
+      for (int i = 0; i < numVariables; i++) {
+         variables[i] = RANDOM.nextInt(40);
+      }
+      return variables;
+   }
 
-	private void doIt(FunctionSet functionSet, TerminalSet terminalSet, FitnessFunction fitnessFunction, Collection<Node> initialGeneration) {
-		Predicate<List<RankedCandidate>> terminator = createTerminator();
-		Map<NodeEvolver, Long> nodeEvolvers = createNodeEvolvers(functionSet, terminalSet);
-		FitnessFunction fitnessFunctionCache = new FitnessFunctionCache(GENERATION_SIZE, fitnessFunction);
-		GenerationProcessor generationProcessor = new FitnessFunctionGenerationProcessor(fitnessFunctionCache);
-		GenerationEvolver generationEvolver = new GenerationEvolver(ELITISM_SIZE, SELECTOR_FACTORY, nodeEvolvers);
-		RankedCandidate best = Runner.process(generationProcessor, generationEvolver, terminator, initialGeneration);
-		printRankedCandidate(best);
-	}
+   private void doIt(FunctionSet functionSet, TerminalSet terminalSet, FitnessFunction fitnessFunction, Collection<Node> initialGeneration) {
+      Predicate<List<RankedCandidate>> terminator = createTerminator();
+      Map<NodeEvolver, Long> nodeEvolvers = createNodeEvolvers(functionSet, terminalSet);
+      FitnessFunction fitnessFunctionCache = new FitnessFunctionCache(GENERATION_SIZE, fitnessFunction);
+      GenerationProcessor generationProcessor = new FitnessFunctionGenerationProcessor(fitnessFunctionCache);
+      GenerationEvolver generationEvolver = new GenerationEvolver(ELITISM_SIZE, SELECTOR_FACTORY, nodeEvolvers);
+      RankedCandidate best = Runner.process(generationProcessor, generationEvolver, terminator, initialGeneration);
+      printRankedCandidate(best);
+   }
 
-	private Map<NodeEvolver, Long> createNodeEvolvers(FunctionSet functionSet, TerminalSet terminalSet) {
-		Map<NodeEvolver, Long> nodeEvolvers = new HashMap<>();
-		nodeEvolvers.put(t -> makeRandomTree(functionSet, terminalSet, 4), 5L);
-		nodeEvolvers.put(new SubtreeCrossover(RANDOM), 21L);
-		nodeEvolvers.put(new PointMutation(RANDOM, functionSet, terminalSet), 21L);
-		return nodeEvolvers;
-	}
+   private Map<NodeEvolver, Long> createNodeEvolvers(FunctionSet functionSet, TerminalSet terminalSet) {
+      Map<NodeEvolver, Long> nodeEvolvers = new HashMap<>();
+      nodeEvolvers.put(t -> makeRandomTree(functionSet, terminalSet, 4), 5L);
+      nodeEvolvers.put(new SubtreeCrossover(RANDOM), 21L);
+      nodeEvolvers.put(new PointMutation(RANDOM, functionSet, terminalSet), 21L);
+      return nodeEvolvers;
+   }
 
-	private Predicate<List<RankedCandidate>> createTerminator() {
-		return new Predicate<List<RankedCandidate>>() {
-			int ctr = 0;
-			double previousBest = 0;
+   private Predicate<List<RankedCandidate>> createTerminator() {
+      return new Predicate<List<RankedCandidate>>() {
+         int ctr = 0;
+         double previousBest = 0;
 
-			@Override
-			public boolean test(List<RankedCandidate> t) {
-				ctr++;
-				double best = t.get(0).getFitness();
-				boolean finished = ctr > 500 || best == 0;
-				if (previousBest != best) {
-					previousBest = best;
-					System.out.println(ctr + " " + best);
-				} else if (finished || ctr % 100 == 0) {
-					System.out.println(ctr + " " + best);
-				}
-				return finished;
-			}
-		};
-	}
+         @Override
+         public boolean test(List<RankedCandidate> t) {
+            ctr++;
+            double best = t.get(0).getFitness();
+            boolean finished = ctr > 500 || best == 0;
+            if (previousBest != best) {
+               previousBest = best;
+               System.out.println(ctr + " " + best);
+            } else if (finished || ctr % 100 == 0) {
+               System.out.println(ctr + " " + best);
+            }
+            return finished;
+         }
+      };
+   }
 }

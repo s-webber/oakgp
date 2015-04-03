@@ -23,29 +23,29 @@ import org.oakgp.node.Node;
  * </pre>
  */
 public class DummyNodeSelector implements NodeSelector {
-	private final Node[] nodes;
-	private int ctr = 0;
+   private final Node[] nodes;
+   private int ctr = 0;
 
-	public DummyNodeSelector(Node... nodes) {
-		this.nodes = nodes;
-	}
+   public DummyNodeSelector(Node... nodes) {
+      this.nodes = nodes;
+   }
 
-	public DummyNodeSelector(String... expressions) {
-		this.nodes = new Node[expressions.length];
-		for (int i = 0; i < expressions.length; i++) {
-			nodes[i] = readNode(expressions[i]);
-		}
-	}
+   public DummyNodeSelector(String... expressions) {
+      this.nodes = new Node[expressions.length];
+      for (int i = 0; i < expressions.length; i++) {
+         nodes[i] = readNode(expressions[i]);
+      }
+   }
 
-	@Override
-	public Node next() {
-		if (ctr == nodes.length) {
-			throw new ArrayIndexOutOfBoundsException("Trying to access element: " + ctr + " of: " + Arrays.toString(nodes));
-		}
-		return nodes[ctr++];
-	}
+   @Override
+   public Node next() {
+      if (ctr == nodes.length) {
+         throw new ArrayIndexOutOfBoundsException("Trying to access element: " + ctr + " of: " + Arrays.toString(nodes));
+      }
+      return nodes[ctr++];
+   }
 
-	public boolean isEmpty() {
-		return ctr == nodes.length;
-	}
+   public boolean isEmpty() {
+      return ctr == nodes.length;
+   }
 }

@@ -21,160 +21,160 @@ import org.oakgp.operator.math.Add;
 import org.oakgp.operator.math.Subtract;
 
 public class NodeReaderTest {
-	// TODO test error conditions
+   // TODO test error conditions
 
-	@Test
-	public void testZero() {
-		assertParseLiteral(0);
-	}
+   @Test
+   public void testZero() {
+      assertParseLiteral(0);
+   }
 
-	@Test
-	public void testNegativeConstantNode() {
-		assertParseLiteral(-9);
-	}
+   @Test
+   public void testNegativeConstantNode() {
+      assertParseLiteral(-9);
+   }
 
-	@Test
-	public void testSingleCharacterConstantNode() {
-		assertParseLiteral(4);
-	}
+   @Test
+   public void testSingleCharacterConstantNode() {
+      assertParseLiteral(4);
+   }
 
-	@Test
-	public void testMulipleCharacterConstantNode() {
-		assertParseLiteral(147);
-	}
+   @Test
+   public void testMulipleCharacterConstantNode() {
+      assertParseLiteral(147);
+   }
 
-	@Test
-	public void testTrue() {
-		assertParseLiteral(Boolean.TRUE);
-	}
+   @Test
+   public void testTrue() {
+      assertParseLiteral(Boolean.TRUE);
+   }
 
-	@Test
-	public void testFalse() {
-		assertParseLiteral(Boolean.FALSE);
-	}
+   @Test
+   public void testFalse() {
+      assertParseLiteral(Boolean.FALSE);
+   }
 
-	@Test
-	public void testSingleWordString() {
-		assertParseLiteral("\"hello\"", "hello");
-	}
+   @Test
+   public void testSingleWordString() {
+      assertParseLiteral("\"hello\"", "hello");
+   }
 
-	@Test
-	public void testMultiWordString() {
-		assertParseLiteral("\"Hello, world!\"", "Hello, world!");
-	}
+   @Test
+   public void testMultiWordString() {
+      assertParseLiteral("\"Hello, world!\"", "Hello, world!");
+   }
 
-	@Test
-	public void testOperatorSymbol() {
-		assertParseOperator("+", Add.class);
-	}
+   @Test
+   public void testOperatorSymbol() {
+      assertParseOperator("+", Add.class);
+   }
 
-	@Test
-	public void testOperatorClassName() {
-		assertParseOperator("org.oakgp.operator.math.Subtract", Subtract.class);
-	}
+   @Test
+   public void testOperatorClassName() {
+      assertParseOperator("org.oakgp.operator.math.Subtract", Subtract.class);
+   }
 
-	@Test
-	public void testEmptyArray() {
-		assertParseLiteral("[]", Arguments.createArguments());
-	}
+   @Test
+   public void testEmptyArray() {
+      assertParseLiteral("[]", Arguments.createArguments());
+   }
 
-	@Test
-	public void testArray() {
-		Arguments expected = Arguments.createArguments(new ConstantNode(Boolean.TRUE, Type.BOOLEAN), new ConstantNode(9, Type.INTEGER), new ConstantNode(
-				Boolean.FALSE, Type.BOOLEAN), createVariable(0));
-		assertParseLiteral("[true 9 false v0]", expected);
-	}
+   @Test
+   public void testArray() {
+      Arguments expected = Arguments.createArguments(new ConstantNode(Boolean.TRUE, Type.BOOLEAN), new ConstantNode(9, Type.INTEGER), new ConstantNode(
+            Boolean.FALSE, Type.BOOLEAN), createVariable(0));
+      assertParseLiteral("[true 9 false v0]", expected);
+   }
 
-	@Test
-	public void testSingleDigitIdVariableNode() {
-		assertParseVariable(1);
-	}
+   @Test
+   public void testSingleDigitIdVariableNode() {
+      assertParseVariable(1);
+   }
 
-	@Test
-	public void testMultipleDigitIdVariableNode() {
-		assertParseVariable(78);
-	}
+   @Test
+   public void testMultipleDigitIdVariableNode() {
+      assertParseVariable(78);
+   }
 
-	@Test
-	public void testFunctionNodeSpecifiedByClassName() {
-		assertParseFunction("(org.oakgp.operator.math.Add 7 21)");
-	}
+   @Test
+   public void testFunctionNodeSpecifiedByClassName() {
+      assertParseFunction("(org.oakgp.operator.math.Add 7 21)");
+   }
 
-	@Test
-	public void testFunctionNodeSpecifiedBySymbol() {
-		assertParseFunction("(+ 7 21)", "(org.oakgp.operator.math.Add 7 21)");
-	}
+   @Test
+   public void testFunctionNodeSpecifiedBySymbol() {
+      assertParseFunction("(+ 7 21)", "(org.oakgp.operator.math.Add 7 21)");
+   }
 
-	@Test
-	public void testFunctionNodeWithFunctionNodeArguments() {
-		assertParseFunction("(org.oakgp.operator.math.Add (org.oakgp.operator.math.Subtract v0 587) (org.oakgp.operator.math.Multiply 43 v1))");
-	}
+   @Test
+   public void testFunctionNodeWithFunctionNodeArguments() {
+      assertParseFunction("(org.oakgp.operator.math.Add (org.oakgp.operator.math.Subtract v0 587) (org.oakgp.operator.math.Multiply 43 v1))");
+   }
 
-	@Test
-	public void testEmptyString() {
-		String input = "";
-		List<Node> outputs = readNodes(input);
-		assertTrue(outputs.isEmpty());
-	}
+   @Test
+   public void testEmptyString() {
+      String input = "";
+      List<Node> outputs = readNodes(input);
+      assertTrue(outputs.isEmpty());
+   }
 
-	@Test
-	public void testWhitespace() {
-		String input = " \r\n\t\t  ";
-		List<Node> outputs = readNodes(input);
-		assertTrue(outputs.isEmpty());
-	}
+   @Test
+   public void testWhitespace() {
+      String input = " \r\n\t\t  ";
+      List<Node> outputs = readNodes(input);
+      assertTrue(outputs.isEmpty());
+   }
 
-	@Test
-	public void testPadded() {
-		String input = " \r\n42\t\t  ";
-		assertParseLiteral(input, 42);
-	}
+   @Test
+   public void testPadded() {
+      String input = " \r\n42\t\t  ";
+      assertParseLiteral(input, 42);
+   }
 
-	@Test
-	public void testMulipleNodes() {
-		String[] inputs = { "6", "(org.oakgp.operator.math.Add v0 v1)", "42", "v0", "(org.oakgp.operator.math.Add 1 2)", "v98" };
-		String combinedInput = " " + inputs[0] + inputs[1] + inputs[2] + " " + inputs[3] + "\n\r\t\t\t" + inputs[4] + "       \n   " + inputs[5] + "\r\n";
-		List<Node> outputs = readNodes(combinedInput);
-		assertEquals(inputs.length, outputs.size());
-		for (int i = 0; i < inputs.length; i++) {
-			assertEquals(inputs[i].toString(), outputs.get(i).toString());
-		}
-	}
+   @Test
+   public void testMulipleNodes() {
+      String[] inputs = { "6", "(org.oakgp.operator.math.Add v0 v1)", "42", "v0", "(org.oakgp.operator.math.Add 1 2)", "v98" };
+      String combinedInput = " " + inputs[0] + inputs[1] + inputs[2] + " " + inputs[3] + "\n\r\t\t\t" + inputs[4] + "       \n   " + inputs[5] + "\r\n";
+      List<Node> outputs = readNodes(combinedInput);
+      assertEquals(inputs.length, outputs.size());
+      for (int i = 0; i < inputs.length; i++) {
+         assertEquals(inputs[i].toString(), outputs.get(i).toString());
+      }
+   }
 
-	private void assertParseLiteral(Object expected) {
-		assertParseLiteral(expected.toString(), expected);
-	}
+   private void assertParseLiteral(Object expected) {
+      assertParseLiteral(expected.toString(), expected);
+   }
 
-	private void assertParseLiteral(String input, Object expected) {
-		Node output = readNode(input);
-		assertSame(ConstantNode.class, output.getClass());
-		assertEquals(expected.toString(), output.toString());
-		assertEquals(expected, ((ConstantNode) output).evaluate(null));
-	}
+   private void assertParseLiteral(String input, Object expected) {
+      Node output = readNode(input);
+      assertSame(ConstantNode.class, output.getClass());
+      assertEquals(expected.toString(), output.toString());
+      assertEquals(expected, ((ConstantNode) output).evaluate(null));
+   }
 
-	private void assertParseOperator(String input, Class<? extends Operator> expected) {
-		Node output = readNode(input);
-		assertSame(ConstantNode.class, output.getClass());
-		assertSame(Type.OPERATOR, output.getType());
-		assertEquals(expected, ((ConstantNode) output).evaluate(null).getClass());
-	}
+   private void assertParseOperator(String input, Class<? extends Operator> expected) {
+      Node output = readNode(input);
+      assertSame(ConstantNode.class, output.getClass());
+      assertSame(Type.OPERATOR, output.getType());
+      assertEquals(expected, ((ConstantNode) output).evaluate(null).getClass());
+   }
 
-	private void assertParseVariable(int id) {
-		String input = "v" + id;
-		Node output = readNode(input);
-		assertSame(VariableNode.class, output.getClass());
-		assertEquals(id, ((VariableNode) output).getId());
-		assertEquals(input, output.toString());
-	}
+   private void assertParseVariable(int id) {
+      String input = "v" + id;
+      Node output = readNode(input);
+      assertSame(VariableNode.class, output.getClass());
+      assertEquals(id, ((VariableNode) output).getId());
+      assertEquals(input, output.toString());
+   }
 
-	private void assertParseFunction(String input) {
-		assertParseFunction(input, input);
-	}
+   private void assertParseFunction(String input) {
+      assertParseFunction(input, input);
+   }
 
-	private void assertParseFunction(String input, String expected) {
-		Node output = readNode(input);
-		assertSame(FunctionNode.class, output.getClass());
-		assertEquals(expected, output.toString());
-	}
+   private void assertParseFunction(String input, String expected) {
+      Node output = readNode(input);
+      assertSame(FunctionNode.class, output.getClass());
+      assertEquals(expected, output.toString());
+   }
 
 }

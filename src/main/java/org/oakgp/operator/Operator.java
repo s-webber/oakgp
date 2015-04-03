@@ -7,20 +7,20 @@ import org.oakgp.node.Node;
 
 /** Represents an operation. */
 public interface Operator {
-	/**
-	 * Returns the result of applying this operation to the specified {@code Arguments} and {@code Assignments}.
-	 *
-	 * @param arguments
-	 *            represents the arguments to apply to the operation
-	 * @param assignments
-	 *            represents values assigned to variables belonging to {@code arguments}
-	 * @return the result of applying this operation to the {@code arguments} and {@code assignments}
-	 */
-	Object evaluate(Arguments arguments, Assignments assignments);
+   /**
+    * Returns the result of applying this operation to the specified {@code Arguments} and {@code Assignments}.
+    *
+    * @param arguments
+    *           represents the arguments to apply to the operation
+    * @param assignments
+    *           represents values assigned to variables belonging to {@code arguments}
+    * @return the result of applying this operation to the {@code arguments} and {@code assignments}
+    */
+   Object evaluate(Arguments arguments, Assignments assignments);
 
-	Signature getSignature();
+   Signature getSignature();
 
-	default Node simplify(Arguments arguments) {
-		return null;
-	}
+   default Node simplify(Arguments arguments) {
+      return null;
+   }
 }

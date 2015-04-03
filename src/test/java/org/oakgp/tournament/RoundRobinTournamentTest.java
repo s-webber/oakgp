@@ -14,27 +14,27 @@ import org.oakgp.RankedCandidate;
 import org.oakgp.node.Node;
 
 public class RoundRobinTournamentTest {
-	@Test
-	public void test() {
-		// test data
-		Node a = createConstant(1);
-		Node b = createConstant(2);
-		Node c = createConstant(3);
-		List<Node> input = Arrays.asList(a, b, c);
+   @Test
+   public void test() {
+      // test data
+      Node a = createConstant(1);
+      Node b = createConstant(2);
+      Node c = createConstant(3);
+      List<Node> input = Arrays.asList(a, b, c);
 
-		// mock
-		TwoPlayerGame mockGame = mock(TwoPlayerGame.class);
-		given(mockGame.evaluate(a, b)).willReturn(5d);
-		given(mockGame.evaluate(a, c)).willReturn(-3d);
-		given(mockGame.evaluate(b, c)).willReturn(2d);
+      // mock
+      TwoPlayerGame mockGame = mock(TwoPlayerGame.class);
+      given(mockGame.evaluate(a, b)).willReturn(5d);
+      given(mockGame.evaluate(a, c)).willReturn(-3d);
+      given(mockGame.evaluate(b, c)).willReturn(2d);
 
-		// invoke process method
-		GenerationProcessor tournament = new RoundRobinTournament(mockGame);
-		List<RankedCandidate> output = tournament.process(input);
+      // invoke process method
+      GenerationProcessor tournament = new RoundRobinTournament(mockGame);
+      List<RankedCandidate> output = tournament.process(input);
 
-		// assert output
-		assertRankedCandidate(output.get(0), a, 2);
-		assertRankedCandidate(output.get(1), c, 1);
-		assertRankedCandidate(output.get(2), b, -3);
-	}
+      // assert output
+      assertRankedCandidate(output.get(0), a, 2);
+      assertRankedCandidate(output.get(1), c, 1);
+      assertRankedCandidate(output.get(2), b, -3);
+   }
 }

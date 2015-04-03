@@ -1,5 +1,5 @@
 package org.oakgp;
 
 public enum Type {
-	INTEGER, BOOLEAN, STRING, ARRAY, OPERATOR
+   INTEGER, BOOLEAN, STRING, ARRAY, OPERATOR
 }

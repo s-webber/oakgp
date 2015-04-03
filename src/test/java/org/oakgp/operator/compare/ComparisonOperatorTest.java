@@ -10,18 +10,18 @@ import org.oakgp.Signature;
 import org.oakgp.operator.Operator;
 
 public class ComparisonOperatorTest {
-	@Test
-	public void testGetSignature() {
-		Operator o = new ComparisonOperator(true) {
-			@Override
-			protected boolean evaluate(int arg1, int arg2) {
-				throw new UnsupportedOperationException();
-			}
-		};
-		Signature signature = o.getSignature();
-		assertSame(BOOLEAN, signature.getReturnType());
-		assertEquals(2, signature.getArgumentTypesLength());
-		assertSame(INTEGER, signature.getArgumentType(0));
-		assertSame(INTEGER, signature.getArgumentType(1));
-	}
+   @Test
+   public void testGetSignature() {
+      Operator o = new ComparisonOperator(true) {
+         @Override
+         protected boolean evaluate(int arg1, int arg2) {
+            throw new UnsupportedOperationException();
+         }
+      };
+      Signature signature = o.getSignature();
+      assertSame(BOOLEAN, signature.getReturnType());
+      assertEquals(2, signature.getArgumentTypesLength());
+      assertSame(INTEGER, signature.getArgumentType(0));
+      assertSame(INTEGER, signature.getArgumentType(1));
+   }
 }

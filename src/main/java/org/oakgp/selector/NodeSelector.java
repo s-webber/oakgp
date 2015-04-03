@@ -9,10 +9,10 @@ import org.oakgp.node.Node;
  */
 @FunctionalInterface
 public interface NodeSelector {
-	/**
-	 * Returns a {@code Node}.
-	 *
-	 * @return a {@code Node}
-	 */
-	Node next();
+   /**
+    * Returns a {@code Node}.
+    *
+    * @return a {@code Node}
+    */
+   Node next();
 }

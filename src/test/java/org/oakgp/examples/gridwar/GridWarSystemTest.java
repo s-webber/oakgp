@@ -36,53 +36,53 @@ import org.oakgp.tournament.TwoPlayerGame;
 import org.oakgp.tournament.TwoPlayerGameCache;
 
 public class GridWarSystemTest {
-	private static final int NUM_GENERATIONS = 100;
-	private static final Type[] VARIABLE_TYPES = createTypeArray(5);
-	private static final int NUM_CONSTANTS = 5;
+   private static final int NUM_GENERATIONS = 100;
+   private static final Type[] VARIABLE_TYPES = createTypeArray(5);
+   private static final int NUM_CONSTANTS = 5;
 
-	@Test
-	public void test() {
-		// set-up
-		ConstantNode[] constants = createConstants(NUM_CONSTANTS);
-		TerminalSet terminalSet = new TerminalSet(RANDOM, RATIO_VARIABLES, VARIABLE_TYPES, constants);
-		Collection<Node> initialGeneration = createInitialGeneration(COMPARISON_FUNCTION_SET, terminalSet, GENERATION_SIZE);
-		Map<NodeEvolver, Long> nodeEvolvers = createNodeEvolvers(terminalSet);
-		Predicate<List<RankedCandidate>> terminator = createTerminator();
+   @Test
+   public void test() {
+      // set-up
+      ConstantNode[] constants = createConstants(NUM_CONSTANTS);
+      TerminalSet terminalSet = new TerminalSet(RANDOM, RATIO_VARIABLES, VARIABLE_TYPES, constants);
+      Collection<Node> initialGeneration = createInitialGeneration(COMPARISON_FUNCTION_SET, terminalSet, GENERATION_SIZE);
+      Map<NodeEvolver, Long> nodeEvolvers = createNodeEvolvers(terminalSet);
+      Predicate<List<RankedCandidate>> terminator = createTerminator();
 
-		// run process
-		TwoPlayerGame game = createGridWarGame();
-		GenerationProcessor generationProcessor = new RoundRobinTournament(game);
-		GenerationEvolver generationEvolver = new GenerationEvolver(ELITISM_SIZE, SELECTOR_FACTORY, nodeEvolvers);
-		RankedCandidate best = Runner.process(generationProcessor, generationEvolver, terminator, initialGeneration);
+      // run process
+      TwoPlayerGame game = createGridWarGame();
+      GenerationProcessor generationProcessor = new RoundRobinTournament(game);
+      GenerationEvolver generationEvolver = new GenerationEvolver(ELITISM_SIZE, SELECTOR_FACTORY, nodeEvolvers);
+      RankedCandidate best = Runner.process(generationProcessor, generationEvolver, terminator, initialGeneration);
 
-		// print best
-		printRankedCandidate(best);
-	}
+      // print best
+      printRankedCandidate(best);
+   }
 
-	private TwoPlayerGame createGridWarGame() {
-		TwoPlayerGame game = new FirstPlayerAdvantageGame(new GridWar(RANDOM));
-		return new TwoPlayerGameCache(GENERATION_SIZE * 2, game);
-	}
+   private TwoPlayerGame createGridWarGame() {
+      TwoPlayerGame game = new FirstPlayerAdvantageGame(new GridWar(RANDOM));
+      return new TwoPlayerGameCache(GENERATION_SIZE * 2, game);
+   }
 
-	private Map<NodeEvolver, Long> createNodeEvolvers(TerminalSet terminalSet) {
-		Map<NodeEvolver, Long> nodeEvolvers = new HashMap<>();
-		nodeEvolvers.put(t -> makeRandomTree(COMPARISON_FUNCTION_SET, terminalSet, 4), 5L);
-		nodeEvolvers.put(new SubtreeCrossover(RANDOM), 21L);
-		nodeEvolvers.put(new PointMutation(RANDOM, COMPARISON_FUNCTION_SET, terminalSet), 21L);
-		return nodeEvolvers;
-	}
+   private Map<NodeEvolver, Long> createNodeEvolvers(TerminalSet terminalSet) {
+      Map<NodeEvolver, Long> nodeEvolvers = new HashMap<>();
+      nodeEvolvers.put(t -> makeRandomTree(COMPARISON_FUNCTION_SET, terminalSet, 4), 5L);
+      nodeEvolvers.put(new SubtreeCrossover(RANDOM), 21L);
+      nodeEvolvers.put(new PointMutation(RANDOM, COMPARISON_FUNCTION_SET, terminalSet), 21L);
+      return nodeEvolvers;
+   }
 
-	private Predicate<List<RankedCandidate>> createTerminator() {
-		return new Predicate<List<RankedCandidate>>() {
-			int ctr = 1;
+   private Predicate<List<RankedCandidate>> createTerminator() {
+      return new Predicate<List<RankedCandidate>>() {
+         int ctr = 1;
 
-			@Override
-			public boolean test(List<RankedCandidate> t) {
-				if (ctr % 50 == 0) {
-					System.out.println(ctr);
-				}
-				return ctr++ > NUM_GENERATIONS;
-			}
-		};
-	}
+         @Override
+         public boolean test(List<RankedCandidate> t) {
+            if (ctr % 50 == 0) {
+               System.out.println(ctr);
+            }
+            return ctr++ > NUM_GENERATIONS;
+         }
+      };
+   }
 }

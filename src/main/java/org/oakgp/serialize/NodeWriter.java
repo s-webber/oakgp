@@ -20,28 +20,27 @@ import org.oakgp.operator.Operator;
  * (+ 9 5)
  * </pre>
  */
-
 public final class NodeWriter {
-	private final SymbolMap symbolMap = new SymbolMap();
+   private final SymbolMap symbolMap = new SymbolMap();
 
-	public String writeNode(Node node) {
-		StringBuilder sb = new StringBuilder();
-		writeNode(node, sb);
-		return sb.toString();
-	}
+   public String writeNode(Node node) {
+      StringBuilder sb = new StringBuilder();
+      writeNode(node, sb);
+      return sb.toString();
+   }
 
-	private void writeNode(Node node, StringBuilder sb) {
-		if (node instanceof FunctionNode) {
-			FunctionNode functionNode = (FunctionNode) node;
-			Operator operator = functionNode.getOperator();
-			Arguments arguments = functionNode.getArguments();
-			sb.append('(').append(symbolMap.getDisplayName(operator));
-			for (int i = 0; i < arguments.length(); i++) {
-				sb.append(' ').append(writeNode(arguments.get(i)));
-			}
-			sb.append(')');
-		} else {
-			sb.append(node);
-		}
-	}
+   private void writeNode(Node node, StringBuilder sb) {
+      if (node instanceof FunctionNode) {
+         FunctionNode functionNode = (FunctionNode) node;
+         Operator operator = functionNode.getOperator();
+         Arguments arguments = functionNode.getArguments();
+         sb.append('(').append(symbolMap.getDisplayName(operator));
+         for (int i = 0; i < arguments.length(); i++) {
+            sb.append(' ').append(writeNode(arguments.get(i)));
+         }
+         sb.append(')');
+      } else {
+         sb.append(node);
+      }
+   }
 }

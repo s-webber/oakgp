@@ -7,14 +7,14 @@ import org.oakgp.node.Node;
  * "first-mover advantage" causing players to be unfairly ranked, each pair plays each other twice - with each having the opportunity to move first.
  */
 public final class FirstPlayerAdvantageGame implements TwoPlayerGame {
-	private final TwoPlayerGame twoPlayerGame;
+   private final TwoPlayerGame twoPlayerGame;
 
-	public FirstPlayerAdvantageGame(TwoPlayerGame twoPlayerGame) {
-		this.twoPlayerGame = twoPlayerGame;
-	}
+   public FirstPlayerAdvantageGame(TwoPlayerGame twoPlayerGame) {
+      this.twoPlayerGame = twoPlayerGame;
+   }
 
-	@Override
-	public double evaluate(Node player1, Node player2) {
-		return twoPlayerGame.evaluate(player1, player2) - twoPlayerGame.evaluate(player2, player1);
-	}
+   @Override
+   public double evaluate(Node player1, Node player2) {
+      return twoPlayerGame.evaluate(player1, player2) - twoPlayerGame.evaluate(player2, player1);
+   }
 }

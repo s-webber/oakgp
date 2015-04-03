@@ -11,18 +11,18 @@ import org.oakgp.serialize.NodeReader;
 import org.oakgp.serialize.NodeWriter;
 
 public class Repl {
-	public static void main(String[] args) throws IOException {
-		Scanner scanner = new Scanner(System.in);
-		Assignments assignments = Assignments.createAssignments(2, 3);
-		while (true) {
-			System.out.print("> ");
-			String input = scanner.nextLine();
-			Node expression = new NodeReader(input, Type.INTEGER, Type.INTEGER).readNode();
-			Node simplifiedResult = new NodeSimplifier().simplify(expression);
-			System.out.println(new NodeWriter().writeNode(expression));
-			System.out.println(new NodeWriter().writeNode(simplifiedResult));
-			System.out.println(expression.evaluate(assignments).toString());
-			System.out.println(simplifiedResult.evaluate(assignments).toString());
-		}
-	}
+   public static void main(String[] args) throws IOException {
+      Scanner scanner = new Scanner(System.in);
+      Assignments assignments = Assignments.createAssignments(2, 3);
+      while (true) {
+         System.out.print("> ");
+         String input = scanner.nextLine();
+         Node expression = new NodeReader(input, Type.INTEGER, Type.INTEGER).readNode();
+         Node simplifiedResult = new NodeSimplifier().simplify(expression);
+         System.out.println(new NodeWriter().writeNode(expression));
+         System.out.println(new NodeWriter().writeNode(simplifiedResult));
+         System.out.println(expression.evaluate(assignments).toString());
+         System.out.println(simplifiedResult.evaluate(assignments).toString());
+      }
+   }
 }
