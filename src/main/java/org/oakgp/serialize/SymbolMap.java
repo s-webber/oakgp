@@ -11,6 +11,7 @@ import org.oakgp.function.compare.GreaterThanOrEqual;
 import org.oakgp.function.compare.LessThan;
 import org.oakgp.function.compare.LessThanOrEqual;
 import org.oakgp.function.compare.NotEqual;
+import org.oakgp.function.hof.Reduce;
 import org.oakgp.function.math.Add;
 import org.oakgp.function.math.Multiply;
 import org.oakgp.function.math.Subtract;
@@ -31,6 +32,8 @@ final class SymbolMap {
       addMapping("!=", NotEqual.class);
 
       addMapping("if", If.class);
+
+      addMapping("reduce", Reduce.class);
    }
 
    private static void addMapping(String symbol, Class<? extends Function> functionClass) {

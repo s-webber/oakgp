@@ -13,16 +13,15 @@ public class ReduceTest extends AbstractFunctionTest {
 
    @Override
    protected void getEvaluateTests(EvaluateTestCases testCases) {
-      // TODO use symbol instead of class name
-      testCases.put("(org.oakgp.function.hof.Reduce + 0 [2 12 8])", 22);
-      testCases.put("(org.oakgp.function.hof.Reduce + 5 [2 12 8])", 27);
+      testCases.put("(reduce + 0 [2 12 8])", 22);
+      testCases.put("(reduce + 5 [2 12 8])", 27);
 
-      testCases.put("(org.oakgp.function.hof.Reduce * 1 [2 12 8])", 192);
+      testCases.put("(reduce * 1 [2 12 8])", 192);
    }
 
    @Override
    protected void getCanSimplifyTests(SimplifyTestCases testCases) {
-      testCases.put("(org.oakgp.function.hof.Reduce + 9 [2 12 8])", "31");
+      testCases.put("(reduce + 9 [2 12 8])", "31");
    }
 
    @Override
