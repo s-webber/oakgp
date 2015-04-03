@@ -6,9 +6,9 @@ import static org.oakgp.TestUtils.createVariable;
 
 import org.junit.Test;
 import org.oakgp.node.FunctionNode;
-import org.oakgp.operator.math.Add;
-import org.oakgp.operator.math.Multiply;
-import org.oakgp.operator.math.Subtract;
+import org.oakgp.function.math.Add;
+import org.oakgp.function.math.Multiply;
+import org.oakgp.function.math.Subtract;
 
 public class NodeWriterTest {
    // TODO test writeNode when no symbol exists in SymbolMap for the specified Operator

@@ -1,4 +1,4 @@
-package org.oakgp.operator;
+package org.oakgp.function;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;

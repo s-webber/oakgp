@@ -3,7 +3,7 @@ package org.oakgp.node;
 import org.oakgp.Arguments;
 import org.oakgp.Assignments;
 import org.oakgp.Type;
-import org.oakgp.operator.Operator;
+import org.oakgp.function.Operator;
 
 /** Contains a function (operator) and the arguments (operands) to apply to it. */
 public final class FunctionNode implements Node {

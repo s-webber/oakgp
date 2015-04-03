@@ -1,11 +1,11 @@
-package org.oakgp.operator.math;
+package org.oakgp.function.math;
 
 import static org.oakgp.Type.INTEGER;
 
 import org.oakgp.Arguments;
 import org.oakgp.Assignments;
 import org.oakgp.Signature;
-import org.oakgp.operator.Operator;
+import org.oakgp.function.Operator;
 
 abstract class ArithmeticOperator implements Operator {
    private static final Signature SIGNATURE = Signature.createSignature(INTEGER, INTEGER, INTEGER);

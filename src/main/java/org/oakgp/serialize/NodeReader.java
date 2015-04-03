@@ -19,7 +19,7 @@ import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.node.VariableNode;
-import org.oakgp.operator.Operator;
+import org.oakgp.function.Operator;
 
 /**
  * Creates {@code Node} instances from {@code String} representations.

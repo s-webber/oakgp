@@ -1,4 +1,4 @@
-package org.oakgp.operator.math;
+package org.oakgp.function.math;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
@@ -27,7 +27,7 @@ import org.oakgp.Signature;
 import org.oakgp.TerminalSet;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
-import org.oakgp.operator.Operator;
+import org.oakgp.function.Operator;
 
 public class ArithmeticOperatorTest {
    private static final File TEST_DATA_FILE = new File("src/test/resources/ArithmeticOperatorTest.txt");

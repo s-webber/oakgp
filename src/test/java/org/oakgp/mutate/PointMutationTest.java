@@ -18,10 +18,10 @@ import org.oakgp.Type;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
-import org.oakgp.operator.Operator;
-import org.oakgp.operator.math.Add;
-import org.oakgp.operator.math.Multiply;
-import org.oakgp.operator.math.Subtract;
+import org.oakgp.function.Operator;
+import org.oakgp.function.math.Add;
+import org.oakgp.function.math.Multiply;
+import org.oakgp.function.math.Subtract;
 import org.oakgp.selector.DummyNodeSelector;
 import org.oakgp.util.Random;
 

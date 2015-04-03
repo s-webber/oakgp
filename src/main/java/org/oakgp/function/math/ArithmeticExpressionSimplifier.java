@@ -1,4 +1,4 @@
-package org.oakgp.operator.math;
+package org.oakgp.function.math;
 
 import static org.oakgp.Type.INTEGER;
 import static org.oakgp.util.NodeComparator.NODE_COMPARATOR;
@@ -7,7 +7,7 @@ import org.oakgp.Arguments;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
-import org.oakgp.operator.Operator;
+import org.oakgp.function.Operator;
 import org.oakgp.util.Utils;
 
 final class ArithmeticExpressionSimplifier {

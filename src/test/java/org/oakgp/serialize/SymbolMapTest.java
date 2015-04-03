@@ -5,10 +5,10 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.fail;
 
 import org.junit.Test;
-import org.oakgp.operator.Operator;
-import org.oakgp.operator.math.Add;
-import org.oakgp.operator.math.Multiply;
-import org.oakgp.operator.math.Subtract;
+import org.oakgp.function.Operator;
+import org.oakgp.function.math.Add;
+import org.oakgp.function.math.Multiply;
+import org.oakgp.function.math.Subtract;
 
 public class SymbolMapTest {
    // TODO test getDisplayName when no symbol mapping exists for the specified Operator
@@ -34,7 +34,7 @@ public class SymbolMapTest {
          symbolMap.getOperator("java.lang.String");
          fail();
       } catch (ClassCastException e) {
-         assertEquals("java.lang.String cannot be cast to org.oakgp.operator.Operator", e.getMessage());
+         assertEquals("java.lang.String cannot be cast to org.oakgp.function.Operator", e.getMessage());
       }
    }
 

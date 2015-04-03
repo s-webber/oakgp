@@ -1,9 +1,9 @@
-package org.oakgp.operator.math;
+package org.oakgp.function.math;
 
 import java.util.List;
 
-import org.oakgp.operator.AbstractOperatorTest;
-import org.oakgp.operator.Operator;
+import org.oakgp.function.AbstractOperatorTest;
+import org.oakgp.function.Operator;
 
 public class SubtractTest extends AbstractOperatorTest {
    @Override

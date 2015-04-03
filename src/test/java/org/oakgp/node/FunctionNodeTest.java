@@ -16,9 +16,9 @@ import java.util.function.Function;
 import org.junit.Test;
 import org.oakgp.Arguments;
 import org.oakgp.Assignments;
-import org.oakgp.operator.Operator;
-import org.oakgp.operator.math.Add;
-import org.oakgp.operator.math.Multiply;
+import org.oakgp.function.Operator;
+import org.oakgp.function.math.Add;
+import org.oakgp.function.math.Multiply;
 
 public class FunctionNodeTest {
    @Test
@@ -56,16 +56,16 @@ public class FunctionNodeTest {
       FunctionNode n = createFunctionNode();
       Function<Node, Node> replacement = t -> createConstant(9);
 
-      assertEquals("(org.oakgp.operator.math.Add (org.oakgp.operator.math.Multiply 9 v1) (org.oakgp.operator.math.Add v2 1))", n.replaceAt(0, replacement)
+      assertEquals("(org.oakgp.function.math.Add (org.oakgp.function.math.Multiply 9 v1) (org.oakgp.function.math.Add v2 1))", n.replaceAt(0, replacement)
             .toString());
-      assertEquals("(org.oakgp.operator.math.Add (org.oakgp.operator.math.Multiply v0 9) (org.oakgp.operator.math.Add v2 1))", n.replaceAt(1, replacement)
+      assertEquals("(org.oakgp.function.math.Add (org.oakgp.function.math.Multiply v0 9) (org.oakgp.function.math.Add v2 1))", n.replaceAt(1, replacement)
             .toString());
-      assertEquals("(org.oakgp.operator.math.Add 9 (org.oakgp.operator.math.Add v2 1))", n.replaceAt(2, replacement).toString());
-      assertEquals("(org.oakgp.operator.math.Add (org.oakgp.operator.math.Multiply v0 v1) (org.oakgp.operator.math.Add 9 1))", n.replaceAt(3, replacement)
+      assertEquals("(org.oakgp.function.math.Add 9 (org.oakgp.function.math.Add v2 1))", n.replaceAt(2, replacement).toString());
+      assertEquals("(org.oakgp.function.math.Add (org.oakgp.function.math.Multiply v0 v1) (org.oakgp.function.math.Add 9 1))", n.replaceAt(3, replacement)
             .toString());
-      assertEquals("(org.oakgp.operator.math.Add (org.oakgp.operator.math.Multiply v0 v1) (org.oakgp.operator.math.Add v2 9))", n.replaceAt(4, replacement)
+      assertEquals("(org.oakgp.function.math.Add (org.oakgp.function.math.Multiply v0 v1) (org.oakgp.function.math.Add v2 9))", n.replaceAt(4, replacement)
             .toString());
-      assertEquals("(org.oakgp.operator.math.Add (org.oakgp.operator.math.Multiply v0 v1) 9)", n.replaceAt(5, replacement).toString());
+      assertEquals("(org.oakgp.function.math.Add (org.oakgp.function.math.Multiply v0 v1) 9)", n.replaceAt(5, replacement).toString());
       assertEquals("9", n.replaceAt(6, replacement).toString());
    }
 
@@ -75,11 +75,11 @@ public class FunctionNodeTest {
 
       assertEquals("v0", n.getAt(0).toString());
       assertEquals("v1", n.getAt(1).toString());
-      assertEquals("(org.oakgp.operator.math.Multiply v0 v1)", n.getAt(2).toString());
+      assertEquals("(org.oakgp.function.math.Multiply v0 v1)", n.getAt(2).toString());
       assertEquals("v2", n.getAt(3).toString());
       assertEquals("1", n.getAt(4).toString());
-      assertEquals("(org.oakgp.operator.math.Add v2 1)", n.getAt(5).toString());
-      assertEquals("(org.oakgp.operator.math.Add (org.oakgp.operator.math.Multiply v0 v1) (org.oakgp.operator.math.Add v2 1))", n.getAt(6).toString());
+      assertEquals("(org.oakgp.function.math.Add v2 1)", n.getAt(5).toString());
+      assertEquals("(org.oakgp.function.math.Add (org.oakgp.function.math.Multiply v0 v1) (org.oakgp.function.math.Add v2 1))", n.getAt(6).toString());
    }
 
    @Test
@@ -99,8 +99,8 @@ public class FunctionNodeTest {
    }
 
    public void testEquals() {
-      Node n1 = readNode("(org.oakgp.operator.math.Multiply 288 v1)");
-      Node n2 = readNode("(org.oakgp.operator.math.Multiply 288 v1)");
+      Node n1 = readNode("(org.oakgp.function.math.Multiply 288 v1)");
+      Node n2 = readNode("(org.oakgp.function.math.Multiply 288 v1)");
       assertEquals(n1, n1);
       assertEquals(n1, n2);
       assertEquals(n2, n1);

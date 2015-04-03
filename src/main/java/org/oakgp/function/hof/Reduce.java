@@ -1,4 +1,4 @@
-package org.oakgp.operator.hof;
+package org.oakgp.function.hof;
 
 import static org.oakgp.Arguments.createArguments;
 
@@ -8,7 +8,7 @@ import org.oakgp.Signature;
 import org.oakgp.Type;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
-import org.oakgp.operator.Operator;
+import org.oakgp.function.Operator;
 
 public class Reduce implements Operator {
    private static final Signature SIGNATURE = Signature.createSignature(Type.INTEGER, Type.OPERATOR, Type.INTEGER, Type.ARRAY);

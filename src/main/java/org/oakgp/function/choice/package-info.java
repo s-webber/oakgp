@@ -1,2 +1,2 @@
 /** Provides operations for selection. */
-package org.oakgp.operator.choice;
+package org.oakgp.function.choice;

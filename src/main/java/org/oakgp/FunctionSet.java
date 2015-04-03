@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.oakgp.operator.Operator;
+import org.oakgp.function.Operator;
 import org.oakgp.util.Random;
 
 /** Represents the set of possible {@code Operator} implementations to use during a genetic programming run. */

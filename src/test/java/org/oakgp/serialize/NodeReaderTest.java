@@ -16,9 +16,9 @@ import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.node.VariableNode;
-import org.oakgp.operator.Operator;
-import org.oakgp.operator.math.Add;
-import org.oakgp.operator.math.Subtract;
+import org.oakgp.function.Operator;
+import org.oakgp.function.math.Add;
+import org.oakgp.function.math.Subtract;
 
 public class NodeReaderTest {
    // TODO test error conditions
@@ -70,7 +70,7 @@ public class NodeReaderTest {
 
    @Test
    public void testOperatorClassName() {
-      assertParseOperator("org.oakgp.operator.math.Subtract", Subtract.class);
+      assertParseOperator("org.oakgp.function.math.Subtract", Subtract.class);
    }
 
    @Test
@@ -97,17 +97,17 @@ public class NodeReaderTest {
 
    @Test
    public void testFunctionNodeSpecifiedByClassName() {
-      assertParseFunction("(org.oakgp.operator.math.Add 7 21)");
+      assertParseFunction("(org.oakgp.function.math.Add 7 21)");
    }
 
    @Test
    public void testFunctionNodeSpecifiedBySymbol() {
-      assertParseFunction("(+ 7 21)", "(org.oakgp.operator.math.Add 7 21)");
+      assertParseFunction("(+ 7 21)", "(org.oakgp.function.math.Add 7 21)");
    }
 
    @Test
    public void testFunctionNodeWithFunctionNodeArguments() {
-      assertParseFunction("(org.oakgp.operator.math.Add (org.oakgp.operator.math.Subtract v0 587) (org.oakgp.operator.math.Multiply 43 v1))");
+      assertParseFunction("(org.oakgp.function.math.Add (org.oakgp.function.math.Subtract v0 587) (org.oakgp.function.math.Multiply 43 v1))");
    }
 
    @Test
@@ -132,7 +132,7 @@ public class NodeReaderTest {
 
    @Test
    public void testMulipleNodes() {
-      String[] inputs = { "6", "(org.oakgp.operator.math.Add v0 v1)", "42", "v0", "(org.oakgp.operator.math.Add 1 2)", "v98" };
+      String[] inputs = { "6", "(org.oakgp.function.math.Add v0 v1)", "42", "v0", "(org.oakgp.function.math.Add 1 2)", "v98" };
       String combinedInput = " " + inputs[0] + inputs[1] + inputs[2] + " " + inputs[3] + "\n\r\t\t\t" + inputs[4] + "       \n   " + inputs[5] + "\r\n";
       List<Node> outputs = readNodes(combinedInput);
       assertEquals(inputs.length, outputs.size());

@@ -1,4 +1,4 @@
-package org.oakgp.operator;
+package org.oakgp.function;
 
 import org.oakgp.Arguments;
 import org.oakgp.Assignments;

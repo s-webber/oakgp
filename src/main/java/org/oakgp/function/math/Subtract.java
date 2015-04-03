@@ -1,17 +1,17 @@
-package org.oakgp.operator.math;
+package org.oakgp.function.math;
 
-import static org.oakgp.operator.math.ArithmeticExpressionSimplifier.ZERO;
-import static org.oakgp.operator.math.ArithmeticExpressionSimplifier.createConstant;
-import static org.oakgp.operator.math.ArithmeticExpressionSimplifier.isAdd;
-import static org.oakgp.operator.math.ArithmeticExpressionSimplifier.isMultiply;
-import static org.oakgp.operator.math.ArithmeticExpressionSimplifier.isSubtract;
-import static org.oakgp.operator.math.ArithmeticExpressionSimplifier.negate;
+import static org.oakgp.function.math.ArithmeticExpressionSimplifier.ZERO;
+import static org.oakgp.function.math.ArithmeticExpressionSimplifier.createConstant;
+import static org.oakgp.function.math.ArithmeticExpressionSimplifier.isAdd;
+import static org.oakgp.function.math.ArithmeticExpressionSimplifier.isMultiply;
+import static org.oakgp.function.math.ArithmeticExpressionSimplifier.isSubtract;
+import static org.oakgp.function.math.ArithmeticExpressionSimplifier.negate;
 
 import org.oakgp.Arguments;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
-import org.oakgp.operator.Operator;
+import org.oakgp.function.Operator;
 
 /** Performs subtraction. */
 public final class Subtract extends ArithmeticOperator {

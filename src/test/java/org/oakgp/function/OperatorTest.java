@@ -1,4 +1,4 @@
-package org.oakgp.operator;
+package org.oakgp.function;
 
 import static java.nio.file.FileVisitResult.CONTINUE;
 import static org.junit.Assert.assertNull;

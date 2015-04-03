@@ -3,7 +3,7 @@ package org.oakgp.serialize;
 import org.oakgp.Arguments;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
-import org.oakgp.operator.Operator;
+import org.oakgp.function.Operator;
 
 /**
  * Creates {@code String} representations of {@code Node} instances.

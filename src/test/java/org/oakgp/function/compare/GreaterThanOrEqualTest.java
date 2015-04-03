@@ -1,12 +1,12 @@
-package org.oakgp.operator.compare;
+package org.oakgp.function.compare;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
 import java.util.List;
 
-import org.oakgp.operator.AbstractOperatorTest;
-import org.oakgp.operator.Operator;
+import org.oakgp.function.AbstractOperatorTest;
+import org.oakgp.function.Operator;
 
 public class GreaterThanOrEqualTest extends AbstractOperatorTest {
    @Override

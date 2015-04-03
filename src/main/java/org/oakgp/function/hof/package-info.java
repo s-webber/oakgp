@@ -6,5 +6,5 @@
  *
  * @see <a href="http://en.wikipedia.org/wiki/Higher-order_function">Wikipedia</a>
  */
-package org.oakgp.operator.hof;
+package org.oakgp.function.hof;
 

@@ -2,7 +2,7 @@ package org.oakgp;
 
 import java.util.Arrays;
 
-public final class Signature { // TODO move to org.oakgp.operator?
+public final class Signature { // TODO move to org.oakgp.function?
    private final Type returnType;
    private final Type[] argumentTypes;
    private int hashCode;

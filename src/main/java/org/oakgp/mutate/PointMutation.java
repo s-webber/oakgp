@@ -5,7 +5,7 @@ import org.oakgp.NodeEvolver;
 import org.oakgp.TerminalSet;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
-import org.oakgp.operator.Operator;
+import org.oakgp.function.Operator;
 import org.oakgp.selector.NodeSelector;
 import org.oakgp.util.Random;
 
