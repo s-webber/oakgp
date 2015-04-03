@@ -1,5 +1,6 @@
 package org.oakgp.examples;
 
+import static org.oakgp.NodeSimplifier.simplify;
 import static org.oakgp.TestUtils.createConstant;
 import static org.oakgp.TestUtils.writeNode;
 import static org.oakgp.Type.booleanType;
@@ -9,7 +10,6 @@ import java.util.Collection;
 import java.util.Set;
 
 import org.oakgp.FunctionSet;
-import org.oakgp.NodeSimplifier;
 import org.oakgp.RankedCandidate;
 import org.oakgp.Signature;
 import org.oakgp.TerminalSet;
@@ -93,6 +93,6 @@ public class SystemTestUtils {
 
    public static void printRankedCandidate(RankedCandidate candidate) {
       System.out.println("Best: " + candidate);
-      System.out.println(writeNode(new NodeSimplifier().simplify(candidate.getNode())));
+      System.out.println(writeNode(simplify(candidate.getNode())));
    }
 }

@@ -2,6 +2,7 @@ package org.oakgp.function.math;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
+import static org.oakgp.NodeSimplifier.simplify;
 import static org.oakgp.TestUtils.createTypeArray;
 import static org.oakgp.TestUtils.readNode;
 import static org.oakgp.TestUtils.writeNode;
@@ -22,7 +23,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.junit.Test;
-import org.oakgp.NodeSimplifier;
 import org.oakgp.Signature;
 import org.oakgp.TerminalSet;
 import org.oakgp.function.Function;
@@ -57,7 +57,7 @@ public class ArithmeticOperatorTest {
       long start = System.currentTimeMillis();
       for (String test : tests) {
          Node input = readNode(test);
-         Node output = new NodeSimplifier().simplify(input);
+         Node output = simplify(input);
          assertEvaluateToSameResult(input, output);
          inputNodeCtr += input.getNodeCount();
          outputNodeCtr += output.getNodeCount();

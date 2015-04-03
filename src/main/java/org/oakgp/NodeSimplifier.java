@@ -29,10 +29,14 @@ import org.oakgp.serialize.NodeWriter;
  * <b>Note:</b> relies on {@code Function} implementations being referentially transparent.
  */
 public final class NodeSimplifier {
-   // TODO have a public static final instance with a private constructor? or make simplify(Node) static?
    private static final int MAX_RETRIES = 100;
 
-   public Node simplify(Node input) {
+   /** Private constructor as all methods are static. */
+   private NodeSimplifier() {
+      // do nothing
+   }
+
+   public static Node simplify(Node input) {
       int ctr = 0;
       Set<String> s = new HashSet<>();
       Node previous;
@@ -51,7 +55,7 @@ public final class NodeSimplifier {
       return output;
    }
 
-   private Node _simplify(Node input) {
+   private static Node _simplify(Node input) {
       if (input instanceof FunctionNode) {
          Node output = simplifyFunctionNode((FunctionNode) input);
          assertEvaluateToSameResult(input, output);
@@ -61,7 +65,7 @@ public final class NodeSimplifier {
       }
    }
 
-   private Node simplifyFunctionNode(final FunctionNode input) {
+   private static Node simplifyFunctionNode(final FunctionNode input) {
       // TODO have a isSimplified method on FunctionNode to indicate that if it has already been simplified? (so no need to try again here)
       // try to simplify each of the arguments
       Arguments inputArgs = input.getArguments();

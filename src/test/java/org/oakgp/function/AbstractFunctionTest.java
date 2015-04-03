@@ -3,6 +3,7 @@ package org.oakgp.function;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
+import static org.oakgp.NodeSimplifier.simplify;
 import static org.oakgp.TestUtils.readNode;
 import static org.oakgp.TestUtils.writeNode;
 
@@ -11,7 +12,6 @@ import java.util.List;
 
 import org.junit.Test;
 import org.oakgp.Assignments;
-import org.oakgp.NodeSimplifier;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 
@@ -37,11 +37,11 @@ public abstract class AbstractFunctionTest {
       for (SimplifyTest test : testCases.tests) {
          FunctionNode input = readInput(test.input);
          Node expectedResult = readNode(test.expectedOutput);
-         Node actualResult = new NodeSimplifier().simplify(input);
+         Node actualResult = simplify(input);
          assertEquals(writeNode(expectedResult), writeNode(actualResult));
          assertEquals(writeNode(input), expectedResult, actualResult);
-         assertSame(actualResult, new NodeSimplifier().simplify(actualResult));
-         assertEquals(actualResult, new NodeSimplifier().simplify(input));
+         assertSame(actualResult, simplify(actualResult));
+         assertEquals(actualResult, simplify(input)); // test get same result from multiple calls to simplify with the same input
 
          assertNodesEvaluateSameOutcome(test, input, actualResult);
       }
@@ -62,7 +62,7 @@ public abstract class AbstractFunctionTest {
       getCannotSimplifyTests(l);
       for (String s : l) {
          FunctionNode input = readInput(s);
-         Node actualResult = new NodeSimplifier().simplify(input);
+         Node actualResult = simplify(input);
          assertSame(input, actualResult);
       }
    }
