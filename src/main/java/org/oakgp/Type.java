@@ -5,26 +5,22 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Type implements Comparable<Type> {
-   private static final Map<Type, Type> typeCache = new HashMap<>();
+   private static final Map<Type, Type> TYPE_CACHE = new HashMap<>();
+   private static final Type[] EMPTY_ARRAY = new Type[0];
 
    private final String name;
    private final Type[] args;
 
-   private Type(String name, Type... args) {
-      this.name = name;
-      this.args = args;
-   }
-
    public static Type stringType() {
-      return add(new Type("string"));
+      return type("string");
    }
 
    public static Type booleanType() {
-      return add(new Type("boolean"));
+      return type("boolean");
    }
 
    public static Type integerType() {
-      return add(new Type("integer"));
+      return type("integer");
    }
 
    public static Type integerToBooleanFunctionType() {
@@ -35,29 +31,42 @@ public class Type implements Comparable<Type> {
       if (signature.length < 2) {
          throw new IllegalArgumentException();
       }
-      return add(new Type("function", signature));
+      return type("function", signature);
    }
 
    public static Type integerArrayType() {
-      return add(arrayType(integerType()));
+      return arrayType(integerType());
    }
 
    public static Type booleanArrayType() {
-      return add(arrayType(booleanType()));
+      return arrayType(booleanType());
    }
 
    public static Type arrayType(Type t) {
-      return add(new Type("array", t));
+      return type("array", t);
    }
 
-   private static Type add(Type t) {
-      Type e = typeCache.get(t);
+   public static Type type(String name) {
+      return type(name, EMPTY_ARRAY);
+   }
+
+   public static Type type(String name, Type... args) {
+      return type(new Type(name, args));
+   }
+
+   private static Type type(Type t) {
+      Type e = TYPE_CACHE.get(t);
       if (e == null) {
-         typeCache.put(t, t);
+         TYPE_CACHE.put(t, t);
          return t;
       } else {
          return e;
       }
+   }
+
+   private Type(String name, Type... args) {
+      this.name = name;
+      this.args = args;
    }
 
    @Override
@@ -69,7 +78,7 @@ public class Type implements Comparable<Type> {
    public boolean equals(Object o) {
       if (o instanceof Type) {
          Type t = (Type) o;
-         return this.name.equals(t.name) && Arrays.equals(this.args, args);
+         return this.name.equals(t.name) && Arrays.equals(this.args, t.args);
       } else {
          return false;
       }
@@ -83,6 +92,10 @@ public class Type implements Comparable<Type> {
 
    @Override
    public String toString() {
-      return name;
+      if (args.length == 0) {
+         return name;
+      } else {
+         return name + " " + Arrays.toString(args);
+      }
    }
 }
