@@ -124,8 +124,8 @@ public class FitnessFunctionSystemTest {
       testData.put(createAssignments(createArguments("-2", "0", "8", "7", "0", "-3", "0")), 3);
       testData.put(createAssignments(createArguments("0", "0", "0")), 3);
       FitnessFunction fitnessFunction = new TestDataFitnessFunction(testData);
-      FunctionSet hofFunctionSet = new FunctionSet(RANDOM, new Function[] { isNegative, isPositive, isZero, new Filter(integerType()), new Count(),
-            createIdentity(integerArrayType()), createIdentity(integerType()), createIdentity(integerToBooleanFunctionType()) });
+      FunctionSet hofFunctionSet = new FunctionSet(RANDOM, new Function[] { isNegative, isPositive, isZero, new Filter(integerType()),
+            new Count(integerType()), createIdentity(integerArrayType()), createIdentity(integerType()), createIdentity(integerToBooleanFunctionType()) });
       Collection<Node> initialGeneration = createInitialGeneration(hofFunctionSet, terminalSet, GENERATION_SIZE);
       doIt(hofFunctionSet, terminalSet, fitnessFunction, initialGeneration);
    }
