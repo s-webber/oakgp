@@ -155,7 +155,7 @@ public class NodeReaderTest {
    private void assertParseFunction(String input, Class<? extends Function> expected) {
       Node output = readNode(input);
       assertSame(ConstantNode.class, output.getClass());
-      assertSame(Type.OPERATOR, output.getType());
+      assertSame(Type.FUNCTION, output.getType());
       assertEquals(expected, ((ConstantNode) output).evaluate(null).getClass());
    }
 

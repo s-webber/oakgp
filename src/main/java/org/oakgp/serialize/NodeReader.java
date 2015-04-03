@@ -3,7 +3,7 @@ package org.oakgp.serialize;
 import static org.oakgp.Type.ARRAY;
 import static org.oakgp.Type.BOOLEAN;
 import static org.oakgp.Type.INTEGER;
-import static org.oakgp.Type.OPERATOR;
+import static org.oakgp.Type.FUNCTION;
 import static org.oakgp.Type.STRING;
 
 import java.io.BufferedReader;
@@ -112,7 +112,7 @@ public final class NodeReader implements Closeable {
          if (isNumber(token)) {
             return new ConstantNode(Integer.parseInt(token), INTEGER);
          } else {
-            return new ConstantNode(symbolMap.getFunction(token), OPERATOR);
+            return new ConstantNode(symbolMap.getFunction(token), FUNCTION);
          }
       }
    }

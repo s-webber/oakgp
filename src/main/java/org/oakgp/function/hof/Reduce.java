@@ -11,7 +11,7 @@ import org.oakgp.node.Node;
 import org.oakgp.function.Function;
 
 public class Reduce implements Function {
-   private static final Signature SIGNATURE = Signature.createSignature(Type.INTEGER, Type.OPERATOR, Type.INTEGER, Type.ARRAY);
+   private static final Signature SIGNATURE = Signature.createSignature(Type.INTEGER, Type.FUNCTION, Type.INTEGER, Type.ARRAY);
 
    @Override
    public Object evaluate(Arguments arguments, Assignments assignments) {
