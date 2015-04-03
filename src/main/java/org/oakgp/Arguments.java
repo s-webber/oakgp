@@ -1,6 +1,7 @@
 package org.oakgp;
 
 import java.util.Arrays;
+import java.util.List;
 
 import org.oakgp.node.Node;
 
@@ -12,6 +13,19 @@ import org.oakgp.node.Node;
 public final class Arguments {
    private final Node[] args;
    private final int hashCode;
+
+   /**
+    * Returns a new {@code Arguments} which contains the specified values.
+    * <p>
+    * Note: {@code Arguments} is immutable - so subsequent changes to {@code args} will not be reflected in the returned {@code Arguments}.
+    *
+    * @param args
+    *           the values to be stored in the {@code Arguments}
+    * @return a new {@code Arguments} which contains the values specified by {@code args}
+    */
+   public static Arguments createArguments(List<Node> args) {
+      return new Arguments(args.toArray(new Node[args.size()]));
+   }
 
    /**
     * Returns a new {@code Arguments} which contains the specified values.

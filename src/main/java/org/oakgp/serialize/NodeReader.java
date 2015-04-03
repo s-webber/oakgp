@@ -1,5 +1,6 @@
 package org.oakgp.serialize;
 
+import static org.oakgp.Arguments.createArguments;
 import static org.oakgp.Type.arrayType;
 import static org.oakgp.Type.booleanType;
 import static org.oakgp.Type.integerToBooleanFunctionType;
@@ -14,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.oakgp.Arguments;
 import org.oakgp.Type;
 import org.oakgp.function.Function;
 import org.oakgp.node.ConstantNode;
@@ -91,7 +91,7 @@ public final class NodeReader implements Closeable {
          types.add(n.getType());
       }
       Function function = symbolMap.getFunction(functionName, types);
-      return new FunctionNode(function, createArgumentsFromList(arguments));
+      return new FunctionNode(function, createArguments(arguments));
    }
 
    private Node nextConstantNode() throws IOException {
@@ -117,17 +117,12 @@ public final class NodeReader implements Closeable {
          }
          arguments.add(n);
       }
-      return new ConstantNode(createArgumentsFromList(arguments), arrayType(t));
+      return new ConstantNode(createArguments(arguments), arrayType(t));
    }
 
    private Node nextVariable(String firstToken) {
       int id = Integer.parseInt(firstToken.substring(1));
       return new VariableNode(id, variableTypes[id]);
-   }
-
-   // TODO move to Arguments
-   private Arguments createArgumentsFromList(List<Node> arguments) {
-      return Arguments.createArguments(arguments.toArray(new Node[arguments.size()]));
    }
 
    private ConstantNode nextLiteral(String token) {

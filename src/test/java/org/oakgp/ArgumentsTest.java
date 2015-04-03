@@ -7,6 +7,9 @@ import static org.junit.Assert.fail;
 import static org.oakgp.TestUtils.createConstant;
 import static org.oakgp.TestUtils.createVariable;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.Test;
 import org.oakgp.node.Node;
 
@@ -27,6 +30,18 @@ public class ArgumentsTest {
 
       // assert the Arguments created first remains unchanged by subsequent changes to args
       assertArguments(first, x, y, z);
+   }
+
+   @Test
+   public void testCreateArgumentsFromList() {
+      Node x = createConstant(1);
+      Node y = createConstant(2);
+      Node z = createConstant(3);
+      Node[] array = { x, y, z };
+      List<Node> list = Arrays.asList(array);
+      Arguments first = Arguments.createArguments(array);
+      Arguments second = Arguments.createArguments(list);
+      assertEquals(first, second);
    }
 
    @Test
