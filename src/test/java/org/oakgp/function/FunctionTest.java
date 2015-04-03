@@ -40,15 +40,15 @@ public class FunctionTest {
 
    @Test
    public void test() throws Exception {
-      List<Class<?>> operatorClasses = SubClassFinder.find(Function.class, "src/main/java");
-      List<Class<?>> operatorTestClasses = SubClassFinder.find(AbstractOperatorTest.class, "src/test/java");
-      for (Class<?> operatorTest : operatorTestClasses) {
-         AbstractOperatorTest t = (AbstractOperatorTest) operatorTest.newInstance();
-         Class<?> operatorClass = t.getFunction().getClass();
-         assertTrue("Tested more than once: " + operatorClass, operatorClasses.contains(operatorClass));
-         operatorClasses.remove(operatorClass);
+      List<Class<?>> functionClasses = SubClassFinder.find(Function.class, "src/main/java");
+      List<Class<?>> functionTestClasses = SubClassFinder.find(AbstractOperatorTest.class, "src/test/java");
+      for (Class<?> functionTest : functionTestClasses) {
+         AbstractOperatorTest t = (AbstractOperatorTest) functionTest.newInstance();
+         Class<?> functionClass = t.getFunction().getClass();
+         assertTrue("Tested more than once: " + functionClass, functionClasses.contains(functionClass));
+         functionClasses.remove(functionClass);
       }
-      assertTrue("Not tested " + operatorClasses.toString(), operatorClasses.isEmpty());
+      assertTrue("Not tested " + functionClasses.toString(), functionClasses.isEmpty());
    }
 }
 

@@ -12,13 +12,13 @@ import org.oakgp.function.Function;
 public class ComparisonOperatorTest {
    @Test
    public void testGetSignature() {
-      Function o = new ComparisonOperator(true) {
+      Function f = new ComparisonOperator(true) {
          @Override
          protected boolean evaluate(int arg1, int arg2) {
             throw new UnsupportedOperationException();
          }
       };
-      Signature signature = o.getSignature();
+      Signature signature = f.getSignature();
       assertSame(BOOLEAN, signature.getReturnType());
       assertEquals(2, signature.getArgumentTypesLength());
       assertSame(INTEGER, signature.getArgumentType(0));

@@ -33,27 +33,27 @@ final class SymbolMap {
       addMapping("if", If.class);
    }
 
-   private static void addMapping(String symbol, Class<? extends Function> operatorClass) {
-      SYMBOL_TO_CLASS_MAPPINGS.put(symbol, operatorClass);
-      CLASS_TO_SYMBOL_MAPPINGS.put(operatorClass, symbol);
+   private static void addMapping(String symbol, Class<? extends Function> functionClass) {
+      SYMBOL_TO_CLASS_MAPPINGS.put(symbol, functionClass);
+      CLASS_TO_SYMBOL_MAPPINGS.put(functionClass, symbol);
    }
 
-   public String getDisplayName(Function operator) {
-      Class<? extends Function> operatorClass = operator.getClass();
-      String displayName = CLASS_TO_SYMBOL_MAPPINGS.get(operatorClass);
+   public String getDisplayName(Function function) {
+      Class<? extends Function> functionClass = function.getClass();
+      String displayName = CLASS_TO_SYMBOL_MAPPINGS.get(functionClass);
       if (displayName != null) {
          return displayName;
       } else {
-         return operatorClass.getName();
+         return functionClass.getName();
       }
    }
 
    public Function getFunction(String symbol) {
-      Class<? extends Function> operatorClass = SYMBOL_TO_CLASS_MAPPINGS.get(symbol);
-      if (operatorClass == null) {
-         operatorClass = findClass(symbol);
+      Class<? extends Function> functionClass = SYMBOL_TO_CLASS_MAPPINGS.get(symbol);
+      if (functionClass == null) {
+         functionClass = findClass(symbol);
       }
-      return newInstance(operatorClass);
+      return newInstance(functionClass);
    }
 
    @SuppressWarnings("unchecked")
@@ -65,11 +65,11 @@ final class SymbolMap {
       }
    }
 
-   private Function newInstance(Class<? extends Function> operatorClass) {
+   private Function newInstance(Class<? extends Function> functionClass) {
       try {
-         return operatorClass.newInstance();
+         return functionClass.newInstance();
       } catch (InstantiationException | IllegalAccessException e) {
-         throw new IllegalArgumentException("Could not create new instance of class: " + operatorClass, e);
+         throw new IllegalArgumentException("Could not create new instance of class: " + functionClass, e);
       }
    }
 }

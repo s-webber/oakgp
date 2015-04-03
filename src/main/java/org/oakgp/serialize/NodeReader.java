@@ -67,13 +67,13 @@ public final class NodeReader implements Closeable {
    private Node nextNode(String firstToken) throws IOException {
       if (firstToken == FUNCTION_START_STRING) {
          String functionName = nextToken();
-         Function operator = symbolMap.getFunction(functionName);
+         Function function = symbolMap.getFunction(functionName);
          List<Node> arguments = new ArrayList<>();
          String nextToken;
          while ((nextToken = nextToken()) != FUNCTION_END_STRING) {
             arguments.add(nextNode(nextToken));
          }
-         return new FunctionNode(operator, createArgumentsFromList(arguments));
+         return new FunctionNode(function, createArgumentsFromList(arguments));
       } else if (firstToken == STRING_STRING) {
          StringBuilder sb = new StringBuilder();
          int next;

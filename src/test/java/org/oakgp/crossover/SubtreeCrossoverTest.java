@@ -44,16 +44,16 @@ public class SubtreeCrossoverTest {
    /**
     * Checks that crossover does not happen if it would create a new tree structure with inconsistent types.
     * <p>
-    * In the following example if crossover did happen then it would break the signature of the {@code Add} operator. i.e. the {@code Add} operator expects both
+    * In the following example if crossover did happen then it would break the signature of the {@code Add} function. i.e. the {@code Add} function expects both
     * of its arguments to be of type {@code integer} - but crossover would replace one of the existing arguments with a function node that has a
-    * {@code LessThan} operator - which has a {@code boolean} return type. This test checks we do <i>not</i> create: {@code (+ 9 (< 6 7))}
+    * {@code LessThan} function - which has a {@code boolean} return type. This test checks we do <i>not</i> create: {@code (+ 9 (< 6 7))}
     */
    @Test
    public void testMixingTypes() {
       // NOTE: this test checks that crossover does not happen if it would create a new tree structure with inconsistent types.
-      // In the following example if crossover did happen then it would break the signature of the Add operator.
-      // i.e. the Add operator expects both of its arguments to be of type integer - but crossover would replace one of the existing arguments with a
-      // function node that has a LessThan operator - which has a boolean return type
+      // In the following example if crossover did happen then it would break the signature of the Add function.
+      // i.e. the Add function expects both of its arguments to be of type integer - but crossover would replace one of the existing arguments with a
+      // function node that has a LessThan function - which has a boolean return type
       // e.g. (+ 9 (< 6 7))
 
       Random mockRandom = mock(Random.class);

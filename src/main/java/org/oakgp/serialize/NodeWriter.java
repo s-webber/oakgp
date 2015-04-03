@@ -32,9 +32,9 @@ public final class NodeWriter {
    private void writeNode(Node node, StringBuilder sb) {
       if (node instanceof FunctionNode) {
          FunctionNode functionNode = (FunctionNode) node;
-         Function operator = functionNode.getFunction();
+         Function function = functionNode.getFunction();
          Arguments arguments = functionNode.getArguments();
-         sb.append('(').append(symbolMap.getDisplayName(operator));
+         sb.append('(').append(symbolMap.getDisplayName(function));
          for (int i = 0; i < arguments.length(); i++) {
             sb.append(' ').append(writeNode(arguments.get(i)));
          }

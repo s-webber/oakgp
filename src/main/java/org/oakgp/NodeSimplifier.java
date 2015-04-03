@@ -97,7 +97,7 @@ public final class NodeSimplifier {
          return new ConstantNode(output.evaluate(null), output.getType());
       }
 
-      // try to simplify using operator specific logic
+      // try to simplify using function specific logic
       Node simplifiedByFunctionVersion = input.getFunction().simplify(arguments);
       if (simplifiedByFunctionVersion == null) {
          return output;

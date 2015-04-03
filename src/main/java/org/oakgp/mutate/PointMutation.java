@@ -28,8 +28,8 @@ public final class PointMutation implements NodeEvolver {
       return root.replaceAt(mutationPoint, node -> {
          if (node instanceof FunctionNode) {
             FunctionNode functionNode = (FunctionNode) node;
-            Function operator = functionSet.nextAlternative(functionNode.getFunction());
-            return new FunctionNode(operator, functionNode.getArguments());
+            Function function = functionSet.nextAlternative(functionNode.getFunction());
+            return new FunctionNode(function, functionNode.getArguments());
          } else {
             return terminalSet.nextAlternative(node);
          }

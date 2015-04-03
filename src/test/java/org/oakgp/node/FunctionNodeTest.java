@@ -21,16 +21,16 @@ import org.oakgp.function.math.Multiply;
 public class FunctionNodeTest {
    @Test
    public void testConstructors() {
-      Function operator = new Multiply();
+      Function function = new Multiply();
       ConstantNode arg1 = createConstant(42);
       VariableNode arg2 = createVariable(0);
 
       // construct using Node array
-      FunctionNode n1 = new FunctionNode(operator, arg1, arg2);
+      FunctionNode n1 = new FunctionNode(function, arg1, arg2);
 
       // Construct using Arguments
       Arguments arguments = createArguments(arg1, arg2);
-      FunctionNode n2 = new FunctionNode(operator, arguments);
+      FunctionNode n2 = new FunctionNode(function, arguments);
 
       // assert the result is the same
       assertEquals(n1, n2);
@@ -38,11 +38,11 @@ public class FunctionNodeTest {
 
    @Test
    public void testEvaluate() {
-      Function operator = new Multiply();
+      Function function = new Multiply();
       Arguments arguments = createArguments(createConstant(42), createVariable(0));
-      FunctionNode functionNode = new FunctionNode(operator, arguments);
+      FunctionNode functionNode = new FunctionNode(function, arguments);
 
-      assertSame(operator, functionNode.getFunction());
+      assertSame(function, functionNode.getFunction());
       assertSame(arguments, functionNode.getArguments());
 
       Assignments assignments = createAssignments(3);
@@ -111,7 +111,7 @@ public class FunctionNodeTest {
       // verify (sanity-check) that equals will return true when it should
       assertEquals(n, new FunctionNode(new Add(), createVariable(0), createConstant(7)));
 
-      // test different operator
+      // test different function
       assertNotEquals(n, new FunctionNode(new Multiply(), createVariable(0), createConstant(7)));
 
       // test different first argument

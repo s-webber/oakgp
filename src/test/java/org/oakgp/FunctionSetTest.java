@@ -21,58 +21,58 @@ import org.oakgp.function.math.Subtract;
 import org.oakgp.util.Random;
 
 public class FunctionSetTest {
-   private static final Function[] OPERATORS = new Function[] { new Add(), new Subtract(), new Multiply(), new If(), new LessThan(), new LessThanOrEqual(),
+   private static final Function[] FUNCTIONS = new Function[] { new Add(), new Subtract(), new Multiply(), new If(), new LessThan(), new LessThanOrEqual(),
       new GreaterThan(), new GreaterThanOrEqual(), new Equal(), new NotEqual() };
 
    @Test
    public void testNext() {
       Random mockRandom = mock(Random.class);
-      // mock randomly selecting one of the 4 operators in OPERATORS with an integer return type
+      // mock randomly selecting one of the 4 functions in OPERATORS with an integer return type
       given(mockRandom.nextInt(4)).willReturn(1, 0, 2, 1, 2, 0, 3);
-      // mock randomly selecting one of the 6 operators in OPERATORS with a boolean return type
+      // mock randomly selecting one of the 6 functions in OPERATORS with a boolean return type
       given(mockRandom.nextInt(6)).willReturn(1, 0, 5, 4);
 
-      FunctionSet functionSet = new FunctionSet(mockRandom, OPERATORS);
+      FunctionSet functionSet = new FunctionSet(mockRandom, FUNCTIONS);
 
       // TODO test with more than just INTEGER
-      assertSame(OPERATORS[1], functionSet.next(INTEGER));
-      assertSame(OPERATORS[0], functionSet.next(INTEGER));
-      assertSame(OPERATORS[2], functionSet.next(INTEGER));
-      assertSame(OPERATORS[1], functionSet.next(INTEGER));
-      assertSame(OPERATORS[2], functionSet.next(INTEGER));
-      assertSame(OPERATORS[0], functionSet.next(INTEGER));
-      assertSame(OPERATORS[3], functionSet.next(INTEGER));
+      assertSame(FUNCTIONS[1], functionSet.next(INTEGER));
+      assertSame(FUNCTIONS[0], functionSet.next(INTEGER));
+      assertSame(FUNCTIONS[2], functionSet.next(INTEGER));
+      assertSame(FUNCTIONS[1], functionSet.next(INTEGER));
+      assertSame(FUNCTIONS[2], functionSet.next(INTEGER));
+      assertSame(FUNCTIONS[0], functionSet.next(INTEGER));
+      assertSame(FUNCTIONS[3], functionSet.next(INTEGER));
 
-      assertSame(OPERATORS[5], functionSet.next(BOOLEAN));
-      assertSame(OPERATORS[4], functionSet.next(BOOLEAN));
-      assertSame(OPERATORS[9], functionSet.next(BOOLEAN));
-      assertSame(OPERATORS[8], functionSet.next(BOOLEAN));
+      assertSame(FUNCTIONS[5], functionSet.next(BOOLEAN));
+      assertSame(FUNCTIONS[4], functionSet.next(BOOLEAN));
+      assertSame(FUNCTIONS[9], functionSet.next(BOOLEAN));
+      assertSame(FUNCTIONS[8], functionSet.next(BOOLEAN));
    }
 
    @Test
    public void testNextAlternative() {
       Random mockRandom = mock(Random.class);
-      FunctionSet functionSet = new FunctionSet(mockRandom, OPERATORS);
+      FunctionSet functionSet = new FunctionSet(mockRandom, FUNCTIONS);
 
       given(mockRandom.nextInt(3)).willReturn(0, 1, 2, 0);
       given(mockRandom.nextInt(2)).willReturn(0, 1);
-      assertSame(OPERATORS[1], functionSet.nextAlternative(OPERATORS[0]));
-      assertSame(OPERATORS[1], functionSet.nextAlternative(OPERATORS[0]));
-      assertSame(OPERATORS[2], functionSet.nextAlternative(OPERATORS[0]));
-      assertSame(OPERATORS[2], functionSet.nextAlternative(OPERATORS[0]));
+      assertSame(FUNCTIONS[1], functionSet.nextAlternative(FUNCTIONS[0]));
+      assertSame(FUNCTIONS[1], functionSet.nextAlternative(FUNCTIONS[0]));
+      assertSame(FUNCTIONS[2], functionSet.nextAlternative(FUNCTIONS[0]));
+      assertSame(FUNCTIONS[2], functionSet.nextAlternative(FUNCTIONS[0]));
 
       given(mockRandom.nextInt(3)).willReturn(0, 1, 1, 2);
       given(mockRandom.nextInt(2)).willReturn(0, 1);
-      assertSame(OPERATORS[0], functionSet.nextAlternative(OPERATORS[1]));
-      assertSame(OPERATORS[0], functionSet.nextAlternative(OPERATORS[1]));
-      assertSame(OPERATORS[2], functionSet.nextAlternative(OPERATORS[1]));
-      assertSame(OPERATORS[2], functionSet.nextAlternative(OPERATORS[1]));
+      assertSame(FUNCTIONS[0], functionSet.nextAlternative(FUNCTIONS[1]));
+      assertSame(FUNCTIONS[0], functionSet.nextAlternative(FUNCTIONS[1]));
+      assertSame(FUNCTIONS[2], functionSet.nextAlternative(FUNCTIONS[1]));
+      assertSame(FUNCTIONS[2], functionSet.nextAlternative(FUNCTIONS[1]));
 
       given(mockRandom.nextInt(3)).willReturn(0, 1, 2, 2);
       given(mockRandom.nextInt(2)).willReturn(0, 1);
-      assertSame(OPERATORS[0], functionSet.nextAlternative(OPERATORS[2]));
-      assertSame(OPERATORS[1], functionSet.nextAlternative(OPERATORS[2]));
-      assertSame(OPERATORS[0], functionSet.nextAlternative(OPERATORS[2]));
-      assertSame(OPERATORS[1], functionSet.nextAlternative(OPERATORS[2]));
+      assertSame(FUNCTIONS[0], functionSet.nextAlternative(FUNCTIONS[2]));
+      assertSame(FUNCTIONS[1], functionSet.nextAlternative(FUNCTIONS[2]));
+      assertSame(FUNCTIONS[0], functionSet.nextAlternative(FUNCTIONS[2]));
+      assertSame(FUNCTIONS[1], functionSet.nextAlternative(FUNCTIONS[2]));
    }
 }

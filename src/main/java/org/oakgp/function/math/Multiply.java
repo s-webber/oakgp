@@ -51,20 +51,20 @@ public final class Multiply extends ArithmeticOperator {
       } else {
          if (arg1 instanceof ConstantNode && arg2 instanceof FunctionNode) {
             FunctionNode fn = (FunctionNode) arg2;
-            Function o = fn.getFunction();
+            Function f = fn.getFunction();
             Arguments args = fn.getArguments();
             Node fnArg1 = args.get(0);
             Node fnArg2 = args.get(1);
             if (fnArg1 instanceof ConstantNode) {
-               if (isAddOrSubtract(o)) {
-                  return new FunctionNode(o, multiply(arg1, fnArg1), new FunctionNode(this, arg1, fnArg2));
-               } else if (isMultiply(o)) {
+               if (isAddOrSubtract(f)) {
+                  return new FunctionNode(f, multiply(arg1, fnArg1), new FunctionNode(this, arg1, fnArg2));
+               } else if (isMultiply(f)) {
                   return new FunctionNode(this, multiply(arg1, fnArg1), fnArg2);
                } else {
                   throw new IllegalArgumentException();
                }
-            } else if (isAddOrSubtract(o)) {
-               return new FunctionNode(o, new FunctionNode(this, arg1, fnArg1), new FunctionNode(this, arg1, fnArg2));
+            } else if (isAddOrSubtract(f)) {
+               return new FunctionNode(f, new FunctionNode(this, arg1, fnArg1), new FunctionNode(this, arg1, fnArg2));
             }
          }
 

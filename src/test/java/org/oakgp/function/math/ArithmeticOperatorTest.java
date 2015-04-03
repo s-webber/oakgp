@@ -35,13 +35,13 @@ public class ArithmeticOperatorTest {
 
    @Test
    public void testGetSignature() {
-      Function o = new ArithmeticOperator() {
+      Function f = new ArithmeticOperator() {
          @Override
          protected int evaluate(int arg1, int arg2) {
             throw new UnsupportedOperationException();
          }
       };
-      Signature signature = o.getSignature();
+      Signature signature = f.getSignature();
       assertSame(INTEGER, signature.getReturnType());
       assertEquals(2, signature.getArgumentTypesLength());
       assertSame(INTEGER, signature.getArgumentType(0));

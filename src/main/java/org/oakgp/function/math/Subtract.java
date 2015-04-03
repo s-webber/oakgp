@@ -51,20 +51,20 @@ public final class Subtract extends ArithmeticOperator {
       } else {
          if (arg2 instanceof FunctionNode) {
             FunctionNode fn = (FunctionNode) arg2;
-            Function o = fn.getFunction();
+            Function f = fn.getFunction();
             Arguments args = fn.getArguments();
             Node fnArg1 = args.get(0);
             Node fnArg2 = args.get(1);
-            if (fnArg1 instanceof ConstantNode && isMultiply(o)) {
+            if (fnArg1 instanceof ConstantNode && isMultiply(f)) {
                if (ZERO.equals(arg1)) {
                   int i = (int) fnArg1.evaluate(null);
-                  return new FunctionNode(o, createConstant(-i), fnArg2);
+                  return new FunctionNode(f, createConstant(-i), fnArg2);
                } else if ((int) fnArg1.evaluate(null) < 0) {
-                  return new FunctionNode(new Add(), arg1, new FunctionNode(o, createConstant(-(int) fnArg1.evaluate(null)), fnArg2));
+                  return new FunctionNode(new Add(), arg1, new FunctionNode(f, createConstant(-(int) fnArg1.evaluate(null)), fnArg2));
                }
-            } else if (ZERO.equals(arg1) && isAdd(o)) {
+            } else if (ZERO.equals(arg1) && isAdd(f)) {
                // (- 0 (+ v0 v1) -> (+ (0 - v0) (0 - v1))
-               return new FunctionNode(o, negate(fnArg1), negate(fnArg2));
+               return new FunctionNode(f, negate(fnArg1), negate(fnArg2));
             } else if (arg1 instanceof ConstantNode && fnArg1 instanceof ConstantNode && isSubtract(fn)) {
                int i1 = (int) arg1.evaluate(null);
                int i2 = (int) fnArg1.evaluate(null);

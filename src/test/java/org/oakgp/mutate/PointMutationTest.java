@@ -31,7 +31,7 @@ public class PointMutationTest {
    private static final double VARIABLE_RATIO = .6;
    private static final Type[] VARIABLE_TYPES = createTypeArray(9);
    private static final ConstantNode[] CONSTANTS = { createConstant(7), createConstant(8), createConstant(9) };
-   private static final Function[] OPERATORS = { new Add(), new Subtract(), new Multiply() };
+   private static final Function[] FUNCTIONS = { new Add(), new Subtract(), new Multiply() };
 
    @Test
    public void testTerminalMutation() {
@@ -58,22 +58,22 @@ public class PointMutationTest {
    public void testFunctionMutation() {
       int expectedFunctionIndex = 2;
       Random mockRandom = mock(Random.class);
-      given(mockRandom.nextInt(OPERATORS.length)).willReturn(expectedFunctionIndex);
+      given(mockRandom.nextInt(FUNCTIONS.length)).willReturn(expectedFunctionIndex);
 
       Arguments arguments = createArguments(createConstant(3), createConstant(7));
-      FunctionNode originalFunctionNode = new FunctionNode(OPERATORS[0], arguments);
+      FunctionNode originalFunctionNode = new FunctionNode(FUNCTIONS[0], arguments);
       DummyNodeSelector dummySelector = new DummyNodeSelector(originalFunctionNode);
 
       PointMutation pointMutation = createPointMutation(mockRandom);
 
       FunctionNode offspring = (FunctionNode) pointMutation.evolve(dummySelector);
-      assertSame(OPERATORS[expectedFunctionIndex], offspring.getFunction());
+      assertSame(FUNCTIONS[expectedFunctionIndex], offspring.getFunction());
       assertSame(arguments, offspring.getArguments());
       assertTrue(dummySelector.isEmpty());
    }
 
    private PointMutation createPointMutation(Random mockRandom) {
-      FunctionSet functionSet = new FunctionSet(mockRandom, OPERATORS);
+      FunctionSet functionSet = new FunctionSet(mockRandom, FUNCTIONS);
       TerminalSet terminalSet = new TerminalSet(mockRandom, VARIABLE_RATIO, VARIABLE_TYPES, CONSTANTS);
       return new PointMutation(mockRandom, functionSet, terminalSet);
    }

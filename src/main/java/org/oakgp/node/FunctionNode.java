@@ -7,38 +7,38 @@ import org.oakgp.function.Function;
 
 /** Contains a function (operator) and the arguments (operands) to apply to it. */
 public final class FunctionNode implements Node {
-   private final Function operator;
+   private final Function function;
    private final Arguments arguments;
    private final int hashCode;
 
    /**
-    * Constructs a new {@code FunctionNode} with the specified operator function and arguments.
+    * Constructs a new {@code FunctionNode} with the specified function function and arguments.
     *
-    * @param operator
-    *           the operator to associate with this {@code FunctionNode}
+    * @param function
+    *           the function to associate with this {@code FunctionNode}
     * @param arguments
-    *           the arguments (i.e. operands) to apply to {@code operator} when evaluating this {@code FunctionNode}
+    *           the arguments (i.e. operands) to apply to {@code function} when evaluating this {@code FunctionNode}
     */
-   public FunctionNode(Function operator, Node... arguments) {
-      this(operator, Arguments.createArguments(arguments));
+   public FunctionNode(Function function, Node... arguments) {
+      this(function, Arguments.createArguments(arguments));
    }
 
    /**
-    * Constructs a new {@code FunctionNode} with the specified operator function and arguments.
+    * Constructs a new {@code FunctionNode} with the specified function function and arguments.
     *
-    * @param operator
-    *           the operator to associate with this {@code FunctionNode}
+    * @param function
+    *           the function to associate with this {@code FunctionNode}
     * @param arguments
-    *           the arguments (i.e. operands) to apply to {@code operator} when evaluating this {@code FunctionNode}
+    *           the arguments (i.e. operands) to apply to {@code function} when evaluating this {@code FunctionNode}
     */
-   public FunctionNode(Function operator, Arguments arguments) {
-      this.operator = operator;
+   public FunctionNode(Function function, Arguments arguments) {
+      this.function = function;
       this.arguments = arguments;
-      this.hashCode = (operator.getClass().getName().hashCode() * 31) * arguments.hashCode();
+      this.hashCode = (function.getClass().getName().hashCode() * 31) * arguments.hashCode();
    }
 
    public Function getFunction() {
-      return operator;
+      return function;
    }
 
    public Arguments getArguments() {
@@ -47,7 +47,7 @@ public final class FunctionNode implements Node {
 
    @Override
    public Object evaluate(Assignments assignments) {
-      return operator.evaluate(arguments, assignments);
+      return function.evaluate(arguments, assignments);
    }
 
    @Override
@@ -57,7 +57,7 @@ public final class FunctionNode implements Node {
          Node node = arguments.get(i);
          int c = node.getNodeCount();
          if (total + c > index) {
-            return new FunctionNode(operator, arguments.replaceAt(i, node.replaceAt(index - total, replacement)));
+            return new FunctionNode(function, arguments.replaceAt(i, node.replaceAt(index - total, replacement)));
          } else {
             total += c;
          }
@@ -91,7 +91,7 @@ public final class FunctionNode implements Node {
 
    @Override
    public Type getType() {
-      return operator.getSignature().getReturnType();
+      return function.getSignature().getReturnType();
    }
 
    @Override
@@ -103,7 +103,7 @@ public final class FunctionNode implements Node {
    public boolean equals(Object o) {
       if (o instanceof FunctionNode) {
          FunctionNode fn = (FunctionNode) o;
-         return this.operator.getClass().equals(fn.operator.getClass()) && this.arguments.equals(fn.arguments);
+         return this.function.getClass().equals(fn.function.getClass()) && this.arguments.equals(fn.arguments);
       } else {
          return false;
       }
@@ -112,7 +112,7 @@ public final class FunctionNode implements Node {
    @Override
    public String toString() {
       StringBuilder sb = new StringBuilder();
-      sb.append('(').append(operator.getClass().getName());
+      sb.append('(').append(function.getClass().getName());
       for (int i = 0; i < arguments.length(); i++) {
          sb.append(' ').append(arguments.get(i));
       }

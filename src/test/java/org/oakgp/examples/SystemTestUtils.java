@@ -65,15 +65,15 @@ public class SystemTestUtils {
 
    private static Node makeRandomTree(FunctionSet functionSet, TerminalSet terminalSet, int depth, Type type) {
       if (depth > 0 && RANDOM.nextDouble() < .5) {
-         Function operator = functionSet.next(type);
-         Signature signature = operator.getSignature();
+         Function function = functionSet.next(type);
+         Signature signature = function.getSignature();
          Node[] args = new Node[signature.getArgumentTypesLength()];
          for (int i = 0; i < args.length; i++) {
             Type argType = signature.getArgumentType(i);
             Node arg = makeRandomTree(functionSet, terminalSet, depth - 1, argType);
             args[i] = arg;
          }
-         return new FunctionNode(operator, args);
+         return new FunctionNode(function, args);
       } else {
          return terminalSet.next(type);
       }

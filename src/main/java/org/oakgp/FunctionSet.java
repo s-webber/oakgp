@@ -11,37 +11,37 @@ import org.oakgp.util.Random;
 /** Represents the set of possible {@code Function} implementations to use during a genetic programming run. */
 public final class FunctionSet {
    private final Random random;
-   private final Map<Type, List<Function>> operatorsByType;
-   private final Map<Signature, List<Function>> operatorsBySignature;
+   private final Map<Type, List<Function>> functionsByType;
+   private final Map<Signature, List<Function>> functionsBySignature;
 
-   public FunctionSet(Random random, Function[] operators) {
+   public FunctionSet(Random random, Function[] functions) {
       this.random = random;
-      operatorsByType = new HashMap<>();
-      operatorsBySignature = new HashMap<>();
-      for (Function operator : operators) {
-         addFunctionByType(operator);
-         addFunctionBySignature(operator);
+      functionsByType = new HashMap<>();
+      functionsBySignature = new HashMap<>();
+      for (Function function : functions) {
+         addFunctionByType(function);
+         addFunctionBySignature(function);
       }
    }
 
-   private void addFunctionByType(Function operator) {
-      Type type = operator.getSignature().getReturnType();
-      List<Function> typeFunctions = operatorsByType.get(type);
+   private void addFunctionByType(Function function) {
+      Type type = function.getSignature().getReturnType();
+      List<Function> typeFunctions = functionsByType.get(type);
       if (typeFunctions == null) {
          typeFunctions = new ArrayList<>();
-         operatorsByType.put(type, typeFunctions);
+         functionsByType.put(type, typeFunctions);
       }
-      typeFunctions.add(operator);
+      typeFunctions.add(function);
    }
 
-   private void addFunctionBySignature(Function operator) {
-      Signature signature = operator.getSignature();
-      List<Function> typeArgumentCountPairFunctions = operatorsBySignature.get(signature);
+   private void addFunctionBySignature(Function function) {
+      Signature signature = function.getSignature();
+      List<Function> typeArgumentCountPairFunctions = functionsBySignature.get(signature);
       if (typeArgumentCountPairFunctions == null) {
          typeArgumentCountPairFunctions = new ArrayList<>();
-         operatorsBySignature.put(signature, typeArgumentCountPairFunctions);
+         functionsBySignature.put(signature, typeArgumentCountPairFunctions);
       }
-      typeArgumentCountPairFunctions.add(operator);
+      typeArgumentCountPairFunctions.add(function);
    }
 
    /**
@@ -52,7 +52,7 @@ public final class FunctionSet {
     * @return a randomly selected {@code Function} with a return type of {@code type}
     */
    public Function next(Type type) {
-      List<Function> typeFunctions = operatorsByType.get(type);
+      List<Function> typeFunctions = functionsByType.get(type);
       if (typeFunctions == null) { // TODO remove this check?
          throw new RuntimeException("No " + type);
       }
@@ -69,25 +69,25 @@ public final class FunctionSet {
     */
    public Function nextAlternative(Function current) {
       Signature signature = current.getSignature();
-      List<Function> operators = operatorsBySignature.get(signature);
-      if (operators == null) {
+      List<Function> functions = functionsBySignature.get(signature);
+      if (functions == null) {
          // TODO remove this check?
-         throw new RuntimeException("no match " + current + " " + current.getSignature() + " " + operatorsBySignature);
+         throw new RuntimeException("no match " + current + " " + current.getSignature() + " " + functionsBySignature);
       }
-      int operatorsSize = operators.size();
-      if (operatorsSize == 1) {
+      int functionsSize = functions.size();
+      if (functionsSize == 1) {
          // TODO return Optional.empty() instead - so calling called can try something different
          // (e.g. call this method on one of the node's arguments instead)
          return current;
       }
-      int randomIndex = random.nextInt(operatorsSize);
-      Function next = operators.get(randomIndex);
+      int randomIndex = random.nextInt(functionsSize);
+      Function next = functions.get(randomIndex);
       if (next == current) {
-         int secondRandomIndex = random.nextInt(operatorsSize - 1);
+         int secondRandomIndex = random.nextInt(functionsSize - 1);
          if (secondRandomIndex >= randomIndex) {
-            return operators.get(secondRandomIndex + 1);
+            return functions.get(secondRandomIndex + 1);
          } else {
-            return operators.get(secondRandomIndex);
+            return functions.get(secondRandomIndex);
          }
       } else {
          return next;

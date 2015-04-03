@@ -24,8 +24,8 @@ public class SymbolMapTest {
 
    @Test
    public void testGetFunctionByClassName() {
-      Function operator = symbolMap.getFunction(Add.class.getName());
-      assertSame(Add.class, operator.getClass());
+      Function function = symbolMap.getFunction(Add.class.getName());
+      assertSame(Add.class, function.getClass());
    }
 
    @Test
