@@ -45,13 +45,14 @@ final class SymbolMap {
 
       addMapping("reduce", new Reduce(integerType()));
       addMapping("filter", new Filter(integerType()));
-      addMapping("map", new org.oakgp.function.hof.Map(booleanType(), integerType()));
+      addMapping("map", new org.oakgp.function.hof.Map(integerType(), booleanType()));
 
       addMapping("pos?", IsPositive.class);
       addMapping("neg?", IsNegative.class);
       addMapping("zero?", IsZero.class);
 
-      addMapping("count", Count.class);
+      addMapping("count", new Count(integerType()));
+      addMapping("count", new Count(booleanType()));
    }
 
    private static void addMapping(String symbol, Function function) {
@@ -95,7 +96,7 @@ final class SymbolMap {
       }
       Function f = m.get(types);
       if (f == null) {
-         throw new IllegalArgumentException("Could not find version of function: " + symbol + " for: " + types);
+         throw new IllegalArgumentException("Could not find version of function: " + symbol + " for: " + types); // TODO + " in: " + m);
       }
       return f;
    }
