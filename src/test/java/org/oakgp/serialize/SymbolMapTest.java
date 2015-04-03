@@ -33,8 +33,8 @@ public class SymbolMapTest {
       try {
          symbolMap.getFunction("java.lang.String");
          fail();
-      } catch (ClassCastException e) {
-         assertEquals("java.lang.String cannot be cast to org.oakgp.function.Function", e.getMessage());
+      } catch (IllegalArgumentException e) {
+         assertEquals("Could not find function: java.lang.String", e.getMessage());
       }
    }
 

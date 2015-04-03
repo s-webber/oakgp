@@ -1,5 +1,8 @@
 package org.oakgp.serialize;
 
+import static org.oakgp.Type.booleanType;
+import static org.oakgp.Type.integerType;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,7 +25,7 @@ import org.oakgp.function.math.Multiply;
 import org.oakgp.function.math.Subtract;
 
 final class SymbolMap {
-   private static final Map<String, Class<? extends Function>> SYMBOL_TO_CLASS_MAPPINGS = new HashMap<>();
+   private static final Map<String, Function> SYMBOL_TO_INSTANCE_MAPPINGS = new HashMap<>();
    private static final Map<Class<? extends Function>, String> CLASS_TO_SYMBOL_MAPPINGS = new HashMap<>();
    static {
       addMapping("+", Add.class);
@@ -38,9 +41,9 @@ final class SymbolMap {
 
       addMapping("if", If.class);
 
-      addMapping("reduce", Reduce.class);
-      addMapping("filter", Filter.class);
-      addMapping("map", org.oakgp.function.hof.Map.class);
+      addMapping("reduce", new Reduce(integerType()));
+      addMapping("filter", new Filter(integerType()));
+      addMapping("map", new org.oakgp.function.hof.Map(booleanType(), integerType()));
 
       addMapping("pos?", IsPositive.class);
       addMapping("neg?", IsNegative.class);
@@ -49,8 +52,13 @@ final class SymbolMap {
       addMapping("count", Count.class);
    }
 
+   private static void addMapping(String symbol, Function function) {
+      SYMBOL_TO_INSTANCE_MAPPINGS.put(symbol, function);
+      CLASS_TO_SYMBOL_MAPPINGS.put(function.getClass(), symbol);
+   }
+
    private static void addMapping(String symbol, Class<? extends Function> functionClass) {
-      SYMBOL_TO_CLASS_MAPPINGS.put(symbol, functionClass);
+      SYMBOL_TO_INSTANCE_MAPPINGS.put(symbol, newInstance(functionClass));
       CLASS_TO_SYMBOL_MAPPINGS.put(functionClass, symbol);
    }
 
@@ -65,26 +73,30 @@ final class SymbolMap {
    }
 
    public Function getFunction(String symbol) {
-      Class<? extends Function> functionClass = SYMBOL_TO_CLASS_MAPPINGS.get(symbol);
-      if (functionClass == null) {
-         functionClass = findClass(symbol);
+      Function function = SYMBOL_TO_INSTANCE_MAPPINGS.get(symbol);
+      if (function == null) {
+         String key = CLASS_TO_SYMBOL_MAPPINGS.get(findClass(symbol));
+         if (key == null) {
+            throw new IllegalArgumentException("Could not find function: " + symbol);
+         }
+         return SYMBOL_TO_INSTANCE_MAPPINGS.get(key);
+      } else {
+         return function;
       }
-      return newInstance(functionClass);
    }
 
-   @SuppressWarnings("unchecked")
-   private Class<? extends Function> findClass(String className) {
+   private Class<?> findClass(String className) {
       try {
-         return (Class<? extends Function>) Class.forName(className);
+         return Class.forName(className);
       } catch (ClassNotFoundException e) {
          throw new IllegalArgumentException("Could not find class: " + className, e);
       }
    }
 
-   private Function newInstance(Class<? extends Function> functionClass) {
+   private static Function newInstance(Class<? extends Function> functionClass) {
       try {
          return functionClass.newInstance();
-      } catch (InstantiationException | IllegalAccessException e) {
+      } catch (ReflectiveOperationException e) {
          throw new IllegalArgumentException("Could not create new instance of class: " + functionClass, e);
       }
    }

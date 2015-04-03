@@ -1,8 +1,7 @@
 package org.oakgp.function.hof;
 
-import static org.oakgp.Type.booleanArrayType;
-import static org.oakgp.Type.integerArrayType;
-import static org.oakgp.Type.integerToBooleanFunctionType;
+import static org.oakgp.Type.arrayType;
+import static org.oakgp.Type.functionType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +15,11 @@ import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
 
 public class Map implements Function {
-   private static final Signature SIGNATURE = Signature.createSignature(booleanArrayType(), integerToBooleanFunctionType(), integerArrayType());
+   private final Signature signature;
+
+   public Map(Type from, Type to) {
+      signature = Signature.createSignature(arrayType(to), functionType(to, from), arrayType(from));
+   }
 
    @Override
    public Object evaluate(Arguments arguments, Assignments assignments) {
@@ -35,6 +38,6 @@ public class Map implements Function {
 
    @Override
    public Signature getSignature() {
-      return SIGNATURE;
+      return signature;
    }
 }

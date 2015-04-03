@@ -1,6 +1,8 @@
 package org.oakgp.function.hof;
 
 import static org.oakgp.TestUtils.createArguments;
+import static org.oakgp.Type.booleanType;
+import static org.oakgp.Type.integerType;
 
 import java.util.List;
 
@@ -10,7 +12,7 @@ import org.oakgp.function.Function;
 public class MapTest extends AbstractFunctionTest {
    @Override
    protected Function getFunction() {
-      return new org.oakgp.function.hof.Map();
+      return new Map(integerType(), booleanType());
    }
 
    @Override

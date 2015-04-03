@@ -1,19 +1,23 @@
 package org.oakgp.function.hof;
 
 import static org.oakgp.Arguments.createArguments;
-import static org.oakgp.Type.integerArrayType;
-import static org.oakgp.Type.integerToBooleanFunctionType;
-import static org.oakgp.Type.integerType;
+import static org.oakgp.Type.arrayType;
+import static org.oakgp.Type.functionType;
 
 import org.oakgp.Arguments;
 import org.oakgp.Assignments;
 import org.oakgp.Signature;
+import org.oakgp.Type;
 import org.oakgp.function.Function;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
 
 public class Reduce implements Function {
-   private static final Signature SIGNATURE = Signature.createSignature(integerType(), integerToBooleanFunctionType(), integerType(), integerArrayType());
+   private final Signature signature;
+
+   public Reduce(Type type) {
+      signature = Signature.createSignature(type, functionType(type, type, type), type, arrayType(type));
+   }
 
    @Override
    public Object evaluate(Arguments arguments, Assignments assignments) {
@@ -28,6 +32,6 @@ public class Reduce implements Function {
 
    @Override
    public Signature getSignature() {
-      return SIGNATURE;
+      return signature;
    }
 }

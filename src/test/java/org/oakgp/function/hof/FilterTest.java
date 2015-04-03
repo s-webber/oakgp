@@ -1,6 +1,7 @@
 package org.oakgp.function.hof;
 
 import static org.oakgp.TestUtils.createArguments;
+import static org.oakgp.Type.integerType;
 
 import java.util.List;
 
@@ -10,7 +11,7 @@ import org.oakgp.function.Function;
 public class FilterTest extends AbstractFunctionTest {
    @Override
    protected Function getFunction() {
-      return new Filter();
+      return new Filter(integerType());
    }
 
    @Override

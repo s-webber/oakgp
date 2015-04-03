@@ -1,5 +1,7 @@
 package org.oakgp.function.hof;
 
+import static org.oakgp.Type.integerType;
+
 import java.util.List;
 
 import org.oakgp.function.AbstractFunctionTest;
@@ -8,7 +10,7 @@ import org.oakgp.function.Function;
 public class ReduceTest extends AbstractFunctionTest {
    @Override
    protected Function getFunction() {
-      return new Reduce();
+      return new Reduce(integerType());
    }
 
    @Override
