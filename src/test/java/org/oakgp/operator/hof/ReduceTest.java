@@ -13,6 +13,7 @@ public class ReduceTest extends AbstractOperatorTest {
 
    @Override
    protected void getEvaluateTests(EvaluateTestCases testCases) {
+      // TODO use symbol instead of class name
       testCases.put("(org.oakgp.operator.hof.Reduce + 0 [2 12 8])", 22);
       testCases.put("(org.oakgp.operator.hof.Reduce + 5 [2 12 8])", 27);
 

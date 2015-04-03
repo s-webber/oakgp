@@ -11,6 +11,8 @@ import org.oakgp.node.Node;
 import org.oakgp.operator.Operator;
 
 public class Reduce implements Operator {
+   private static final Signature SIGNATURE = Signature.createSignature(Type.INTEGER, Type.OPERATOR, Type.INTEGER, Type.ARRAY);
+
    @Override
    public Object evaluate(Arguments arguments, Assignments assignments) {
       Operator f = arguments.get(0).evaluate(assignments);
@@ -24,6 +26,6 @@ public class Reduce implements Operator {
 
    @Override
    public Signature getSignature() {
-      return Signature.createSignature(Type.INTEGER, Type.OPERATOR, Type.INTEGER, Type.ARRAY);
+      return SIGNATURE;
    }
 }
