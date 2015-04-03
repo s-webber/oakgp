@@ -14,6 +14,7 @@ import org.oakgp.function.compare.GreaterThanOrEqual;
 import org.oakgp.function.compare.LessThan;
 import org.oakgp.function.compare.LessThanOrEqual;
 import org.oakgp.function.compare.NotEqual;
+import org.oakgp.function.hof.Filter;
 import org.oakgp.function.hof.Reduce;
 import org.oakgp.function.math.Add;
 import org.oakgp.function.math.Multiply;
@@ -37,6 +38,7 @@ final class SymbolMap {
       addMapping("if", If.class);
 
       addMapping("reduce", Reduce.class);
+      addMapping("filter", Filter.class);
 
       addMapping("pos?", IsPositive.class);
       addMapping("neg?", IsNegative.class);
