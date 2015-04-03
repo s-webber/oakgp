@@ -7,6 +7,7 @@ import org.oakgp.function.Function;
 import org.oakgp.function.choice.If;
 import org.oakgp.function.classify.IsNegative;
 import org.oakgp.function.classify.IsPositive;
+import org.oakgp.function.classify.IsZero;
 import org.oakgp.function.compare.Equal;
 import org.oakgp.function.compare.GreaterThan;
 import org.oakgp.function.compare.GreaterThanOrEqual;
@@ -39,6 +40,7 @@ final class SymbolMap {
 
       addMapping("pos?", IsPositive.class);
       addMapping("neg?", IsNegative.class);
+      addMapping("zero?", IsZero.class);
    }
 
    private static void addMapping(String symbol, Class<? extends Function> functionClass) {
