@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.oakgp.function.Function;
 import org.oakgp.function.choice.If;
+import org.oakgp.function.classify.IsNegative;
 import org.oakgp.function.classify.IsPositive;
 import org.oakgp.function.compare.Equal;
 import org.oakgp.function.compare.GreaterThan;
@@ -37,6 +38,7 @@ final class SymbolMap {
       addMapping("reduce", Reduce.class);
 
       addMapping("pos?", IsPositive.class);
+      addMapping("neg?", IsNegative.class);
    }
 
    private static void addMapping(String symbol, Class<? extends Function> functionClass) {
