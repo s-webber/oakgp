@@ -1,0 +1,29 @@
+package org.oakgp.function.coll;
+
+import java.util.List;
+
+import org.oakgp.function.AbstractFunctionTest;
+import org.oakgp.function.Function;
+
+public class CountTest extends AbstractFunctionTest {
+   @Override
+   protected Function getFunction() {
+      return new Count();
+   }
+
+   @Override
+   protected void getEvaluateTests(EvaluateTestCases testCases) {
+      testCases.put("(count [])", 0);
+      testCases.put("(count [2 -12 8])", 3);
+      testCases.put("(count [2 -12 8 -3 -7])", 5);
+   }
+
+   @Override
+   protected void getCanSimplifyTests(SimplifyTestCases testCases) {
+      testCases.put("(count [2 -12 8])", "3");
+   }
+
+   @Override
+   protected void getCannotSimplifyTests(List<String> testCases) {
+   }
+}
