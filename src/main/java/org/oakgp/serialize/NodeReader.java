@@ -3,7 +3,6 @@ package org.oakgp.serialize;
 import static org.oakgp.Arguments.createArguments;
 import static org.oakgp.Type.arrayType;
 import static org.oakgp.Type.booleanType;
-import static org.oakgp.Type.integerToBooleanFunctionType;
 import static org.oakgp.Type.integerType;
 import static org.oakgp.Type.stringType;
 
@@ -135,14 +134,17 @@ public final class NodeReader implements Closeable {
          if (isNumber(token)) {
             return new ConstantNode(Integer.parseInt(token), integerType());
          } else {
-            Type functionType = integerToBooleanFunctionType(); // TODO
             List<Type> types;
+            Type type;
             if ("+".equals(token) || "*".equals(token) || "-".equals(token)) {
                types = Arrays.asList(integerType(), integerType()); // TODO
+               type = Type.functionType(integerType(), integerType(), integerType());
             } else {
                types = Arrays.asList(integerType()); // TODO
+               type = Type.integerToBooleanFunctionType();
             }
-            return new ConstantNode(symbolMap.getFunction(token, types), functionType);
+            Function function = symbolMap.getFunction(token, types);
+            return new ConstantNode(function, type);
          }
       }
    }
