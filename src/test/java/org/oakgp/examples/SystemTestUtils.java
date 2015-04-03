@@ -44,38 +44,48 @@ public class SystemTestUtils {
    public static final double RATIO_VARIABLES = .6;
 
    public static Collection<Node> createInitialGeneration(FunctionSet functionSet, TerminalSet terminalSet, int size) {
+      return createInitialGeneration(functionSet, terminalSet, size, Type.INTEGER);
+   }
+
+   public static Collection<Node> createInitialGeneration(FunctionSet functionSet, TerminalSet terminalSet, int size, Type type) {
       Set<Node> initialGeneration = new NodeSet();
       for (int i = 0; i < size; i++) {
-         initialGeneration.add(makeRandomTree(functionSet, terminalSet, 4));
+         Node n = makeRandomTree(functionSet, terminalSet, 4, type);
+         if (n.getType() != type) {
+            throw new RuntimeException();
+         }
+         initialGeneration.add(n);
       }
       return initialGeneration;
    }
 
    public static Node makeRandomTree(FunctionSet functionSet, TerminalSet terminalSet, int depth) {
-      return makeRandomTree(Type.INTEGER, functionSet, terminalSet, depth);
+      return makeRandomTree(functionSet, terminalSet, depth, Type.INTEGER);
    }
 
-   private static Node makeRandomTree(Type type, FunctionSet functionSet, TerminalSet terminalSet, int depth) {
+   private static Node makeRandomTree(FunctionSet functionSet, TerminalSet terminalSet, int depth, Type type) {
       if (depth > 0 && RANDOM.nextDouble() < .5) {
          Operator operator = functionSet.next(type);
          Signature signature = operator.getSignature();
          Node[] args = new Node[signature.getArgumentTypesLength()];
          for (int i = 0; i < args.length; i++) {
             Type argType = signature.getArgumentType(i);
-            Node arg = makeRandomTree(argType, functionSet, terminalSet, depth - 1);
+            Node arg = makeRandomTree(functionSet, terminalSet, depth - 1, argType);
             args[i] = arg;
          }
          return new FunctionNode(operator, args);
       } else {
-         return terminalSet.next();
+         return terminalSet.next(type);
       }
    }
 
    public static ConstantNode[] createConstants(int numberOfConstants) {
-      ConstantNode[] constants = new ConstantNode[numberOfConstants];
+      ConstantNode[] constants = new ConstantNode[numberOfConstants + 2];
       for (int i = 0; i < numberOfConstants; i++) {
          constants[i] = createConstant(i);
       }
+      constants[numberOfConstants] = new ConstantNode(Boolean.TRUE, Type.BOOLEAN);
+      constants[numberOfConstants + 1] = new ConstantNode(Boolean.FALSE, Type.BOOLEAN);
       return constants;
    }
 
