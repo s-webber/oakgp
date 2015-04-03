@@ -1,6 +1,7 @@
 package org.oakgp.examples.simple;
 
 import static org.oakgp.Assignments.createAssignments;
+import static org.oakgp.TestUtils.createArguments;
 import static org.oakgp.TestUtils.createTypeArray;
 import static org.oakgp.examples.SystemTestUtils.ARITHMETIC_FUNCTION_SET;
 import static org.oakgp.examples.SystemTestUtils.COMPARISON_FUNCTION_SET;
@@ -18,10 +19,10 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.function.Predicate;
 
 import org.junit.Test;
+import org.oakgp.Arguments;
 import org.oakgp.Assignments;
 import org.oakgp.FunctionSet;
 import org.oakgp.GenerationEvolver;
@@ -29,12 +30,20 @@ import org.oakgp.GenerationProcessor;
 import org.oakgp.NodeEvolver;
 import org.oakgp.RankedCandidate;
 import org.oakgp.Runner;
+import org.oakgp.Signature;
 import org.oakgp.TerminalSet;
+import org.oakgp.Type;
 import org.oakgp.crossover.SubtreeCrossover;
 import org.oakgp.fitness.FitnessFunction;
 import org.oakgp.fitness.FitnessFunctionCache;
 import org.oakgp.fitness.FitnessFunctionGenerationProcessor;
 import org.oakgp.fitness.TestDataFitnessFunction;
+import org.oakgp.function.Function;
+import org.oakgp.function.classify.IsNegative;
+import org.oakgp.function.classify.IsPositive;
+import org.oakgp.function.classify.IsZero;
+import org.oakgp.function.coll.Count;
+import org.oakgp.function.hof.Filter;
 import org.oakgp.mutate.PointMutation;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
@@ -90,7 +99,52 @@ public class FitnessFunctionSystemTest {
       doIt(COMPARISON_FUNCTION_SET, terminalSet, fitnessFunction, initialGeneration);
    }
 
-   private static Map<Assignments, Integer> createTests(int numVariables, Function<Assignments, Integer> f) {
+   @Test
+   public void testIsCountOfZerosGreater() {
+      IsPositive isPositive = new IsPositive();
+      IsNegative isNegative = new IsNegative();
+      IsZero isZero = new IsZero();
+      // TODO add to TestUtils: operatorConstant(); integerConstant(); trueConstant(); falseConstant(); arrayConstant();
+      ConstantNode[] constants = { new ConstantNode(Boolean.TRUE, Type.BOOLEAN), new ConstantNode(Boolean.FALSE, Type.BOOLEAN),
+            new ConstantNode(isPositive, Type.FUNCTION), new ConstantNode(isNegative, Type.FUNCTION), new ConstantNode(isZero, Type.FUNCTION),
+            new ConstantNode(Arguments.createArguments(), Type.ARRAY), new ConstantNode(0, Type.INTEGER) };
+      TerminalSet terminalSet = new TerminalSet(RANDOM, RATIO_VARIABLES, new Type[] { Type.ARRAY }, constants);
+      Map<Assignments, Integer> testData = new HashMap<>();
+      testData.put(createAssignments(createArguments("0", "0", "0", "0", "0", "0", "0", "0")), 8);
+      testData.put(createAssignments(createArguments("6", "3", "4", "0", "2", "4", "1", "3")), 1);
+      testData.put(createAssignments(createArguments("0", "0", "4", "0", "0", "0", "1", "0")), 6);
+      testData.put(createAssignments(createArguments("1", "-1", "2", "5", "4", "-2")), 0);
+      testData.put(createAssignments(createArguments("1", "0", "2", "5", "4", "-2")), 1);
+      testData.put(createAssignments(createArguments("1", "0", "2", "5", "4", "0")), 2);
+      testData.put(createAssignments(createArguments("-2", "0", "8", "7", "0", "-3", "0")), 3);
+      testData.put(createAssignments(createArguments("0", "0", "0")), 3);
+      FitnessFunction fitnessFunction = new TestDataFitnessFunction(testData);
+      FunctionSet hofFunctionSet = new FunctionSet(RANDOM, new Function[] { isNegative, isPositive, isZero, new Filter(), new Count(),
+            createIdentity(Type.ARRAY), createIdentity(Type.INTEGER), createIdentity(Type.FUNCTION) });
+      Collection<Node> initialGeneration = createInitialGeneration(hofFunctionSet, terminalSet, GENERATION_SIZE);
+      doIt(hofFunctionSet, terminalSet, fitnessFunction, initialGeneration);
+   }
+
+   private Function createIdentity(final Type type) {
+      return new Function() {
+         @Override
+         public Object evaluate(Arguments arguments, Assignments assignments) {
+            return arguments.get(0).evaluate(assignments);
+         }
+
+         @Override
+         public Signature getSignature() {
+            return Signature.createSignature(type, type);
+         }
+
+         @Override
+         public Node simplify(Arguments arguments) {
+            return arguments.get(0);
+         }
+      };
+   }
+
+   private static Map<Assignments, Integer> createTests(int numVariables, java.util.function.Function<Assignments, Integer> f) {
       Map<Assignments, Integer> tests = new HashMap<>();
       for (int i = 0; i < 200; i++) {
          Object[] inputs = createInputs(numVariables);
