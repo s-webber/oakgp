@@ -9,11 +9,13 @@ import static org.oakgp.Signature.createSignature;
 import static org.oakgp.Type.booleanType;
 import static org.oakgp.Type.integerType;
 
+import java.util.List;
+
 import org.junit.Test;
 
 public class SignatureTest {
    @Test
-   public void test() {
+   public void testGetArgumentType() {
       Signature signature = createSignature(integerType(), booleanType(), integerType(), booleanType());
 
       assertEquals(3, signature.getArgumentTypesLength());
@@ -33,6 +35,18 @@ public class SignatureTest {
       } catch (ArrayIndexOutOfBoundsException e) {
          // expected
       }
+   }
+
+   @Test
+   public void testGetArgumemntTypes() {
+      Signature signature = createSignature(integerType(), booleanType(), integerType(), booleanType());
+      List<Type> types = signature.getArgumentTypes();
+      assertEquals(3, types.size());
+      assertSame(booleanType(), types.get(0));
+      assertSame(integerType(), types.get(1));
+      assertSame(booleanType(), types.get(2));
+      // assert unmodifiable
+      assertEquals("java.util.Collections$UnmodifiableRandomAccessList", types.getClass().getName());
    }
 
    @Test

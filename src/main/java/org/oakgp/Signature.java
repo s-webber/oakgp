@@ -33,7 +33,7 @@ public final class Signature { // TODO move to org.oakgp.function?
       return argumentTypes.length;
    }
 
-   public List<Type> getArgumentTypes() { // TODO test
+   public List<Type> getArgumentTypes() {
       return Collections.unmodifiableList(Arrays.asList(argumentTypes));
    }
 
