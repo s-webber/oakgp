@@ -20,6 +20,7 @@ public class UtilsTest {
       Node b = readNode("(+ 9 12)");
       try {
          Utils.assertEvaluateToSameResult(a, b);
+         // TODO fail();
       } catch (IllegalArgumentException e) {
          assertEquals("(* 7 (- 1 2)) = -7 (+ 9 12) = 21", e.getMessage());
       }
