@@ -85,10 +85,17 @@ public final class NodeReader implements Closeable {
       } else if (firstToken == ARRAY_START_STRING) {
          List<Node> arguments = new ArrayList<>();
          String nextToken;
+         Type t = null;
          while ((nextToken = nextToken()) != ARRAY_END_STRING) {
-            arguments.add(nextNode(nextToken));
+            Node n = nextNode(nextToken);
+            if (t == null) {
+               t = n.getType();
+            } else if (t != n.getType()) {
+               throw new RuntimeException("Mixed type array elements: " + t + " and " + n.getType());
+            }
+            arguments.add(n);
          }
-         return new ConstantNode(createArgumentsFromList(arguments), arrayType());
+         return new ConstantNode(createArgumentsFromList(arguments), arrayType(t));
       } else if (firstToken.charAt(0) == 'v') {
          int id = Integer.parseInt(firstToken.substring(1));
          return new VariableNode(id, variableTypes[id]);

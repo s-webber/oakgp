@@ -1,7 +1,7 @@
 package org.oakgp.function.hof;
 
-import static org.oakgp.Type.arrayType;
 import static org.oakgp.Type.functionType;
+import static org.oakgp.Type.integerArrayType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +13,7 @@ import org.oakgp.function.Function;
 import org.oakgp.node.Node;
 
 public class Filter implements Function {
-   private static final Signature SIGNATURE = Signature.createSignature(arrayType(), functionType(), arrayType());
+   private static final Signature SIGNATURE = Signature.createSignature(integerArrayType(), functionType(), integerArrayType());
 
    @Override
    public Object evaluate(Arguments arguments, Assignments assignments) {

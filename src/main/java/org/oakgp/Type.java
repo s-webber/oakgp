@@ -1,16 +1,18 @@
 package org.oakgp;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Type implements Comparable<Type> {
    private static final Map<Type, Type> typeCache = new HashMap<>();
 
-   // INTEGER, BOOLEAN, STRING, ARRAY, FUNCTION
    private final String name;
+   private final Type[] args;
 
-   private Type(String name) {
+   private Type(String name, Type... args) {
       this.name = name;
+      this.args = args;
    }
 
    public static Type stringType() {
@@ -29,8 +31,16 @@ public class Type implements Comparable<Type> {
       return add(new Type("function"));
    }
 
-   public static Type arrayType() {
-      return add(new Type("array"));
+   public static Type integerArrayType() {
+      return add(arrayType(integerType()));
+   }
+
+   public static Type booleanArrayType() {
+      return add(arrayType(booleanType()));
+   }
+
+   public static Type arrayType(Type t) {
+      return add(new Type("array", t));
    }
 
    private static Type add(Type t) {
@@ -52,7 +62,7 @@ public class Type implements Comparable<Type> {
    public boolean equals(Object o) {
       if (o instanceof Type) {
          Type t = (Type) o;
-         return this.name.equals(t.name);
+         return this.name.equals(t.name) && Arrays.equals(this.args, args);
       } else {
          return false;
       }
@@ -60,6 +70,7 @@ public class Type implements Comparable<Type> {
 
    @Override
    public int hashCode() {
+      // TODO include args in hashCode? cache hashCode?
       return name.hashCode();
    }
 

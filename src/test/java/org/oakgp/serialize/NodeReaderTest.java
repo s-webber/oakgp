@@ -3,10 +3,10 @@ package org.oakgp.serialize;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.oakgp.TestUtils.createVariable;
 import static org.oakgp.TestUtils.readNode;
 import static org.oakgp.TestUtils.readNodes;
-import static org.oakgp.Type.booleanType;
 import static org.oakgp.Type.functionType;
 import static org.oakgp.Type.integerType;
 
@@ -23,7 +23,7 @@ import org.oakgp.node.Node;
 import org.oakgp.node.VariableNode;
 
 public class NodeReaderTest {
-   // TODO test error conditions
+   // TODO test error conditions using assetReadException
 
    @Test
    public void testZero() {
@@ -81,10 +81,15 @@ public class NodeReaderTest {
    }
 
    @Test
-   public void testArray() {
-      Arguments expected = Arguments.createArguments(new ConstantNode(Boolean.TRUE, booleanType()), new ConstantNode(9, integerType()), new ConstantNode(
-            Boolean.FALSE, booleanType()), createVariable(0));
-      assertParseLiteral("[true 9 false v0]", expected);
+   public void testTypeArray() {
+      Arguments expected = Arguments.createArguments(new ConstantNode(9, integerType()), new ConstantNode(2, integerType()), createVariable(0),
+            new ConstantNode(7, integerType()));
+      assertParseLiteral("[9 2 v0 7]", expected);
+   }
+
+   @Test
+   public void testMixedTypeArray() {
+      assetReadException("[true 9 false v0]", "Mixed type array elements: boolean and integer");
    }
 
    @Test
@@ -179,4 +184,12 @@ public class NodeReaderTest {
       assertEquals(expected, output.toString());
    }
 
+   private void assetReadException(String input, String expectedMessage) {
+      try {
+         readNode(input);
+         fail();
+      } catch (RuntimeException e) {
+         assertEquals(expectedMessage, e.getMessage());
+      }
+   }
 }
