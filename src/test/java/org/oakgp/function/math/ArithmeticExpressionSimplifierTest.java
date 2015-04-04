@@ -5,6 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.oakgp.TestUtils.readNode;
 import static org.oakgp.TestUtils.writeNode;
 import static org.oakgp.Type.integerType;
@@ -263,7 +264,7 @@ public class ArithmeticExpressionSimplifierTest {
       Node b = readNode("(+ 9 12)");
       try {
          ArithmeticExpressionSimplifier.assertEvaluateToSameResult(a, b);
-         // TODO fail();
+         fail();
       } catch (IllegalArgumentException e) {
          assertEquals("(* 7 (- 1 2)) = -7 (+ 9 12) = 21", e.getMessage());
       }
