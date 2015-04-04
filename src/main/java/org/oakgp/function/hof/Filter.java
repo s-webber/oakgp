@@ -14,6 +14,14 @@ import org.oakgp.Type;
 import org.oakgp.function.Function;
 import org.oakgp.node.Node;
 
+/**
+ * Uses a function to filter the elements of a collection.
+ * <p>
+ * Returns a new collection that exists of all the elements in the collection (specified by the second argument) for which the function (specified by the first
+ * argument) returns {@code true}.
+ *
+ * @see <a href="http://en.wikipedia.org/wiki/Filter_(higher-order_function)">Wikipedia</a>
+ */
 public final class Filter implements Function {
    private final Signature signature;
 

@@ -9,6 +9,7 @@ import org.oakgp.Signature;
 import org.oakgp.Type;
 import org.oakgp.function.Function;
 
+/** Determines the number of elements contained in a collection. */
 public final class Count implements Function {
    private final Signature signature;
 

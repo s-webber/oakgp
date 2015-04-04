@@ -4,6 +4,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Represents the type signature of a {@code Function}.
+ * <p>
+ * A signature includes the return type, the number of arguments and the type of each argument.
+ */
 public final class Signature { // TODO move to org.oakgp.function?
    private final Type returnType;
    private final Type[] argumentTypes;

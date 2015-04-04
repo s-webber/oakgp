@@ -6,6 +6,7 @@ import org.oakgp.Arguments;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 
+/** Determines if two numbers are equal. */
 public final class Equal extends ComparisonOperator {
    public Equal() {
       super(true);

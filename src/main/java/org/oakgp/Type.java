@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+/** Represents a data type (e.g. integer, boolean, string, array, function). */
 public final class Type implements Comparable<Type> {
    private static final Map<Type, Type> TYPE_CACHE = new HashMap<>();
    private static final Type[] EMPTY_ARRAY = new Type[0];

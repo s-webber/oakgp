@@ -6,6 +6,7 @@ import org.oakgp.Arguments;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 
+/** Determines if two numbers are not equal. */
 public final class NotEqual extends ComparisonOperator {
    public NotEqual() {
       super(false);

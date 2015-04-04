@@ -4,6 +4,7 @@ import org.oakgp.Arguments;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 
+/** Determines if the number represented by the first argument is greater than the number represented by the second. */
 public final class GreaterThan extends ComparisonOperator {
    public GreaterThan() {
       super(false);

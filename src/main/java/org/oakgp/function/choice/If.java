@@ -11,6 +11,16 @@ import org.oakgp.function.Function;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
 
+/**
+ * A selection operator.
+ * <p>
+ * Expects three arguments:
+ * <ol>
+ * <li>Conditional statement.</li>
+ * <li>Value to evaluate to if the conditional statement is {@code true}.</li>
+ * <li>Value to evaluate to if the conditional statement is {@code false}.</li>
+ * </ol>
+ */
 public final class If implements Function {
    private static final Signature SIGNATURE = Signature.createSignature(integerType(), booleanType(), integerType(), integerType());
 

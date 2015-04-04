@@ -8,7 +8,7 @@ package org.oakgp.util;
  */
 public interface Random {
    /**
-    * Returns a {@code int} value between 0 (inclusive) and the specified value (exclusive)
+    * Returns a {@code int} value between 0 (inclusive) and the specified value (exclusive).
     *
     * @param bound
     *           the upper bound (exclusive)

@@ -14,7 +14,7 @@ public final class FitnessFunctionGenerationProcessor implements GenerationProce
    private final FitnessFunction fitnessFunction;
 
    /**
-    * Constructs a {@code GenerationProcessor} with the specified {@code FitnessFunction}
+    * Constructs a {@code GenerationProcessor} with the specified {@code FitnessFunction}.
     *
     * @param fitnessFunction
     *           the {@code FitnessFunction} to use when determining the fitness of candidates

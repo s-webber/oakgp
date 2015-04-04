@@ -12,6 +12,18 @@ import org.oakgp.function.Function;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
 
+/**
+ * Combines the elements of a collection by recursively applying a function.
+ * <p>
+ * Expects three arguments:
+ * <ol>
+ * <li>A function.</li>
+ * <li>An initial value.</li>
+ * <li>A collection.</li>
+ * </ol>
+ *
+ * @see <a href="http://en.wikipedia.org/wiki/Fold_(higher-order_function)">Wikipedia</a>
+ */
 public final class Reduce implements Function {
    private final Signature signature;
 

@@ -227,6 +227,7 @@ final class ArithmeticExpressionSimplifier {
    }
 
    /**
+    * Returns {@code true} if both of the specified nodes represent multiplication of the same value by a constant.
     * <p>
     * Examples of arguments that would return true: {@code (* 3 v0), (* 7 v0)} or {@code (* 1 v0), (* -8 v0)}
     * </p>

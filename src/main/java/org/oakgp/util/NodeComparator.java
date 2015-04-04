@@ -8,10 +8,10 @@ import org.oakgp.node.Node;
 
 /** An implementation of {@code Comparator} for comparing instances of {@link Node}. */
 public final class NodeComparator implements Comparator<Node> {
-   /** Singleton instance */
+   /** Singleton instance. */
    public static final NodeComparator NODE_COMPARATOR = new NodeComparator();
 
-   /** Private constructor to force use of {@link #notify()} */
+   /** Private constructor to force use of {@link #notify()}. */
    private NodeComparator() {
       // do nothing
    }

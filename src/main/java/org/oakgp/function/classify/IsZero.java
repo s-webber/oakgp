@@ -8,6 +8,7 @@ import org.oakgp.Assignments;
 import org.oakgp.Signature;
 import org.oakgp.function.Function;
 
+/** Determines if a number is zero. */
 public final class IsZero implements Function {
    private static final Signature SIGNATURE = Signature.createSignature(booleanType(), integerType());
 
