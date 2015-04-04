@@ -12,6 +12,11 @@ import org.oakgp.serialize.NodeReader;
 import org.oakgp.serialize.NodeWriter;
 
 public final class Repl {
+   /** Private constructor as all methods are static. */
+   private Repl() {
+      // do nothing
+   }
+
    public static void main(String[] args) throws IOException {
       Scanner scanner = new Scanner(System.in);
       Assignments assignments = Assignments.createAssignments(2, 3);
