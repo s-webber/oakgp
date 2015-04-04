@@ -42,7 +42,7 @@ public final class NodeSimplifier {
       Node output = input;
       do {
          previous = output;
-         output = _simplify(output);
+         output = simplifyOnce(output);
          if (!output.equals(previous) && !s.add(new NodeWriter().writeNode(output))) { // TODO
             // throw new IllegalArgumentException(new NodeWriter().writeNode(output) + " " + new NodeWriter().writeNode(previous));
             return output;
@@ -54,7 +54,7 @@ public final class NodeSimplifier {
       return output;
    }
 
-   private static Node _simplify(Node input) {
+   private static Node simplifyOnce(Node input) {
       if (input instanceof FunctionNode) {
          return simplifyFunctionNode((FunctionNode) input);
       } else {
@@ -71,7 +71,7 @@ public final class NodeSimplifier {
       boolean constants = true;
       for (int i = 0; i < simplifiedArgs.length; i++) {
          Node originalArg = inputArgs.get(i);
-         simplifiedArgs[i] = _simplify(originalArg);
+         simplifiedArgs[i] = simplifyOnce(originalArg);
          if (originalArg != simplifiedArgs[i]) {
             modified = true;
          }
