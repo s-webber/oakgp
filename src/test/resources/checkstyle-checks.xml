@@ -61,9 +61,17 @@
 
         <!-- Checks for Javadoc comments.                     -->
         <!-- See http://checkstyle.sf.net/config_javadoc.html -->
-        <module name="JavadocMethod"/>
-        <module name="JavadocType"/>
-        <module name="JavadocVariable"/>
+        <module name="JavadocMethod">
+          <property name="severity" value="warning"/>
+          <property name="scope" value="protected"/>
+        </module>
+        <module name="JavadocType">
+          <property name="scope" value="protected"/>
+        </module>
+        <module name="JavadocVariable">
+          <property name="severity" value="warning"/>
+          <property name="scope" value="protected"/>
+        </module>
         <module name="JavadocStyle"/>
 
 
@@ -100,7 +108,9 @@
         <module name="AvoidStarImport"/>
         <module name="IllegalImport"/> <!-- defaults to sun.* packages -->
         <module name="RedundantImport"/>
-        <module name="UnusedImports"/>
+        <module name="UnusedImports">
+           <property name="severity" value="warning"/>
+        </module>
 
 
         <!-- Checks for Size Violations.                    -->
@@ -116,7 +126,9 @@
         <!-- See http://checkstyle.sf.net/config_whitespace.html -->
         <module name="EmptyForIteratorPad"/>
         <module name="MethodParamPad"/>
-        <module name="NoWhitespaceAfter"/>
+        <module name="NoWhitespaceAfter">
+           <property name="severity" value="warning"/>
+        </module>
         <module name="NoWhitespaceBefore"/>
         <module name="OperatorWrap"/>
         <module name="ParenPad"/>
@@ -142,13 +154,22 @@
 
         <!-- Checks for common coding problems               -->
         <!-- See http://checkstyle.sf.net/config_coding.html -->
-        <module name="AvoidInlineConditionals"/>
+        <module name="AvoidInlineConditionals">
+           <property name="severity" value="warning"/>
+        </module>
         <module name="EmptyStatement"/>
         <module name="EqualsHashCode"/>
-        <module name="HiddenField"/>
+        <module name="HiddenField">
+           <property name="ignoreConstructorParameter" value="true"/>
+           <property name="ignoreSetter" value="true"/>
+        </module>
         <module name="IllegalInstantiation"/>
-        <module name="InnerAssignment"/>
-        <module name="MagicNumber"/>
+        <module name="InnerAssignment">
+           <property name="severity" value="warning"/>
+        </module>
+        <module name="MagicNumber">
+           <property name="severity" value="warning"/>
+        </module>
         <module name="MissingSwitchDefault"/>
         <module name="SimplifyBooleanExpression"/>
         <module name="SimplifyBooleanReturn"/>
@@ -165,7 +186,9 @@
         <!-- Miscellaneous other checks.                   -->
         <!-- See http://checkstyle.sf.net/config_misc.html -->
         <module name="ArrayTypeStyle"/>
-        <module name="FinalParameters"/>
+        <module name="FinalParameters">
+           <property name="severity" value="warning"/>
+        </module>
         <module name="TodoComment"/>
         <module name="UpperEll"/>
 
