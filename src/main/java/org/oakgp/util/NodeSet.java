@@ -19,7 +19,7 @@ public final class NodeSet extends HashSet<Node> {
     * @param n
     *           element that a simplified version of will be added to this set
     * @return {@code true} if this set did not already contain a simplified version of the specified {@code Node}
-    * @see NodeSimplifier
+    * @see org.oakgp.NodeSimplifier
     */
    @Override
    public boolean add(Node n) {

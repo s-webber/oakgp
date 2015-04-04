@@ -33,7 +33,11 @@ public final class CacheMap<K, V> extends LinkedHashMap<K, V> {
       return Collections.synchronizedMap(m);
    }
 
-   /** @see {@link #createCache(int)} */
+   /**
+    * @param maxSize
+    *           the maximum size restriction to enforce on the returned map
+    * @see #createCache(int)
+    */
    private CacheMap(int maxSize) {
       super(maxSize, 0.1f, true);
       this.maxSize = maxSize;
