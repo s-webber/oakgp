@@ -9,7 +9,7 @@ import org.oakgp.Signature;
 import org.oakgp.Type;
 import org.oakgp.function.Function;
 
-public class Count implements Function {
+public final class Count implements Function {
    private final Signature signature;
 
    public Count(Type t) {

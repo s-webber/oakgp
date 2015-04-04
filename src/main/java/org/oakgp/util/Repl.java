@@ -11,7 +11,7 @@ import org.oakgp.node.Node;
 import org.oakgp.serialize.NodeReader;
 import org.oakgp.serialize.NodeWriter;
 
-public class Repl {
+public final class Repl {
    public static void main(String[] args) throws IOException {
       Scanner scanner = new Scanner(System.in);
       Assignments assignments = Assignments.createAssignments(2, 3);

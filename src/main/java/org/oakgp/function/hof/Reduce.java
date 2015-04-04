@@ -12,7 +12,7 @@ import org.oakgp.function.Function;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
 
-public class Reduce implements Function {
+public final class Reduce implements Function {
    private final Signature signature;
 
    public Reduce(Type type) {

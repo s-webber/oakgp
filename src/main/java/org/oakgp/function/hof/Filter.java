@@ -14,7 +14,7 @@ import org.oakgp.Type;
 import org.oakgp.function.Function;
 import org.oakgp.node.Node;
 
-public class Filter implements Function {
+public final class Filter implements Function {
    private final Signature signature;
 
    public Filter(Type type) {

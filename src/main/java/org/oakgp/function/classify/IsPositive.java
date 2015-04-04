@@ -8,7 +8,7 @@ import org.oakgp.Assignments;
 import org.oakgp.Signature;
 import org.oakgp.function.Function;
 
-public class IsPositive implements Function {
+public final class IsPositive implements Function {
    private static final Signature SIGNATURE = Signature.createSignature(booleanType(), integerType());
 
    @Override
