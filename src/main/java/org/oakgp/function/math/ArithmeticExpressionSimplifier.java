@@ -4,11 +4,12 @@ import static org.oakgp.Type.integerType;
 import static org.oakgp.util.NodeComparator.NODE_COMPARATOR;
 
 import org.oakgp.Arguments;
+import org.oakgp.Assignments;
 import org.oakgp.function.Function;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
-import org.oakgp.util.Utils;
+import org.oakgp.serialize.NodeWriter;
 
 final class ArithmeticExpressionSimplifier {
    static final ConstantNode ZERO = createConstant(0);
@@ -274,18 +275,40 @@ final class ArithmeticExpressionSimplifier {
       }
    }
 
-   private static void assertEvaluateToSameResult(Node simplifiedVersion, Function function, Node firstArg, Node secondArg) {
-      // TODO remove this method - only here to sanity check output during development
-      if (simplifiedVersion != null) {
-         FunctionNode in = new FunctionNode(function, firstArg, secondArg);
-         Utils.assertEvaluateToSameResult(in, simplifiedVersion);
-      }
-   }
-
    private static void assertSameClass(Node currentNode, Node nodeToReplace) {
       // TODO remove this method - only here to sanity check input during development
       if (nodeToReplace.getClass() != currentNode.getClass()) {
          throw new IllegalArgumentException(nodeToReplace.getClass().getName() + " " + currentNode.getClass().getName());
+      }
+   }
+
+   private static void assertEvaluateToSameResult(Node simplifiedVersion, Function function, Node firstArg, Node secondArg) {
+      // TODO remove this method - only here to sanity check output during development
+      if (simplifiedVersion != null) {
+         FunctionNode in = new FunctionNode(function, firstArg, secondArg);
+         assertEvaluateToSameResult(in, simplifiedVersion);
+      }
+   }
+
+   /**
+    * Asserts that the specified nodes evaluate to the same results.
+    *
+    * @param first
+    *           the node to compare to {@code second}
+    * @param second
+    *           the node to compare to {@code first}
+    * @throws IllegalArgumentException
+    *            if the specified nodes evaluate to different results
+    */
+   static void assertEvaluateToSameResult(Node first, Node second) {
+      // TODO remove this method - only here to sanity check output during development
+      Object[] assignedValues = { 2, 14, 4, 9, 7 };
+      Assignments assignments = Assignments.createAssignments(assignedValues);
+      Object firstResult = first.evaluate(assignments);
+      Object secondResult = second.evaluate(assignments);
+      if (!firstResult.equals(secondResult)) {
+         NodeWriter writer = new NodeWriter();
+         throw new IllegalArgumentException(writer.writeNode(first) + " = " + firstResult + " " + writer.writeNode(second) + " = " + secondResult);
       }
    }
 

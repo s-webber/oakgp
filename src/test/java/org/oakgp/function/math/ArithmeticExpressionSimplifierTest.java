@@ -249,4 +249,23 @@ public class ArithmeticExpressionSimplifierTest {
    private Optional<Node> simplify(FunctionNode in, Arguments args) {
       return Optional.ofNullable(ArithmeticExpressionSimplifier.simplify(in.getFunction(), args.get(0), args.get(1)));
    }
+
+   @Test
+   public void testEvaluateToSameResultSuccess() {
+      Node a = readNode("(* 7 (+ 1 2))");
+      Node b = readNode("(+ 9 12)");
+      ArithmeticExpressionSimplifier.assertEvaluateToSameResult(a, b);
+   }
+
+   @Test
+   public void testEvaluateToSameResultFailure() {
+      Node a = readNode("(* 7 (- 1 2))");
+      Node b = readNode("(+ 9 12)");
+      try {
+         ArithmeticExpressionSimplifier.assertEvaluateToSameResult(a, b);
+         // TODO fail();
+      } catch (IllegalArgumentException e) {
+         assertEquals("(* 7 (- 1 2)) = -7 (+ 9 12) = 21", e.getMessage());
+      }
+   }
 }

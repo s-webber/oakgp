@@ -12,7 +12,7 @@ import static org.oakgp.examples.SystemTestUtils.RANDOM;
 import static org.oakgp.examples.SystemTestUtils.RATIO_VARIABLES;
 import static org.oakgp.examples.SystemTestUtils.createConstants;
 import static org.oakgp.examples.SystemTestUtils.makeRandomTree;
-import static org.oakgp.util.Utils.assertEvaluateToSameResult;
+import static org.oakgp.function.math.ArithmeticExpressionSimplifier.assertEvaluateToSameResult;
 
 import java.io.File;
 import java.io.FileWriter;

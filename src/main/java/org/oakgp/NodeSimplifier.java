@@ -1,7 +1,6 @@
 package org.oakgp;
 
 import static org.oakgp.Arguments.createArguments;
-import static org.oakgp.util.Utils.assertEvaluateToSameResult;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -57,9 +56,7 @@ public final class NodeSimplifier {
 
    private static Node _simplify(Node input) {
       if (input instanceof FunctionNode) {
-         Node output = simplifyFunctionNode((FunctionNode) input);
-         assertEvaluateToSameResult(input, output);
-         return output;
+         return simplifyFunctionNode((FunctionNode) input);
       } else {
          return input;
       }
@@ -76,7 +73,6 @@ public final class NodeSimplifier {
          Node originalArg = inputArgs.get(i);
          simplifiedArgs[i] = _simplify(originalArg);
          if (originalArg != simplifiedArgs[i]) {
-            assertEvaluateToSameResult(originalArg, simplifiedArgs[i]);
             modified = true;
          }
          if (!(simplifiedArgs[i] instanceof ConstantNode)) {
@@ -90,7 +86,6 @@ public final class NodeSimplifier {
       if (modified) {
          arguments = createArguments(simplifiedArgs);
          output = new FunctionNode(input.getFunction(), arguments);
-         assertEvaluateToSameResult(input, output);
       } else {
          arguments = inputArgs;
          output = input;
@@ -106,7 +101,6 @@ public final class NodeSimplifier {
       if (simplifiedByFunctionVersion == null) {
          return output;
       } else {
-         assertEvaluateToSameResult(input, simplifiedByFunctionVersion);
          return simplifiedByFunctionVersion;
       }
    }
