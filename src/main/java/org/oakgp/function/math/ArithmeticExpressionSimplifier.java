@@ -36,11 +36,11 @@ final class ArithmeticExpressionSimplifier {
       if (firstArg instanceof FunctionNode && secondArg instanceof FunctionNode) {
          NodePair p = removeFromChildNodes(firstArg, secondArg, isPos);
          if (p != null) {
-            return new FunctionNode(function, p.x, p.y);
+            return new FunctionNode(function, p.nodeThatHasBeenReduced, p.nodeThatHasBeenExpanded);
          }
          p = removeFromChildNodes(secondArg, firstArg, isPos);
          if (p != null) {
-            return new FunctionNode(function, p.y, p.x);
+            return new FunctionNode(function, p.nodeThatHasBeenExpanded, p.nodeThatHasBeenReduced);
          }
       } else if (firstArg instanceof FunctionNode) {
          return combineWithChildNodes(firstArg, secondArg, isPos);
@@ -102,16 +102,16 @@ final class ArithmeticExpressionSimplifier {
          if (isAdd(f) || isSubtract) {
             NodePair p = removeFromChildNodes(firstArg, nodeToRemove, isPos);
             if (p != null) {
-               NodePair p2 = removeFromChildNodes(secondArg, p.y, isSubtract ? !isPos : isPos);
+               NodePair p2 = removeFromChildNodes(secondArg, p.nodeThatHasBeenExpanded, isSubtract ? !isPos : isPos);
                if (p2 == null) {
-                  return new NodePair(new FunctionNode(f, p.x, secondArg), p.y);
+                  return new NodePair(new FunctionNode(f, p.nodeThatHasBeenReduced, secondArg), p.nodeThatHasBeenExpanded);
                } else {
-                  return new NodePair(new FunctionNode(f, p.x, p2.x), p2.y);
+                  return new NodePair(new FunctionNode(f, p.nodeThatHasBeenReduced, p2.nodeThatHasBeenReduced), p2.nodeThatHasBeenExpanded);
                }
             }
             p = removeFromChildNodes(secondArg, nodeToRemove, isSubtract ? !isPos : isPos);
             if (p != null) {
-               return new NodePair(new FunctionNode(f, firstArg, p.x), p.y);
+               return new NodePair(new FunctionNode(f, firstArg, p.nodeThatHasBeenReduced), p.nodeThatHasBeenExpanded);
             }
          }
       } else if (!ZERO.equals(nodeToWalk)) {
@@ -366,12 +366,12 @@ final class ArithmeticExpressionSimplifier {
    }
 
    private static class NodePair {
-      final Node x;
-      final Node y;
+      private final Node nodeThatHasBeenReduced;
+      private final Node nodeThatHasBeenExpanded;
 
-      NodePair(Node x, Node y) {
-         this.x = x;
-         this.y = y;
+      NodePair(Node nodeThatHasBeenReduced, Node nodeThatHasBeenExpanded) {
+         this.nodeThatHasBeenReduced = nodeThatHasBeenReduced;
+         this.nodeThatHasBeenExpanded = nodeThatHasBeenExpanded;
       }
    }
 }
