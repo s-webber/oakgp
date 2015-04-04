@@ -11,7 +11,7 @@ import org.oakgp.node.Node;
 import org.oakgp.serialize.NodeReader;
 import org.oakgp.serialize.NodeWriter;
 
-/** Simple read–eval–print loop (REPL). */
+/** Simple read-eval-print loop (REPL). */
 public final class Repl {
    /** Private constructor as all methods are static. */
    private Repl() {
