@@ -12,7 +12,7 @@ import java.util.List;
 public final class Signature { // TODO move to org.oakgp.function?
    private final Type returnType;
    private final Type[] argumentTypes;
-   private int hashCode;
+   private final int hashCode;
 
    public static Signature createSignature(Type returnType, Type... argumentTypes) {
       Type[] copy = new Type[argumentTypes.length];
