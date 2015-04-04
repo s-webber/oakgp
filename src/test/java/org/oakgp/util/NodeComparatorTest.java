@@ -1,6 +1,7 @@
 package org.oakgp.util;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.oakgp.TestUtils.createConstant;
 import static org.oakgp.TestUtils.createVariable;
 import static org.oakgp.TestUtils.readNode;
@@ -25,11 +26,19 @@ public class NodeComparatorTest {
    }
 
    @Test
-   public void testCompareFunctions() {
+   public void testCompareFunctionsSameReturnType() {
       // ordering of function nodes is a bit arbitrary (relies on hashCode of Function class name and arguments)
       // the important thing is that it is consistent
       assertOrdered(readNode("(- 1 1)"), readNode("(+ 1 1)"));
       assertOrdered(readNode("(* 3 3)"), readNode("(* 3 4)"));
+   }
+
+   @Test
+   public void testCompareFunctionsDifferentReturnTypes() {
+      // ordering of function nodes is a bit arbitrary (relies on hashCode of Function class name and arguments)
+      // the important thing is that it is consistent
+      // pos? returns boolean, + returns integer
+      assertOrdered(readNode("(pos? 1)"), readNode("(+ 1 1)"));
    }
 
    @Test
@@ -50,8 +59,8 @@ public class NodeComparatorTest {
 
    private void assertOrdered(Node n1, Node n2) {
       assertEquals(0, NODE_COMPARATOR.compare(n1, n1));
-      assertEquals(-1, NODE_COMPARATOR.compare(n1, n2));
-      assertEquals(1, NODE_COMPARATOR.compare(n2, n1));
+      assertTrue(NODE_COMPARATOR.compare(n1, n2) < 0);
+      assertTrue(NODE_COMPARATOR.compare(n2, n1) > 0);
    }
 
    @Test
