@@ -19,7 +19,7 @@ import org.oakgp.function.math.Subtract;
 public class SymbolMapTest {
    // TODO test getDisplayName when no symbol mapping exists for the specified Function
 
-   private final SymbolMap symbolMap = new SymbolMap();
+   private final SymbolMap symbolMap = SymbolMap.createDefaultSymbolMap();
    private final List<Type> types = Collections.unmodifiableList(Arrays.asList(integerType(), integerType()));
 
    @Test

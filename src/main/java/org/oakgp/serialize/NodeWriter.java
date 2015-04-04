@@ -1,9 +1,9 @@
 package org.oakgp.serialize;
 
 import org.oakgp.Arguments;
+import org.oakgp.function.Function;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
-import org.oakgp.function.Function;
 
 /**
  * Creates {@code String} representations of {@code Node} instances.
@@ -21,7 +21,7 @@ import org.oakgp.function.Function;
  * </pre>
  */
 public final class NodeWriter {
-   private final SymbolMap symbolMap = new SymbolMap();
+   private final SymbolMap symbolMap = SymbolMap.createDefaultSymbolMap();
 
    public String writeNode(Node node) {
       StringBuilder sb = new StringBuilder();

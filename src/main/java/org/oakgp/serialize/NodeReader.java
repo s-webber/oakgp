@@ -50,7 +50,7 @@ public final class NodeReader implements Closeable {
    private static final char ARRAY_END_CHAR = ']';
    private static final String ARRAY_END_STRING = Character.toString(ARRAY_END_CHAR);
 
-   private final SymbolMap symbolMap = new SymbolMap();
+   private final SymbolMap symbolMap = SymbolMap.createDefaultSymbolMap();
    private final CharReader cr;
    private final Type[] variableTypes;
 
