@@ -54,9 +54,27 @@ public class TypeTest {
       assertNotEquals(Type.functionType(Type.integerType(), Type.stringType()), Type.functionType(Type.stringType(), Type.integerType()));
    }
 
+   @Test
+   public void testUserDefinedType() {
+      Type t = Type.type("qwerty", Type.integerType());
+      assertEquals("qwerty [integer]", t.toString());
+      assertEquals(t, Type.type("qwerty", Type.integerType()));
+      assertSame(t, Type.type("qwerty", Type.integerType()));
+      assertNotEquals(t, Type.type("Qwerty", Type.integerType()));
+      assertNotEquals(t, Type.type("qwe-rty", Type.integerType()));
+      assertNotEquals(t, Type.type("qwe rty", Type.integerType()));
+      assertNotEquals(t, Type.type(" qwerty", Type.integerType()));
+      assertNotEquals(t, Type.type("qwerty ", Type.integerType()));
+      assertNotEquals(t, Type.type("qwerty"));
+      assertNotEquals(t, Type.type("qwerty", Type.integerType(), Type.integerType()));
+      assertNotEquals(t, Type.type("qwerty", Type.stringType()));
+   }
+
    private void assertType(String name, Supplier<Type> s) {
       Type t = s.get();
+      assertEquals(t, s.get());
       assertSame(t, s.get());
+      assertEquals(t, Type.type(name));
       assertSame(t, Type.type(name));
       assertEquals(name, t.toString());
    }

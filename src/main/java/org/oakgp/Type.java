@@ -15,6 +15,7 @@ public final class Type implements Comparable<Type> {
 
    private final String name;
    private final Type[] args;
+   private final int hashCode;
 
    public static Type stringType() {
       return type("string");
@@ -62,16 +63,28 @@ public final class Type implements Comparable<Type> {
    private static Type type(Type t) {
       Type e = TYPE_CACHE.get(t);
       if (e == null) {
-         TYPE_CACHE.put(t, t);
-         return t;
+         return store(t);
       } else {
          return e;
+      }
+   }
+
+   private static Type store(Type t) {
+      synchronized (TYPE_CACHE) {
+         Type e = TYPE_CACHE.get(t);
+         if (e == null) {
+            TYPE_CACHE.put(t, t);
+            return t;
+         } else {
+            return e;
+         }
       }
    }
 
    private Type(String name, Type... args) {
       this.name = name;
       this.args = args;
+      this.hashCode = (name.hashCode() * 31) * Arrays.hashCode(args);
    }
 
    @Override
@@ -91,8 +104,7 @@ public final class Type implements Comparable<Type> {
 
    @Override
    public int hashCode() {
-      // TODO include args in hashCode? cache hashCode?
-      return name.hashCode();
+      return hashCode;
    }
 
    @Override
