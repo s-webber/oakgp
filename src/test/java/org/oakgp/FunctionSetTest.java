@@ -18,27 +18,27 @@ import org.oakgp.function.math.Subtract;
 public class FunctionSetTest {
    // TODO test getDisplayName when no symbol mapping exists for the specified Function
 
-   private final FunctionSet symbolMap = FunctionSet.createDefaultFunctionSet();
+   private final FunctionSet functionSet = FunctionSet.createDefaultFunctionSet();
    private final List<Type> types = Collections.unmodifiableList(Arrays.asList(integerType(), integerType()));
 
    @Test
    public void testGetDisplayName() {
-      assertEquals("+", symbolMap.getDisplayName(new Add()));
-      assertEquals("-", symbolMap.getDisplayName(new Subtract()));
-      assertEquals("*", symbolMap.getDisplayName(new Multiply()));
+      assertEquals("+", functionSet.getDisplayName(new Add()));
+      assertEquals("-", functionSet.getDisplayName(new Subtract()));
+      assertEquals("*", functionSet.getDisplayName(new Multiply()));
    }
 
    @Test
    public void testGetFunctionBySymbol() {
-      assertSame(Add.class, symbolMap.getFunction("+", types).getClass());
-      assertSame(Subtract.class, symbolMap.getFunction("-", types).getClass());
-      assertSame(Multiply.class, symbolMap.getFunction("*", types).getClass());
+      assertSame(Add.class, functionSet.getFunction("+", types).getClass());
+      assertSame(Subtract.class, functionSet.getFunction("-", types).getClass());
+      assertSame(Multiply.class, functionSet.getFunction("*", types).getClass());
    }
 
    @Test
    public void testGetFunctionByClassName() {
       try {
-         symbolMap.getFunction(Add.class.getName(), types);
+         functionSet.getFunction(Add.class.getName(), types);
          fail();
       } catch (IllegalArgumentException e) {
          assertEquals("Could not find function: org.oakgp.function.math.Add", e.getMessage());
@@ -48,7 +48,7 @@ public class FunctionSetTest {
    @Test
    public void testGetFunctionSymbolDoesNotExist() {
       try {
-         symbolMap.getFunction("^", types);
+         functionSet.getFunction("^", types);
          fail();
       } catch (IllegalArgumentException e) {
          assertEquals("Could not find function: ^", e.getMessage());
@@ -72,7 +72,7 @@ public class FunctionSetTest {
 
    private void assertCannotFindByTypes(List<Type> types) {
       try {
-         symbolMap.getFunction("+", types);
+         functionSet.getFunction("+", types);
          fail();
       } catch (IllegalArgumentException e) {
          assertEquals("Could not find version of function: + for: " + types, e.getMessage());
