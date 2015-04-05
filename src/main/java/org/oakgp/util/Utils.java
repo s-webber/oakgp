@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 import org.oakgp.Type;
 import org.oakgp.node.Node;
@@ -18,16 +19,20 @@ public final class Utils {
    }
 
    public static <T extends Node> Map<Type, List<T>> groupNodesByType(T[] nodes) {
-      Map<Type, List<T>> nodesByType = new HashMap<>();
-      for (T n : nodes) {
-         addToListOfMap(nodesByType, n.getType(), n);
+      return groupValuesByKey(nodes, Node::getType);
+   }
+
+   public static <K, V> Map<K, List<V>> groupValuesByKey(V[] values, Function<V, K> valueToKey) {
+      Map<K, List<V>> nodesByType = new HashMap<>();
+      for (V v : values) {
+         addToListOfMap(nodesByType, valueToKey.apply(v), v);
       }
       makeValuesImmutable(nodesByType);
       return nodesByType;
    }
 
-   private static <T> void addToListOfMap(Map<Type, List<T>> map, Type key, T value) {
-      List<T> list = map.get(key);
+   private static <K, V> void addToListOfMap(Map<K, List<V>> map, K key, V value) {
+      List<V> list = map.get(key);
       if (list == null) {
          list = new ArrayList<>();
          map.put(key, list);
@@ -35,8 +40,8 @@ public final class Utils {
       list.add(value);
    }
 
-   private static <T> void makeValuesImmutable(Map<Type, List<T>> map) {
-      for (Map.Entry<Type, List<T>> e : map.entrySet()) {
+   private static <K, V> void makeValuesImmutable(Map<K, List<V>> map) {
+      for (Map.Entry<K, List<V>> e : map.entrySet()) {
          map.put(e.getKey(), unmodifiableList(e.getValue()));
       }
    }
