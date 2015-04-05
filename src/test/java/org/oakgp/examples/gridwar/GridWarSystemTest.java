@@ -19,16 +19,17 @@ import java.util.Map;
 import java.util.function.Predicate;
 
 import org.junit.Test;
+import org.oakgp.ConstantSet;
 import org.oakgp.GenerationEvolver;
 import org.oakgp.GenerationProcessor;
 import org.oakgp.NodeEvolver;
+import org.oakgp.PrimitiveSet;
 import org.oakgp.RankedCandidate;
 import org.oakgp.Runner;
-import org.oakgp.TerminalSet;
 import org.oakgp.Type;
+import org.oakgp.VariableSet;
 import org.oakgp.crossover.SubtreeCrossover;
 import org.oakgp.mutate.PointMutation;
-import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
 import org.oakgp.tournament.FirstPlayerAdvantageGame;
 import org.oakgp.tournament.RoundRobinTournament;
@@ -43,10 +44,11 @@ public class GridWarSystemTest {
    @Test
    public void test() {
       // set-up
-      ConstantNode[] constants = createConstants(NUM_CONSTANTS);
-      TerminalSet terminalSet = new TerminalSet(RANDOM, RATIO_VARIABLES, VARIABLE_TYPES, constants);
-      Collection<Node> initialGeneration = createInitialGeneration(COMPARISON_FUNCTION_SET, terminalSet, GENERATION_SIZE);
-      Map<NodeEvolver, Long> nodeEvolvers = createNodeEvolvers(terminalSet);
+      ConstantSet constants = createConstants(NUM_CONSTANTS);
+      VariableSet variables = VariableSet.createVariableSet(VARIABLE_TYPES);
+      PrimitiveSet primitiveSet = new PrimitiveSet(COMPARISON_FUNCTION_SET, constants, variables, RANDOM, RATIO_VARIABLES);
+      Collection<Node> initialGeneration = createInitialGeneration(primitiveSet, GENERATION_SIZE);
+      Map<NodeEvolver, Long> nodeEvolvers = createNodeEvolvers(primitiveSet);
       Predicate<List<RankedCandidate>> terminator = createTerminator();
 
       // run process
@@ -64,11 +66,11 @@ public class GridWarSystemTest {
       return new TwoPlayerGameCache(GENERATION_SIZE * 2, game);
    }
 
-   private Map<NodeEvolver, Long> createNodeEvolvers(TerminalSet terminalSet) {
+   private Map<NodeEvolver, Long> createNodeEvolvers(PrimitiveSet primitiveSet) {
       Map<NodeEvolver, Long> nodeEvolvers = new HashMap<>();
-      nodeEvolvers.put(t -> makeRandomTree(COMPARISON_FUNCTION_SET, terminalSet, 4), 5L);
+      nodeEvolvers.put(t -> makeRandomTree(primitiveSet, 4), 5L);
       nodeEvolvers.put(new SubtreeCrossover(RANDOM), 21L);
-      nodeEvolvers.put(new PointMutation(RANDOM, COMPARISON_FUNCTION_SET, terminalSet), 21L);
+      nodeEvolvers.put(new PointMutation(RANDOM, primitiveSet), 21L);
       return nodeEvolvers;
    }
 

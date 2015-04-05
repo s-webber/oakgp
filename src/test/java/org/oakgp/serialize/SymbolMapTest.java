@@ -11,15 +11,16 @@ import java.util.Collections;
 import java.util.List;
 
 import org.junit.Test;
+import org.oakgp.FunctionSet;
 import org.oakgp.Type;
 import org.oakgp.function.math.Add;
 import org.oakgp.function.math.Multiply;
 import org.oakgp.function.math.Subtract;
 
-public class SymbolMapTest {
+public class SymbolMapTest { // TODO move tests to FunctionSetTest
    // TODO test getDisplayName when no symbol mapping exists for the specified Function
 
-   private final SymbolMap symbolMap = SymbolMap.createDefaultSymbolMap();
+   private final FunctionSet symbolMap = FunctionSet.createDefaultFunctionSet();
    private final List<Type> types = Collections.unmodifiableList(Arrays.asList(integerType(), integerType()));
 
    @Test

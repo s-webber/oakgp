@@ -1,21 +1,43 @@
 package org.oakgp;
 
+import static org.oakgp.Type.booleanType;
+import static org.oakgp.Type.integerType;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.oakgp.function.Function;
-import org.oakgp.util.Random;
+import org.oakgp.function.choice.If;
+import org.oakgp.function.classify.IsNegative;
+import org.oakgp.function.classify.IsPositive;
+import org.oakgp.function.classify.IsZero;
+import org.oakgp.function.coll.Count;
+import org.oakgp.function.compare.Equal;
+import org.oakgp.function.compare.GreaterThan;
+import org.oakgp.function.compare.GreaterThanOrEqual;
+import org.oakgp.function.compare.LessThan;
+import org.oakgp.function.compare.LessThanOrEqual;
+import org.oakgp.function.compare.NotEqual;
+import org.oakgp.function.hof.Filter;
+import org.oakgp.function.hof.Reduce;
+import org.oakgp.function.math.Add;
+import org.oakgp.function.math.Multiply;
+import org.oakgp.function.math.Subtract;
 
 /** Represents the set of possible {@code Function} implementations to use during a genetic programming run. */
 public final class FunctionSet {
-   private final Random random;
+   private final Map<Class<? extends Function>, String> classToSymbolMappings;
+   private final Map<String, Map<List<Type>, Function>> symbolToInstanceMappings;
    private final Map<Type, List<Function>> functionsByType;
    private final Map<Signature, List<Function>> functionsBySignature;
 
-   public FunctionSet(Random random, Function[] functions) {
-      this.random = random;
+   /** @see FunctionSet.Builder#build() */
+   private FunctionSet(Map<Class<? extends Function>, String> classToSymbolMappings, Map<String, Map<List<Type>, Function>> symbolToInstanceMappings,
+         List<Function> functions) {
+      this.classToSymbolMappings = classToSymbolMappings;
+      this.symbolToInstanceMappings = symbolToInstanceMappings;
       functionsByType = new HashMap<>();
       functionsBySignature = new HashMap<>();
       for (Function function : functions) {
@@ -44,53 +66,96 @@ public final class FunctionSet {
       typeArgumentCountPairFunctions.add(function);
    }
 
-   /**
-    * Returns a randomly selected {@code Function} of the specified {@code Type}.
-    *
-    * @param type
-    *           the required return type of the {@code Function}
-    * @return a randomly selected {@code Function} with a return type of {@code type}
-    */
-   public Function next(Type type) {
-      List<Function> typeFunctions = functionsByType.get(type);
-      if (typeFunctions == null) { // TODO remove this check?
-         throw new RuntimeException("No " + type);
+   public String getDisplayName(Function function) {
+      Class<? extends Function> functionClass = function.getClass();
+      String displayName = classToSymbolMappings.get(functionClass);
+      if (displayName != null) {
+         return displayName;
+      } else {
+         return functionClass.getName();
       }
-      int index = random.nextInt(typeFunctions.size());
-      return typeFunctions.get(index);
    }
 
-   /**
-    * Returns a randomly selected {@code Function} that is not the same as the specified {@code Function}.
-    *
-    * @param current
-    *           the current {@code Function} that the returned result should be an alternative to (i.e. not the same as)
-    * @return a randomly selected {@code Function} that is not the same as the specified {@code Function}
-    */
-   public Function nextAlternative(Function current) {
-      Signature signature = current.getSignature();
-      List<Function> functions = functionsBySignature.get(signature);
-      if (functions == null) {
-         // TODO remove this check?
-         throw new RuntimeException("no match " + current + " " + current.getSignature() + " " + functionsBySignature);
+   public Function getFunction(String symbol, List<Type> types) {
+      Map<List<Type>, Function> m = symbolToInstanceMappings.get(symbol);
+      if (m == null) {
+         throw new IllegalArgumentException("Could not find function: " + symbol);
       }
-      int functionsSize = functions.size();
-      if (functionsSize == 1) {
-         // TODO return Optional.empty() instead - so calling called can try something different
-         // (e.g. call this method on one of the node's arguments instead)
-         return current;
+      Function f = m.get(types);
+      if (f == null) {
+         throw new IllegalArgumentException("Could not find version of function: " + symbol + " for: " + types); // TODO + " in: " + m);
       }
-      int randomIndex = random.nextInt(functionsSize);
-      Function next = functions.get(randomIndex);
-      if (next == current) {
-         int secondRandomIndex = random.nextInt(functionsSize - 1);
-         if (secondRandomIndex >= randomIndex) {
-            return functions.get(secondRandomIndex + 1);
-         } else {
-            return functions.get(secondRandomIndex);
+      return f;
+   }
+
+   public List<Function> getByType(Type type) {
+      return functionsByType.get(type);
+   }
+
+   public List<Function> getBySignature(Signature signature) {
+      return functionsBySignature.get(signature);
+   }
+
+   public static FunctionSet createDefaultFunctionSet() {
+      FunctionSet.Builder builder = new FunctionSet.Builder();
+
+      builder.put("+", new Add());
+      builder.put("-", new Subtract());
+      builder.put("*", new Multiply());
+
+      builder.put("<", new LessThan());
+      builder.put("<=", new LessThanOrEqual());
+      builder.put(">", new GreaterThan());
+      builder.put(">=", new GreaterThanOrEqual());
+      builder.put("=", new Equal());
+      builder.put("!=", new NotEqual());
+
+      builder.put("if", new If());
+
+      builder.put("reduce", new Reduce(integerType()));
+      builder.put("filter", new Filter(integerType()));
+      builder.put("map", new org.oakgp.function.hof.Map(integerType(), booleanType()));
+
+      builder.put("pos?", new IsPositive());
+      builder.put("neg?", new IsNegative());
+      builder.put("zero?", new IsZero());
+
+      builder.put("count", new Count(integerType()));
+      builder.put("count", new Count(booleanType()));
+
+      return builder.build();
+   }
+
+   public static class Builder {
+      private final Map<Class<? extends Function>, String> classToSymbolMappings = new HashMap<>();
+      private final Map<String, Map<List<Type>, Function>> symbolToInstanceMappings = new HashMap<>();
+      private final List<Function> functions = new ArrayList<>();
+
+      public Builder put(String symbol, Function function) {
+         // TODO add validation around adding things that already exist
+         // TODO check subsequent calls after build() do not alter original?
+         classToSymbolMappings.put(function.getClass(), symbol);
+         functions.add(function);
+         addToInstanceMappings(symbol, function);
+         return this;
+      }
+
+      private void addToInstanceMappings(String symbol, Function f) {
+         Map<List<Type>, Function> m = symbolToInstanceMappings.get(symbol);
+         if (m == null) {
+            m = new HashMap<>();
+            symbolToInstanceMappings.put(symbol, m);
          }
-      } else {
-         return next;
+         List<Type> key = f.getSignature().getArgumentTypes();
+         if (m.containsKey(key)) {
+            // TODO is this check required?
+            throw new IllegalArgumentException();
+         }
+         m.put(key, f);
+      }
+
+      public FunctionSet build() {
+         return new FunctionSet(classToSymbolMappings, symbolToInstanceMappings, functions);
       }
    }
 }

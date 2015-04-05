@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.oakgp.FunctionSet;
 import org.oakgp.Type;
 import org.oakgp.function.Function;
 import org.oakgp.node.ConstantNode;
@@ -50,7 +51,7 @@ public final class NodeReader implements Closeable {
    private static final char ARRAY_END_CHAR = ']';
    private static final String ARRAY_END_STRING = Character.toString(ARRAY_END_CHAR);
 
-   private final SymbolMap symbolMap = SymbolMap.createDefaultSymbolMap();
+   private final FunctionSet functionSet = FunctionSet.createDefaultFunctionSet();
    private final CharReader cr;
    private final Type[] variableTypes;
 
@@ -89,7 +90,7 @@ public final class NodeReader implements Closeable {
          arguments.add(n);
          types.add(n.getType());
       }
-      Function function = symbolMap.getFunction(functionName, types);
+      Function function = functionSet.getFunction(functionName, types);
       return new FunctionNode(function, createArguments(arguments));
    }
 
@@ -143,7 +144,7 @@ public final class NodeReader implements Closeable {
                types = Arrays.asList(integerType()); // TODO
                type = Type.integerToBooleanFunctionType();
             }
-            Function function = symbolMap.getFunction(token, types);
+            Function function = functionSet.getFunction(token, types);
             return new ConstantNode(function, type);
          }
       }

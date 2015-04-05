@@ -3,30 +3,18 @@ package org.oakgp.function.math;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.oakgp.NodeSimplifier.simplify;
-import static org.oakgp.TestUtils.createTypeArray;
 import static org.oakgp.TestUtils.readNode;
-import static org.oakgp.TestUtils.writeNode;
 import static org.oakgp.Type.integerType;
-import static org.oakgp.examples.SystemTestUtils.ARITHMETIC_FUNCTION_SET;
-import static org.oakgp.examples.SystemTestUtils.RANDOM;
-import static org.oakgp.examples.SystemTestUtils.RATIO_VARIABLES;
-import static org.oakgp.examples.SystemTestUtils.createConstants;
-import static org.oakgp.examples.SystemTestUtils.makeRandomTree;
 import static org.oakgp.function.math.ArithmeticExpressionSimplifier.assertEvaluateToSameResult;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.junit.Test;
 import org.oakgp.Signature;
-import org.oakgp.TerminalSet;
 import org.oakgp.function.Function;
-import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
 
 public class ArithmeticOperatorTest {
@@ -68,25 +56,26 @@ public class ArithmeticOperatorTest {
 
    private List<String> getTestData() throws IOException {
       if (!TEST_DATA_FILE.exists()) {
-         createTestData(TEST_DATA_FILE, TEST_DATA_SIZE);
+         // createTestData(TEST_DATA_FILE, TEST_DATA_SIZE);
+         throw new RuntimeException("Not found: " + TEST_DATA_FILE.getAbsolutePath());
       }
       return Files.readAllLines(TEST_DATA_FILE.toPath());
    }
 
-   private static void createTestData(File outputFile, int size) throws IOException {
-      ConstantNode[] constants = createConstants(11);
-      int numVariables = 4;
-      TerminalSet terminalSet = new TerminalSet(RANDOM, RATIO_VARIABLES, createTypeArray(numVariables), constants);
-      Set<String> examples = new HashSet<>();
-      try (FileWriter fw = new FileWriter(outputFile)) {
-         while (examples.size() < size) {
-            Node node = makeRandomTree(ARITHMETIC_FUNCTION_SET, terminalSet, 16);
-            String example = writeNode(node);
-            if (node.getNodeCount() > 7 && examples.add(example)) {
-               fw.write(example);
-               fw.write('\n');
-            }
-         }
-      }
-   }
+   // private static void createTestData(File outputFile, int size) throws IOException {
+   // ConstantNode[] constants = createConstants(11);
+   // int numVariables = 4;
+   // TerminalSet terminalSet = new TerminalSet(RANDOM, RATIO_VARIABLES, createTypeArray(numVariables), constants);
+   // Set<String> examples = new HashSet<>();
+   // try (FileWriter fw = new FileWriter(outputFile)) {
+   // while (examples.size() < size) {
+   // Node node = makeRandomTree(ARITHMETIC_FUNCTION_SET, terminalSet, 16);
+   // String example = writeNode(node);
+   // if (node.getNodeCount() > 7 && examples.add(example)) {
+   // fw.write(example);
+   // fw.write('\n');
+   // }
+   // }
+   // }
+   // }
 }

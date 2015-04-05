@@ -1,24 +1,21 @@
 package org.oakgp.mutate;
 
-import org.oakgp.FunctionSet;
 import org.oakgp.NodeEvolver;
-import org.oakgp.TerminalSet;
+import org.oakgp.PrimitiveSet;
+import org.oakgp.function.Function;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
-import org.oakgp.function.Function;
 import org.oakgp.selector.NodeSelector;
 import org.oakgp.util.Random;
 
 /** Performs mutation (also known as node replacement mutation). */
 public final class PointMutation implements NodeEvolver {
    private final Random random;
-   private final FunctionSet functionSet;
-   private final TerminalSet terminalSet;
+   private final PrimitiveSet primitiveSet;
 
-   public PointMutation(Random random, FunctionSet functionSet, TerminalSet terminalSet) {
+   public PointMutation(Random random, PrimitiveSet primitiveSet) {
       this.random = random;
-      this.functionSet = functionSet;
-      this.terminalSet = terminalSet;
+      this.primitiveSet = primitiveSet;
    }
 
    @Override
@@ -28,10 +25,10 @@ public final class PointMutation implements NodeEvolver {
       return root.replaceAt(mutationPoint, node -> {
          if (node instanceof FunctionNode) {
             FunctionNode functionNode = (FunctionNode) node;
-            Function function = functionSet.nextAlternative(functionNode.getFunction());
+            Function function = primitiveSet.nextFunction(functionNode.getFunction());
             return new FunctionNode(function, functionNode.getArguments());
          } else {
-            return terminalSet.nextAlternative(node);
+            return primitiveSet.nextAlternative(node);
          }
       });
    }

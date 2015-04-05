@@ -1,6 +1,7 @@
 package org.oakgp.serialize;
 
 import org.oakgp.Arguments;
+import org.oakgp.FunctionSet;
 import org.oakgp.function.Function;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
@@ -21,7 +22,7 @@ import org.oakgp.node.Node;
  * </pre>
  */
 public final class NodeWriter {
-   private final SymbolMap symbolMap = SymbolMap.createDefaultSymbolMap();
+   private final FunctionSet functionSet = FunctionSet.createDefaultFunctionSet();
 
    public String writeNode(Node node) {
       StringBuilder sb = new StringBuilder();
@@ -34,7 +35,7 @@ public final class NodeWriter {
          FunctionNode functionNode = (FunctionNode) node;
          Function function = functionNode.getFunction();
          Arguments arguments = functionNode.getArguments();
-         sb.append('(').append(symbolMap.getDisplayName(function));
+         sb.append('(').append(functionSet.getDisplayName(function));
          for (int i = 0; i < arguments.length(); i++) {
             sb.append(' ').append(writeNode(arguments.get(i)));
          }

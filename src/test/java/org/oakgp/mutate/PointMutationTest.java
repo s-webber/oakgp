@@ -7,21 +7,23 @@ import static org.mockito.Mockito.mock;
 import static org.oakgp.Arguments.createArguments;
 import static org.oakgp.TestUtils.assertConstant;
 import static org.oakgp.TestUtils.assertVariable;
-import static org.oakgp.TestUtils.integerConstant;
 import static org.oakgp.TestUtils.createTypeArray;
+import static org.oakgp.TestUtils.integerConstant;
 
 import org.junit.Test;
 import org.oakgp.Arguments;
+import org.oakgp.ConstantSet;
 import org.oakgp.FunctionSet;
-import org.oakgp.TerminalSet;
+import org.oakgp.PrimitiveSet;
 import org.oakgp.Type;
-import org.oakgp.node.ConstantNode;
-import org.oakgp.node.FunctionNode;
-import org.oakgp.node.Node;
+import org.oakgp.VariableSet;
 import org.oakgp.function.Function;
 import org.oakgp.function.math.Add;
 import org.oakgp.function.math.Multiply;
 import org.oakgp.function.math.Subtract;
+import org.oakgp.node.ConstantNode;
+import org.oakgp.node.FunctionNode;
+import org.oakgp.node.Node;
 import org.oakgp.selector.DummyNodeSelector;
 import org.oakgp.util.Random;
 
@@ -73,8 +75,14 @@ public class PointMutationTest {
    }
 
    private PointMutation createPointMutation(Random mockRandom) {
-      FunctionSet functionSet = new FunctionSet(mockRandom, FUNCTIONS);
-      TerminalSet terminalSet = new TerminalSet(mockRandom, VARIABLE_RATIO, VARIABLE_TYPES, CONSTANTS);
-      return new PointMutation(mockRandom, functionSet, terminalSet);
+      FunctionSet.Builder b = new FunctionSet.Builder();
+      b.put("+", FUNCTIONS[0]);
+      b.put("-", FUNCTIONS[1]);
+      b.put("*", FUNCTIONS[2]);
+      FunctionSet functions = b.build();
+      ConstantSet constants = new ConstantSet(CONSTANTS);
+      VariableSet variables = VariableSet.createVariableSet(VARIABLE_TYPES);
+      PrimitiveSet primitiveSet = new PrimitiveSet(functions, constants, variables, mockRandom, VARIABLE_RATIO);
+      return new PointMutation(mockRandom, primitiveSet);
    }
 }
