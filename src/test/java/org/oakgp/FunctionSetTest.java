@@ -16,8 +16,6 @@ import org.oakgp.function.math.Multiply;
 import org.oakgp.function.math.Subtract;
 
 public class FunctionSetTest {
-   // TODO test getDisplayName when no symbol mapping exists for the specified Function
-
    private final FunctionSet functionSet = FunctionSet.createDefaultFunctionSet();
    private final List<Type> types = Collections.unmodifiableList(Arrays.asList(integerType(), integerType()));
 
@@ -26,6 +24,12 @@ public class FunctionSetTest {
       assertEquals("+", functionSet.getDisplayName(new Add()));
       assertEquals("-", functionSet.getDisplayName(new Subtract()));
       assertEquals("*", functionSet.getDisplayName(new Multiply()));
+   }
+
+   @Test
+   public void testGetDisplayNameWhenNoEntryExists() {
+      FunctionSet emptySet = new FunctionSet.Builder().build();
+      assertEquals("org.oakgp.function.math.Add", emptySet.getDisplayName(new Add()));
    }
 
    @Test
