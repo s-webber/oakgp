@@ -28,6 +28,8 @@ import org.oakgp.function.math.Subtract;
 
 /** Represents the set of possible {@code Function} implementations to use during a genetic programming run. */
 public final class FunctionSet {
+   // TODO tidy up how member variables are created
+
    private final Map<Class<? extends Function>, String> classToSymbolMappings;
    private final Map<String, Map<List<Type>, Function>> symbolToInstanceMappings;
    private final Map<Type, List<Function>> functionsByType;
