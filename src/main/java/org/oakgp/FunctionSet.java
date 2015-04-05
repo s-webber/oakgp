@@ -128,7 +128,8 @@ public final class FunctionSet {
       return builder.build();
    }
 
-   public static class Builder {
+   /** Implementation of the builder pattern to aid the construction of a {@code FunctionSet}. */
+   public static final class Builder {
       private final Map<Class<? extends Function>, String> classToSymbolMappings = new HashMap<>();
       private final Map<String, Map<List<Type>, Function>> symbolToInstanceMappings = new HashMap<>();
       private final List<Function> functions = new ArrayList<>();

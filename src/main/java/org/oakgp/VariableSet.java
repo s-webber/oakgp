@@ -2,6 +2,7 @@ package org.oakgp;
 
 import org.oakgp.node.VariableNode;
 
+/** Represents the range of possible variables to use during a genetic programming run. */
 public final class VariableSet extends AbstractTerminalSet<VariableNode> {
    private final VariableNode[] variables;
 
