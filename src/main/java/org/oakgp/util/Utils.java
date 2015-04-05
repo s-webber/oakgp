@@ -1,5 +1,7 @@
 package org.oakgp.util;
 
+import static java.util.Collections.unmodifiableList;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,15 +22,22 @@ public final class Utils {
       for (T n : nodes) {
          addToListOfMap(nodesByType, n.getType(), n);
       }
+      makeValuesImmutable(nodesByType);
       return nodesByType;
    }
 
-   public static <T> void addToListOfMap(Map<Type, List<T>> map, Type key, T value) {
+   private static <T> void addToListOfMap(Map<Type, List<T>> map, Type key, T value) {
       List<T> list = map.get(key);
       if (list == null) {
          list = new ArrayList<>();
          map.put(key, list);
       }
       list.add(value);
+   }
+
+   private static <T> void makeValuesImmutable(Map<Type, List<T>> map) {
+      for (Map.Entry<Type, List<T>> e : map.entrySet()) {
+         map.put(e.getKey(), unmodifiableList(e.getValue()));
+      }
    }
 }

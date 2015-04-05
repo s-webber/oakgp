@@ -4,6 +4,7 @@ import static java.lang.Boolean.TRUE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
+import static org.oakgp.TestUtils.assertUnmodifiable;
 import static org.oakgp.TestUtils.booleanConstant;
 import static org.oakgp.TestUtils.integerConstant;
 import static org.oakgp.Type.booleanType;
@@ -34,5 +35,12 @@ public class ConstantSetTest {
       assertSame(c1, strings.get(0));
 
       assertNull(s.getByType(stringType())); // TODO expect empty list?
+   }
+
+   @Test
+   public void assertGetByTypeUnmodifiable() {
+      ConstantSet s = new ConstantSet(integerConstant(7), booleanConstant(TRUE), integerConstant(5));
+      List<ConstantNode> integers = s.getByType(integerType());
+      assertUnmodifiable(integers);
    }
 }

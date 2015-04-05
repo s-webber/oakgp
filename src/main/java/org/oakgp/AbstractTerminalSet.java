@@ -13,7 +13,6 @@ abstract class AbstractTerminalSet<T extends Node> {
       nodesByType = Utils.groupNodesByType(nodes);
    }
 
-   // TODO return immutable version
    public List<T> getByType(Type type) {
       return nodesByType.get(type);
    }

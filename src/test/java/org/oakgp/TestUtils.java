@@ -3,6 +3,7 @@ package org.oakgp;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,6 +24,17 @@ public class TestUtils {
    public static void assertConstant(Object expectedValue, Node node) {
       assertTrue(node instanceof ConstantNode);
       assertEquals(expectedValue, ((ConstantNode) node).evaluate(null));
+   }
+
+   @SuppressWarnings({ "unchecked", "rawtypes" })
+   public static void assertUnmodifiable(List list) {
+      assertEquals("java.util.Collections$UnmodifiableRandomAccessList", list.getClass().getName());
+      try {
+         list.add(new Object());
+         fail();
+      } catch (UnsupportedOperationException e) {
+         // expected
+      }
    }
 
    public static String writeNode(Node input) {

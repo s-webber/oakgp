@@ -6,6 +6,7 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.oakgp.Signature.createSignature;
+import static org.oakgp.TestUtils.assertUnmodifiable;
 import static org.oakgp.Type.booleanType;
 import static org.oakgp.Type.integerType;
 
@@ -45,8 +46,7 @@ public class SignatureTest {
       assertSame(booleanType(), types.get(0));
       assertSame(integerType(), types.get(1));
       assertSame(booleanType(), types.get(2));
-      // assert unmodifiable
-      assertEquals("java.util.Collections$UnmodifiableRandomAccessList", types.getClass().getName());
+      assertUnmodifiable(types);
    }
 
    @Test
