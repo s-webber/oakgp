@@ -59,6 +59,10 @@ public class TestUtils {
       return new ConstantNode(value, Type.integerType());
    }
 
+   public static ConstantNode booleanConstant(Boolean value) {
+      return new ConstantNode(value, Type.booleanType());
+   }
+
    public static VariableNode createVariable(int id) {
       return new VariableNode(id, Type.integerType());
    }

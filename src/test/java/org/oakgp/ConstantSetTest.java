@@ -1,8 +1,10 @@
 package org.oakgp;
 
+import static java.lang.Boolean.TRUE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
+import static org.oakgp.TestUtils.booleanConstant;
 import static org.oakgp.TestUtils.integerConstant;
 import static org.oakgp.Type.booleanType;
 import static org.oakgp.Type.integerType;
@@ -17,7 +19,7 @@ public class ConstantSetTest {
    @Test
    public void testGetByType() {
       ConstantNode c0 = integerConstant(7);
-      ConstantNode c1 = new ConstantNode(Boolean.TRUE, booleanType());
+      ConstantNode c1 = booleanConstant(TRUE);
       ConstantNode c2 = integerConstant(5);
 
       ConstantSet s = new ConstantSet(c0, c1, c2);
