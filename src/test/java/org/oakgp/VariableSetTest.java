@@ -16,7 +16,7 @@ import org.oakgp.node.VariableNode;
 public class VariableSetTest {
    @Test
    public void testGetById() {
-      VariableSet s = new VariableSet(integerType(), booleanType(), integerType());
+      VariableSet s = VariableSet.createVariableSet(integerType(), booleanType(), integerType());
 
       VariableNode v0 = s.getById(0);
       VariableNode v1 = s.getById(1);
@@ -38,7 +38,7 @@ public class VariableSetTest {
 
    @Test
    public void assertGetByType() {
-      VariableSet s = new VariableSet(integerType(), booleanType(), integerType());
+      VariableSet s = VariableSet.createVariableSet(integerType(), booleanType(), integerType());
 
       VariableNode v0 = s.getById(0);
       VariableNode v1 = s.getById(1);
