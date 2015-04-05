@@ -30,9 +30,9 @@ public class ConstantSetTest {
       assertSame(c0, integers.get(0));
       assertSame(c2, integers.get(1));
 
-      List<ConstantNode> strings = s.getByType(booleanType());
-      assertEquals(1, strings.size());
-      assertSame(c1, strings.get(0));
+      List<ConstantNode> booleans = s.getByType(booleanType());
+      assertEquals(1, booleans.size());
+      assertSame(c1, booleans.get(0));
 
       assertNull(s.getByType(stringType())); // TODO expect empty list?
    }
