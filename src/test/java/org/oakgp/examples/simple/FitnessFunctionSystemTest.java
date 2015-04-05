@@ -7,19 +7,8 @@ import static org.oakgp.Type.booleanType;
 import static org.oakgp.Type.integerArrayType;
 import static org.oakgp.Type.integerToBooleanFunctionType;
 import static org.oakgp.Type.integerType;
-import static org.oakgp.examples.SystemTestUtils.ARITHMETIC_FUNCTION_SET;
-import static org.oakgp.examples.SystemTestUtils.COMPARISON_FUNCTION_SET;
-import static org.oakgp.examples.SystemTestUtils.ELITISM_SIZE;
-import static org.oakgp.examples.SystemTestUtils.GENERATION_SIZE;
-import static org.oakgp.examples.SystemTestUtils.RANDOM;
-import static org.oakgp.examples.SystemTestUtils.RATIO_VARIABLES;
-import static org.oakgp.examples.SystemTestUtils.SELECTOR_FACTORY;
-import static org.oakgp.examples.SystemTestUtils.createConstants;
-import static org.oakgp.examples.SystemTestUtils.createInitialGeneration;
-import static org.oakgp.examples.SystemTestUtils.makeRandomTree;
-import static org.oakgp.examples.SystemTestUtils.printRankedCandidate;
+import static org.oakgp.examples.SystemTestConfig.RANDOM;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,21 +17,12 @@ import java.util.function.Predicate;
 import org.junit.Test;
 import org.oakgp.Arguments;
 import org.oakgp.Assignments;
-import org.oakgp.ConstantSet;
 import org.oakgp.FunctionSet;
-import org.oakgp.GenerationEvolver;
-import org.oakgp.GenerationProcessor;
-import org.oakgp.NodeEvolver;
-import org.oakgp.PrimitiveSet;
 import org.oakgp.RankedCandidate;
-import org.oakgp.Runner;
 import org.oakgp.Signature;
 import org.oakgp.Type;
-import org.oakgp.VariableSet;
-import org.oakgp.crossover.SubtreeCrossover;
+import org.oakgp.examples.SystemTestConfig;
 import org.oakgp.fitness.FitnessFunction;
-import org.oakgp.fitness.FitnessFunctionCache;
-import org.oakgp.fitness.FitnessFunctionGenerationProcessor;
 import org.oakgp.fitness.TestDataFitnessFunction;
 import org.oakgp.function.Function;
 import org.oakgp.function.classify.IsNegative;
@@ -50,7 +30,6 @@ import org.oakgp.function.classify.IsPositive;
 import org.oakgp.function.classify.IsZero;
 import org.oakgp.function.coll.Count;
 import org.oakgp.function.hof.Filter;
-import org.oakgp.mutate.PointMutation;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
 
@@ -64,48 +43,54 @@ import org.oakgp.node.Node;
 public class FitnessFunctionSystemTest {
    @Test
    public void testTwoVariableArithmeticExpression() {
-      ConstantSet constants = createConstants(11);
-      int numVariables = 2;
-      VariableSet variables = VariableSet.createVariableSet(createTypeArray(numVariables));
-      FitnessFunction fitnessFunction = new TestDataFitnessFunction(createTests(numVariables, a -> {
+      Type[] variableTypes = createTypeArray(2);
+      SystemTestConfig config = new SystemTestConfig();
+      config.useIntegerConstants(11);
+      config.setVariables(variableTypes);
+      config.setTerminator(createTerminator());
+      config.useArithmeticFunctions();
+      FitnessFunction fitnessFunction = new TestDataFitnessFunction(createTests(variableTypes.length, a -> {
          int x = (int) a.get(0);
          int y = (int) a.get(1);
          return (x * x) + 2 * y + 3 * x + 5;
       }));
-      PrimitiveSet primitiveSet = new PrimitiveSet(ARITHMETIC_FUNCTION_SET, constants, variables, RANDOM, RATIO_VARIABLES);
-      Collection<Node> initialGeneration = createInitialGeneration(primitiveSet, GENERATION_SIZE);
-      doIt(primitiveSet, fitnessFunction, initialGeneration);
+      config.setFitnessFunction(fitnessFunction);
+      config.process();
    }
 
    @Test
    public void testThreeVariableArithmeticExpression() {
-      ConstantSet constants = createConstants(11);
-      int numVariables = 3;
-      VariableSet variables = VariableSet.createVariableSet(createTypeArray(numVariables));
-      FitnessFunction fitnessFunction = new TestDataFitnessFunction(createTests(numVariables, a -> {
+      Type[] variableTypes = createTypeArray(3);
+      SystemTestConfig config = new SystemTestConfig();
+      config.useIntegerConstants(11);
+      config.setVariables(variableTypes);
+      config.setTerminator(createTerminator());
+      config.useArithmeticFunctions();
+      FitnessFunction fitnessFunction = new TestDataFitnessFunction(createTests(variableTypes.length, a -> {
          int x = (int) a.get(0);
          int y = (int) a.get(1);
          int z = (int) a.get(2);
          return (x * -3) + (y * 5) - z;
       }));
-      PrimitiveSet primitiveSet = new PrimitiveSet(ARITHMETIC_FUNCTION_SET, constants, variables, RANDOM, RATIO_VARIABLES);
-      Collection<Node> initialGeneration = createInitialGeneration(primitiveSet, GENERATION_SIZE);
-      doIt(primitiveSet, fitnessFunction, initialGeneration);
+      config.setFitnessFunction(fitnessFunction);
+      config.process();
    }
 
    @Test
    public void testTwoVariableBooleanLogicExpression() {
-      ConstantSet constants = createConstants(5);
-      int numVariables = 2;
-      VariableSet variables = VariableSet.createVariableSet(createTypeArray(numVariables));
-      FitnessFunction fitnessFunction = new TestDataFitnessFunction(createTests(numVariables, a -> {
+      Type[] variableTypes = createTypeArray(2);
+      SystemTestConfig config = new SystemTestConfig();
+      config.useIntegerConstants(5);
+      config.setVariables(variableTypes);
+      config.setTerminator(createTerminator());
+      config.useComparisionFunctions();
+      FitnessFunction fitnessFunction = new TestDataFitnessFunction(createTests(variableTypes.length, a -> {
          int x = (int) a.get(0);
          int y = (int) a.get(1);
          return x > 20 ? x : y;
       }));
-      PrimitiveSet primitiveSet = new PrimitiveSet(COMPARISON_FUNCTION_SET, constants, variables, RANDOM, RATIO_VARIABLES);
-      Collection<Node> initialGeneration = createInitialGeneration(primitiveSet, GENERATION_SIZE);
-      doIt(primitiveSet, fitnessFunction, initialGeneration);
+      config.setFitnessFunction(fitnessFunction);
+      config.process();
    }
 
    @Test
@@ -114,14 +99,13 @@ public class FitnessFunctionSystemTest {
       IsNegative isNegative = new IsNegative();
       IsZero isZero = new IsZero();
 
-      // TODO add to TestUtils: operatorConstant(); integerConstant(); trueConstant(); falseConstant(); arrayConstant();
-      ConstantNode[] constants = { new ConstantNode(Boolean.TRUE, booleanType()), new ConstantNode(Boolean.FALSE, booleanType()),
+      SystemTestConfig config = new SystemTestConfig();
+      config.setConstants(new ConstantNode[] { new ConstantNode(Boolean.TRUE, booleanType()), new ConstantNode(Boolean.FALSE, booleanType()),
             new ConstantNode(isPositive, integerToBooleanFunctionType()), new ConstantNode(isNegative, integerToBooleanFunctionType()),
             new ConstantNode(isZero, integerToBooleanFunctionType()), new ConstantNode(Arguments.createArguments(), integerArrayType()),
-            new ConstantNode(0, integerType()) };
-      ConstantSet constantSet = new ConstantSet(constants);
-
-      VariableSet variableSet = VariableSet.createVariableSet(integerArrayType());
+            new ConstantNode(0, integerType()) });
+      config.setVariables(integerArrayType());
+      config.setTerminator(createTerminator());
 
       FunctionSet.Builder builder = new FunctionSet.Builder();
       builder.put("filter", new Filter(integerType()));
@@ -132,9 +116,7 @@ public class FitnessFunctionSystemTest {
       builder.put("identity", createIdentity(integerArrayType()));
       builder.put("identity", createIdentity(integerType()));
       builder.put("identity", createIdentity(integerToBooleanFunctionType()));
-      FunctionSet functionSet = builder.build();
-
-      PrimitiveSet primitiveSet = new PrimitiveSet(functionSet, constantSet, variableSet, RANDOM, RATIO_VARIABLES);
+      config.setFunctionSet(builder.build());
 
       Map<Assignments, Integer> testData = new HashMap<>();
       testData.put(createAssignments(createArguments("0", "0", "0", "0", "0", "0", "0", "0")), 8);
@@ -147,8 +129,8 @@ public class FitnessFunctionSystemTest {
       testData.put(createAssignments(createArguments("0", "0", "0")), 3);
       FitnessFunction fitnessFunction = new TestDataFitnessFunction(testData);
 
-      Collection<Node> initialGeneration = createInitialGeneration(primitiveSet, GENERATION_SIZE);
-      doIt(primitiveSet, fitnessFunction, initialGeneration);
+      config.setFitnessFunction(fitnessFunction);
+      config.process();
    }
 
    private Function createIdentity(final Type type) {
@@ -186,24 +168,6 @@ public class FitnessFunctionSystemTest {
          variables[i] = RANDOM.nextInt(40);
       }
       return variables;
-   }
-
-   private void doIt(PrimitiveSet primitiveSet, FitnessFunction fitnessFunction, Collection<Node> initialGeneration) {
-      Predicate<List<RankedCandidate>> terminator = createTerminator();
-      Map<NodeEvolver, Long> nodeEvolvers = createNodeEvolvers(primitiveSet);
-      FitnessFunction fitnessFunctionCache = new FitnessFunctionCache(GENERATION_SIZE, fitnessFunction);
-      GenerationProcessor generationProcessor = new FitnessFunctionGenerationProcessor(fitnessFunctionCache);
-      GenerationEvolver generationEvolver = new GenerationEvolver(ELITISM_SIZE, SELECTOR_FACTORY, nodeEvolvers);
-      RankedCandidate best = Runner.process(generationProcessor, generationEvolver, terminator, initialGeneration);
-      printRankedCandidate(best);
-   }
-
-   private Map<NodeEvolver, Long> createNodeEvolvers(PrimitiveSet primitiveSet) {
-      Map<NodeEvolver, Long> nodeEvolvers = new HashMap<>();
-      nodeEvolvers.put(t -> makeRandomTree(primitiveSet, 4), 5L);
-      nodeEvolvers.put(new SubtreeCrossover(RANDOM), 21L);
-      nodeEvolvers.put(new PointMutation(RANDOM, primitiveSet), 21L);
-      return nodeEvolvers;
    }
 
    private Predicate<List<RankedCandidate>> createTerminator() {
