@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
-import static org.oakgp.TestUtils.createConstant;
+import static org.oakgp.TestUtils.integerConstant;
 import static org.oakgp.TestUtils.readNode;
 
 import org.junit.Test;
@@ -13,7 +13,7 @@ import org.oakgp.node.Node;
 public class RankedCandidateTest {
    @Test
    public void testGetters() {
-      Node n = createConstant(0);
+      Node n = integerConstant(0);
       double f = 7.5;
       RankedCandidate a = new RankedCandidate(n, f);
       assertSame(n, a.getNode());
@@ -33,10 +33,10 @@ public class RankedCandidateTest {
    @Test
    public void testEquals() {
       double f = 7.5;
-      RankedCandidate a = new RankedCandidate(createConstant(0), f);
-      RankedCandidate b = new RankedCandidate(createConstant(0), f);
-      RankedCandidate c = new RankedCandidate(createConstant(0), f * 2);
-      RankedCandidate d = new RankedCandidate(createConstant(7), f);
+      RankedCandidate a = new RankedCandidate(integerConstant(0), f);
+      RankedCandidate b = new RankedCandidate(integerConstant(0), f);
+      RankedCandidate c = new RankedCandidate(integerConstant(0), f * 2);
+      RankedCandidate d = new RankedCandidate(integerConstant(7), f);
 
       assertTrue(a.equals(a));
       assertEquals(a.hashCode(), a.hashCode());

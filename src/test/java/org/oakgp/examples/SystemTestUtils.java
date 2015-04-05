@@ -1,7 +1,7 @@
 package org.oakgp.examples;
 
 import static org.oakgp.NodeSimplifier.simplify;
-import static org.oakgp.TestUtils.createConstant;
+import static org.oakgp.TestUtils.integerConstant;
 import static org.oakgp.TestUtils.writeNode;
 import static org.oakgp.Type.booleanType;
 import static org.oakgp.Type.integerType;
@@ -84,7 +84,7 @@ public class SystemTestUtils {
    public static ConstantNode[] createConstants(int numberOfConstants) {
       ConstantNode[] constants = new ConstantNode[numberOfConstants + 2];
       for (int i = 0; i < numberOfConstants; i++) {
-         constants[i] = createConstant(i);
+         constants[i] = integerConstant(i);
       }
       constants[numberOfConstants] = new ConstantNode(Boolean.TRUE, booleanType());
       constants[numberOfConstants + 1] = new ConstantNode(Boolean.FALSE, booleanType());

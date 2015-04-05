@@ -6,7 +6,7 @@ import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
 import static org.oakgp.Arguments.createArguments;
 import static org.oakgp.Assignments.createAssignments;
-import static org.oakgp.TestUtils.createConstant;
+import static org.oakgp.TestUtils.integerConstant;
 import static org.oakgp.TestUtils.createVariable;
 import static org.oakgp.TestUtils.readNode;
 import static org.oakgp.Type.integerType;
@@ -22,7 +22,7 @@ public class FunctionNodeTest {
    @Test
    public void testConstructors() {
       Function function = new Multiply();
-      ConstantNode arg1 = createConstant(42);
+      ConstantNode arg1 = integerConstant(42);
       VariableNode arg2 = createVariable(0);
 
       // construct using Node array
@@ -39,7 +39,7 @@ public class FunctionNodeTest {
    @Test
    public void testEvaluate() {
       Function function = new Multiply();
-      Arguments arguments = createArguments(createConstant(42), createVariable(0));
+      Arguments arguments = createArguments(integerConstant(42), createVariable(0));
       FunctionNode functionNode = new FunctionNode(function, arguments);
 
       assertSame(function, functionNode.getFunction());
@@ -52,7 +52,7 @@ public class FunctionNodeTest {
    @Test
    public void testReplaceAt() {
       FunctionNode n = createFunctionNode();
-      java.util.function.Function<Node, Node> replacement = t -> createConstant(9);
+      java.util.function.Function<Node, Node> replacement = t -> integerConstant(9);
 
       assertEquals("(org.oakgp.function.math.Add (org.oakgp.function.math.Multiply 9 v1) (org.oakgp.function.math.Add v2 1))", n.replaceAt(0, replacement)
             .toString());
@@ -106,28 +106,28 @@ public class FunctionNodeTest {
 
    @Test
    public void testNotEquals() {
-      final FunctionNode n = new FunctionNode(new Add(), createVariable(0), createConstant(7));
+      final FunctionNode n = new FunctionNode(new Add(), createVariable(0), integerConstant(7));
 
       // verify (sanity-check) that equals will return true when it should
-      assertEquals(n, new FunctionNode(new Add(), createVariable(0), createConstant(7)));
+      assertEquals(n, new FunctionNode(new Add(), createVariable(0), integerConstant(7)));
 
       // test different function
-      assertNotEquals(n, new FunctionNode(new Multiply(), createVariable(0), createConstant(7)));
+      assertNotEquals(n, new FunctionNode(new Multiply(), createVariable(0), integerConstant(7)));
 
       // test different first argument
-      assertNotEquals(n, new FunctionNode(new Add(), createVariable(1), createConstant(7)));
+      assertNotEquals(n, new FunctionNode(new Add(), createVariable(1), integerConstant(7)));
 
       // test different second argument
-      assertNotEquals(n, new FunctionNode(new Add(), createVariable(0), createConstant(6)));
+      assertNotEquals(n, new FunctionNode(new Add(), createVariable(0), integerConstant(6)));
 
       // test same arguments but different order
-      assertNotEquals(n, new FunctionNode(new Add(), createConstant(7), createVariable(0)));
+      assertNotEquals(n, new FunctionNode(new Add(), integerConstant(7), createVariable(0)));
 
       // test wrong arguments but different order
-      assertNotEquals(n, new FunctionNode(new Add(), createConstant(0), createVariable(7)));
+      assertNotEquals(n, new FunctionNode(new Add(), integerConstant(0), createVariable(7)));
 
       // test extra argument
-      assertNotEquals(n, new FunctionNode(new Add(), createVariable(0), createConstant(7), createConstant(7)));
+      assertNotEquals(n, new FunctionNode(new Add(), createVariable(0), integerConstant(7), integerConstant(7)));
 
       // test one less argument
       assertNotEquals(n, new FunctionNode(new Add(), createVariable(0)));
@@ -136,7 +136,7 @@ public class FunctionNodeTest {
       assertNotEquals(n, new FunctionNode(new Add()));
 
       // test not equal to other Node implementations
-      assertNotEquals(n, createConstant(7));
+      assertNotEquals(n, integerConstant(7));
 
       // test not equal to other non-Node instances
       assertNotEquals(n, new Object());
@@ -145,6 +145,6 @@ public class FunctionNodeTest {
    /** Returns representation of: {@code (x*y)+z+1} */
    private FunctionNode createFunctionNode() {
       return new FunctionNode(new Add(), new FunctionNode(new Multiply(), createVariable(0), createVariable(1)), new FunctionNode(new Add(), createVariable(2),
-            createConstant(1)));
+            integerConstant(1)));
    }
 }

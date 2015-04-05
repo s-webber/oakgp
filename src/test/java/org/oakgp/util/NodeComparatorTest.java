@@ -2,7 +2,7 @@ package org.oakgp.util;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.oakgp.TestUtils.createConstant;
+import static org.oakgp.TestUtils.integerConstant;
 import static org.oakgp.TestUtils.createVariable;
 import static org.oakgp.TestUtils.readNode;
 import static org.oakgp.util.NodeComparator.NODE_COMPARATOR;
@@ -22,7 +22,7 @@ public class NodeComparatorTest {
 
    @Test
    public void testCompareConstants() {
-      assertOrdered(createConstant(3), createConstant(7));
+      assertOrdered(integerConstant(3), integerConstant(7));
    }
 
    @Test
@@ -43,13 +43,13 @@ public class NodeComparatorTest {
 
    @Test
    public void testCompareConstantsToVariables() {
-      assertOrdered(createConstant(7), createVariable(3));
-      assertOrdered(createConstant(3), createVariable(7));
+      assertOrdered(integerConstant(7), createVariable(3));
+      assertOrdered(integerConstant(3), createVariable(7));
    }
 
    @Test
    public void testCompareConstantsToFunctions() {
-      assertOrdered(createConstant(7), readNode("(+ 1 1)"));
+      assertOrdered(integerConstant(7), readNode("(+ 1 1)"));
    }
 
    @Test

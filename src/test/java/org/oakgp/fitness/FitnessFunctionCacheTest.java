@@ -1,7 +1,7 @@
 package org.oakgp.fitness;
 
 import static org.junit.Assert.assertEquals;
-import static org.oakgp.TestUtils.createConstant;
+import static org.oakgp.TestUtils.integerConstant;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -12,8 +12,8 @@ public class FitnessFunctionCacheTest {
    @Test
    public void test() {
       // set-up expectations
-      final Node n1 = createConstant(1);
-      final Node n2 = createConstant(2);
+      final Node n1 = integerConstant(1);
+      final Node n2 = integerConstant(2);
       final double fitness1 = 9;
       final double fitness2 = -3;
       final AtomicInteger evaluateCtr = new AtomicInteger(0);

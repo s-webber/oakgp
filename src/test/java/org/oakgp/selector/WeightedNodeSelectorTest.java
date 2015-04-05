@@ -3,7 +3,7 @@ package org.oakgp.selector;
 import static org.junit.Assert.assertSame;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
-import static org.oakgp.TestUtils.createConstant;
+import static org.oakgp.TestUtils.integerConstant;
 
 import java.util.Arrays;
 import java.util.List;
@@ -16,9 +16,9 @@ import org.oakgp.util.Random;
 public class WeightedNodeSelectorTest {
    @Test
    public void test() {
-      Node first = createConstant(0);
-      Node second = createConstant(0);
-      Node third = createConstant(0);
+      Node first = integerConstant(0);
+      Node second = integerConstant(0);
+      Node third = integerConstant(0);
       List<RankedCandidate> candidates = Arrays.asList(new RankedCandidate(first, 0), new RankedCandidate(second, 0), new RankedCandidate(third, 0));
 
       Random mockRandom = mock(Random.class);

@@ -3,7 +3,7 @@ package org.oakgp.tournament;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
-import static org.oakgp.TestUtils.createConstant;
+import static org.oakgp.TestUtils.integerConstant;
 
 import org.junit.Test;
 import org.oakgp.node.Node;
@@ -11,8 +11,8 @@ import org.oakgp.node.Node;
 public class FirstPlayerAdvantageGameTest {
    @Test
    public void test() {
-      Node n1 = createConstant(1);
-      Node n2 = createConstant(2);
+      Node n1 = integerConstant(1);
+      Node n2 = integerConstant(2);
       TwoPlayerGame mockTwoPlayerGame = mock(TwoPlayerGame.class);
       given(mockTwoPlayerGame.evaluate(n1, n2)).willReturn(7d);
       given(mockTwoPlayerGame.evaluate(n2, n1)).willReturn(4d);

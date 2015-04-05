@@ -3,7 +3,7 @@ package org.oakgp.tournament;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.oakgp.TestUtils.assertRankedCandidate;
-import static org.oakgp.TestUtils.createConstant;
+import static org.oakgp.TestUtils.integerConstant;
 
 import java.util.Arrays;
 import java.util.List;
@@ -17,9 +17,9 @@ public class RoundRobinTournamentTest {
    @Test
    public void test() {
       // test data
-      Node a = createConstant(1);
-      Node b = createConstant(2);
-      Node c = createConstant(3);
+      Node a = integerConstant(1);
+      Node b = integerConstant(2);
+      Node c = integerConstant(3);
       List<Node> input = Arrays.asList(a, b, c);
 
       // mock

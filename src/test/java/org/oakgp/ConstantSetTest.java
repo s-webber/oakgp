@@ -3,7 +3,7 @@ package org.oakgp;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
-import static org.oakgp.TestUtils.createConstant;
+import static org.oakgp.TestUtils.integerConstant;
 import static org.oakgp.Type.booleanType;
 import static org.oakgp.Type.integerType;
 import static org.oakgp.Type.stringType;
@@ -16,9 +16,9 @@ import org.oakgp.node.ConstantNode;
 public class ConstantSetTest {
    @Test
    public void testGetByType() {
-      ConstantNode c0 = createConstant(7);
+      ConstantNode c0 = integerConstant(7);
       ConstantNode c1 = new ConstantNode(Boolean.TRUE, booleanType());
-      ConstantNode c2 = createConstant(5);
+      ConstantNode c2 = integerConstant(5);
 
       ConstantSet s = new ConstantSet(c0, c1, c2);
 

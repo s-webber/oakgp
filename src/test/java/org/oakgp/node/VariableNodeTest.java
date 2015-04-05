@@ -5,7 +5,7 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
 import static org.oakgp.Assignments.createAssignments;
-import static org.oakgp.TestUtils.createConstant;
+import static org.oakgp.TestUtils.integerConstant;
 import static org.oakgp.TestUtils.createVariable;
 import static org.oakgp.Type.integerType;
 
@@ -39,7 +39,7 @@ public class VariableNodeTest {
    @Test
    public void testReplaceAt() {
       final VariableNode v = createVariable(0);
-      final ConstantNode c = createConstant(Integer.MAX_VALUE);
+      final ConstantNode c = integerConstant(Integer.MAX_VALUE);
       assertSame(v, v.replaceAt(0, t -> t));
       assertSame(c, v.replaceAt(0, t -> c));
    }
@@ -59,7 +59,7 @@ public class VariableNodeTest {
       final VariableNode n = createVariable(1);
       assertNotEquals(n, createVariable(0));
       assertNotEquals(n, createVariable(2));
-      assertNotEquals(n, createConstant(1));
+      assertNotEquals(n, integerConstant(1));
       assertNotEquals(n, new Integer(1));
    }
 }

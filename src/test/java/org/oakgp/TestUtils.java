@@ -55,7 +55,7 @@ public class TestUtils {
       return Arguments.createArguments(args);
    }
 
-   public static ConstantNode createConstant(int value) {
+   public static ConstantNode integerConstant(int value) {
       return new ConstantNode(value, Type.integerType());
    }
 
