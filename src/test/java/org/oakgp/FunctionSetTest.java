@@ -1,26 +1,35 @@
 package org.oakgp;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.fail;
+import static org.oakgp.Signature.createSignature;
+import static org.oakgp.TestUtils.assertUnmodifiable;
+import static org.oakgp.Type.booleanArrayType;
 import static org.oakgp.Type.booleanType;
+import static org.oakgp.Type.integerArrayType;
 import static org.oakgp.Type.integerType;
+import static org.oakgp.Type.stringType;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import org.junit.Test;
+import org.oakgp.function.Function;
+import org.oakgp.function.classify.IsZero;
+import org.oakgp.function.coll.Count;
 import org.oakgp.function.math.Add;
 import org.oakgp.function.math.Multiply;
 import org.oakgp.function.math.Subtract;
 
 public class FunctionSetTest {
-   private final FunctionSet functionSet = FunctionSet.createDefaultFunctionSet();
-   private final List<Type> types = Collections.unmodifiableList(Arrays.asList(integerType(), integerType()));
+   private static final List<Type> TWO_INTEGERS = Collections.unmodifiableList(Arrays.asList(integerType(), integerType()));
 
    @Test
    public void testGetDisplayName() {
+      FunctionSet functionSet = FunctionSet.createDefaultFunctionSet();
       assertEquals("+", functionSet.getDisplayName(new Add()));
       assertEquals("-", functionSet.getDisplayName(new Subtract()));
       assertEquals("*", functionSet.getDisplayName(new Multiply()));
@@ -34,15 +43,17 @@ public class FunctionSetTest {
 
    @Test
    public void testGetFunctionBySymbol() {
-      assertSame(Add.class, functionSet.getFunction("+", types).getClass());
-      assertSame(Subtract.class, functionSet.getFunction("-", types).getClass());
-      assertSame(Multiply.class, functionSet.getFunction("*", types).getClass());
+      FunctionSet functionSet = FunctionSet.createDefaultFunctionSet();
+      assertSame(Add.class, functionSet.getFunction("+", TWO_INTEGERS).getClass());
+      assertSame(Subtract.class, functionSet.getFunction("-", TWO_INTEGERS).getClass());
+      assertSame(Multiply.class, functionSet.getFunction("*", TWO_INTEGERS).getClass());
    }
 
    @Test
    public void testGetFunctionByClassName() {
+      FunctionSet functionSet = FunctionSet.createDefaultFunctionSet();
       try {
-         functionSet.getFunction(Add.class.getName(), types);
+         functionSet.getFunction(Add.class.getName(), TWO_INTEGERS);
          fail();
       } catch (IllegalArgumentException e) {
          assertEquals("Could not find function: org.oakgp.function.math.Add", e.getMessage());
@@ -51,8 +62,9 @@ public class FunctionSetTest {
 
    @Test
    public void testGetFunctionSymbolDoesNotExist() {
+      FunctionSet functionSet = FunctionSet.createDefaultFunctionSet();
       try {
-         functionSet.getFunction("^", types);
+         functionSet.getFunction("^", TWO_INTEGERS);
          fail();
       } catch (IllegalArgumentException e) {
          assertEquals("Could not find function: ^", e.getMessage());
@@ -75,11 +87,84 @@ public class FunctionSetTest {
    }
 
    private void assertCannotFindByTypes(List<Type> types) {
+      FunctionSet functionSet = FunctionSet.createDefaultFunctionSet();
       try {
          functionSet.getFunction("+", types);
          fail();
       } catch (IllegalArgumentException e) {
          assertEquals("Could not find version of function: + for: " + types, e.getMessage());
       }
+   }
+
+   @Test
+   public void testGetByType() {
+      FunctionSet.Builder builder = new FunctionSet.Builder();
+      Add add = new Add();
+      builder.put("+", add);
+      Subtract subtract = new Subtract();
+      builder.put("-", subtract);
+      Multiply multiply = new Multiply();
+      builder.put("*", multiply);
+      IsZero isZero = new IsZero();
+      builder.put("zero?", isZero);
+      FunctionSet functionSet = builder.build();
+
+      List<Function> integers = functionSet.getByType(integerType());
+      assertEquals(3, integers.size());
+      assertSame(add, integers.get(0));
+      assertSame(subtract, integers.get(1));
+      assertSame(multiply, integers.get(2));
+
+      List<Function> booleans = functionSet.getByType(booleanType());
+      assertEquals(1, booleans.size());
+      assertSame(isZero, booleans.get(0));
+
+      assertNull(functionSet.getByType(stringType())); // TODO expect empty list?
+   }
+
+   @Test
+   public void assertGetByTypeUnmodifiable() {
+      FunctionSet functionSet = FunctionSet.createDefaultFunctionSet();
+      List<Function> integers = functionSet.getByType(integerType());
+      assertUnmodifiable(integers);
+   }
+
+   @Test
+   public void testGetBySignature() {
+      FunctionSet.Builder builder = new FunctionSet.Builder();
+      Add add = new Add();
+      builder.put("+", add);
+      Subtract subtract = new Subtract();
+      builder.put("-", subtract);
+      Count countIntegerArray = new Count(integerType());
+      builder.put("count", countIntegerArray);
+      Count countBooleanArray = new Count(booleanType());
+      builder.put("count", countBooleanArray);
+      FunctionSet functionSet = builder.build();
+
+      // sanity check we have added 4 functions with a return type of integer
+      assertEquals(4, functionSet.getByType(integerType()).size());
+
+      List<Function> integers = functionSet.getBySignature(createSignature(integerType(), integerType(), integerType()));
+      assertEquals(2, integers.size());
+      assertSame(add, integers.get(0));
+      assertSame(subtract, integers.get(1));
+
+      List<Function> integerArrays = functionSet.getBySignature(createSignature(integerType(), integerArrayType()));
+      assertEquals(1, integerArrays.size());
+      assertSame(countIntegerArray, integerArrays.get(0));
+
+      List<Function> booleanArrays = functionSet.getBySignature(createSignature(integerType(), booleanArrayType()));
+      assertEquals(1, booleanArrays.size());
+      assertSame(countBooleanArray, booleanArrays.get(0));
+
+      assertNull(functionSet.getBySignature(createSignature(stringType(), integerType(), integerType()))); // TODO expect empty list?
+   }
+
+   @Test
+   public void assertGetBySignatureUnmodifiable() {
+      FunctionSet functionSet = FunctionSet.createDefaultFunctionSet();
+      List<Function> integers = functionSet.getByType(integerType());
+      assertUnmodifiable(integers);
    }
 }

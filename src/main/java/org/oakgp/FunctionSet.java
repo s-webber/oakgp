@@ -2,6 +2,7 @@ package org.oakgp;
 
 import static org.oakgp.Type.booleanType;
 import static org.oakgp.Type.integerType;
+import static org.oakgp.util.Utils.groupValuesByKey;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,32 +41,9 @@ public final class FunctionSet {
          List<Function> functions) {
       this.classToSymbolMappings = classToSymbolMappings;
       this.symbolToInstanceMappings = symbolToInstanceMappings;
-      functionsByType = new HashMap<>();
-      functionsBySignature = new HashMap<>();
-      for (Function function : functions) {
-         addFunctionByType(function);
-         addFunctionBySignature(function);
-      }
-   }
-
-   private void addFunctionByType(Function function) {
-      Type type = function.getSignature().getReturnType();
-      List<Function> typeFunctions = functionsByType.get(type);
-      if (typeFunctions == null) {
-         typeFunctions = new ArrayList<>();
-         functionsByType.put(type, typeFunctions);
-      }
-      typeFunctions.add(function);
-   }
-
-   private void addFunctionBySignature(Function function) {
-      Signature signature = function.getSignature();
-      List<Function> typeArgumentCountPairFunctions = functionsBySignature.get(signature);
-      if (typeArgumentCountPairFunctions == null) {
-         typeArgumentCountPairFunctions = new ArrayList<>();
-         functionsBySignature.put(signature, typeArgumentCountPairFunctions);
-      }
-      typeArgumentCountPairFunctions.add(function);
+      Function[] functionsArray = functions.toArray(new Function[functions.size()]);
+      functionsByType = groupValuesByKey(functionsArray, f -> f.getSignature().getReturnType());
+      functionsBySignature = groupValuesByKey(functionsArray, f -> f.getSignature());
    }
 
    public String getDisplayName(Function function) {
