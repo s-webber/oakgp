@@ -10,4 +10,9 @@ public final class LessThan extends ComparisonOperator {
    protected boolean evaluate(int arg1, int arg2) {
       return arg1 < arg2;
    }
+
+   @Override
+   public String getDisplayName() {
+      return "<";
+   }
 }

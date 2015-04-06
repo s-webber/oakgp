@@ -22,4 +22,9 @@ public final class IsPositive implements Function {
    public Signature getSignature() {
       return SIGNATURE;
    }
+
+   @Override
+   public String getDisplayName() {
+      return "pos?";
+   }
 }

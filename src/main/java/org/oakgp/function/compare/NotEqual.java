@@ -26,4 +26,9 @@ public final class NotEqual extends ComparisonOperator {
          return simplifiedVersion;
       }
    }
+
+   @Override
+   public String getDisplayName() {
+      return "!=";
+   }
 }

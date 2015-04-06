@@ -24,4 +24,9 @@ public final class GreaterThanOrEqual extends ComparisonOperator {
          return simplifiedVersion;
       }
    }
+
+   @Override
+   public String getDisplayName() {
+      return ">=";
+   }
 }
