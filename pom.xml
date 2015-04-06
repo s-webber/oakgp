@@ -90,8 +90,17 @@
             </executions>
             -->
          </plugin>
+      </plugins>
+   </build>
+
+   <reporting>
+      <plugins>
          <plugin>
-            <!-- To see the PMD report use the following command "mvn pmd:check" -->
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>2.10.1</version>
+         </plugin>
+         <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-pmd-plugin</artifactId>
             <version>3.4</version>
@@ -103,27 +112,7 @@
                   <ruleset>src/test/resources/pmd-ruleset.xml</ruleset>
                </rulesets>
             </configuration>
-            <!-- To run as part of a "mvn clean install" uncomment the following:
-            <executions>
-               <execution>
-                  <phase>verify</phase>
-                  <goals>
-                     <goal>check</goal>
-                  </goals>
-               </execution>
-            </executions>
-            -->
          </plugin>
-         <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-javadoc-plugin</artifactId>
-            <version>2.10.1</version>
-         </plugin>
-      </plugins>
-   </build>
-
-   <reporting>
-      <plugins>
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-checkstyle-plugin</artifactId>
