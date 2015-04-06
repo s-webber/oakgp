@@ -3,6 +3,7 @@ package org.oakgp.function;
 import org.oakgp.Arguments;
 import org.oakgp.Assignments;
 import org.oakgp.Signature;
+import org.oakgp.Type;
 import org.oakgp.node.Node;
 
 /** Represents an operation. */
@@ -22,5 +23,16 @@ public interface Function {
 
    default Node simplify(Arguments arguments) {
       return null;
+   }
+
+   default String getDisplayName() {
+      String className = getClass().getName();
+      int packagePos = className.lastIndexOf('.');
+      String lowerCaseNameMinusPackage = className.substring(packagePos + 1).toLowerCase();
+      if (lowerCaseNameMinusPackage.startsWith("is") && getSignature().getReturnType() == Type.booleanType()) {
+         return lowerCaseNameMinusPackage.substring(2) + "?";
+      } else {
+         return lowerCaseNameMinusPackage;
+      }
    }
 }

@@ -1,6 +1,7 @@
 package org.oakgp.function;
 
 import static java.nio.file.FileVisitResult.CONTINUE;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -20,6 +21,7 @@ import org.junit.Test;
 import org.oakgp.Arguments;
 import org.oakgp.Assignments;
 import org.oakgp.Signature;
+import org.oakgp.Type;
 
 public class FunctionTest {
    @Test
@@ -38,6 +40,17 @@ public class FunctionTest {
       assertNull(o.simplify(null));
    }
 
+   @Test
+   public void testGetDisplayName() {
+      assertEquals("dummyfunction", new DummyFunction().getDisplayName());
+   }
+
+   @Test
+   public void testGetDisplayNameBooleanReturnType() {
+      assertEquals("booleandummyfunction?", new IsBooleanDummyFunction().getDisplayName());
+   }
+
+   // TODO move this method and SubClassFinder to FunctionsTest
    @Test
    public void test() throws Exception {
       List<Class<?>> functionClasses = SubClassFinder.find(Function.class, "src/main/java");
@@ -128,5 +141,29 @@ class SubClassFinder extends SimpleFileVisitor<Path> {
       } else {
          return fileName.substring(0, extensionPos);
       }
+   }
+}
+
+class DummyFunction implements Function {
+   @Override
+   public Signature getSignature() {
+      throw new UnsupportedOperationException();
+   }
+
+   @Override
+   public Object evaluate(Arguments arguments, Assignments assignments) {
+      throw new UnsupportedOperationException();
+   }
+}
+
+class IsBooleanDummyFunction implements Function {
+   @Override
+   public Signature getSignature() {
+      return Signature.createSignature(Type.booleanType(), Type.integerType());
+   }
+
+   @Override
+   public Object evaluate(Arguments arguments, Assignments assignments) {
+      throw new UnsupportedOperationException();
    }
 }
