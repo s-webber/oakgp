@@ -64,4 +64,9 @@ public final class Add extends ArithmeticOperator {
 
       return ArithmeticExpressionSimplifier.simplify(this, arg1, arg2);
    }
+
+   @Override
+   public String getDisplayName() {
+      return "+";
+   }
 }

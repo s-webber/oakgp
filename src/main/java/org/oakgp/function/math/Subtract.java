@@ -8,10 +8,10 @@ import static org.oakgp.function.math.ArithmeticExpressionSimplifier.isSubtract;
 import static org.oakgp.function.math.ArithmeticExpressionSimplifier.negate;
 
 import org.oakgp.Arguments;
+import org.oakgp.function.Function;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
-import org.oakgp.function.Function;
 
 /** Performs subtraction. */
 public final class Subtract extends ArithmeticOperator {
@@ -87,5 +87,10 @@ public final class Subtract extends ArithmeticOperator {
 
          return ArithmeticExpressionSimplifier.simplify(this, arg1, arg2);
       }
+   }
+
+   @Override
+   public String getDisplayName() {
+      return "-";
    }
 }

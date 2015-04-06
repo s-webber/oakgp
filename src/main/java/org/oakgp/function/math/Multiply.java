@@ -8,10 +8,10 @@ import static org.oakgp.function.math.ArithmeticExpressionSimplifier.isMultiply;
 import static org.oakgp.util.NodeComparator.NODE_COMPARATOR;
 
 import org.oakgp.Arguments;
+import org.oakgp.function.Function;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
-import org.oakgp.function.Function;
 
 /** Performs multiplication. */
 public final class Multiply extends ArithmeticOperator {
@@ -76,5 +76,10 @@ public final class Multiply extends ArithmeticOperator {
       int i1 = (int) n1.evaluate(null);
       int i2 = (int) n2.evaluate(null);
       return createConstant(i1 * i2);
+   }
+
+   @Override
+   public String getDisplayName() {
+      return "*";
    }
 }
