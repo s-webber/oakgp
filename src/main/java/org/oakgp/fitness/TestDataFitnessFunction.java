@@ -32,6 +32,8 @@ public final class TestDataFitnessFunction implements FitnessFunction {
       for (Map.Entry<Assignments, Integer> test : tests.entrySet()) {
          Assignments input = test.getKey();
          int expected = test.getValue();
+         // TODO in future, the result of node.evaluate(input) might not always be an int
+         // TODO allow a function to be specified in constructor which converts the result of evaluate to an int
          int actual = (int) node.evaluate(input);
          diff += Math.abs(actual - expected);
       }

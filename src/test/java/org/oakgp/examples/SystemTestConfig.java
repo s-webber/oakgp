@@ -53,6 +53,9 @@ import org.oakgp.util.NodeSet;
 import org.oakgp.util.Random;
 
 public class SystemTestConfig {
+   // TODO enable all values to be overridden
+   // TODO provide default terminator implementation
+
    public static final Random RANDOM = new JavaUtilRandomAdapter();
    public static final int GENERATION_SIZE = 50;
 
@@ -60,8 +63,8 @@ public class SystemTestConfig {
    private static final int ELITISM_SIZE = 3;
    private static final double RATIO_VARIABLES = .6;
 
-   public static final FunctionSet ARITHMETIC_FUNCTION_SET = createArithmeticFunctionSet();
-   public static final FunctionSet COMPARISON_FUNCTION_SET = createComparisonFunctionSet();
+   public static final FunctionSet ARITHMETIC_FUNCTION_SET = createArithmeticFunctionSet(); // TODO move somewhere else
+   public static final FunctionSet COMPARISON_FUNCTION_SET = createComparisonFunctionSet(); // TODO move somewhere else
 
    private static FunctionSet createArithmeticFunctionSet() {
       FunctionSet.Builder builder = new FunctionSet.Builder();
