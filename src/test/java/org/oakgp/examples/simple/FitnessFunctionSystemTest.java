@@ -108,14 +108,14 @@ public class FitnessFunctionSystemTest {
       config.setTerminator(createTerminator());
 
       FunctionSet.Builder builder = new FunctionSet.Builder();
-      builder.put("filter", new Filter(integerType()));
-      builder.put("pos?", isPositive);
-      builder.put("neg?", isNegative);
-      builder.put("zero?", isZero);
-      builder.put("count", new Count(integerType()));
-      builder.put("identity", createIdentity(integerArrayType()));
-      builder.put("identity", createIdentity(integerType()));
-      builder.put("identity", createIdentity(integerToBooleanFunctionType()));
+      builder.put(new Filter(integerType()));
+      builder.put(isPositive);
+      builder.put(isNegative);
+      builder.put(isZero);
+      builder.put(new Count(integerType()));
+      builder.put(createIdentity(integerArrayType()));
+      builder.put(createIdentity(integerType()));
+      builder.put(createIdentity(integerToBooleanFunctionType()));
       config.setFunctionSet(builder.build());
 
       Map<Assignments, Integer> testData = new HashMap<>();

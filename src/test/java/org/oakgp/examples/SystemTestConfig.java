@@ -66,9 +66,9 @@ public class SystemTestConfig {
    private static FunctionSet createArithmeticFunctionSet() {
       FunctionSet.Builder builder = new FunctionSet.Builder();
 
-      builder.put("+", new Add());
-      builder.put("-", new Subtract());
-      builder.put("*", new Multiply());
+      builder.put(new Add());
+      builder.put(new Subtract());
+      builder.put(new Multiply());
 
       return builder.build();
    }
@@ -76,18 +76,18 @@ public class SystemTestConfig {
    private static FunctionSet createComparisonFunctionSet() {
       FunctionSet.Builder builder = new FunctionSet.Builder();
 
-      builder.put("+", new Add());
-      builder.put("-", new Subtract());
-      builder.put("*", new Multiply());
+      builder.put(new Add());
+      builder.put(new Subtract());
+      builder.put(new Multiply());
 
-      builder.put("<", new LessThan());
-      builder.put("<=", new LessThanOrEqual());
-      builder.put(">", new GreaterThan());
-      builder.put(">=", new GreaterThanOrEqual());
-      builder.put("=", new Equal());
-      builder.put("!=", new NotEqual());
+      builder.put(new LessThan());
+      builder.put(new LessThanOrEqual());
+      builder.put(new GreaterThan());
+      builder.put(new GreaterThanOrEqual());
+      builder.put(new Equal());
+      builder.put(new NotEqual());
 
-      builder.put("if", new If());
+      builder.put(new If());
 
       return builder.build();
    }

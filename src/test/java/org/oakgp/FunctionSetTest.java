@@ -100,13 +100,13 @@ public class FunctionSetTest {
    public void testGetByType() {
       FunctionSet.Builder builder = new FunctionSet.Builder();
       Add add = new Add();
-      builder.put("+", add);
+      builder.put(add);
       Subtract subtract = new Subtract();
-      builder.put("-", subtract);
+      builder.put(subtract);
       Multiply multiply = new Multiply();
-      builder.put("*", multiply);
+      builder.put(multiply);
       IsZero isZero = new IsZero();
-      builder.put("zero?", isZero);
+      builder.put(isZero);
       FunctionSet functionSet = builder.build();
 
       List<Function> integers = functionSet.getByType(integerType());
@@ -133,13 +133,13 @@ public class FunctionSetTest {
    public void testGetBySignature() {
       FunctionSet.Builder builder = new FunctionSet.Builder();
       Add add = new Add();
-      builder.put("+", add);
+      builder.put(add);
       Subtract subtract = new Subtract();
-      builder.put("-", subtract);
+      builder.put(subtract);
       Count countIntegerArray = new Count(integerType());
-      builder.put("count", countIntegerArray);
+      builder.put(countIntegerArray);
       Count countBooleanArray = new Count(booleanType());
-      builder.put("count", countBooleanArray);
+      builder.put(countBooleanArray);
       FunctionSet functionSet = builder.build();
 
       // sanity check we have added 4 functions with a return type of integer

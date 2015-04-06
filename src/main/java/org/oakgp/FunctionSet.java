@@ -79,29 +79,29 @@ public final class FunctionSet {
    public static FunctionSet createDefaultFunctionSet() {
       FunctionSet.Builder builder = new FunctionSet.Builder();
 
-      builder.put("+", new Add());
-      builder.put("-", new Subtract());
-      builder.put("*", new Multiply());
+      builder.put(new Add());
+      builder.put(new Subtract());
+      builder.put(new Multiply());
 
-      builder.put("<", new LessThan());
-      builder.put("<=", new LessThanOrEqual());
-      builder.put(">", new GreaterThan());
-      builder.put(">=", new GreaterThanOrEqual());
-      builder.put("=", new Equal());
-      builder.put("!=", new NotEqual());
+      builder.put(new LessThan());
+      builder.put(new LessThanOrEqual());
+      builder.put(new GreaterThan());
+      builder.put(new GreaterThanOrEqual());
+      builder.put(new Equal());
+      builder.put(new NotEqual());
 
-      builder.put("if", new If());
+      builder.put(new If());
 
-      builder.put("reduce", new Reduce(integerType()));
-      builder.put("filter", new Filter(integerType()));
-      builder.put("map", new org.oakgp.function.hof.Map(integerType(), booleanType()));
+      builder.put(new Reduce(integerType()));
+      builder.put(new Filter(integerType()));
+      builder.put(new org.oakgp.function.hof.Map(integerType(), booleanType()));
 
-      builder.put("pos?", new IsPositive());
-      builder.put("neg?", new IsNegative());
-      builder.put("zero?", new IsZero());
+      builder.put(new IsPositive());
+      builder.put(new IsNegative());
+      builder.put(new IsZero());
 
-      builder.put("count", new Count(integerType()));
-      builder.put("count", new Count(booleanType()));
+      builder.put(new Count(integerType()));
+      builder.put(new Count(booleanType()));
 
       return builder.build();
    }
@@ -112,7 +112,8 @@ public final class FunctionSet {
       private final Map<String, Map<List<Type>, Function>> symbolToInstanceMappings = new HashMap<>();
       private final List<Function> functions = new ArrayList<>();
 
-      public Builder put(String symbol, Function function) {
+      public Builder put(Function function) {
+         String symbol = function.getDisplayName();
          // TODO add validation around adding things that already exist
          // TODO check subsequent calls after build() do not alter original?
          classToSymbolMappings.put(function.getClass(), symbol);

@@ -33,7 +33,7 @@ public class PrimitiveSetTest {
    private static final ConstantNode[] CONSTANTS = { integerConstant(7), integerConstant(8), integerConstant(9) };
    private static final Type[] VARIABLE_TYPES = createTypeArray(3);
    private static final Function[] FUNCTIONS = new Function[] { new Add(), new Subtract(), new Multiply(), new If(), new LessThan(), new LessThanOrEqual(),
-         new GreaterThan(), new GreaterThanOrEqual(), new Equal(), new NotEqual() };
+      new GreaterThan(), new GreaterThanOrEqual(), new Equal(), new NotEqual() };
 
    @Test
    public void testNextFunctionByType() {
@@ -181,18 +181,18 @@ public class PrimitiveSetTest {
    private PrimitiveSet createWithFunctions(Random random) {
       FunctionSet.Builder builder = new FunctionSet.Builder();
 
-      builder.put("+", FUNCTIONS[0]);
-      builder.put("-", FUNCTIONS[1]);
-      builder.put("*", FUNCTIONS[2]);
+      builder.put(FUNCTIONS[0]);
+      builder.put(FUNCTIONS[1]);
+      builder.put(FUNCTIONS[2]);
 
-      builder.put("<", FUNCTIONS[4]);
-      builder.put("<=", FUNCTIONS[5]);
-      builder.put(">", FUNCTIONS[6]);
-      builder.put(">=", FUNCTIONS[7]);
-      builder.put("=", FUNCTIONS[8]);
-      builder.put("!=", FUNCTIONS[9]);
+      builder.put(FUNCTIONS[4]);
+      builder.put(FUNCTIONS[5]);
+      builder.put(FUNCTIONS[6]);
+      builder.put(FUNCTIONS[7]);
+      builder.put(FUNCTIONS[8]);
+      builder.put(FUNCTIONS[9]);
 
-      builder.put("if", FUNCTIONS[3]);
+      builder.put(FUNCTIONS[3]);
 
       return new PrimitiveSet(builder.build(), null, null, random, .1);
    }
