@@ -49,9 +49,11 @@ public final class Signature { // TODO move to org.oakgp.function?
 
    @Override
    public boolean equals(Object o) {
-      if (o instanceof Signature) {
+      if (this == o) {
+         return true;
+      } else if (o instanceof Signature) {
          Signature s = (Signature) o;
-         return this.returnType == s.returnType && Arrays.equals(this.argumentTypes, s.argumentTypes);
+         return this.returnType == s.returnType && Type.sameTypes(this.argumentTypes, s.argumentTypes);
       } else {
          return false;
       }

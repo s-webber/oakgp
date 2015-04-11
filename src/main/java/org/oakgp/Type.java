@@ -81,6 +81,27 @@ public final class Type implements Comparable<Type> {
       }
    }
 
+   /**
+    * Returns {@code true} if the two arrays contain the same number of elements, and all corresponding pairs of elements in the two arrays are the same.
+    * <p>
+    * Assumes no {@code null} values. Compares elements using {@code ==} rather than {@code equals(Object)}. TODO provide details of performance test results
+    * that caused this to be introduced.
+    */
+   public static boolean sameTypes(Type[] a, Type[] b) {
+      int length = a.length;
+      if (b.length != length) {
+         return false;
+      }
+
+      for (int i = 0; i < length; i++) {
+         if (a[i] != b[i]) {
+            return false;
+         }
+      }
+
+      return true;
+   }
+
    private Type(String name, Type... args) {
       this.name = name;
       this.args = args;
@@ -96,7 +117,7 @@ public final class Type implements Comparable<Type> {
    public boolean equals(Object o) {
       if (o instanceof Type) {
          Type t = (Type) o;
-         return this.name.equals(t.name) && Arrays.equals(this.args, t.args);
+         return this.name.equals(t.name) && sameTypes(this.args, t.args);
       } else {
          return false;
       }

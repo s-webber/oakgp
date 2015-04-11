@@ -1,8 +1,10 @@
 package org.oakgp;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 import java.util.function.Supplier;
 
@@ -70,6 +72,25 @@ public class TypeTest {
       assertNotEquals(t, Type.type("qwerty", Type.stringType()));
    }
 
+   @Test
+   public void testSameTypes() {
+      Type[] t1 = { Type.booleanType(), Type.integerType(), Type.booleanType() };
+
+      assertSameTypes(t1, new Type[] { Type.booleanType(), Type.integerType(), Type.booleanType() });
+
+      // same types, but in a different order
+      assertNotSameTypes(t1, new Type[] { Type.integerType(), Type.booleanType(), Type.booleanType() });
+
+      // different type for final element
+      assertNotSameTypes(t1, new Type[] { Type.booleanType(), Type.integerType(), Type.stringType() });
+
+      // too few types
+      assertNotSameTypes(t1, new Type[] { Type.booleanType(), Type.integerType() });
+
+      // too many types
+      assertNotSameTypes(t1, new Type[] { Type.booleanType(), Type.integerType(), Type.booleanType(), Type.booleanType() });
+   }
+
    private void assertType(String name, Supplier<Type> s) {
       Type t = s.get();
       assertEquals(t, s.get());
@@ -84,5 +105,19 @@ public class TypeTest {
       assertSame(t, s.get());
       assertSame(t, Type.arrayType(Type.type(name)));
       assertEquals("array [" + name + "]", t.toString());
+   }
+
+   private void assertSameTypes(Type[] a, Type[] b) {
+      assertTrue(Type.sameTypes(a, a));
+      assertTrue(Type.sameTypes(b, b));
+      assertTrue(Type.sameTypes(a, b));
+      assertTrue(Type.sameTypes(b, a));
+   }
+
+   private void assertNotSameTypes(Type[] a, Type[] b) {
+      assertTrue(Type.sameTypes(a, a));
+      assertTrue(Type.sameTypes(b, b));
+      assertFalse(Type.sameTypes(a, b));
+      assertFalse(Type.sameTypes(b, a));
    }
 }
