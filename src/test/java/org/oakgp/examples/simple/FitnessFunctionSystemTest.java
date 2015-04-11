@@ -25,11 +25,21 @@ import org.oakgp.examples.SystemTestConfig;
 import org.oakgp.fitness.FitnessFunction;
 import org.oakgp.fitness.TestDataFitnessFunction;
 import org.oakgp.function.Function;
+import org.oakgp.function.choice.If;
 import org.oakgp.function.classify.IsNegative;
 import org.oakgp.function.classify.IsPositive;
 import org.oakgp.function.classify.IsZero;
 import org.oakgp.function.coll.Count;
+import org.oakgp.function.compare.Equal;
+import org.oakgp.function.compare.GreaterThan;
+import org.oakgp.function.compare.GreaterThanOrEqual;
+import org.oakgp.function.compare.LessThan;
+import org.oakgp.function.compare.LessThanOrEqual;
+import org.oakgp.function.compare.NotEqual;
 import org.oakgp.function.hof.Filter;
+import org.oakgp.function.math.Add;
+import org.oakgp.function.math.Multiply;
+import org.oakgp.function.math.Subtract;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
 
@@ -41,6 +51,8 @@ import org.oakgp.node.Node;
  * </p>
  */
 public class FitnessFunctionSystemTest {
+   private static final Function[] ARITHMETIC_FUNCTIONS = { new Add(), new Subtract(), new Multiply() };
+
    @Test
    public void testTwoVariableArithmeticExpression() {
       Type[] variableTypes = createTypeArray(2);
@@ -48,7 +60,7 @@ public class FitnessFunctionSystemTest {
       config.useIntegerConstants(11);
       config.setVariables(variableTypes);
       config.setTerminator(createTerminator());
-      config.useArithmeticFunctions();
+      config.setFunctionSet(ARITHMETIC_FUNCTIONS);
       FitnessFunction fitnessFunction = new TestDataFitnessFunction(createTests(variableTypes.length, a -> {
          int x = (int) a.get(0);
          int y = (int) a.get(1);
@@ -65,7 +77,7 @@ public class FitnessFunctionSystemTest {
       config.useIntegerConstants(11);
       config.setVariables(variableTypes);
       config.setTerminator(createTerminator());
-      config.useArithmeticFunctions();
+      config.setFunctionSet(ARITHMETIC_FUNCTIONS);
       FitnessFunction fitnessFunction = new TestDataFitnessFunction(createTests(variableTypes.length, a -> {
          int x = (int) a.get(0);
          int y = (int) a.get(1);
@@ -83,7 +95,8 @@ public class FitnessFunctionSystemTest {
       config.useIntegerConstants(5);
       config.setVariables(variableTypes);
       config.setTerminator(createTerminator());
-      config.useComparisionFunctions();
+      config.setFunctionSet(new Add(), new Subtract(), new Multiply(), new LessThan(), new LessThanOrEqual(), new GreaterThan(), new GreaterThanOrEqual(),
+            new Equal(), new NotEqual(), new If());
       FitnessFunction fitnessFunction = new TestDataFitnessFunction(createTests(variableTypes.length, a -> {
          int x = (int) a.get(0);
          int y = (int) a.get(1);
@@ -107,16 +120,9 @@ public class FitnessFunctionSystemTest {
       config.setVariables(integerArrayType());
       config.setTerminator(createTerminator());
 
-      FunctionSet.Builder builder = new FunctionSet.Builder();
-      builder.put(new Filter(integerType()));
-      builder.put(isPositive);
-      builder.put(isNegative);
-      builder.put(isZero);
-      builder.put(new Count(integerType()));
-      builder.put(createIdentity(integerArrayType()));
-      builder.put(createIdentity(integerType()));
-      builder.put(createIdentity(integerToBooleanFunctionType()));
-      config.setFunctionSet(builder.build());
+      FunctionSet functions = new FunctionSet(new Filter(integerType()), isPositive, isNegative, isZero, new Count(integerType()),
+            createIdentity(integerArrayType()), createIdentity(integerType()), createIdentity(integerToBooleanFunctionType()));
+      config.setFunctionSet(functions);
 
       Map<Assignments, Integer> testData = new HashMap<>();
       testData.put(createAssignments(createArguments("0", "0", "0", "0", "0", "0", "0", "0")), 8);

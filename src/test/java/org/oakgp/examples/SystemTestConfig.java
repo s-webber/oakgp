@@ -32,16 +32,6 @@ import org.oakgp.fitness.FitnessFunction;
 import org.oakgp.fitness.FitnessFunctionCache;
 import org.oakgp.fitness.FitnessFunctionGenerationProcessor;
 import org.oakgp.function.Function;
-import org.oakgp.function.choice.If;
-import org.oakgp.function.compare.Equal;
-import org.oakgp.function.compare.GreaterThan;
-import org.oakgp.function.compare.GreaterThanOrEqual;
-import org.oakgp.function.compare.LessThan;
-import org.oakgp.function.compare.LessThanOrEqual;
-import org.oakgp.function.compare.NotEqual;
-import org.oakgp.function.math.Add;
-import org.oakgp.function.math.Multiply;
-import org.oakgp.function.math.Subtract;
 import org.oakgp.mutate.PointMutation;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
@@ -62,38 +52,6 @@ public class SystemTestConfig {
    private static final NodeSelectorFactory SELECTOR_FACTORY = new WeightedNodeSelectorFactory(RANDOM);
    private static final int ELITISM_SIZE = 3;
    private static final double RATIO_VARIABLES = .6;
-
-   public static final FunctionSet ARITHMETIC_FUNCTION_SET = createArithmeticFunctionSet(); // TODO move somewhere else
-   public static final FunctionSet COMPARISON_FUNCTION_SET = createComparisonFunctionSet(); // TODO move somewhere else
-
-   private static FunctionSet createArithmeticFunctionSet() {
-      FunctionSet.Builder builder = new FunctionSet.Builder();
-
-      builder.put(new Add());
-      builder.put(new Subtract());
-      builder.put(new Multiply());
-
-      return builder.build();
-   }
-
-   private static FunctionSet createComparisonFunctionSet() {
-      FunctionSet.Builder builder = new FunctionSet.Builder();
-
-      builder.put(new Add());
-      builder.put(new Subtract());
-      builder.put(new Multiply());
-
-      builder.put(new LessThan());
-      builder.put(new LessThanOrEqual());
-      builder.put(new GreaterThan());
-      builder.put(new GreaterThanOrEqual());
-      builder.put(new Equal());
-      builder.put(new NotEqual());
-
-      builder.put(new If());
-
-      return builder.build();
-   }
 
    private FunctionSet functionSet;
    private ConstantSet constantSet;
@@ -183,6 +141,10 @@ public class SystemTestConfig {
       this.functionSet = functionSet;
    }
 
+   public void setFunctionSet(Function... functions) {
+      setFunctionSet(new FunctionSet(functions));
+   }
+
    public void setGenerationProcessor(GenerationProcessor generationProcessor) {
       requireNull(this.generationProcessor);
       this.generationProcessor = generationProcessor;
@@ -196,14 +158,6 @@ public class SystemTestConfig {
    public void setFitnessFunction(FitnessFunction fitnessFunction) {
       FitnessFunction fitnessFunctionCache = new FitnessFunctionCache(GENERATION_SIZE, fitnessFunction);
       setGenerationProcessor(new FitnessFunctionGenerationProcessor(fitnessFunctionCache));
-   }
-
-   public void useArithmeticFunctions() {
-      setFunctionSet(ARITHMETIC_FUNCTION_SET);
-   }
-
-   public void useComparisionFunctions() {
-      setFunctionSet(COMPARISON_FUNCTION_SET);
    }
 
    public void useIntegerConstants(int numberOfConstants) {

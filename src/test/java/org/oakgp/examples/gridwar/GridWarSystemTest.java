@@ -11,6 +11,16 @@ import org.junit.Test;
 import org.oakgp.RankedCandidate;
 import org.oakgp.Type;
 import org.oakgp.examples.SystemTestConfig;
+import org.oakgp.function.choice.If;
+import org.oakgp.function.compare.Equal;
+import org.oakgp.function.compare.GreaterThan;
+import org.oakgp.function.compare.GreaterThanOrEqual;
+import org.oakgp.function.compare.LessThan;
+import org.oakgp.function.compare.LessThanOrEqual;
+import org.oakgp.function.compare.NotEqual;
+import org.oakgp.function.math.Add;
+import org.oakgp.function.math.Multiply;
+import org.oakgp.function.math.Subtract;
 import org.oakgp.tournament.FirstPlayerAdvantageGame;
 import org.oakgp.tournament.RoundRobinTournament;
 import org.oakgp.tournament.TwoPlayerGame;
@@ -27,7 +37,8 @@ public class GridWarSystemTest {
       config.useIntegerConstants(NUM_CONSTANTS);
       config.setVariables(VARIABLE_TYPES);
       config.setTerminator(createTerminator());
-      config.useComparisionFunctions();
+      config.setFunctionSet(new Add(), new Subtract(), new Multiply(), new LessThan(), new LessThanOrEqual(), new GreaterThan(), new GreaterThanOrEqual(),
+            new Equal(), new NotEqual(), new If());
       config.setGenerationProcessor(new RoundRobinTournament(createGridWarGame()));
       config.process();
    }

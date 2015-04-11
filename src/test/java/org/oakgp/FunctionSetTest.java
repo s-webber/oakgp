@@ -84,16 +84,11 @@ public class FunctionSetTest {
 
    @Test
    public void testGetByType() {
-      FunctionSet.Builder builder = new FunctionSet.Builder();
       Add add = new Add();
-      builder.put(add);
       Subtract subtract = new Subtract();
-      builder.put(subtract);
       Multiply multiply = new Multiply();
-      builder.put(multiply);
       IsZero isZero = new IsZero();
-      builder.put(isZero);
-      FunctionSet functionSet = builder.build();
+      FunctionSet functionSet = new FunctionSet(add, subtract, multiply, isZero);
 
       List<Function> integers = functionSet.getByType(integerType());
       assertEquals(3, integers.size());
@@ -117,16 +112,11 @@ public class FunctionSetTest {
 
    @Test
    public void testGetBySignature() {
-      FunctionSet.Builder builder = new FunctionSet.Builder();
       Add add = new Add();
-      builder.put(add);
       Subtract subtract = new Subtract();
-      builder.put(subtract);
       Count countIntegerArray = new Count(integerType());
-      builder.put(countIntegerArray);
       Count countBooleanArray = new Count(booleanType());
-      builder.put(countBooleanArray);
-      FunctionSet functionSet = builder.build();
+      FunctionSet functionSet = new FunctionSet(add, subtract, countIntegerArray, countBooleanArray);
 
       // sanity check we have added 4 functions with a return type of integer
       assertEquals(4, functionSet.getByType(integerType()).size());

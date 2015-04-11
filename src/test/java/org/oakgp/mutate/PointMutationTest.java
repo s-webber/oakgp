@@ -75,11 +75,7 @@ public class PointMutationTest {
    }
 
    private PointMutation createPointMutation(Random mockRandom) {
-      FunctionSet.Builder b = new FunctionSet.Builder();
-      b.put(FUNCTIONS[0]);
-      b.put(FUNCTIONS[1]);
-      b.put(FUNCTIONS[2]);
-      FunctionSet functions = b.build();
+      FunctionSet functions = new FunctionSet(FUNCTIONS);
       ConstantSet constants = new ConstantSet(CONSTANTS);
       VariableSet variables = VariableSet.createVariableSet(VARIABLE_TYPES);
       PrimitiveSet primitiveSet = new PrimitiveSet(functions, constants, variables, mockRandom, VARIABLE_RATIO);

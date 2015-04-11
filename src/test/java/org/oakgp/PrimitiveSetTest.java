@@ -179,21 +179,6 @@ public class PrimitiveSetTest {
    }
 
    private PrimitiveSet createWithFunctions(Random random) {
-      FunctionSet.Builder builder = new FunctionSet.Builder();
-
-      builder.put(FUNCTIONS[0]);
-      builder.put(FUNCTIONS[1]);
-      builder.put(FUNCTIONS[2]);
-
-      builder.put(FUNCTIONS[4]);
-      builder.put(FUNCTIONS[5]);
-      builder.put(FUNCTIONS[6]);
-      builder.put(FUNCTIONS[7]);
-      builder.put(FUNCTIONS[8]);
-      builder.put(FUNCTIONS[9]);
-
-      builder.put(FUNCTIONS[3]);
-
-      return new PrimitiveSet(builder.build(), null, null, random, .1);
+      return new PrimitiveSet(new FunctionSet(FUNCTIONS), null, null, random, .1);
    }
 }

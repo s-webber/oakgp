@@ -4,7 +4,6 @@ import static org.oakgp.Type.booleanType;
 import static org.oakgp.Type.integerType;
 import static org.oakgp.util.Utils.groupBy;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,19 +28,37 @@ import org.oakgp.function.math.Subtract;
 
 /** Represents the set of possible {@code Function} implementations to use during a genetic programming run. */
 public final class FunctionSet {
-   // TODO tidy up how member variables are created
-   // TODO remove Builder - replace with new FunctionSet(Function...)
-
    private final Map<String, Map<List<Type>, Function>> symbolToInstanceMappings;
    private final Map<Type, List<Function>> functionsByType;
    private final Map<Signature, List<Function>> functionsBySignature;
 
-   /** @see FunctionSet.Builder#build() */
-   private FunctionSet(Map<String, Map<List<Type>, Function>> symbolToInstanceMappings, List<Function> functions) {
-      this.symbolToInstanceMappings = symbolToInstanceMappings;
-      Function[] functionsArray = functions.toArray(new Function[functions.size()]);
-      functionsByType = groupBy(functionsArray, f -> f.getSignature().getReturnType());
-      functionsBySignature = groupBy(functionsArray, f -> f.getSignature());
+   public FunctionSet(Function... functions) {
+      this.symbolToInstanceMappings = createInstanceMappings(functions);
+      this.functionsByType = groupBy(functions, f -> f.getSignature().getReturnType());
+      this.functionsBySignature = groupBy(functions, f -> f.getSignature());
+   }
+
+   private static Map<String, Map<List<Type>, Function>> createInstanceMappings(Function[] functions) {
+      Map<String, Map<List<Type>, Function>> m = new HashMap<>();
+      for (Function f : functions) {
+         addToInstanceMappings(m, f);
+      }
+      return m;
+   }
+
+   private static void addToInstanceMappings(Map<String, Map<List<Type>, Function>> symbolToInstanceMappings, Function f) {
+      String displayName = f.getDisplayName();
+      Map<List<Type>, Function> m = symbolToInstanceMappings.get(displayName);
+      if (m == null) {
+         m = new HashMap<>();
+         symbolToInstanceMappings.put(displayName, m);
+      }
+      List<Type> key = f.getSignature().getArgumentTypes();
+      if (m.containsKey(key)) {
+         throw new IllegalArgumentException("Functions " + m.get(key) + " and " + f + " both have the display name " + key + " and signature "
+               + f.getSignature());
+      }
+      m.put(key, f);
    }
 
    public Function getFunction(String symbol, List<Type> types) {
@@ -65,65 +82,18 @@ public final class FunctionSet {
    }
 
    public static FunctionSet createDefaultFunctionSet() {
-      FunctionSet.Builder builder = new FunctionSet.Builder();
+      return new FunctionSet(
 
-      builder.put(new Add());
-      builder.put(new Subtract());
-      builder.put(new Multiply());
+      new Add(), new Subtract(), new Multiply(),
 
-      builder.put(new LessThan());
-      builder.put(new LessThanOrEqual());
-      builder.put(new GreaterThan());
-      builder.put(new GreaterThanOrEqual());
-      builder.put(new Equal());
-      builder.put(new NotEqual());
+            new LessThan(), new LessThanOrEqual(), new GreaterThan(), new GreaterThanOrEqual(), new Equal(), new NotEqual(),
 
-      builder.put(new If());
+            new If(),
 
-      builder.put(new Reduce(integerType()));
-      builder.put(new Filter(integerType()));
-      builder.put(new org.oakgp.function.hof.Map(integerType(), booleanType()));
+            new Reduce(integerType()), new Filter(integerType()), new org.oakgp.function.hof.Map(integerType(), booleanType()),
 
-      builder.put(new IsPositive());
-      builder.put(new IsNegative());
-      builder.put(new IsZero());
+            new IsPositive(), new IsNegative(), new IsZero(),
 
-      builder.put(new Count(integerType()));
-      builder.put(new Count(booleanType()));
-
-      return builder.build();
-   }
-
-   /** Implementation of the builder pattern to aid the construction of a {@code FunctionSet}. */
-   public static final class Builder {
-      private final Map<String, Map<List<Type>, Function>> symbolToInstanceMappings = new HashMap<>();
-      private final List<Function> functions = new ArrayList<>();
-
-      public Builder put(Function function) {
-         String symbol = function.getDisplayName();
-         // TODO add validation around adding things that already exist
-         // TODO check subsequent calls after build() do not alter original?
-         functions.add(function);
-         addToInstanceMappings(symbol, function);
-         return this;
-      }
-
-      private void addToInstanceMappings(String symbol, Function f) {
-         Map<List<Type>, Function> m = symbolToInstanceMappings.get(symbol);
-         if (m == null) {
-            m = new HashMap<>();
-            symbolToInstanceMappings.put(symbol, m);
-         }
-         List<Type> key = f.getSignature().getArgumentTypes();
-         if (m.containsKey(key)) {
-            // TODO is this check required?
-            throw new IllegalArgumentException();
-         }
-         m.put(key, f);
-      }
-
-      public FunctionSet build() {
-         return new FunctionSet(symbolToInstanceMappings, functions);
-      }
+            new Count(integerType()), new Count(booleanType()));
    }
 }
