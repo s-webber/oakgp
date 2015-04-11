@@ -2,7 +2,7 @@ package org.oakgp;
 
 import static org.oakgp.Type.booleanType;
 import static org.oakgp.Type.integerType;
-import static org.oakgp.util.Utils.groupValuesByKey;
+import static org.oakgp.util.Utils.groupBy;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,8 +43,8 @@ public final class FunctionSet {
       this.classToSymbolMappings = classToSymbolMappings;
       this.symbolToInstanceMappings = symbolToInstanceMappings;
       Function[] functionsArray = functions.toArray(new Function[functions.size()]);
-      functionsByType = groupValuesByKey(functionsArray, f -> f.getSignature().getReturnType());
-      functionsBySignature = groupValuesByKey(functionsArray, f -> f.getSignature());
+      functionsByType = groupBy(functionsArray, f -> f.getSignature().getReturnType());
+      functionsBySignature = groupBy(functionsArray, f -> f.getSignature());
    }
 
    public String getDisplayName(Function function) {

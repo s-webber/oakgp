@@ -18,11 +18,11 @@ public final class Utils {
       // do nothing
    }
 
-   public static <T extends Node> Map<Type, List<T>> groupNodesByType(T[] nodes) {
-      return groupValuesByKey(nodes, Node::getType);
+   public static <T extends Node> Map<Type, List<T>> groupByType(T[] nodes) {
+      return groupBy(nodes, Node::getType);
    }
 
-   public static <K, V> Map<K, List<V>> groupValuesByKey(V[] values, Function<V, K> valueToKey) {
+   public static <K, V> Map<K, List<V>> groupBy(V[] values, Function<V, K> valueToKey) {
       Map<K, List<V>> nodesByType = new HashMap<>();
       for (V v : values) {
          addToListOfMap(nodesByType, valueToKey.apply(v), v);

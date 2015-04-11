@@ -10,7 +10,7 @@ abstract class AbstractTerminalSet<T extends Node> {
    private final Map<Type, List<T>> nodesByType;
 
    AbstractTerminalSet(T[] nodes) {
-      nodesByType = Utils.groupNodesByType(nodes);
+      nodesByType = Utils.groupByType(nodes);
    }
 
    public List<T> getByType(Type type) {
