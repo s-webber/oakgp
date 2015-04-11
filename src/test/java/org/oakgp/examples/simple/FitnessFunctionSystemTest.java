@@ -8,6 +8,7 @@ import static org.oakgp.Type.integerArrayType;
 import static org.oakgp.Type.integerToBooleanFunctionType;
 import static org.oakgp.Type.integerType;
 import static org.oakgp.examples.SystemTestConfig.RANDOM;
+import static org.oakgp.fitness.TestDataFitnessFunction.createIntegerTestDataFitnessFunction;
 
 import java.util.HashMap;
 import java.util.List;
@@ -23,7 +24,6 @@ import org.oakgp.Signature;
 import org.oakgp.Type;
 import org.oakgp.examples.SystemTestConfig;
 import org.oakgp.fitness.FitnessFunction;
-import org.oakgp.fitness.TestDataFitnessFunction;
 import org.oakgp.function.Function;
 import org.oakgp.function.choice.If;
 import org.oakgp.function.classify.IsNegative;
@@ -61,7 +61,7 @@ public class FitnessFunctionSystemTest {
       config.setVariables(variableTypes);
       config.setTerminator(createTerminator());
       config.setFunctionSet(ARITHMETIC_FUNCTIONS);
-      FitnessFunction fitnessFunction = new TestDataFitnessFunction(createTests(variableTypes.length, a -> {
+      FitnessFunction fitnessFunction = createIntegerTestDataFitnessFunction(createTests(variableTypes.length, a -> {
          int x = (int) a.get(0);
          int y = (int) a.get(1);
          return (x * x) + 2 * y + 3 * x + 5;
@@ -78,7 +78,7 @@ public class FitnessFunctionSystemTest {
       config.setVariables(variableTypes);
       config.setTerminator(createTerminator());
       config.setFunctionSet(ARITHMETIC_FUNCTIONS);
-      FitnessFunction fitnessFunction = new TestDataFitnessFunction(createTests(variableTypes.length, a -> {
+      FitnessFunction fitnessFunction = createIntegerTestDataFitnessFunction(createTests(variableTypes.length, a -> {
          int x = (int) a.get(0);
          int y = (int) a.get(1);
          int z = (int) a.get(2);
@@ -97,7 +97,7 @@ public class FitnessFunctionSystemTest {
       config.setTerminator(createTerminator());
       config.setFunctionSet(new Add(), new Subtract(), new Multiply(), new LessThan(), new LessThanOrEqual(), new GreaterThan(), new GreaterThanOrEqual(),
             new Equal(), new NotEqual(), new If());
-      FitnessFunction fitnessFunction = new TestDataFitnessFunction(createTests(variableTypes.length, a -> {
+      FitnessFunction fitnessFunction = createIntegerTestDataFitnessFunction(createTests(variableTypes.length, a -> {
          int x = (int) a.get(0);
          int y = (int) a.get(1);
          return x > 20 ? x : y;
@@ -133,7 +133,7 @@ public class FitnessFunctionSystemTest {
       testData.put(createAssignments(createArguments("1", "0", "2", "5", "4", "0")), 2);
       testData.put(createAssignments(createArguments("-2", "0", "8", "7", "0", "-3", "0")), 3);
       testData.put(createAssignments(createArguments("0", "0", "0")), 3);
-      FitnessFunction fitnessFunction = new TestDataFitnessFunction(testData);
+      FitnessFunction fitnessFunction = createIntegerTestDataFitnessFunction(testData);
 
       config.setFitnessFunction(fitnessFunction);
       config.process();

@@ -31,7 +31,7 @@ public class TestDataFitnessFunctionTest {
       given(mockNode.evaluate(assignments3)).willReturn(5);
 
       // invoke evaluate method
-      FitnessFunction fitnessFunction = new TestDataFitnessFunction(testData);
+      FitnessFunction fitnessFunction = TestDataFitnessFunction.createIntegerTestDataFitnessFunction(testData);
       double result = fitnessFunction.evaluate(mockNode);
 
       // assert result
@@ -41,25 +41,33 @@ public class TestDataFitnessFunctionTest {
    @Test
    public void testSpecifiedRankingFunction() {
       // test data
-      Map<Assignments, Integer> testData = new HashMap<>();
+      Map<Assignments, String> testData = new HashMap<>();
       Assignments assignments1 = createAssignments(1);
-      testData.put(assignments1, 9);
+      testData.put(assignments1, "abcdef");
       Assignments assignments2 = createAssignments(2);
-      testData.put(assignments2, 2);
+      testData.put(assignments2, "asdfgh");
       Assignments assignments3 = createAssignments(3);
-      testData.put(assignments3, 7);
+      testData.put(assignments3, "qwerty");
 
       // mock
       Node mockNode = mock(Node.class);
-      given(mockNode.evaluate(assignments1)).willReturn("abcdefg");
-      given(mockNode.evaluate(assignments2)).willReturn("asdf");
+      given(mockNode.evaluate(assignments1)).willReturn("abcdex");
+      given(mockNode.evaluate(assignments2)).willReturn("asdxxx");
       given(mockNode.evaluate(assignments3)).willReturn("qwerty");
 
       // invoke evaluate method
-      FitnessFunction fitnessFunction = new TestDataFitnessFunction(testData, (o) -> ((String) o).length());
+      FitnessFunction fitnessFunction = new TestDataFitnessFunction<String>(testData, (e, a) -> {
+         int ctr = 0;
+         for (int i = 0; i < e.length(); i++) {
+            if (e.charAt(i) != a.charAt(i)) {
+               ctr++;
+            }
+         }
+         return ctr;
+      });
       double result = fitnessFunction.evaluate(mockNode);
 
       // assert result
-      assertEquals(5d, result, 0d);
+      assertEquals(4d, result, 0d);
    }
 }

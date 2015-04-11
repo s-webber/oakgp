@@ -1,15 +1,15 @@
 package org.oakgp.fitness;
 
 import java.util.Map;
-import java.util.function.ToIntFunction;
+import java.util.function.ToDoubleBiFunction;
 
 import org.oakgp.Assignments;
 import org.oakgp.node.Node;
 
 /** Calculates the fitness of a potential solution by comparing its results against the expected values. */
-public final class TestDataFitnessFunction implements FitnessFunction {
-   private final Map<Assignments, Integer> tests;
-   private final ToIntFunction<Object> rankingFunction;
+public final class TestDataFitnessFunction<T> implements FitnessFunction {
+   private final Map<Assignments, T> tests;
+   private final ToDoubleBiFunction<T, T> rankingFunction;
 
    /**
     * Constructs a new {@code FitnessFunction} which uses the specified test data to assess the fitness of potential solutions.
@@ -17,11 +17,11 @@ public final class TestDataFitnessFunction implements FitnessFunction {
     * @param tests
     *           test data which associates a collection of inputs with their expected outcomes
     */
-   public TestDataFitnessFunction(Map<Assignments, Integer> tests) {
-      this(tests, (o) -> (int) o);
+   public static TestDataFitnessFunction<Integer> createIntegerTestDataFitnessFunction(Map<Assignments, Integer> tests) {
+      return new TestDataFitnessFunction<>(tests, (e, a) -> Math.abs(e - a));
    }
 
-   public TestDataFitnessFunction(Map<Assignments, Integer> tests, ToIntFunction<Object> rankingFunction) {
+   public TestDataFitnessFunction(Map<Assignments, T> tests, ToDoubleBiFunction<T, T> rankingFunction) {
       this.tests = tests;
       this.rankingFunction = rankingFunction;
    }
@@ -36,11 +36,11 @@ public final class TestDataFitnessFunction implements FitnessFunction {
    @Override
    public double evaluate(Node node) {
       double diff = 0;
-      for (Map.Entry<Assignments, Integer> test : tests.entrySet()) {
+      for (Map.Entry<Assignments, T> test : tests.entrySet()) {
          Assignments input = test.getKey();
-         int expected = test.getValue();
-         int actual = rankingFunction.applyAsInt(node.evaluate(input));
-         diff += Math.abs(actual - expected);
+         T expected = test.getValue();
+         T actual = node.evaluate(input);
+         diff += rankingFunction.applyAsDouble(expected, actual);
       }
       return diff;
    }
