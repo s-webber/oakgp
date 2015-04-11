@@ -7,6 +7,7 @@ import static org.junit.Assert.fail;
 import static org.oakgp.TestUtils.createVariable;
 import static org.oakgp.TestUtils.readNode;
 import static org.oakgp.TestUtils.readNodes;
+import static org.oakgp.Type.integerToBooleanFunctionType;
 import static org.oakgp.Type.integerType;
 
 import java.util.List;
@@ -152,7 +153,7 @@ public class NodeReaderTest {
    private void assertParseFunction(String input, Class<? extends Function> expected) {
       Node output = readNode(input);
       assertSame(ConstantNode.class, output.getClass());
-      // TODO assertSame(integerToBooleanFunctionType(), output.getType());
+      assertSame(integerToBooleanFunctionType(), output.getType());
       assertEquals(expected, ((ConstantNode) output).evaluate(null).getClass());
    }
 
