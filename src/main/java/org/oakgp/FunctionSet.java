@@ -32,29 +32,16 @@ public final class FunctionSet {
    // TODO tidy up how member variables are created
    // TODO remove Builder - replace with new FunctionSet(Function...)
 
-   private final Map<Class<? extends Function>, String> classToSymbolMappings;
    private final Map<String, Map<List<Type>, Function>> symbolToInstanceMappings;
    private final Map<Type, List<Function>> functionsByType;
    private final Map<Signature, List<Function>> functionsBySignature;
 
    /** @see FunctionSet.Builder#build() */
-   private FunctionSet(Map<Class<? extends Function>, String> classToSymbolMappings, Map<String, Map<List<Type>, Function>> symbolToInstanceMappings,
-         List<Function> functions) {
-      this.classToSymbolMappings = classToSymbolMappings;
+   private FunctionSet(Map<String, Map<List<Type>, Function>> symbolToInstanceMappings, List<Function> functions) {
       this.symbolToInstanceMappings = symbolToInstanceMappings;
       Function[] functionsArray = functions.toArray(new Function[functions.size()]);
       functionsByType = groupBy(functionsArray, f -> f.getSignature().getReturnType());
       functionsBySignature = groupBy(functionsArray, f -> f.getSignature());
-   }
-
-   public String getDisplayName(Function function) {
-      Class<? extends Function> functionClass = function.getClass();
-      String displayName = classToSymbolMappings.get(functionClass);
-      if (displayName != null) {
-         return displayName;
-      } else {
-         return functionClass.getName();
-      }
    }
 
    public Function getFunction(String symbol, List<Type> types) {
@@ -109,7 +96,6 @@ public final class FunctionSet {
 
    /** Implementation of the builder pattern to aid the construction of a {@code FunctionSet}. */
    public static final class Builder {
-      private final Map<Class<? extends Function>, String> classToSymbolMappings = new HashMap<>();
       private final Map<String, Map<List<Type>, Function>> symbolToInstanceMappings = new HashMap<>();
       private final List<Function> functions = new ArrayList<>();
 
@@ -117,7 +103,6 @@ public final class FunctionSet {
          String symbol = function.getDisplayName();
          // TODO add validation around adding things that already exist
          // TODO check subsequent calls after build() do not alter original?
-         classToSymbolMappings.put(function.getClass(), symbol);
          functions.add(function);
          addToInstanceMappings(symbol, function);
          return this;
@@ -138,7 +123,7 @@ public final class FunctionSet {
       }
 
       public FunctionSet build() {
-         return new FunctionSet(classToSymbolMappings, symbolToInstanceMappings, functions);
+         return new FunctionSet(symbolToInstanceMappings, functions);
       }
    }
 }

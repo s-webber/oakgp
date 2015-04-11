@@ -28,20 +28,6 @@ public class FunctionSetTest {
    private static final List<Type> TWO_INTEGERS = Collections.unmodifiableList(Arrays.asList(integerType(), integerType()));
 
    @Test
-   public void testGetDisplayName() {
-      FunctionSet functionSet = FunctionSet.createDefaultFunctionSet();
-      assertEquals("+", functionSet.getDisplayName(new Add()));
-      assertEquals("-", functionSet.getDisplayName(new Subtract()));
-      assertEquals("*", functionSet.getDisplayName(new Multiply()));
-   }
-
-   @Test
-   public void testGetDisplayNameWhenNoEntryExists() {
-      FunctionSet emptySet = new FunctionSet.Builder().build();
-      assertEquals("org.oakgp.function.math.Add", emptySet.getDisplayName(new Add()));
-   }
-
-   @Test
    public void testGetFunctionBySymbol() {
       FunctionSet functionSet = FunctionSet.createDefaultFunctionSet();
       assertSame(Add.class, functionSet.getFunction("+", TWO_INTEGERS).getClass());

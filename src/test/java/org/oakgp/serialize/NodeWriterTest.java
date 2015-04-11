@@ -1,18 +1,16 @@
 package org.oakgp.serialize;
 
 import static org.junit.Assert.assertEquals;
-import static org.oakgp.TestUtils.integerConstant;
 import static org.oakgp.TestUtils.createVariable;
+import static org.oakgp.TestUtils.integerConstant;
 
 import org.junit.Test;
-import org.oakgp.node.FunctionNode;
 import org.oakgp.function.math.Add;
 import org.oakgp.function.math.Multiply;
 import org.oakgp.function.math.Subtract;
+import org.oakgp.node.FunctionNode;
 
 public class NodeWriterTest {
-   // TODO test writeNode when no symbol exists in SymbolMap for the specified Function
-
    @Test
    public void testConstantNode() {
       NodeWriter writer = new NodeWriter();
