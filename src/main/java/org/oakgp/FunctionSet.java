@@ -1,7 +1,5 @@
 package org.oakgp;
 
-import static org.oakgp.Type.booleanType;
-import static org.oakgp.Type.integerType;
 import static org.oakgp.util.Utils.groupBy;
 
 import java.util.HashMap;
@@ -9,22 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.oakgp.function.Function;
-import org.oakgp.function.choice.If;
-import org.oakgp.function.classify.IsNegative;
-import org.oakgp.function.classify.IsPositive;
-import org.oakgp.function.classify.IsZero;
-import org.oakgp.function.coll.Count;
-import org.oakgp.function.compare.Equal;
-import org.oakgp.function.compare.GreaterThan;
-import org.oakgp.function.compare.GreaterThanOrEqual;
-import org.oakgp.function.compare.LessThan;
-import org.oakgp.function.compare.LessThanOrEqual;
-import org.oakgp.function.compare.NotEqual;
-import org.oakgp.function.hof.Filter;
-import org.oakgp.function.hof.Reduce;
-import org.oakgp.function.math.Add;
-import org.oakgp.function.math.Multiply;
-import org.oakgp.function.math.Subtract;
 
 /** Represents the set of possible {@code Function} implementations to use during a genetic programming run. */
 public final class FunctionSet {
@@ -79,21 +61,5 @@ public final class FunctionSet {
 
    public List<Function> getBySignature(Signature signature) {
       return functionsBySignature.get(signature);
-   }
-
-   public static FunctionSet createDefaultFunctionSet() {
-      return new FunctionSet(
-
-      new Add(), new Subtract(), new Multiply(),
-
-            new LessThan(), new LessThanOrEqual(), new GreaterThan(), new GreaterThanOrEqual(), new Equal(), new NotEqual(),
-
-            new If(),
-
-            new Reduce(integerType()), new Filter(integerType()), new org.oakgp.function.hof.Map(integerType(), booleanType()),
-
-            new IsPositive(), new IsNegative(), new IsZero(),
-
-            new Count(integerType()), new Count(booleanType()));
    }
 }

@@ -4,11 +4,30 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.oakgp.Type.booleanType;
+import static org.oakgp.Type.integerType;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.oakgp.function.Function;
+import org.oakgp.function.choice.If;
+import org.oakgp.function.classify.IsNegative;
+import org.oakgp.function.classify.IsPositive;
+import org.oakgp.function.classify.IsZero;
+import org.oakgp.function.coll.Count;
+import org.oakgp.function.compare.Equal;
+import org.oakgp.function.compare.GreaterThan;
+import org.oakgp.function.compare.GreaterThanOrEqual;
+import org.oakgp.function.compare.LessThan;
+import org.oakgp.function.compare.LessThanOrEqual;
+import org.oakgp.function.compare.NotEqual;
+import org.oakgp.function.hof.Filter;
+import org.oakgp.function.hof.Reduce;
+import org.oakgp.function.math.Add;
+import org.oakgp.function.math.Multiply;
+import org.oakgp.function.math.Subtract;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
 import org.oakgp.node.VariableNode;
@@ -49,7 +68,7 @@ public class TestUtils {
 
    public static List<Node> readNodes(String input) {
       List<Node> outputs = new ArrayList<>();
-      try (NodeReader nr = new NodeReader(input, createTypeArray(100))) {
+      try (NodeReader nr = new NodeReader(input, createDefaultFunctionSet(), createVariableNodes(100))) {
          while (!nr.isEndOfStream()) {
             outputs.add(nr.readNode());
          }
@@ -57,6 +76,44 @@ public class TestUtils {
          throw new RuntimeException("IOException caught reading: " + input, e);
       }
       return outputs;
+   }
+
+   private static FunctionSet createDefaultFunctionSet() {
+      List<Function> functions = new ArrayList<>();
+
+      functions.add(new Add());
+      functions.add(new Subtract());
+      functions.add(new Multiply());
+
+      functions.add(new LessThan());
+      functions.add(new LessThanOrEqual());
+      functions.add(new GreaterThan());
+      functions.add(new GreaterThanOrEqual());
+      functions.add(new Equal());
+      functions.add(new NotEqual());
+
+      functions.add(new If());
+
+      functions.add(new Reduce(integerType()));
+      functions.add(new Filter(integerType()));
+      functions.add(new org.oakgp.function.hof.Map(integerType(), booleanType()));
+
+      functions.add(new IsPositive());
+      functions.add(new IsNegative());
+      functions.add(new IsZero());
+
+      functions.add(new Count(integerType()));
+      functions.add(new Count(booleanType()));
+
+      return new FunctionSet(functions.toArray(new Function[functions.size()]));
+   }
+
+   private static VariableNode[] createVariableNodes(int size) {
+      VariableNode[] v = new VariableNode[size];
+      for (int i = 0; i < size; i++) {
+         v[i] = new VariableNode(i, Type.integerType());
+      }
+      return v;
    }
 
    public static Arguments createArguments(String... expressions) {

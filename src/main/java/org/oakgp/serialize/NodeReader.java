@@ -51,15 +51,22 @@ public final class NodeReader implements Closeable {
    private static final char ARRAY_END_CHAR = ']';
    private static final String ARRAY_END_STRING = Character.toString(ARRAY_END_CHAR);
 
-   private final FunctionSet functionSet = FunctionSet.createDefaultFunctionSet();
    private final CharReader cr;
-   private final Type[] variableTypes;
+   private final FunctionSet functionSet;
+   private final VariableNode[] variableNodes;
 
    // TODO accept array of VariableNode instead of Type
-   public NodeReader(String input, Type... variableTypes) {
+   public NodeReader(String input, FunctionSet functionSet, VariableNode... variableNodes) {
       StringReader sr = new StringReader(input);
       this.cr = new CharReader(new BufferedReader(sr));
-      this.variableTypes = variableTypes;
+      this.functionSet = functionSet;
+      this.variableNodes = arrayCopy(variableNodes);
+   }
+
+   private static VariableNode[] arrayCopy(VariableNode[] original) {
+      VariableNode[] copy = new VariableNode[original.length];
+      System.arraycopy(original, 0, copy, 0, original.length);
+      return copy;
    }
 
    public Node readNode() throws IOException {
@@ -122,7 +129,7 @@ public final class NodeReader implements Closeable {
 
    private Node nextVariable(String firstToken) {
       int id = Integer.parseInt(firstToken.substring(1));
-      return new VariableNode(id, variableTypes[id]);
+      return variableNodes[id];
    }
 
    private ConstantNode nextLiteral(String token) {

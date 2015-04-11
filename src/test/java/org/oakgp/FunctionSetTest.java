@@ -18,8 +18,19 @@ import java.util.List;
 
 import org.junit.Test;
 import org.oakgp.function.Function;
+import org.oakgp.function.choice.If;
+import org.oakgp.function.classify.IsNegative;
+import org.oakgp.function.classify.IsPositive;
 import org.oakgp.function.classify.IsZero;
 import org.oakgp.function.coll.Count;
+import org.oakgp.function.compare.Equal;
+import org.oakgp.function.compare.GreaterThan;
+import org.oakgp.function.compare.GreaterThanOrEqual;
+import org.oakgp.function.compare.LessThan;
+import org.oakgp.function.compare.LessThanOrEqual;
+import org.oakgp.function.compare.NotEqual;
+import org.oakgp.function.hof.Filter;
+import org.oakgp.function.hof.Reduce;
 import org.oakgp.function.math.Add;
 import org.oakgp.function.math.Multiply;
 import org.oakgp.function.math.Subtract;
@@ -29,7 +40,7 @@ public class FunctionSetTest {
 
    @Test
    public void testGetFunctionBySymbol() {
-      FunctionSet functionSet = FunctionSet.createDefaultFunctionSet();
+      FunctionSet functionSet = createFunctionSet();
       assertSame(Add.class, functionSet.getFunction("+", TWO_INTEGERS).getClass());
       assertSame(Subtract.class, functionSet.getFunction("-", TWO_INTEGERS).getClass());
       assertSame(Multiply.class, functionSet.getFunction("*", TWO_INTEGERS).getClass());
@@ -37,7 +48,7 @@ public class FunctionSetTest {
 
    @Test
    public void testGetFunctionByClassName() {
-      FunctionSet functionSet = FunctionSet.createDefaultFunctionSet();
+      FunctionSet functionSet = createFunctionSet();
       try {
          functionSet.getFunction(Add.class.getName(), TWO_INTEGERS);
          fail();
@@ -48,7 +59,7 @@ public class FunctionSetTest {
 
    @Test
    public void testGetFunctionSymbolDoesNotExist() {
-      FunctionSet functionSet = FunctionSet.createDefaultFunctionSet();
+      FunctionSet functionSet = createFunctionSet();
       try {
          functionSet.getFunction("^", TWO_INTEGERS);
          fail();
@@ -73,7 +84,7 @@ public class FunctionSetTest {
    }
 
    private void assertCannotFindByTypes(List<Type> types) {
-      FunctionSet functionSet = FunctionSet.createDefaultFunctionSet();
+      FunctionSet functionSet = createFunctionSet();
       try {
          functionSet.getFunction("+", types);
          fail();
@@ -105,7 +116,7 @@ public class FunctionSetTest {
 
    @Test
    public void assertGetByTypeUnmodifiable() {
-      FunctionSet functionSet = FunctionSet.createDefaultFunctionSet();
+      FunctionSet functionSet = createFunctionSet();
       List<Function> integers = functionSet.getByType(integerType());
       assertUnmodifiable(integers);
    }
@@ -139,8 +150,24 @@ public class FunctionSetTest {
 
    @Test
    public void assertGetBySignatureUnmodifiable() {
-      FunctionSet functionSet = FunctionSet.createDefaultFunctionSet();
+      FunctionSet functionSet = createFunctionSet();
       List<Function> integers = functionSet.getByType(integerType());
       assertUnmodifiable(integers);
+   }
+
+   private static FunctionSet createFunctionSet() {
+      return new FunctionSet(
+            // arithmetic
+            new Add(), new Subtract(), new Multiply(),
+            // comparison
+            new LessThan(), new LessThanOrEqual(), new GreaterThan(), new GreaterThanOrEqual(), new Equal(), new NotEqual(),
+            // selection
+            new If(),
+            // higher-order functions
+            new Reduce(integerType()), new Filter(integerType()), new org.oakgp.function.hof.Map(integerType(), booleanType()),
+            // classify
+            new IsPositive(), new IsNegative(), new IsZero(),
+            // collections
+            new Count(integerType()), new Count(booleanType()));
    }
 }
