@@ -37,6 +37,7 @@ import org.oakgp.function.math.Subtract;
 
 public class FunctionSetTest {
    private static final List<Type> TWO_INTEGERS = Collections.unmodifiableList(Arrays.asList(integerType(), integerType()));
+   private static final Add ADD = new Add();
 
    @Test
    public void testGetFunctionBySymbol() {
@@ -89,13 +90,13 @@ public class FunctionSetTest {
          functionSet.getFunction("+", types);
          fail();
       } catch (IllegalArgumentException e) {
-         assertEquals("Could not find version of function: + for: " + types, e.getMessage());
+         assertEquals(e.getMessage(), "Could not find version of function: + for: " + types + " in: {[integer, integer]=" + ADD + "}");
       }
    }
 
    @Test
    public void testGetByType() {
-      Add add = new Add();
+      Add add = ADD;
       Subtract subtract = new Subtract();
       Multiply multiply = new Multiply();
       IsZero isZero = new IsZero();
@@ -123,7 +124,7 @@ public class FunctionSetTest {
 
    @Test
    public void testGetBySignature() {
-      Add add = new Add();
+      Add add = ADD;
       Subtract subtract = new Subtract();
       Count countIntegerArray = new Count(integerType());
       Count countBooleanArray = new Count(booleanType());
@@ -158,7 +159,7 @@ public class FunctionSetTest {
    private static FunctionSet createFunctionSet() {
       return new FunctionSet(
             // arithmetic
-            new Add(), new Subtract(), new Multiply(),
+            ADD, new Subtract(), new Multiply(),
             // comparison
             new LessThan(), new LessThanOrEqual(), new GreaterThan(), new GreaterThanOrEqual(), new Equal(), new NotEqual(),
             // selection

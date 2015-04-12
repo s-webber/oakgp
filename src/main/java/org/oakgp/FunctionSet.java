@@ -50,7 +50,7 @@ public final class FunctionSet {
       }
       Function f = m.get(types);
       if (f == null) {
-         throw new IllegalArgumentException("Could not find version of function: " + symbol + " for: " + types); // TODO + " in: " + m);
+         throw new IllegalArgumentException("Could not find version of function: " + symbol + " for: " + types + " in: " + m);
       }
       return f;
    }
