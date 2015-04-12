@@ -7,8 +7,10 @@ import org.oakgp.function.Function;
 
 /** Contains a function (operator) and the arguments (operands) to apply to it. */
 public final class FunctionNode implements Node {
+   private static final int PRIMES[] = { 2, 3, 5, 7, 11, 13, 19 };
    private final Function function;
    private final Arguments arguments;
+   private final int nodeCount;
    private final int hashCode;
 
    /**
@@ -34,7 +36,24 @@ public final class FunctionNode implements Node {
    public FunctionNode(Function function, Arguments arguments) {
       this.function = function;
       this.arguments = arguments;
-      this.hashCode = (function.getClass().getName().hashCode() * 31) * arguments.hashCode();
+      this.nodeCount = calculateNodeCount(arguments);
+      this.hashCode = (function.getClass().getName().hashCode() * 31) * createHashCode(arguments, nodeCount);
+   }
+
+   private static int calculateNodeCount(Arguments arguments) {
+      int total = 1;
+      for (int i = 0; i < arguments.length(); i++) {
+         total += arguments.get(i).getNodeCount();
+      }
+      return total;
+   }
+
+   private static int createHashCode(Arguments arguments, int nodeCount) {
+      int hashCode = 0;
+      for (int i = 0; i < arguments.length(); i++) {
+         hashCode += arguments.get(i).hashCode() * (PRIMES[i] + nodeCount);
+      }
+      return hashCode;
    }
 
    public Function getFunction() {
@@ -82,11 +101,7 @@ public final class FunctionNode implements Node {
 
    @Override
    public int getNodeCount() {
-      int total = 1;
-      for (int i = 0; i < arguments.length(); i++) {
-         total += arguments.get(i).getNodeCount();
-      }
-      return total;
+      return nodeCount;
    }
 
    @Override

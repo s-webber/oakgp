@@ -144,10 +144,31 @@ public class FunctionNodeTest {
 
    @Test
    public void testHashCode() {
+      // In Java the following results in two lists that have the same hashCode (even though they are different);
+      // List a = new ArrayList();
+      // a.add(Arrays.asList(9, 1));
+      // a.add(Arrays.asList(2, 9));
+      //
+      // List b = new ArrayList();
+      // b.add(Arrays.asList(9, 2));
+      // b.add(Arrays.asList(1, 9));
+      //
+      // assertEquals(a.hashCode(), b.hashCode());
+
+      // This is also true of Clojure's PersistentVector:
+      // user=> (def x [[9 1] [2 9]])
+      // #'user/x
+      // user=> (def y [[9 2] [1 9]])
+      // #'user/y
+      // user=> (.hashCode x)
+      // 40464
+      // user=> (.hashCode y)
+      // 40464
+
+      // test that result of reading the following expressions is nodes with different hash codes:
       Node n1 = readNode("(- (- (* -1 v3) 0) (- 13 v1))");
       Node n2 = readNode("(- (- (* -1 v3) 13) (- 0 v1))");
-      // TODO is there anyway to improve hashCode so these nodes do not have the same value?
-      assertEquals(n1.hashCode(), n2.hashCode());
+      assertNotEquals(n1.hashCode(), n2.hashCode());
    }
 
    /** Returns representation of: {@code (x*y)+z+1} */

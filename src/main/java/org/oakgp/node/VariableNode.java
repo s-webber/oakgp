@@ -13,6 +13,7 @@ import org.oakgp.Type;
 public final class VariableNode implements Node {
    private final int id;
    private final Type type;
+   private final int hashCode;
 
    /**
     * Constructs a new {@code VariableNode} with the specified ID.
@@ -25,6 +26,9 @@ public final class VariableNode implements Node {
    public VariableNode(int id, Type type) {
       this.id = id;
       this.type = type;
+      // +1 so never multiplying by 0
+      // *997 as an alternative to *31 - so VariableNode with id 1 has a different hash code than a ConstantNode with an Integer with value 1
+      this.hashCode = (id + 1) * 997;
    }
 
    public int getId() {
@@ -61,14 +65,14 @@ public final class VariableNode implements Node {
       return type;
    }
 
-   // TODO cache hashCode (e.g. (id+1)*31) and remove equals method
    @Override
    public int hashCode() {
-      return id;
+      return hashCode;
    }
 
    @Override
    public boolean equals(Object o) {
+      // TODO confirm - no need to also check type?
       return o instanceof VariableNode && this.id == ((VariableNode) o).id;
    }
 

@@ -45,7 +45,7 @@ public class AddTest extends AbstractFunctionTest {
       testCases.put("(+ (+ v0 v1) 0)", "(+ v0 v1)", assignedValues);
       testCases.put("(+ 0 (+ v0 v1))", "(+ v0 v1)", assignedValues);
 
-      testCases.put("(+ (+ 4 v0) (+ v0 (* 2 v1)))", "(+ (* 2 v1) (+ 4 (* 2 v0)))", assignedValues);
+      testCases.put("(+ (+ 4 v0) (+ v0 (* 2 v1)))", "(+ 4 (+ (* 2 v1) (* 2 v0)))", assignedValues);
       testCases.put("(+ (- 10 v0) (+ 1 v0))", "11", assignedValues);
       testCases.put("(+ (+ 10 v0) (- 1 v0))", "11", assignedValues);
       testCases.put("(+ (- 10 v0) (+ 1 v1))", "(+ v1 (- 11 v0))", assignedValues);
