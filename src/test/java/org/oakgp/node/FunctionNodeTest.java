@@ -142,6 +142,14 @@ public class FunctionNodeTest {
       assertNotEquals(n, new Object());
    }
 
+   @Test
+   public void testHashCode() {
+      Node n1 = readNode("(- (- (* -1 v3) 0) (- 13 v1))");
+      Node n2 = readNode("(- (- (* -1 v3) 13) (- 0 v1))");
+      // TODO is there anyway to improve hashCode so these nodes do not have the same value?
+      assertEquals(n1.hashCode(), n2.hashCode());
+   }
+
    /** Returns representation of: {@code (x*y)+z+1} */
    private FunctionNode createFunctionNode() {
       return new FunctionNode(new Add(), new FunctionNode(new Multiply(), createVariable(0), createVariable(1)), new FunctionNode(new Add(), createVariable(2),
