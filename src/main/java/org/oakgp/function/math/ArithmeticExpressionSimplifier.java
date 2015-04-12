@@ -12,6 +12,8 @@ import org.oakgp.node.Node;
 import org.oakgp.serialize.NodeWriter;
 
 final class ArithmeticExpressionSimplifier {
+   private static boolean SANITY_CHECK = true;
+
    static final ConstantNode ZERO = createConstant(0);
    static final ConstantNode ONE = createConstant(1);
    static final ConstantNode TWO = createConstant(2);
@@ -23,11 +25,13 @@ final class ArithmeticExpressionSimplifier {
 
    /** @return {@code null} if it was not possible to simplify the expression. */
    static Node simplify(Function function, Node firstArg, Node secondArg) {
-      assertAddOrSubtract(function);
-      assertArgumentsOrdered(function, firstArg, secondArg);
+      sanityCheck(() -> {
+         assertAddOrSubtract(function);
+         assertArgumentsOrdered(function, firstArg, secondArg);
+      });
 
       Node simplifiedVersion = getSimplifiedVersion(function, firstArg, secondArg);
-      assertEvaluateToSameResult(simplifiedVersion, function, firstArg, secondArg);
+      sanityCheck(() -> assertEvaluateToSameResult(simplifiedVersion, function, firstArg, secondArg));
       return simplifiedVersion;
    }
 
@@ -207,7 +211,7 @@ final class ArithmeticExpressionSimplifier {
     *           subtracted from {@code first}
     */
    private static Node combine(Node first, Node second, boolean isPos) {
-      assertSameClass(first, second);
+      sanityCheck(() -> assertSameClass(first, second));
 
       if (second instanceof ConstantNode) {
          int currentNodeValue = (int) first.evaluate(null);
@@ -262,29 +266,32 @@ final class ArithmeticExpressionSimplifier {
       return new FunctionNode(f1.getFunction(), createConstant(result), f1.getArguments().get(1));
    }
 
-   private static void assertAddOrSubtract(Function f) {
+   private static void sanityCheck(Runnable r) {
       // TODO remove this method - only here to sanity check input during development
+      if (SANITY_CHECK) {
+         r.run();
+      }
+   }
+
+   private static void assertAddOrSubtract(Function f) {
       if (!isAddOrSubtract(f)) {
          throw new IllegalArgumentException(f.getClass().getName());
       }
    }
 
    private static void assertArgumentsOrdered(Function f, Node firstArg, Node secondArg) {
-      // TODO remove this method - only here to sanity check input during development
       if (!isSubtract(f) && NODE_COMPARATOR.compare(firstArg, secondArg) > 0) {
          throw new IllegalArgumentException("arg1 " + firstArg + " arg2 " + secondArg);
       }
    }
 
    private static void assertSameClass(Node currentNode, Node nodeToReplace) {
-      // TODO remove this method - only here to sanity check input during development
       if (nodeToReplace.getClass() != currentNode.getClass()) {
          throw new IllegalArgumentException(nodeToReplace.getClass().getName() + " " + currentNode.getClass().getName());
       }
    }
 
    private static void assertEvaluateToSameResult(Node simplifiedVersion, Function function, Node firstArg, Node secondArg) {
-      // TODO remove this method - only here to sanity check output during development
       if (simplifiedVersion != null) {
          FunctionNode in = new FunctionNode(function, firstArg, secondArg);
          assertEvaluateToSameResult(in, simplifiedVersion);
@@ -302,7 +309,6 @@ final class ArithmeticExpressionSimplifier {
     *            if the specified nodes evaluate to different results
     */
    static void assertEvaluateToSameResult(Node first, Node second) {
-      // TODO remove this method - only here to sanity check output during development
       Object[] assignedValues = { 2, 14, 4, 9, 7 };
       Assignments assignments = Assignments.createAssignments(assignedValues);
       Object firstResult = first.evaluate(assignments);
