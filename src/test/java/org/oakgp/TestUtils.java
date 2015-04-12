@@ -68,7 +68,9 @@ public class TestUtils {
 
    public static List<Node> readNodes(String input) {
       List<Node> outputs = new ArrayList<>();
-      try (NodeReader nr = new NodeReader(input, createDefaultFunctionSet(), createVariableNodes(100))) {
+      FunctionSet functionSet = createDefaultFunctionSet();
+      VariableSet variableSet = VariableSet.createVariableSet(createTypeArray(100));
+      try (NodeReader nr = new NodeReader(input, functionSet, variableSet)) {
          while (!nr.isEndOfStream()) {
             outputs.add(nr.readNode());
          }
@@ -106,14 +108,6 @@ public class TestUtils {
       functions.add(new Count(booleanType()));
 
       return new FunctionSet(functions.toArray(new Function[functions.size()]));
-   }
-
-   private static VariableNode[] createVariableNodes(int size) {
-      VariableNode[] v = new VariableNode[size];
-      for (int i = 0; i < size; i++) {
-         v[i] = new VariableNode(i, Type.integerType());
-      }
-      return v;
    }
 
    public static Arguments createArguments(String... expressions) {

@@ -16,11 +16,11 @@ import java.util.List;
 
 import org.oakgp.FunctionSet;
 import org.oakgp.Type;
+import org.oakgp.VariableSet;
 import org.oakgp.function.Function;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
-import org.oakgp.node.VariableNode;
 
 /**
  * Creates {@code Node} instances from {@code String} representations.
@@ -53,20 +53,13 @@ public final class NodeReader implements Closeable {
 
    private final CharReader cr;
    private final FunctionSet functionSet;
-   private final VariableNode[] variableNodes;
+   private final VariableSet variableSet;
 
-   // TODO accept array of VariableNode instead of Type
-   public NodeReader(String input, FunctionSet functionSet, VariableNode... variableNodes) {
+   public NodeReader(String input, FunctionSet functionSet, VariableSet variableSet) {
       StringReader sr = new StringReader(input);
       this.cr = new CharReader(new BufferedReader(sr));
       this.functionSet = functionSet;
-      this.variableNodes = arrayCopy(variableNodes);
-   }
-
-   private static VariableNode[] arrayCopy(VariableNode[] original) {
-      VariableNode[] copy = new VariableNode[original.length];
-      System.arraycopy(original, 0, copy, 0, original.length);
-      return copy;
+      this.variableSet = variableSet;
    }
 
    public Node readNode() throws IOException {
@@ -129,7 +122,7 @@ public final class NodeReader implements Closeable {
 
    private Node nextVariable(String firstToken) {
       int id = Integer.parseInt(firstToken.substring(1));
-      return variableNodes[id];
+      return variableSet.getById(id);
    }
 
    private ConstantNode nextLiteral(String token) {
@@ -206,7 +199,7 @@ public final class NodeReader implements Closeable {
       private final BufferedReader br;
       private int previous = -1;
 
-      CharReader(BufferedReader br) { // TODO create br in constructor
+      CharReader(BufferedReader br) {
          this.br = br;
       }
 
@@ -233,7 +226,7 @@ public final class NodeReader implements Closeable {
          }
       }
 
-      void rewind(int c) { // TODO don't accept argument (already know what to rewind to)
+      void rewind(int c) {
          previous = c;
       }
 
