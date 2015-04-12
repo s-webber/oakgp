@@ -2,7 +2,6 @@ package org.oakgp.serialize;
 
 import static org.oakgp.Arguments.createArguments;
 import static org.oakgp.Type.arrayType;
-import static org.oakgp.Type.booleanType;
 import static org.oakgp.Type.integerType;
 import static org.oakgp.Type.stringType;
 
@@ -21,6 +20,7 @@ import org.oakgp.function.Function;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
+import org.oakgp.util.Utils;
 
 /**
  * Creates {@code Node} instances from {@code String} representations.
@@ -38,8 +38,6 @@ import org.oakgp.node.Node;
  * </pre>
  */
 public final class NodeReader implements Closeable {
-   private static final ConstantNode TRUE_NODE = new ConstantNode(Boolean.TRUE, booleanType()); // TODO move somewhere it can be shared
-   private static final ConstantNode FALSE_NODE = new ConstantNode(Boolean.FALSE, booleanType()); // TODO move somewhere it can be shared
    private static final char FUNCTION_START_CHAR = '(';
    private static final String FUNCTION_START_STRING = Character.toString(FUNCTION_START_CHAR);
    private static final char FUNCTION_END_CHAR = ')';
@@ -128,9 +126,9 @@ public final class NodeReader implements Closeable {
    private ConstantNode nextLiteral(String token) {
       switch (token) {
       case "true":
-         return TRUE_NODE;
+         return Utils.TRUE_NODE;
       case "false":
-         return FALSE_NODE;
+         return Utils.FALSE_NODE;
       default:
          if (isNumber(token)) {
             return new ConstantNode(Integer.parseInt(token), integerType());

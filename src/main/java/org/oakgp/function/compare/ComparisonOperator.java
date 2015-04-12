@@ -1,7 +1,5 @@
 package org.oakgp.function.compare;
 
-import static java.lang.Boolean.FALSE;
-import static java.lang.Boolean.TRUE;
 import static org.oakgp.Type.booleanType;
 import static org.oakgp.Type.integerType;
 
@@ -9,12 +7,10 @@ import org.oakgp.Arguments;
 import org.oakgp.Assignments;
 import org.oakgp.Signature;
 import org.oakgp.function.Function;
-import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
+import org.oakgp.util.Utils;
 
 abstract class ComparisonOperator implements Function {
-   private static final ConstantNode TRUE_NODE = new ConstantNode(TRUE, booleanType()); // TODO share version used by NodeReader
-   private static final ConstantNode FALSE_NODE = new ConstantNode(FALSE, booleanType()); // TODO share version used by NodeReader
    private static final Signature SIGNATURE = Signature.createSignature(booleanType(), integerType(), integerType());
 
    private final boolean equalsIsTrue;
@@ -28,9 +24,9 @@ abstract class ComparisonOperator implements Function {
       int i1 = (int) arguments.get(0).evaluate(assignments);
       int i2 = (int) arguments.get(1).evaluate(assignments);
       if (evaluate(i1, i2)) {
-         return TRUE;
+         return Boolean.TRUE;
       } else {
-         return FALSE;
+         return Boolean.FALSE;
       }
    }
 
@@ -44,7 +40,7 @@ abstract class ComparisonOperator implements Function {
    @Override
    public Node simplify(Arguments arguments) {
       if (arguments.get(0).equals(arguments.get(1))) {
-         return equalsIsTrue ? TRUE_NODE : FALSE_NODE;
+         return equalsIsTrue ? Utils.TRUE_NODE : Utils.FALSE_NODE;
       } else {
          return null;
       }
