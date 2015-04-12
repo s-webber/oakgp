@@ -70,11 +70,7 @@ public final class VariableNode implements Node {
       return hashCode;
    }
 
-   @Override
-   public boolean equals(Object o) {
-      // TODO confirm - no need to also check type?
-      return o instanceof VariableNode && this.id == ((VariableNode) o).id;
-   }
+   // NOTE: *not* over-riding equals(Object) as two VariableNode references are only "equal" if they refer to the same instance
 
    @Override
    public String toString() {

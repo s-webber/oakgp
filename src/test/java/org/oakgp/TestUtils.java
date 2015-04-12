@@ -35,6 +35,9 @@ import org.oakgp.serialize.NodeReader;
 import org.oakgp.serialize.NodeWriter;
 
 public class TestUtils {
+   private static final VariableSet VARIABLE_SET = VariableSet.createVariableSet(createTypeArray(100));
+   private static final FunctionSet FUNCTION_SET = createDefaultFunctionSet();
+
    public static void assertVariable(int expectedId, Node node) {
       assertTrue(node instanceof VariableNode);
       assertEquals(expectedId, ((VariableNode) node).getId());
@@ -68,9 +71,7 @@ public class TestUtils {
 
    public static List<Node> readNodes(String input) {
       List<Node> outputs = new ArrayList<>();
-      FunctionSet functionSet = createDefaultFunctionSet();
-      VariableSet variableSet = VariableSet.createVariableSet(createTypeArray(100));
-      try (NodeReader nr = new NodeReader(input, functionSet, variableSet)) {
+      try (NodeReader nr = new NodeReader(input, FUNCTION_SET, VARIABLE_SET)) {
          while (!nr.isEndOfStream()) {
             outputs.add(nr.readNode());
          }
@@ -131,7 +132,7 @@ public class TestUtils {
    }
 
    public static VariableNode createVariable(int id) {
-      return new VariableNode(id, Type.integerType());
+      return VARIABLE_SET.getById(id);
    }
 
    public static Type[] createTypeArray(int size) {
