@@ -101,8 +101,13 @@ public final class FunctionNode implements Node {
 
    @Override
    public boolean equals(Object o) {
-      if (o instanceof FunctionNode) {
+      if (this == o) {
+         return true;
+      } else if (hashCode() != o.hashCode()) {
+         return false;
+      } else if (o instanceof FunctionNode) {
          FunctionNode fn = (FunctionNode) o;
+         // TODO see how often we return false when we get here - as that indicates hashCode() could be improved
          return this.function.getClass().equals(fn.function.getClass()) && this.arguments.equals(fn.arguments);
       } else {
          return false;

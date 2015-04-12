@@ -6,8 +6,8 @@ import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
 import static org.oakgp.Arguments.createArguments;
 import static org.oakgp.Assignments.createAssignments;
-import static org.oakgp.TestUtils.integerConstant;
 import static org.oakgp.TestUtils.createVariable;
+import static org.oakgp.TestUtils.integerConstant;
 import static org.oakgp.TestUtils.readNode;
 import static org.oakgp.Type.integerType;
 

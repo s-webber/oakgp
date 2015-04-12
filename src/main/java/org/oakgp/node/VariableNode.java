@@ -61,6 +61,7 @@ public final class VariableNode implements Node {
       return type;
    }
 
+   // TODO cache hashCode (e.g. (id+1)*31) and remove equals method
    @Override
    public int hashCode() {
       return id;
@@ -68,7 +69,6 @@ public final class VariableNode implements Node {
 
    @Override
    public boolean equals(Object o) {
-      // TODO confirm - no need to also check type?
       return o instanceof VariableNode && this.id == ((VariableNode) o).id;
    }
 
