@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
+import static org.oakgp.TestUtils.writeNode;
 
 import org.junit.Test;
 import org.oakgp.NodeEvolver;
@@ -23,7 +24,7 @@ public class SubtreeCrossoverTest {
       NodeEvolver c = new SubtreeCrossover(mockRandom);
 
       Node result = c.evolve(dummySelector);
-      assertEquals("(org.oakgp.function.math.Add 9 (org.oakgp.function.math.Subtract 8 v5))", result.toString());
+      assertOutputEquals("(+ 9 (- 8 v5))", result);
       assertTrue(dummySelector.isEmpty());
    }
 
@@ -37,36 +38,50 @@ public class SubtreeCrossoverTest {
       NodeEvolver c = new SubtreeCrossover(mockRandom);
 
       Node result = c.evolve(dummySelector);
-      assertEquals("2", result.toString());
+      assertOutputEquals("2", result);
       assertTrue(dummySelector.isEmpty());
    }
 
-   /**
-    * Checks that crossover does not happen if it would create a new tree structure with inconsistent types.
-    * <p>
-    * In the following example if crossover did happen then it would break the signature of the {@code Add} function. i.e. the {@code Add} function expects both
-    * of its arguments to be of type {@code integer} - but crossover would replace one of the existing arguments with a function node that has a
-    * {@code LessThan} function - which has a {@code boolean} return type. This test checks we do <i>not</i> create: {@code (+ 9 (< 6 7))}
-    */
+   /** Test crossover using trees that use a mix of types (booleans and integers) */
    @Test
-   public void testMixingTypes() {
-      // NOTE: this test checks that crossover does not happen if it would create a new tree structure with inconsistent types.
-      // In the following example if crossover did happen then it would break the signature of the Add function.
-      // i.e. the Add function expects both of its arguments to be of type integer - but crossover would replace one of the existing arguments with a
-      // function node that has a LessThan function - which has a boolean return type
-      // e.g. (+ 9 (< 6 7))
-
+   public void testMixedTypes() {
       Random mockRandom = mock(Random.class);
-      given(mockRandom.nextInt(2)).willReturn(1);
-      given(mockRandom.nextInt(6)).willReturn(2);
+      given(mockRandom.nextInt(2)).willReturn(0, 1);
+      given(mockRandom.nextInt(5)).willReturn(0, 0, 1, 2, 3, 4);
 
-      DummyNodeSelector dummySelector = new DummyNodeSelector("(+ 9 5)", "(if (< 6 7) 8 9)");
+      String input = "(+ 4 5)";
+      String output = "(if (< 6 7) 8 9)";
+      DummyNodeSelector dummySelector = new DummyNodeSelector(input, output, input, output, input, output, input, output, input, output, input, output);
 
       NodeEvolver c = new SubtreeCrossover(mockRandom);
 
-      Node result = c.evolve(dummySelector);
-      assertEquals("(org.oakgp.function.math.Add 9 5)", result.toString());
-      assertEquals(14, (int) result.evaluate(null));
+      assertOutputEquals("(+ 6 5)", c.evolve(dummySelector));
+      assertOutputEquals("(+ 4 6)", c.evolve(dummySelector));
+      assertOutputEquals("(+ 4 7)", c.evolve(dummySelector));
+      assertOutputEquals("(+ 4 8)", c.evolve(dummySelector));
+      assertOutputEquals("(+ 4 9)", c.evolve(dummySelector));
+      assertOutputEquals("(+ 4 " + output + ")", c.evolve(dummySelector));
+
       assertTrue(dummySelector.isEmpty());
+   }
+
+   /** Test attempted crossover when selected node in first parent has a type that is not present in the second parent */
+   @Test
+   public void testNoMatchingTypes() {
+      Random mockRandom = mock(Random.class);
+      given(mockRandom.nextInt(7)).willReturn(2);
+
+      String input = "(+ (if (< 6 7) 8 9) 5)";
+      String output = "(+ 1 2)";
+      DummyNodeSelector dummySelector = new DummyNodeSelector(input, output);
+
+      NodeEvolver c = new SubtreeCrossover(mockRandom);
+
+      assertOutputEquals(input, c.evolve(dummySelector));
+      assertTrue(dummySelector.isEmpty());
+   }
+
+   private void assertOutputEquals(String expected, Node actual) {
+      assertEquals(expected, writeNode(actual));
    }
 }

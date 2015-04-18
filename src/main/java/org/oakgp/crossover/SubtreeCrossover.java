@@ -1,6 +1,9 @@
 package org.oakgp.crossover;
 
+import java.util.function.Predicate;
+
 import org.oakgp.NodeEvolver;
+import org.oakgp.Type;
 import org.oakgp.node.Node;
 import org.oakgp.selector.NodeSelector;
 import org.oakgp.util.Random;
@@ -19,11 +22,13 @@ public final class SubtreeCrossover implements NodeEvolver {
       Node parent1 = selector.next();
       Node parent2 = selector.next();
       int to = Utils.selectSubNodeIndex(parent1, random);
-      int from = random.nextInt(parent2.getNodeCount());
-      Node replacementSubTree = parent2.getAt(from);
       return parent1.replaceAt(to, t -> {
-         if (t.getType() == replacementSubTree.getType()) {
-            return replacementSubTree;
+         Type toType = t.getType();
+         Predicate<Node> treeWalkerStrategy = n -> n.getType() == toType;
+         int nodeCount = parent2.getNodeCount(treeWalkerStrategy);
+         if (nodeCount != 0) {
+            int from = random.nextInt(nodeCount);
+            return parent2.getAt(from, treeWalkerStrategy);
          } else {
             return t;
          }
