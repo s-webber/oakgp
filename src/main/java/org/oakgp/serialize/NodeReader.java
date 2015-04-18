@@ -10,10 +10,10 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.oakgp.FunctionSet;
+import org.oakgp.Signature;
 import org.oakgp.Type;
 import org.oakgp.VariableSet;
 import org.oakgp.function.Function;
@@ -133,24 +133,35 @@ public final class NodeReader implements Closeable {
          if (isNumber(token)) {
             return new ConstantNode(Integer.parseInt(token), integerType());
          } else {
-            List<Type> types;
-            Type type;
-            if ("+".equals(token) || "*".equals(token) || "-".equals(token)) {
-               types = Arrays.asList(integerType(), integerType()); // TODO
-               type = Type.functionType(integerType(), integerType(), integerType());
-            } else {
-               types = Arrays.asList(integerType()); // TODO
-               type = Type.integerToBooleanFunctionType();
-            }
-            Function function = functionSet.getFunction(token, types);
-            return new ConstantNode(function, type);
+            Function function = functionSet.getFunction(token);
+            return new ConstantNode(function, getFunctionType(function));
          }
       }
    }
 
-   private boolean isNumber(String token) {
-      int c = token.charAt(0);
-      return c == '-' || (c >= '0' && c <= '9');
+   private Type getFunctionType(Function function) {
+      Signature signature = function.getSignature();
+      Type[] types = new Type[signature.getArgumentTypesLength() + 1];
+      types[0] = signature.getReturnType();
+      for (int i = 1; i < types.length; i++) {
+         types[i] = signature.getArgumentType(i - 1);
+      }
+      return Type.functionType(types);
+   }
+
+   private static boolean isNumber(String token) {
+      char firstChar = token.charAt(0);
+      if (isNumber(firstChar)) {
+         return true;
+      } else if (firstChar == '-' && token.length() > 1 && isNumber(token.charAt(1))) {
+         return true;
+      } else {
+         return false;
+      }
+   }
+
+   private static boolean isNumber(char c) {
+      return c >= '0' && c <= '9';
    }
 
    private String nextToken() throws IOException {
@@ -171,14 +182,23 @@ public final class NodeReader implements Closeable {
          StringBuilder sb = new StringBuilder();
          do {
             sb.append((char) c);
-         } while ((c = cr.next()) != -1 && c != FUNCTION_END_CHAR && c != FUNCTION_START_CHAR && c != ARRAY_START_CHAR && c != ARRAY_END_CHAR
-               && c != STRING_CHAR && !Character.isWhitespace(c));
+         } while ((c = cr.next()) != -1 && isFunctionIdentifierPart(c));
          cr.rewind(c);
          return sb.toString();
       }
    }
 
-   private void assertNotEndOfStream(int c) {
+   // TODO test, add Utils.isFunctionIdentifier (which calls this) and then use that from FunctionSet
+   public static boolean isFunctionIdentifierPart(char c) {
+      return isFunctionIdentifierPart((int) c);
+   }
+
+   private static boolean isFunctionIdentifierPart(int c) {
+      return c != FUNCTION_END_CHAR && c != FUNCTION_START_CHAR && c != ARRAY_START_CHAR && c != ARRAY_END_CHAR && c != STRING_CHAR
+            && !Character.isWhitespace(c);
+   }
+
+   private static void assertNotEndOfStream(int c) {
       if (c == -1) {
          throw new IllegalStateException();
       }
