@@ -11,6 +11,10 @@ import org.junit.Test;
 import org.oakgp.Signature;
 import org.oakgp.function.AbstractFunctionTest;
 import org.oakgp.function.Function;
+import org.oakgp.function.compare.GreaterThan;
+import org.oakgp.function.compare.LessThan;
+import org.oakgp.function.math.Add;
+import org.oakgp.function.math.Multiply;
 
 public class IfTest extends AbstractFunctionTest {
    @Override
@@ -44,5 +48,10 @@ public class IfTest extends AbstractFunctionTest {
       assertSame(booleanType(), signature.getArgumentType(0));
       assertSame(integerType(), signature.getArgumentType(1));
       assertSame(integerType(), signature.getArgumentType(2));
+   }
+
+   @Override
+   protected Function[] getFunctionSet() {
+      return new Function[] { getFunction(), new Add(), new Multiply(), new LessThan(), new GreaterThan() };
    }
 }

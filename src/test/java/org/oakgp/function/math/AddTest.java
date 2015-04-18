@@ -84,4 +84,9 @@ public class AddTest extends AbstractFunctionTest {
       testCases.add("(+ 1 v0)");
       testCases.add("(+ v0 (* v0 v1))");
    }
+
+   @Override
+   protected Function[] getFunctionSet() {
+      return new Function[] { getFunction(), new Multiply() };
+   }
 }

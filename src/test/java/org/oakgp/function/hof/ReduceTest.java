@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.oakgp.function.AbstractFunctionTest;
 import org.oakgp.function.Function;
+import org.oakgp.function.math.Add;
+import org.oakgp.function.math.Multiply;
 
 public class ReduceTest extends AbstractFunctionTest {
    @Override
@@ -28,5 +30,10 @@ public class ReduceTest extends AbstractFunctionTest {
 
    @Override
    protected void getCannotSimplifyTests(List<String> testCases) {
+   }
+
+   @Override
+   protected Function[] getFunctionSet() {
+      return new Function[] { getFunction(), new Add(), new Multiply() };
    }
 }

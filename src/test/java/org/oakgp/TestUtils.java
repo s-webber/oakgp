@@ -38,7 +38,7 @@ import org.oakgp.serialize.NodeWriter;
 
 public class TestUtils {
    public static final VariableSet VARIABLE_SET = VariableSet.createVariableSet(createTypeArray(100));
-   public static final FunctionSet FUNCTION_SET = createDefaultFunctionSet();
+   private static final FunctionSet FUNCTION_SET = createDefaultFunctionSet();
 
    public static void assertVariable(int expectedId, Node node) {
       assertTrue(node instanceof VariableNode);

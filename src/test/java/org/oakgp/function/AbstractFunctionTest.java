@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 import static org.oakgp.NodeSimplifier.simplify;
 import static org.oakgp.TestUtils.readNode;
 import static org.oakgp.TestUtils.writeNode;
@@ -20,6 +21,7 @@ import org.oakgp.VariableSet;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
+import org.oakgp.serialize.NodeReader;
 
 public abstract class AbstractFunctionTest {
    @Test
@@ -74,7 +76,14 @@ public abstract class AbstractFunctionTest {
       assertSame(function.getSignature(), function.getSignature());
    }
 
-   // TODO add assert testDisplayName - assert no invalid chars
+   @Test
+   public void testDisplayNameValid() {
+      String displayName = getFunction().getDisplayName();
+      assertNotNull(displayName);
+      for (int i = 0; i < displayName.length(); i++) {
+         assertTrue(NodeReader.isFunctionIdentifierPart(displayName.charAt(i)));
+      }
+   }
 
    private FunctionNode readInput(String input) {
       return readInput(input, TestUtils.VARIABLE_SET);
@@ -89,8 +98,11 @@ public abstract class AbstractFunctionTest {
    }
 
    private FunctionSet createFunctionSet() {
-      // TODO return new FunctionSet(getFunction());
-      return TestUtils.FUNCTION_SET;
+      return new FunctionSet(getFunctionSet());
+   }
+
+   protected Function[] getFunctionSet() {
+      return new Function[] { getFunction() };
    }
 
    private Assignments toAssignments(ConstantNode[] constants) {

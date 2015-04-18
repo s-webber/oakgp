@@ -7,6 +7,9 @@ import java.util.List;
 
 import org.oakgp.function.AbstractFunctionTest;
 import org.oakgp.function.Function;
+import org.oakgp.function.classify.IsNegative;
+import org.oakgp.function.classify.IsPositive;
+import org.oakgp.function.classify.IsZero;
 
 public class FilterTest extends AbstractFunctionTest {
    @Override
@@ -28,5 +31,10 @@ public class FilterTest extends AbstractFunctionTest {
 
    @Override
    protected void getCannotSimplifyTests(List<String> testCases) {
+   }
+
+   @Override
+   protected Function[] getFunctionSet() {
+      return new Function[] { getFunction(), new IsPositive(), new IsNegative(), new IsZero() };
    }
 }
