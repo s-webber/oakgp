@@ -37,6 +37,8 @@ public interface Node {
     */
    Node replaceAt(int index, Function<Node, Node> replacement);
 
+   Node replaceAt(int index, Function<Node, Node> replacement, Predicate<Node> treeWalkerStrategy);
+
    /**
     * Returns a {@code Node} from the tree structure represented by this object.
     *

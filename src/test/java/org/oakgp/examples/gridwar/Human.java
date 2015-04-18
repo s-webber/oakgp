@@ -60,6 +60,11 @@ class Human implements Node {
    }
 
    @Override
+   public Node replaceAt(int index, Function<Node, Node> replacement, Predicate<Node> treeWalkerStrategy) {
+      return null;
+   }
+
+   @Override
    public Node getAt(int idx) {
       return null;
    }

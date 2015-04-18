@@ -87,6 +87,21 @@ public final class FunctionNode implements Node {
    }
 
    @Override
+   public Node replaceAt(int index, java.util.function.Function<Node, Node> replacement, Predicate<Node> treeWalkerStrategy) {
+      int total = 0;
+      for (int i = 0; i < arguments.getArgCount(); i++) {
+         Node node = arguments.getArg(i);
+         int c = node.getNodeCount(treeWalkerStrategy);
+         if (total + c > index) {
+            return new FunctionNode(function, arguments.replaceAt(i, node.replaceAt(index - total, replacement, treeWalkerStrategy)));
+         } else {
+            total += c;
+         }
+      }
+      return replacement.apply(this);
+   }
+
+   @Override
    public Node getAt(int index) {
       int total = 0;
       for (int i = 0; i < arguments.getArgCount(); i++) {

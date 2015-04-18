@@ -62,13 +62,18 @@ public final class VariableNode implements Node {
    }
 
    @Override
+   public Node replaceAt(int index, Function<Node, Node> replacement, Predicate<Node> treeWalkerStrategy) {
+      return replaceAt(index, replacement); // TODO review what correct behaviour should be (plus ConstantNode version)
+   }
+
+   @Override
    public Node getAt(int index) {
       return this;
    }
 
    @Override
    public Node getAt(int index, Predicate<Node> treeWalkerStrategy) {
-      return getAt(index);
+      return getAt(index); // TODO review what correct behaviour should be (plus ConstantNode version)
    }
 
    @Override

@@ -9,7 +9,11 @@ import static org.oakgp.Assignments.createAssignments;
 import static org.oakgp.TestUtils.createVariable;
 import static org.oakgp.TestUtils.integerConstant;
 import static org.oakgp.TestUtils.readNode;
+import static org.oakgp.TestUtils.writeNode;
 import static org.oakgp.Type.integerType;
+import static org.oakgp.util.Utils.TRUE_NODE;
+
+import java.util.function.Predicate;
 
 import org.junit.Test;
 import org.oakgp.Arguments;
@@ -126,6 +130,28 @@ public class FunctionNodeTest {
       assertSame(branch1, tree.getAt(0, n -> n instanceof FunctionNode));
       assertSame(branch2, tree.getAt(1, n -> n instanceof FunctionNode));
       assertSame(tree, tree.getAt(2, n -> n instanceof FunctionNode));
+   }
+
+   @Test
+   public void testReplaceStrategy() {
+      String input = "(+ (+ 1 v0) (+ (+ v0 v1) 2))";
+
+      assertReplaceStrategy(input, 0, n -> n instanceof VariableNode, "(+ (+ 1 true) (+ (+ v0 v1) 2))");
+      assertReplaceStrategy(input, 1, n -> n instanceof VariableNode, "(+ (+ 1 v0) (+ (+ true v1) 2))");
+      assertReplaceStrategy(input, 2, n -> n instanceof VariableNode, "(+ (+ 1 v0) (+ (+ v0 true) 2))");
+
+      assertReplaceStrategy(input, 0, n -> n instanceof ConstantNode, "(+ (+ true v0) (+ (+ v0 v1) 2))");
+      assertReplaceStrategy(input, 1, n -> n instanceof ConstantNode, "(+ (+ 1 v0) (+ (+ v0 v1) true))");
+
+      assertReplaceStrategy(input, 0, n -> n instanceof FunctionNode, "(+ true (+ (+ v0 v1) 2))");
+      assertReplaceStrategy(input, 1, n -> n instanceof FunctionNode, "(+ (+ 1 v0) (+ true 2))");
+      assertReplaceStrategy(input, 2, n -> n instanceof FunctionNode, "(+ (+ 1 v0) true)");
+      assertReplaceStrategy(input, 3, n -> n instanceof FunctionNode, "true");
+   }
+
+   private void assertReplaceStrategy(String input, int index, Predicate<Node> treeWalkerStrategy, String expected) {
+      Node actual = readNode(input).replaceAt(index, n -> TRUE_NODE, treeWalkerStrategy);
+      assertEquals(expected, writeNode(actual));
    }
 
    @Test

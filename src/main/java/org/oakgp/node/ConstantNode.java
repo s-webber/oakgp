@@ -52,6 +52,11 @@ public final class ConstantNode implements Node {
    }
 
    @Override
+   public Node replaceAt(int index, Function<Node, Node> replacement, Predicate<Node> treeWalkerStrategy) {
+      return replaceAt(index, replacement);
+   }
+
+   @Override
    public Node getAt(int index) {
       return this;
    }
