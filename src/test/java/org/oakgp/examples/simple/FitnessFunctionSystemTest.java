@@ -143,7 +143,7 @@ public class FitnessFunctionSystemTest {
       return new Function() {
          @Override
          public Object evaluate(Arguments arguments, Assignments assignments) {
-            return arguments.get(0).evaluate(assignments);
+            return arguments.firstArg().evaluate(assignments);
          }
 
          @Override
@@ -153,7 +153,7 @@ public class FitnessFunctionSystemTest {
 
          @Override
          public Node simplify(Arguments arguments) {
-            return arguments.get(0);
+            return arguments.firstArg();
          }
       };
    }

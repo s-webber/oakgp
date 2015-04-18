@@ -78,14 +78,14 @@ final class ArithmeticExpressionSimplifier {
       if (nodeToWalk instanceof FunctionNode) {
          FunctionNode fn = (FunctionNode) nodeToWalk;
          Function f = fn.getFunction();
-         Node firstArg = fn.getArguments().get(0);
-         Node secondArg = fn.getArguments().get(1);
+         Node firstArg = fn.getArguments().firstArg();
+         Node secondArg = fn.getArguments().secondArg();
          if (isMultiply(f) && nodeToRemove instanceof FunctionNode) {
             FunctionNode x = (FunctionNode) nodeToRemove;
             Arguments a = x.getArguments();
-            if (isMultiply(x) && firstArg instanceof ConstantNode && a.get(0) instanceof ConstantNode && secondArg.equals(a.get(1))) {
+            if (isMultiply(x) && firstArg instanceof ConstantNode && a.firstArg() instanceof ConstantNode && secondArg.equals(a.secondArg())) {
                int i1 = (int) firstArg.evaluate(null);
-               int i2 = (int) a.get(0).evaluate(null);
+               int i2 = (int) a.firstArg().evaluate(null);
                int result;
                if (isPos) {
                   result = i2 + i1;
@@ -149,8 +149,8 @@ final class ArithmeticExpressionSimplifier {
       }
 
       FunctionNode currentFunctionNode = (FunctionNode) nodeToWalk;
-      Node firstArg = currentFunctionNode.getArguments().get(0);
-      Node secondArg = currentFunctionNode.getArguments().get(1);
+      Node firstArg = currentFunctionNode.getArguments().firstArg();
+      Node secondArg = currentFunctionNode.getArguments().secondArg();
       Function currentFunction = currentFunctionNode.getFunction();
       boolean isAdd = isAdd(currentFunction);
       boolean isSubtract = isSubtract(currentFunction);
@@ -243,8 +243,8 @@ final class ArithmeticExpressionSimplifier {
       if (n1 instanceof FunctionNode && n2 instanceof FunctionNode) {
          FunctionNode f1 = (FunctionNode) n1;
          FunctionNode f2 = (FunctionNode) n2;
-         if (isMultiply(f1) && isMultiply(f2) && f1.getArguments().get(0) instanceof ConstantNode && f2.getArguments().get(0) instanceof ConstantNode
-               && f1.getArguments().get(1).equals(f2.getArguments().get(1))) {
+         if (isMultiply(f1) && isMultiply(f2) && f1.getArguments().firstArg() instanceof ConstantNode && f2.getArguments().firstArg() instanceof ConstantNode
+               && f1.getArguments().secondArg().equals(f2.getArguments().secondArg())) {
             return true;
          }
       }
@@ -255,15 +255,15 @@ final class ArithmeticExpressionSimplifier {
    private static Node combineMultipliers(Node n1, Node n2, boolean isPos) {
       FunctionNode f1 = (FunctionNode) n1;
       FunctionNode f2 = (FunctionNode) n2;
-      int i1 = (int) f1.getArguments().get(0).evaluate(null);
-      int i2 = (int) f2.getArguments().get(0).evaluate(null);
+      int i1 = (int) f1.getArguments().firstArg().evaluate(null);
+      int i2 = (int) f2.getArguments().firstArg().evaluate(null);
       int result;
       if (isPos) {
          result = i1 + i2;
       } else {
          result = i1 - i2;
       }
-      return new FunctionNode(f1.getFunction(), createConstant(result), f1.getArguments().get(1));
+      return new FunctionNode(f1.getFunction(), createConstant(result), f1.getArguments().secondArg());
    }
 
    private static void sanityCheck(Runnable r) {

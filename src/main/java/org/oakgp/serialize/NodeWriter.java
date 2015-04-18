@@ -33,8 +33,8 @@ public final class NodeWriter {
          Function function = functionNode.getFunction();
          Arguments arguments = functionNode.getArguments();
          sb.append('(').append(function.getDisplayName());
-         for (int i = 0; i < arguments.length(); i++) {
-            sb.append(' ').append(writeNode(arguments.get(i)));
+         for (int i = 0; i < arguments.getArgCount(); i++) {
+            sb.append(' ').append(writeNode(arguments.getArg(i)));
          }
          sb.append(')');
       } else {

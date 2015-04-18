@@ -27,7 +27,7 @@ public final class If implements Function {
    @Override
    public Object evaluate(Arguments arguments, Assignments assignments) {
       int index = getOutcomeArgumentIndex(arguments, assignments);
-      return arguments.get(index).evaluate(assignments);
+      return arguments.getArg(index).evaluate(assignments);
    }
 
    @Override
@@ -37,17 +37,17 @@ public final class If implements Function {
 
    @Override
    public Node simplify(Arguments arguments) {
-      if (arguments.get(1).equals(arguments.get(2))) {
-         return arguments.get(1);
-      } else if (arguments.get(0) instanceof ConstantNode) {
+      if (arguments.secondArg().equals(arguments.thirdArg())) {
+         return arguments.secondArg();
+      } else if (arguments.firstArg() instanceof ConstantNode) {
          int index = getOutcomeArgumentIndex(arguments, null);
-         return arguments.get(index);
+         return arguments.getArg(index);
       } else {
          return null;
       }
    }
 
    private int getOutcomeArgumentIndex(Arguments arguments, Assignments assignments) {
-      return TRUE.equals(arguments.get(0).evaluate(assignments)) ? 1 : 2;
+      return TRUE.equals(arguments.firstArg().evaluate(assignments)) ? 1 : 2;
    }
 }

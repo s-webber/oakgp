@@ -19,8 +19,8 @@ public final class Count implements Function {
 
    @Override
    public Object evaluate(Arguments arguments, Assignments assignments) {
-      Arguments a = arguments.get(0).evaluate(assignments);
-      return a.length();
+      Arguments a = arguments.firstArg().evaluate(assignments);
+      return a.getArgCount();
    }
 
    @Override

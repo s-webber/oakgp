@@ -55,8 +55,20 @@ public final class Arguments {
     * @throws IndexOutOfBoundsException
     *            if the index is out of range (<tt>index &lt; 0 || index &gt;= length()</tt>)
     */
-   public Node get(int index) {
+   public Node getArg(int index) {
       return args[index];
+   }
+
+   public Node firstArg() {
+      return args[0];
+   }
+
+   public Node secondArg() {
+      return args[1];
+   }
+
+   public Node thirdArg() {
+      return args[2];
    }
 
    /**
@@ -64,7 +76,7 @@ public final class Arguments {
     *
     * @return the number of elements in this {@code Arguments}
     */
-   public int length() {
+   public int getArgCount() {
       return args.length;
    }
 

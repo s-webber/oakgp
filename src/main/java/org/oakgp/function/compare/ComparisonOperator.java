@@ -21,8 +21,8 @@ abstract class ComparisonOperator implements Function {
 
    @Override
    public final Object evaluate(Arguments arguments, Assignments assignments) {
-      int i1 = (int) arguments.get(0).evaluate(assignments);
-      int i2 = (int) arguments.get(1).evaluate(assignments);
+      int i1 = (int) arguments.firstArg().evaluate(assignments);
+      int i2 = (int) arguments.secondArg().evaluate(assignments);
       if (evaluate(i1, i2)) {
          return Boolean.TRUE;
       } else {
@@ -39,7 +39,7 @@ abstract class ComparisonOperator implements Function {
 
    @Override
    public Node simplify(Arguments arguments) {
-      if (arguments.get(0).equals(arguments.get(1))) {
+      if (arguments.firstArg().equals(arguments.secondArg())) {
          return equalsIsTrue ? Utils.TRUE_NODE : Utils.FALSE_NODE;
       } else {
          return null;

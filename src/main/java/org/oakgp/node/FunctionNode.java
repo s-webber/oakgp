@@ -42,16 +42,16 @@ public final class FunctionNode implements Node {
 
    private static int calculateNodeCount(Arguments arguments) {
       int total = 1;
-      for (int i = 0; i < arguments.length(); i++) {
-         total += arguments.get(i).getNodeCount();
+      for (int i = 0; i < arguments.getArgCount(); i++) {
+         total += arguments.getArg(i).getNodeCount();
       }
       return total;
    }
 
    private static int createHashCode(Arguments arguments, int nodeCount) {
       int hashCode = 0;
-      for (int i = 0; i < arguments.length(); i++) {
-         hashCode += arguments.get(i).hashCode() * (PRIMES[i] + nodeCount);
+      for (int i = 0; i < arguments.getArgCount(); i++) {
+         hashCode += arguments.getArg(i).hashCode() * (PRIMES[i] + nodeCount);
       }
       return hashCode;
    }
@@ -72,8 +72,8 @@ public final class FunctionNode implements Node {
    @Override
    public Node replaceAt(int index, java.util.function.Function<Node, Node> replacement) {
       int total = 0;
-      for (int i = 0; i < arguments.length(); i++) {
-         Node node = arguments.get(i);
+      for (int i = 0; i < arguments.getArgCount(); i++) {
+         Node node = arguments.getArg(i);
          int c = node.getNodeCount();
          if (total + c > index) {
             return new FunctionNode(function, arguments.replaceAt(i, node.replaceAt(index - total, replacement)));
@@ -87,11 +87,11 @@ public final class FunctionNode implements Node {
    @Override
    public Node getAt(int index) {
       int total = 0;
-      for (int i = 0; i < arguments.length(); i++) {
-         Node node = arguments.get(i);
+      for (int i = 0; i < arguments.getArgCount(); i++) {
+         Node node = arguments.getArg(i);
          int c = node.getNodeCount();
          if (total + c > index) {
-            return arguments.get(i).getAt(index - total);
+            return arguments.getArg(i).getAt(index - total);
          } else {
             total += c;
          }
@@ -133,8 +133,8 @@ public final class FunctionNode implements Node {
    public String toString() {
       StringBuilder sb = new StringBuilder();
       sb.append('(').append(function.getClass().getName());
-      for (int i = 0; i < arguments.length(); i++) {
-         sb.append(' ').append(arguments.get(i));
+      for (int i = 0; i < arguments.getArgCount(); i++) {
+         sb.append(' ').append(arguments.getArg(i));
       }
       return sb.append(')').toString();
    }

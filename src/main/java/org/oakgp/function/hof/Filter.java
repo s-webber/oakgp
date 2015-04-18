@@ -31,11 +31,11 @@ public final class Filter implements Function {
 
    @Override
    public Object evaluate(Arguments arguments, Assignments assignments) {
-      Function f = arguments.get(0).evaluate(assignments);
-      Arguments candidates = arguments.get(1).evaluate(assignments);
+      Function f = arguments.firstArg().evaluate(assignments);
+      Arguments candidates = arguments.secondArg().evaluate(assignments);
       List<Node> result = new ArrayList<>();
-      for (int i = 0; i < candidates.length(); i++) {
-         Node candidate = candidates.get(i);
+      for (int i = 0; i < candidates.getArgCount(); i++) {
+         Node candidate = candidates.getArg(i);
          if (((Boolean) f.evaluate(Arguments.createArguments(candidate), assignments)).booleanValue()) {
             result.add(candidate);
          }

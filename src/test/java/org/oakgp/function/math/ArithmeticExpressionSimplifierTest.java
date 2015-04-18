@@ -248,7 +248,7 @@ public class ArithmeticExpressionSimplifierTest {
    }
 
    private Optional<Node> simplify(FunctionNode in, Arguments args) {
-      return Optional.ofNullable(ArithmeticExpressionSimplifier.simplify(in.getFunction(), args.get(0), args.get(1)));
+      return Optional.ofNullable(ArithmeticExpressionSimplifier.simplify(in.getFunction(), args.firstArg(), args.secondArg()));
    }
 
    @Test

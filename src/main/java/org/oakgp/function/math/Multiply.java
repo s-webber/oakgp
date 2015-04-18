@@ -27,8 +27,8 @@ public final class Multiply extends ArithmeticOperator {
 
    @Override
    public Node simplify(Arguments arguments) {
-      Node arg1 = arguments.get(0);
-      Node arg2 = arguments.get(1);
+      Node arg1 = arguments.firstArg();
+      Node arg2 = arguments.secondArg();
 
       if (NODE_COMPARATOR.compare(arg1, arg2) > 0) {
          // as for addition the order of the arguments is not important, order arguments in a consistent way
@@ -53,8 +53,8 @@ public final class Multiply extends ArithmeticOperator {
             FunctionNode fn = (FunctionNode) arg2;
             Function f = fn.getFunction();
             Arguments args = fn.getArguments();
-            Node fnArg1 = args.get(0);
-            Node fnArg2 = args.get(1);
+            Node fnArg1 = args.firstArg();
+            Node fnArg2 = args.secondArg();
             if (fnArg1 instanceof ConstantNode) {
                if (isAddOrSubtract(f)) {
                   return new FunctionNode(f, multiply(arg1, fnArg1), new FunctionNode(this, arg1, fnArg2));

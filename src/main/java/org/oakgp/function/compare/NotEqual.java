@@ -20,8 +20,8 @@ public final class NotEqual extends ComparisonOperator {
    @Override
    public Node simplify(Arguments arguments) {
       Node simplifiedVersion = super.simplify(arguments);
-      if (simplifiedVersion == null && NODE_COMPARATOR.compare(arguments.get(0), arguments.get(1)) > 0) {
-         return new FunctionNode(this, arguments.get(1), arguments.get(0));
+      if (simplifiedVersion == null && NODE_COMPARATOR.compare(arguments.firstArg(), arguments.secondArg()) > 0) {
+         return new FunctionNode(this, arguments.secondArg(), arguments.firstArg());
       } else {
          return simplifiedVersion;
       }

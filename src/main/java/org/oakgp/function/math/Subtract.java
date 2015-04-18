@@ -27,8 +27,8 @@ public final class Subtract extends ArithmeticOperator {
 
    @Override
    public Node simplify(Arguments arguments) {
-      Node arg1 = arguments.get(0);
-      Node arg2 = arguments.get(1);
+      Node arg1 = arguments.firstArg();
+      Node arg2 = arguments.secondArg();
 
       if (arg1.equals(arg2)) {
          // anything minus itself is zero
@@ -43,7 +43,7 @@ public final class Subtract extends ArithmeticOperator {
          // e.g. (- 0 (- x y) -> (- y x)
          FunctionNode fn2 = (FunctionNode) arg2;
          Arguments fn2Arguments = fn2.getArguments();
-         return new FunctionNode(this, fn2Arguments.get(1), fn2Arguments.get(0));
+         return new FunctionNode(this, fn2Arguments.secondArg(), fn2Arguments.firstArg());
       } else if (arg2 instanceof ConstantNode && ((int) arg2.evaluate(null)) < 0) {
          // convert double negatives to addition
          // e.g. (- x -1) -> (+ 1 x)
@@ -53,8 +53,8 @@ public final class Subtract extends ArithmeticOperator {
             FunctionNode fn = (FunctionNode) arg2;
             Function f = fn.getFunction();
             Arguments args = fn.getArguments();
-            Node fnArg1 = args.get(0);
-            Node fnArg2 = args.get(1);
+            Node fnArg1 = args.firstArg();
+            Node fnArg2 = args.secondArg();
             if (fnArg1 instanceof ConstantNode && isMultiply(f)) {
                if (ZERO.equals(arg1)) {
                   int i = (int) fnArg1.evaluate(null);

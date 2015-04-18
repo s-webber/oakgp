@@ -14,7 +14,7 @@ public final class IsZero implements Function {
 
    @Override
    public Object evaluate(Arguments arguments, Assignments assignments) {
-      int i = arguments.get(0).evaluate(assignments);
+      int i = arguments.firstArg().evaluate(assignments);
       return i == 0;
    }
 

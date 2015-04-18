@@ -19,7 +19,7 @@ public final class GreaterThanOrEqual extends ComparisonOperator {
    public Node simplify(Arguments arguments) {
       Node simplifiedVersion = super.simplify(arguments);
       if (simplifiedVersion == null) {
-         return new FunctionNode(new LessThanOrEqual(), arguments.get(1), arguments.get(0));
+         return new FunctionNode(new LessThanOrEqual(), arguments.secondArg(), arguments.firstArg());
       } else {
          return simplifiedVersion;
       }

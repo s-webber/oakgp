@@ -25,8 +25,8 @@ public final class Add extends ArithmeticOperator {
 
    @Override
    public Node simplify(Arguments arguments) {
-      Node arg1 = arguments.get(0);
-      Node arg2 = arguments.get(1);
+      Node arg1 = arguments.firstArg();
+      Node arg2 = arguments.secondArg();
 
       if (NODE_COMPARATOR.compare(arg1, arg2) > 0) {
          // as for addition the order of the arguments is not important, order arguments in a consistent way
@@ -55,10 +55,10 @@ public final class Add extends ArithmeticOperator {
          throw new IllegalArgumentException("arg1 " + arg1 + " arg2 " + arg2);
       } else if (arg1 instanceof ConstantNode && arg2 instanceof FunctionNode) {
          FunctionNode fn2 = (FunctionNode) arg2;
-         if (fn2.getArguments().get(0) instanceof ConstantNode && isAddOrSubtract(fn2.getFunction())) {
+         if (fn2.getArguments().firstArg() instanceof ConstantNode && isAddOrSubtract(fn2.getFunction())) {
             int i1 = (int) arg1.evaluate(null);
-            int i2 = (int) fn2.getArguments().get(0).evaluate(null);
-            return new FunctionNode(fn2.getFunction(), createConstant(i1 + i2), fn2.getArguments().get(1));
+            int i2 = (int) fn2.getArguments().firstArg().evaluate(null);
+            return new FunctionNode(fn2.getFunction(), createConstant(i1 + i2), fn2.getArguments().secondArg());
          }
       }
 

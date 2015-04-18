@@ -31,12 +31,12 @@ public final class Map implements Function {
 
    @Override
    public Object evaluate(Arguments arguments, Assignments assignments) {
-      Function f = arguments.get(0).evaluate(assignments);
+      Function f = arguments.firstArg().evaluate(assignments);
       Type returnType = f.getSignature().getReturnType();
-      Arguments candidates = arguments.get(1).evaluate(assignments);
+      Arguments candidates = arguments.secondArg().evaluate(assignments);
       List<Node> result = new ArrayList<>();
-      for (int i = 0; i < candidates.length(); i++) {
-         Node inputNode = candidates.get(i);
+      for (int i = 0; i < candidates.getArgCount(); i++) {
+         Node inputNode = candidates.getArg(i);
          Object evaluateResult = f.evaluate(Arguments.createArguments(inputNode), assignments);
          ConstantNode outputNode = new ConstantNode(evaluateResult, returnType);
          result.add(outputNode);

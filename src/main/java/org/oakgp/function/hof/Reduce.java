@@ -33,11 +33,11 @@ public final class Reduce implements Function {
 
    @Override
    public Object evaluate(Arguments arguments, Assignments assignments) {
-      Function f = arguments.get(0).evaluate(assignments);
-      Node result = arguments.get(1);
-      Arguments candidates = arguments.get(2).evaluate(assignments);
-      for (int i = 0; i < candidates.length(); i++) {
-         result = new ConstantNode(f.evaluate(createArguments(result, candidates.get(i)), assignments), f.getSignature().getReturnType());
+      Function f = arguments.firstArg().evaluate(assignments);
+      Node result = arguments.secondArg();
+      Arguments candidates = arguments.thirdArg().evaluate(assignments);
+      for (int i = 0; i < candidates.getArgCount(); i++) {
+         result = new ConstantNode(f.evaluate(createArguments(result, candidates.getArg(i)), assignments), f.getSignature().getReturnType());
       }
       return result.evaluate(assignments);
    }

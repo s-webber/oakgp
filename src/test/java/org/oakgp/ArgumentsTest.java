@@ -4,8 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.fail;
-import static org.oakgp.TestUtils.integerConstant;
 import static org.oakgp.TestUtils.createVariable;
+import static org.oakgp.TestUtils.integerConstant;
 
 import java.util.Arrays;
 import java.util.List;
@@ -104,18 +104,24 @@ public class ArgumentsTest {
 
    private void assertArrayIndexOutOfBoundsException(Arguments arguments, int index) {
       try {
-         arguments.get(index);
+         arguments.getArg(index);
          fail();
       } catch (ArrayIndexOutOfBoundsException e) {
          // expected
       }
    }
 
-   /** tests both {@link Arguments#get(int)} and {@link Arguments#length()} */
+   /**
+    * tests {@link Arguments#getArgCount()}, {@link Arguments#getArg(int)}, {@link Arguments#firstArg()}, {@link Arguments#secondArg()},
+    * {@link Arguments#thirdArg()}
+    */
    private void assertArguments(Arguments actual, Node... expected) {
-      assertEquals(expected.length, actual.length());
+      assertEquals(expected.length, actual.getArgCount());
+      assertSame(expected[0], actual.firstArg());
+      assertSame(expected[1], actual.secondArg());
+      assertSame(expected[2], actual.thirdArg());
       for (int i = 0; i < expected.length; i++) {
-         assertSame(expected[i], actual.get(i));
+         assertSame(expected[i], actual.getArg(i));
       }
    }
 }

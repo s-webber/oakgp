@@ -12,8 +12,8 @@ abstract class ArithmeticOperator implements Function {
 
    @Override
    public final Object evaluate(Arguments arguments, Assignments assignments) {
-      int i1 = (int) arguments.get(0).evaluate(assignments);
-      int i2 = (int) arguments.get(1).evaluate(assignments);
+      int i1 = (int) arguments.firstArg().evaluate(assignments);
+      int i2 = (int) arguments.secondArg().evaluate(assignments);
       return evaluate(i1, i2);
    }
 
