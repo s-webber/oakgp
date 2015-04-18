@@ -6,8 +6,13 @@ import java.util.Map;
 public class DummyValuesMap<K, V> {
    private final Map<K, DummyValuesQueue<V>> map;
 
-   public DummyValuesMap(Map<K, DummyValuesQueue<V>> map) {
-      this.map = map;
+   public DummyValuesMap(K key, V value) {
+      map = new HashMap<>();
+      map.put(key, new DummyValuesQueue<>(value));
+   }
+
+   private DummyValuesMap(Map<K, DummyValuesQueue<V>> map) {
+      this.map = new HashMap<>(map);
    }
 
    public V next(K key) {
