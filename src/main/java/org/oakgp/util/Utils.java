@@ -52,4 +52,13 @@ public final class Utils {
          map.put(e.getKey(), unmodifiableList(e.getValue()));
       }
    }
+
+   public static int selectSubNodeIndex(Node tree, Random random) { // TODO test
+      int nodeCount = tree.getNodeCount();
+      if (nodeCount == 1) {
+         return 0;
+      } else {
+         return random.nextInt(nodeCount - 1); // Note: -1 to avoid selecting root node
+      }
+   }
 }

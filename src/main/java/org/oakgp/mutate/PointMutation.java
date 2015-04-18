@@ -7,6 +7,7 @@ import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.selector.NodeSelector;
 import org.oakgp.util.Random;
+import org.oakgp.util.Utils;
 
 /** Performs mutation (also known as node replacement mutation). */
 public final class PointMutation implements NodeEvolver {
@@ -21,7 +22,7 @@ public final class PointMutation implements NodeEvolver {
    @Override
    public Node evolve(NodeSelector selector) {
       Node root = selector.next();
-      int mutationPoint = random.nextInt(root.getNodeCount()); // TODO avoid selecting root node?
+      int mutationPoint = Utils.selectSubNodeIndex(root, random);
       return root.replaceAt(mutationPoint, node -> {
          if (node instanceof FunctionNode) {
             FunctionNode functionNode = (FunctionNode) node;
