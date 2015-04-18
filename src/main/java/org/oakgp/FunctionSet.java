@@ -43,7 +43,7 @@ public final class FunctionSet {
       m.put(key, f);
    }
 
-   public Function getFunction(String symbol) { // TODO test
+   public Function getFunction(String symbol) {
       Map<List<Type>, Function> m = symbolToInstanceMappings.get(symbol);
       if (m == null) {
          throw new IllegalArgumentException("Could not find function: " + symbol);

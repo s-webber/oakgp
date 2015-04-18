@@ -3,6 +3,7 @@ package org.oakgp;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.oakgp.Signature.createSignature;
 import static org.oakgp.TestUtils.assertUnmodifiable;
@@ -156,9 +157,33 @@ public class FunctionSetTest {
       assertUnmodifiable(integers);
    }
 
+   @Test
+   public void testGetSymbol() {
+      assertSame(ADD, createFunctionSet().getFunction("+"));
+   }
+
+   @Test
+   public void testGetSymbolNotFound() {
+      assertEquals("Could not find function: ^", getGetSymbolExceptionMessage("^"));
+   }
+
+   @Test
+   public void testGetSymbolDuplicates() {
+      assertTrue(getGetSymbolExceptionMessage("count").startsWith("Found more than one function: count"));
+   }
+
+   private String getGetSymbolExceptionMessage(String symbol) {
+      try {
+         createFunctionSet().getFunction(symbol);
+      } catch (IllegalArgumentException e) {
+         return e.getMessage();
+      }
+      throw new IllegalStateException("No exception was thrown");
+   }
+
    private static FunctionSet createFunctionSet() {
       return new FunctionSet(
-            // arithmetic
+      // arithmetic
             ADD, new Subtract(), new Multiply(),
             // comparison
             new LessThan(), new LessThanOrEqual(), new GreaterThan(), new GreaterThanOrEqual(), new Equal(), new NotEqual(),
