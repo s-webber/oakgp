@@ -57,6 +57,11 @@ public final class ConstantNode implements Node {
    }
 
    @Override
+   public Node getAt(int index, Predicate<Node> treeWalkerStrategy) {
+      return getAt(index);
+   }
+
+   @Override
    public int getDepth() {
       return 1;
    }

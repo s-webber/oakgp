@@ -46,6 +46,8 @@ public interface Node {
     */
    Node getAt(int index);
 
+   Node getAt(int index, Predicate<Node> treeWalkerStrategy);
+
    int getDepth();
 
    Type getType();

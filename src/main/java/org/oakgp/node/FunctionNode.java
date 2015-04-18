@@ -102,6 +102,24 @@ public final class FunctionNode implements Node {
    }
 
    @Override
+   public Node getAt(int index, Predicate<Node> treeWalkerStrategy) {
+      int total = 0;
+      for (int i = 0; i < arguments.getArgCount(); i++) {
+         Node node = arguments.getArg(i);
+         int c = node.getNodeCount(treeWalkerStrategy);
+         if (total + c > index) {
+            return arguments.getArg(i).getAt(index - total, treeWalkerStrategy);
+         } else {
+            total += c;
+         }
+      }
+      if (!treeWalkerStrategy.test(this)) {
+         throw new IllegalStateException();
+      }
+      return this;
+   }
+
+   @Override
    public int getNodeCount() {
       return nodeCount;
    }

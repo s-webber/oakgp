@@ -107,6 +107,28 @@ public class FunctionNodeTest {
    }
 
    @Test
+   public void testGetStrategy() {
+      VariableNode v0 = createVariable(0);
+      VariableNode v1 = createVariable(1);
+      VariableNode v2 = createVariable(2);
+      ConstantNode c1 = integerConstant(0);
+      Add f = new Add();
+      FunctionNode branch1 = new FunctionNode(f, v0, c1);
+      FunctionNode branch2 = new FunctionNode(f, v2, v1);
+      FunctionNode tree = new FunctionNode(f, branch1, branch2);
+
+      assertSame(v0, tree.getAt(0, n -> n instanceof VariableNode));
+      assertSame(v2, tree.getAt(1, n -> n instanceof VariableNode));
+      assertSame(v1, tree.getAt(2, n -> n instanceof VariableNode));
+
+      assertSame(c1, tree.getAt(0, n -> n instanceof ConstantNode));
+
+      assertSame(branch1, tree.getAt(0, n -> n instanceof FunctionNode));
+      assertSame(branch2, tree.getAt(1, n -> n instanceof FunctionNode));
+      assertSame(tree, tree.getAt(2, n -> n instanceof FunctionNode));
+   }
+
+   @Test
    public void testGetType() {
       FunctionNode n = createFunctionNode();
       assertSame(integerType(), n.getType());

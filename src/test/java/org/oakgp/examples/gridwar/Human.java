@@ -65,6 +65,11 @@ class Human implements Node {
    }
 
    @Override
+   public Node getAt(int index, Predicate<Node> treeWalkerStrategy) {
+      return null;
+   }
+
+   @Override
    public int getDepth() {
       return 0;
    }
