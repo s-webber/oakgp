@@ -105,6 +105,16 @@ public final class FunctionNode implements Node {
    }
 
    @Override
+   public int getDepth() {
+      // TODO cache on first call
+      int depth = 0;
+      for (int i = 0; i < arguments.getArgCount(); i++) {
+         depth = Math.max(depth, arguments.getArg(i).getDepth());
+      }
+      return depth + 1;
+   }
+
+   @Override
    public Type getType() {
       return function.getSignature().getReturnType();
    }

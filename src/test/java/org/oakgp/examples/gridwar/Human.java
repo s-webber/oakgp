@@ -59,6 +59,11 @@ class Human implements Node {
    }
 
    @Override
+   public int getDepth() {
+      return 0;
+   }
+
+   @Override
    public Type getType() {
       return null;
    }

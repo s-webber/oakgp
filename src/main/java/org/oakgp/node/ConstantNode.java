@@ -51,6 +51,11 @@ public final class ConstantNode implements Node {
    }
 
    @Override
+   public int getDepth() {
+      return 1;
+   }
+
+   @Override
    public Type getType() {
       return type;
    }

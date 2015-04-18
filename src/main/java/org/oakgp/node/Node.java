@@ -43,5 +43,7 @@ public interface Node {
     */
    Node getAt(int index);
 
+   int getDepth();
+
    Type getType();
 }

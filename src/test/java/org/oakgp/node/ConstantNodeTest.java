@@ -16,6 +16,7 @@ public class ConstantNodeTest {
    public void testGetters() {
       final ConstantNode n = integerConstant(7);
       assertEquals(1, n.getNodeCount());
+      assertEquals(1, n.getDepth());
       assertSame(integerType(), n.getType());
    }
 

@@ -81,27 +81,49 @@ public class FunctionNodeTest {
    }
 
    @Test
+   public void testCountAndDepth() {
+      assertCountAndDepth("(* 7 7)", 3, 2);
+      assertCountAndDepth("(* (+ 8 9) 7)", 5, 3);
+      assertCountAndDepth("(* 7 (+ 8 9))", 5, 3);
+      assertCountAndDepth("(zero? (+ (* 4 5) (- 6 (+ 7 8))))", 10, 5);
+      assertCountAndDepth("(zero? (+ (- 6 (+ 7 8)) (* 4 5)))", 10, 5);
+      assertCountAndDepth("(if (zero? v0) v1 v2)", 5, 3);
+      assertCountAndDepth("(if (zero? v0) v1 (+ v0 (* v1 v2)))", 9, 4);
+      assertCountAndDepth("(if (zero? v0) (+ v0 (* v1 v2)) v1)", 9, 4);
+   }
+
+   private void assertCountAndDepth(String expression, int nodeCount, int depth) {
+      Node n = readNode(expression);
+      assertEquals(nodeCount, n.getNodeCount());
+      assertEquals(depth, n.getDepth());
+   }
+
+   @Test
    public void testGetType() {
       FunctionNode n = createFunctionNode();
       assertSame(integerType(), n.getType());
    }
 
    @Test
-   public void testEqualsAndHashCode() {
+   public void testEqualsAndHashCode1() {
       final FunctionNode n1 = createFunctionNode();
       final FunctionNode n2 = createFunctionNode();
-      assertNotSame(n1, n2);
+      assertNotSame(n1, n2); // just to sanity check createFunctionNode() doesn't return cached versions
       assertEquals(n1, n1);
       assertEquals(n1.hashCode(), n2.hashCode());
       assertEquals(n1, n2);
+      assertEquals(n2, n1);
    }
 
-   public void testEquals() {
-      Node n1 = readNode("(org.oakgp.function.math.Multiply 288 v1)");
-      Node n2 = readNode("(org.oakgp.function.math.Multiply 288 v1)");
+   @Test
+   public void testEqualsAndHashCode2() {
+      Node n1 = readNode("(* 288 v1)");
+      Node n2 = readNode("(* 288 v1)");
+      assertNotSame(n1, n2); // just to sanity check readNode doesn't return cached versions
       assertEquals(n1, n1);
       assertEquals(n1, n2);
       assertEquals(n2, n1);
+      assertEquals(n1.hashCode(), n2.hashCode());
    }
 
    @Test
