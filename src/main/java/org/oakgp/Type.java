@@ -33,6 +33,10 @@ public final class Type implements Comparable<Type> {
       return functionType(booleanType(), integerType());
    }
 
+   public static Type optionalType(Type t) {
+      return type("optional", t);
+   }
+
    public static Type functionType(Type... signature) {
       if (signature.length < 2) {
          throw new IllegalArgumentException();

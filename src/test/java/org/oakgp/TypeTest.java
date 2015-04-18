@@ -37,6 +37,16 @@ public class TypeTest {
    }
 
    @Test
+   public void testOptionalInteger() {
+      assertOptionalType("integer", Type::integerType);
+   }
+
+   @Test
+   public void testOptionalBooleanArray() {
+      assertOptionalType("array [boolean]", Type::booleanArrayType);
+   }
+
+   @Test
    public void testIntegerToBooleanFunction() {
       Type t = Type.integerToBooleanFunctionType();
       assertSame(t, Type.integerToBooleanFunctionType());
@@ -105,6 +115,13 @@ public class TypeTest {
       assertSame(t, s.get());
       assertSame(t, Type.arrayType(Type.type(name)));
       assertEquals("array [" + name + "]", t.toString());
+   }
+
+   private void assertOptionalType(String name, Supplier<Type> s) {
+      Type t = Type.type("optional", s.get());
+      assertSame(t, Type.type("optional", s.get()));
+      assertSame(t, Type.optionalType(s.get()));
+      assertEquals("optional [" + name + "]", t.toString());
    }
 
    private void assertSameTypes(Type[] a, Type[] b) {

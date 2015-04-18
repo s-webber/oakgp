@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.oakgp.Type.booleanType;
 import static org.oakgp.Type.integerType;
+import static org.oakgp.Type.stringType;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import java.util.List;
 
 import org.oakgp.function.Function;
 import org.oakgp.function.choice.If;
+import org.oakgp.function.choice.OrElse;
 import org.oakgp.function.classify.IsNegative;
 import org.oakgp.function.classify.IsPositive;
 import org.oakgp.function.classify.IsZero;
@@ -35,8 +37,8 @@ import org.oakgp.serialize.NodeReader;
 import org.oakgp.serialize.NodeWriter;
 
 public class TestUtils {
-   private static final VariableSet VARIABLE_SET = VariableSet.createVariableSet(createTypeArray(100));
-   private static final FunctionSet FUNCTION_SET = createDefaultFunctionSet();
+   public static final VariableSet VARIABLE_SET = VariableSet.createVariableSet(createTypeArray(100));
+   public static final FunctionSet FUNCTION_SET = createDefaultFunctionSet();
 
    public static void assertVariable(int expectedId, Node node) {
       assertTrue(node instanceof VariableNode);
@@ -64,14 +66,22 @@ public class TestUtils {
    }
 
    public static Node readNode(String input) {
-      List<Node> outputs = readNodes(input);
+      return readNode(input, FUNCTION_SET, VARIABLE_SET);
+   }
+
+   public static Node readNode(String input, FunctionSet functionSet, VariableSet variableSet) {
+      List<Node> outputs = readNodes(input, functionSet, variableSet);
       assertEquals(1, outputs.size());
       return outputs.get(0);
    }
 
    public static List<Node> readNodes(String input) {
+      return readNodes(input, FUNCTION_SET, VARIABLE_SET);
+   }
+
+   public static List<Node> readNodes(String input, FunctionSet functionSet, VariableSet variableSet) {
       List<Node> outputs = new ArrayList<>();
-      try (NodeReader nr = new NodeReader(input, FUNCTION_SET, VARIABLE_SET)) {
+      try (NodeReader nr = new NodeReader(input, functionSet, variableSet)) {
          while (!nr.isEndOfStream()) {
             outputs.add(nr.readNode());
          }
@@ -96,6 +106,8 @@ public class TestUtils {
       functions.add(new NotEqual());
 
       functions.add(new If());
+      functions.add(new OrElse(stringType()));
+      functions.add(new OrElse(integerType()));
 
       functions.add(new Reduce(integerType()));
       functions.add(new Filter(integerType()));
