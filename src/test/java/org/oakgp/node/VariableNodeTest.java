@@ -47,6 +47,13 @@ public class VariableNodeTest {
    }
 
    @Test
+   public void testCountStrategy() {
+      final VariableNode v = createVariable(0);
+      assertEquals(1, v.getNodeCount(n -> n == v));
+      assertEquals(0, v.getNodeCount(n -> n != v));
+   }
+
+   @Test
    public void testEqualsAndHashCode() {
       final VariableNode n1 = new VariableNode(1, Type.integerType());
       final VariableNode n2 = new VariableNode(1, Type.integerType());
@@ -64,6 +71,6 @@ public class VariableNodeTest {
       assertNotEquals(n, createVariable(0));
       assertNotEquals(n, createVariable(2));
       assertNotEquals(n, integerConstant(1));
-      assertNotEquals(n, new Integer(1));
+      assertNotEquals(n, Integer.valueOf(1));
    }
 }

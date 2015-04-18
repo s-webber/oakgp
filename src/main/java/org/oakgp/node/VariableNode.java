@@ -1,6 +1,7 @@
 package org.oakgp.node;
 
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 import org.oakgp.Assignments;
 import org.oakgp.Type;
@@ -48,6 +49,11 @@ public final class VariableNode implements Node {
    @Override
    public int getNodeCount() {
       return 1;
+   }
+
+   @Override
+   public int getNodeCount(Predicate<Node> treeWalkerStrategy) {
+      return treeWalkerStrategy.test(this) ? 1 : 0;
    }
 
    @Override

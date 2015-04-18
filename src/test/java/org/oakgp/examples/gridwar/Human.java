@@ -4,6 +4,7 @@ import static org.oakgp.examples.gridwar.GridWar.GRID_WIDTH;
 
 import java.util.Scanner;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 import org.oakgp.Assignments;
 import org.oakgp.Type;
@@ -12,7 +13,7 @@ import org.oakgp.node.Node;
 /** Represents a human player in a GridWar game. */
 class Human implements Node {
    @Override
-   public Object evaluate(Assignments assignments) {
+   public Integer evaluate(Assignments assignments) {
       int playerX = (int) assignments.get(0);
       int playerY = (int) assignments.get(1);
       int opponentX = (int) assignments.get(3);
@@ -45,6 +46,11 @@ class Human implements Node {
 
    @Override
    public int getNodeCount() {
+      return 0;
+   }
+
+   @Override
+   public int getNodeCount(Predicate<Node> treeWalkerStrategy) {
       return 0;
    }
 

@@ -1,5 +1,7 @@
 package org.oakgp.node;
 
+import java.util.function.Predicate;
+
 import org.oakgp.Arguments;
 import org.oakgp.Assignments;
 import org.oakgp.Type;
@@ -102,6 +104,15 @@ public final class FunctionNode implements Node {
    @Override
    public int getNodeCount() {
       return nodeCount;
+   }
+
+   @Override
+   public int getNodeCount(Predicate<Node> treeWalkerStrategy) {
+      int total = treeWalkerStrategy.test(this) ? 1 : 0;
+      for (int i = 0; i < arguments.getArgCount(); i++) {
+         total += arguments.getArg(i).getNodeCount(treeWalkerStrategy);
+      }
+      return total;
    }
 
    @Override

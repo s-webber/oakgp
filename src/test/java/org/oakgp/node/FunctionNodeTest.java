@@ -99,6 +99,14 @@ public class FunctionNodeTest {
    }
 
    @Test
+   public void testCountStrategy() {
+      Node tree = readNode("(+ (+ 1 v0) (+ (+ v0 v1) 2))");
+      assertEquals(3, tree.getNodeCount(n -> n instanceof VariableNode));
+      assertEquals(2, tree.getNodeCount(n -> n instanceof ConstantNode));
+      assertEquals(4, tree.getNodeCount(n -> n instanceof FunctionNode));
+   }
+
+   @Test
    public void testGetType() {
       FunctionNode n = createFunctionNode();
       assertSame(integerType(), n.getType());

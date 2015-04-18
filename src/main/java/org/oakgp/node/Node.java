@@ -1,6 +1,7 @@
 package org.oakgp.node;
 
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 import org.oakgp.Assignments;
 import org.oakgp.Type;
@@ -22,6 +23,8 @@ public interface Node {
     * @return the total number of nodes represented by this {@code Node} - including any child-nodes
     */
    int getNodeCount();
+
+   int getNodeCount(Predicate<Node> treeWalkerStrategy);
 
    /**
     * Returns a new {@code Node} resulting from replacing the {@code Node} at position {@code index} with the result of {@code replacement}.

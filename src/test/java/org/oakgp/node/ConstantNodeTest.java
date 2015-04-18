@@ -42,6 +42,13 @@ public class ConstantNodeTest {
    }
 
    @Test
+   public void testCountStrategy() {
+      final ConstantNode c = integerConstant(7);
+      assertEquals(1, c.getNodeCount(n -> n == c));
+      assertEquals(0, c.getNodeCount(n -> n != c));
+   }
+
+   @Test
    public void testEqualsAndHashCodeIntegers() {
       final ConstantNode n1 = integerConstant(7);
       final ConstantNode n2 = integerConstant(7);
@@ -72,6 +79,6 @@ public class ConstantNodeTest {
       assertNotEquals(n, integerConstant(-7));
       assertNotEquals(n, createVariable(7));
       assertNotEquals(n, stringConstant("7"));
-      assertNotEquals(n, new Integer(7));
+      assertNotEquals(n, Integer.valueOf(7));
    }
 }
