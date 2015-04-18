@@ -95,6 +95,13 @@ public final class Arguments {
       return new Arguments(clone);
    }
 
+   public Arguments swap(int from, int to) {
+      Node[] clone = arrayCopy(args);
+      clone[from] = args[to];
+      clone[to] = args[from];
+      return new Arguments(clone);
+   }
+
    private static Node[] arrayCopy(Node[] original) {
       Node[] copy = new Node[original.length];
       System.arraycopy(original, 0, copy, 0, original.length);

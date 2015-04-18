@@ -64,6 +64,28 @@ public class ArgumentsTest {
    }
 
    @Test
+   public void testSwap() {
+      // create arguments
+      Node x = integerConstant(1);
+      Node y = integerConstant(2);
+      Node z = integerConstant(3);
+      Arguments original = Arguments.createArguments(x, y, z);
+
+      assertArguments(original.swap(0, 0), x, y, z);
+      assertArguments(original.swap(1, 1), x, y, z);
+      assertArguments(original.swap(2, 2), x, y, z);
+
+      assertArguments(original.swap(0, 1), y, x, z);
+      assertArguments(original.swap(1, 0), y, x, z);
+
+      assertArguments(original.swap(0, 2), z, y, x);
+      assertArguments(original.swap(2, 0), z, y, x);
+
+      assertArguments(original.swap(1, 2), x, z, y);
+      assertArguments(original.swap(2, 1), x, z, y);
+   }
+
+   @Test
    public void testArrayIndexOutOfBoundsException() {
       Arguments arguments = Arguments.createArguments(integerConstant(7), integerConstant(42));
       assertArrayIndexOutOfBoundsException(arguments, -1);
