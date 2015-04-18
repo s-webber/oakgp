@@ -21,7 +21,7 @@ public final class PointMutation implements NodeEvolver {
    @Override
    public Node evolve(NodeSelector selector) {
       Node root = selector.next();
-      int mutationPoint = random.nextInt(root.getNodeCount());
+      int mutationPoint = random.nextInt(root.getNodeCount()); // TODO avoid selecting root node?
       return root.replaceAt(mutationPoint, node -> {
          if (node instanceof FunctionNode) {
             FunctionNode functionNode = (FunctionNode) node;
