@@ -22,6 +22,7 @@ import org.oakgp.GenerationEvolver;
 import org.oakgp.GenerationProcessor;
 import org.oakgp.NodeEvolver;
 import org.oakgp.PrimitiveSet;
+import org.oakgp.PrimitiveSetImpl;
 import org.oakgp.RankedCandidate;
 import org.oakgp.Runner;
 import org.oakgp.Signature;
@@ -81,7 +82,7 @@ public class SystemTestConfig {
          requireNonNull(constantSet);
          requireNonNull(variableSet);
 
-         primitiveSet = new PrimitiveSet(functionSet, constantSet, variableSet, RANDOM, RATIO_VARIABLES);
+         primitiveSet = new PrimitiveSetImpl(functionSet, constantSet, variableSet, RANDOM, RATIO_VARIABLES);
       }
       return primitiveSet;
    }

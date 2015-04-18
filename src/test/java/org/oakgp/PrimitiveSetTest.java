@@ -146,7 +146,7 @@ public class PrimitiveSetTest {
 
       ConstantSet constantSet = new ConstantSet(CONSTANTS);
       VariableSet variableSet = VariableSet.createVariableSet(VARIABLE_TYPES);
-      PrimitiveSet terminalSet = new PrimitiveSet(null, constantSet, variableSet, mockRandom, VARIABLE_RATIO);
+      PrimitiveSet terminalSet = new PrimitiveSetImpl(null, constantSet, variableSet, mockRandom, VARIABLE_RATIO);
 
       given(mockRandom.nextInt(3)).willReturn(0, 1, 2, 0);
       given(mockRandom.nextInt(2)).willReturn(0, 1);
@@ -182,10 +182,10 @@ public class PrimitiveSetTest {
    private PrimitiveSet createWithTerminals(Random random) {
       ConstantSet constantSet = new ConstantSet(CONSTANTS);
       VariableSet variableSet = VariableSet.createVariableSet(VARIABLE_TYPES);
-      return new PrimitiveSet(null, constantSet, variableSet, random, VARIABLE_RATIO);
+      return new PrimitiveSetImpl(null, constantSet, variableSet, random, VARIABLE_RATIO);
    }
 
    private PrimitiveSet createWithFunctions(Random random) {
-      return new PrimitiveSet(new FunctionSet(FUNCTIONS), null, null, random, .1);
+      return new PrimitiveSetImpl(new FunctionSet(FUNCTIONS), null, null, random, .1);
    }
 }

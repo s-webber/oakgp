@@ -15,6 +15,7 @@ import org.oakgp.Arguments;
 import org.oakgp.ConstantSet;
 import org.oakgp.FunctionSet;
 import org.oakgp.PrimitiveSet;
+import org.oakgp.PrimitiveSetImpl;
 import org.oakgp.Type;
 import org.oakgp.VariableSet;
 import org.oakgp.function.Function;
@@ -78,7 +79,7 @@ public class PointMutationTest {
       FunctionSet functions = new FunctionSet(FUNCTIONS);
       ConstantSet constants = new ConstantSet(CONSTANTS);
       VariableSet variables = VariableSet.createVariableSet(VARIABLE_TYPES);
-      PrimitiveSet primitiveSet = new PrimitiveSet(functions, constants, variables, mockRandom, VARIABLE_RATIO);
+      PrimitiveSet primitiveSet = new PrimitiveSetImpl(functions, constants, variables, mockRandom, VARIABLE_RATIO);
       return new PointMutation(mockRandom, primitiveSet);
    }
 }
