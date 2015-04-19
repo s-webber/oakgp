@@ -3,6 +3,7 @@ package org.oakgp.mutate;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.oakgp.TestUtils.integerConstant;
+import static org.oakgp.util.DummyRandom.GetIntExpectation.nextInt;
 
 import org.junit.Test;
 import org.oakgp.NodeEvolver;
@@ -42,7 +43,7 @@ public class PointMutationTest {
 
    @Test
    public void testFunctionSubNodes() {
-      DummyRandom dummyRandom = DummyRandom.getInt(3).returns(1, 2, 0);
+      DummyRandom dummyRandom = nextInt(3).returns(1, 2, 0);
       Function rootFunction = new IsZero();
       Function inputFunction = new Add();
       Function outputFunction = new Subtract();

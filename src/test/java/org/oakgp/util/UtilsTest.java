@@ -9,6 +9,7 @@ import static org.oakgp.TestUtils.readNode;
 import static org.oakgp.Type.booleanType;
 import static org.oakgp.Type.integerType;
 import static org.oakgp.Type.stringType;
+import static org.oakgp.util.DummyRandom.GetIntExpectation.nextInt;
 
 import java.util.List;
 import java.util.Map;
@@ -59,7 +60,7 @@ public class UtilsTest {
    private void assertSelectSubNodeIndex(String input, int expectedNodeCount, int expectedIndex) {
       Node tree = readNode(input);
       assertEquals(expectedNodeCount, tree.getNodeCount());
-      int actual = Utils.selectSubNodeIndex(tree, DummyRandom.getInt(expectedNodeCount - 1).returns(expectedIndex));
+      int actual = Utils.selectSubNodeIndex(tree, nextInt(expectedNodeCount - 1).returns(expectedIndex));
       assertEquals(expectedIndex, actual);
    }
 

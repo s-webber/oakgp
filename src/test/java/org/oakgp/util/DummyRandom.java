@@ -65,10 +65,6 @@ public class DummyRandom implements Random {
       }
    }
 
-   public static GetIntExpectation getInt(int bound) {
-      return new GetIntExpectation(bound);
-   }
-
    public static class Builder {
       private DummyValuesMap.Builder<Integer, Integer> integersBuilder = new DummyValuesMap.Builder<Integer, Integer>();
       private DummyValuesQueue<Double> doubles;
@@ -79,7 +75,7 @@ public class DummyRandom implements Random {
          return this;
       }
 
-      public GetIntBuilderExpectation getInt(int bound) {
+      public GetIntBuilderExpectation nextInt(int bound) {
          return new GetIntBuilderExpectation(this, bound);
       }
 
@@ -108,7 +104,7 @@ public class DummyRandom implements Random {
       private final Builder builder;
       private final Integer bound;
 
-      public GetIntBuilderExpectation(Builder builder, Integer bound) {
+      private GetIntBuilderExpectation(Builder builder, Integer bound) {
          this.builder = builder;
          this.bound = bound;
       }
@@ -122,7 +118,11 @@ public class DummyRandom implements Random {
    public static class GetIntExpectation {
       private final Integer bound;
 
-      public GetIntExpectation(Integer bound) {
+      public static GetIntExpectation nextInt(int bound) {
+         return new GetIntExpectation(bound);
+      }
+
+      private GetIntExpectation(Integer bound) {
          this.bound = bound;
       }
 
