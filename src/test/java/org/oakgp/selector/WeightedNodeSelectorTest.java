@@ -10,7 +10,6 @@ import org.junit.Test;
 import org.oakgp.RankedCandidate;
 import org.oakgp.node.Node;
 import org.oakgp.util.DummyRandom;
-import org.oakgp.util.Random;
 
 public class WeightedNodeSelectorTest {
    @Test
@@ -20,7 +19,7 @@ public class WeightedNodeSelectorTest {
       Node third = integerConstant(0);
       List<RankedCandidate> candidates = Arrays.asList(new RankedCandidate(first, 0), new RankedCandidate(second, 0), new RankedCandidate(third, 0));
 
-      Random dummyRandom = new DummyRandom(true, false, false, false, true, false, true, true, false, false);
+      DummyRandom dummyRandom = new DummyRandom(true, false, false, false, true, false, true, true, false, false);
 
       WeightedNodeSelectorFactory factory = new WeightedNodeSelectorFactory(dummyRandom);
       WeightedNodeSelector selector = factory.getSelector(candidates);
@@ -31,5 +30,7 @@ public class WeightedNodeSelectorTest {
       assertSame(second, selector.next());
       assertSame(first, selector.next());
       assertSame(third, selector.next());
+
+      dummyRandom.assertEmpty();
    }
 }

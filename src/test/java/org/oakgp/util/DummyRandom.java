@@ -53,6 +53,18 @@ public class DummyRandom implements Random {
       return booleans.next();
    }
 
+   public void assertEmpty() {
+      if (integers != null) {
+         integers.assertEmpty();
+      }
+      if (doubles != null && !doubles.isEmpty()) {
+         throw new IllegalArgumentException("Not all doubles have been selected");
+      }
+      if (booleans != null && !booleans.isEmpty()) {
+         throw new IllegalArgumentException("Not all booleans have been selected");
+      }
+   }
+
    public static class Builder {
       private DummyValuesMap.Builder<Integer, Integer> integersBuilder = new DummyValuesMap.Builder<Integer, Integer>();
       private DummyValuesQueue<Double> doubles;

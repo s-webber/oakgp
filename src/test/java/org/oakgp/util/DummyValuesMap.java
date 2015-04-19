@@ -2,6 +2,7 @@ package org.oakgp.util;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 public class DummyValuesMap<K, V> {
    private final Map<K, DummyValuesQueue<V>> map;
@@ -44,6 +45,14 @@ public class DummyValuesMap<K, V> {
 
       public DummyValuesMap<K, V> build() {
          return new DummyValuesMap<>(map);
+      }
+   }
+
+   public void assertEmpty() {
+      for (Entry<K, DummyValuesQueue<V>> e : map.entrySet()) {
+         if (!e.getValue().isEmpty()) {
+            throw new IllegalStateException("There are still unselected values for key: " + e.getKey());
+         }
       }
    }
 }

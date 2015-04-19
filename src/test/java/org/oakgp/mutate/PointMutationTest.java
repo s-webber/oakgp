@@ -17,7 +17,6 @@ import org.oakgp.selector.DummyNodeSelector;
 import org.oakgp.util.DummyPrimitiveSet;
 import org.oakgp.util.DummyRandom;
 import org.oakgp.util.DummyValuesMap;
-import org.oakgp.util.Random;
 
 public class PointMutationTest {
    // TODO test mutating child nodes, not just the root node (which is all the tests currently do)
@@ -39,12 +38,13 @@ public class PointMutationTest {
       Node offspring = pointMutation.evolve(dummySelector);
 
       assertSame(output, offspring);
+
       dummySelector.assertEmpty();
    }
 
    @Test
    public void testFunctionSubNodes() {
-      Random dummyRandom = new DummyRandom(3, 1, 2, 0);
+      DummyRandom dummyRandom = new DummyRandom(3, 1, 2, 0);
       Function rootFunction = new IsZero();
       Function inputFunction = new Add();
       Function outputFunction = new Subtract();
@@ -72,6 +72,8 @@ public class PointMutationTest {
       assertEquals(new FunctionNode(rootFunction, new FunctionNode(inputFunction, inputArg1, outputArg2)), pointMutation.evolve(dummySelector));
       assertEquals(new FunctionNode(rootFunction, new FunctionNode(outputFunction, inputArg1, inputArg2)), pointMutation.evolve(dummySelector));
       assertEquals(new FunctionNode(rootFunction, new FunctionNode(inputFunction, outputArg1, inputArg2)), pointMutation.evolve(dummySelector));
+
+      dummyRandom.assertEmpty();
       dummySelector.assertEmpty();
    }
 }
