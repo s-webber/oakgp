@@ -1,8 +1,6 @@
 package org.oakgp.selector;
 
 import static org.junit.Assert.assertSame;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
 import static org.oakgp.TestUtils.integerConstant;
 
 import java.util.Arrays;
@@ -11,6 +9,7 @@ import java.util.List;
 import org.junit.Test;
 import org.oakgp.RankedCandidate;
 import org.oakgp.node.Node;
+import org.oakgp.util.DummyRandom;
 import org.oakgp.util.Random;
 
 public class WeightedNodeSelectorTest {
@@ -21,10 +20,9 @@ public class WeightedNodeSelectorTest {
       Node third = integerConstant(0);
       List<RankedCandidate> candidates = Arrays.asList(new RankedCandidate(first, 0), new RankedCandidate(second, 0), new RankedCandidate(third, 0));
 
-      Random mockRandom = mock(Random.class);
-      given(mockRandom.nextBoolean()).willReturn(true, false, false, false, true, false, true, true, false, false);
+      Random dummyRandom = new DummyRandom(true, false, false, false, true, false, true, true, false, false);
 
-      WeightedNodeSelectorFactory factory = new WeightedNodeSelectorFactory(mockRandom);
+      WeightedNodeSelectorFactory factory = new WeightedNodeSelectorFactory(dummyRandom);
       WeightedNodeSelector selector = factory.getSelector(candidates);
 
       assertSame(first, selector.next());

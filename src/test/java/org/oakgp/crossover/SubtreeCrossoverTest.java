@@ -1,7 +1,6 @@
 package org.oakgp.crossover;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.oakgp.TestUtils.writeNode;
 
 import org.junit.Test;
@@ -21,7 +20,7 @@ public class SubtreeCrossoverTest {
 
       Node result = c.evolve(dummySelector);
       assertOutputEquals("(+ 9 (- 8 v5))", result);
-      assertTrue(dummySelector.isEmpty());
+      dummySelector.assertEmpty();
    }
 
    @Test
@@ -33,7 +32,7 @@ public class SubtreeCrossoverTest {
 
       Node result = c.evolve(dummySelector);
       assertOutputEquals("2", result);
-      assertTrue(dummySelector.isEmpty());
+      dummySelector.assertEmpty();
    }
 
    /** Test crossover using trees that use a mix of types (booleans and integers) */
@@ -54,7 +53,7 @@ public class SubtreeCrossoverTest {
       assertOutputEquals("(+ 4 9)", c.evolve(dummySelector));
       assertOutputEquals("(+ 4 " + output + ")", c.evolve(dummySelector));
 
-      assertTrue(dummySelector.isEmpty());
+      dummySelector.assertEmpty();
    }
 
    /** Test attempted crossover when selected node in first parent has a type that is not present in the second parent */
@@ -69,7 +68,7 @@ public class SubtreeCrossoverTest {
       NodeEvolver c = new SubtreeCrossover(dummyRandom);
 
       assertOutputEquals(input, c.evolve(dummySelector));
-      assertTrue(dummySelector.isEmpty());
+      dummySelector.assertEmpty();
    }
 
    private void assertOutputEquals(String expected, Node actual) {

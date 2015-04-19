@@ -2,7 +2,6 @@ package org.oakgp.mutate;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
 import static org.oakgp.TestUtils.integerConstant;
 
 import org.junit.Test;
@@ -40,7 +39,7 @@ public class PointMutationTest {
       Node offspring = pointMutation.evolve(dummySelector);
 
       assertSame(output, offspring);
-      assertTrue(dummySelector.isEmpty());
+      dummySelector.assertEmpty();
    }
 
    @Test
@@ -73,6 +72,6 @@ public class PointMutationTest {
       assertEquals(new FunctionNode(rootFunction, new FunctionNode(inputFunction, inputArg1, outputArg2)), pointMutation.evolve(dummySelector));
       assertEquals(new FunctionNode(rootFunction, new FunctionNode(outputFunction, inputArg1, inputArg2)), pointMutation.evolve(dummySelector));
       assertEquals(new FunctionNode(rootFunction, new FunctionNode(inputFunction, outputArg1, inputArg2)), pointMutation.evolve(dummySelector));
-      assertTrue(dummySelector.isEmpty());
+      dummySelector.assertEmpty();
    }
 }

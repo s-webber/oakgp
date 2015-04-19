@@ -45,7 +45,9 @@ public class DummyNodeSelector implements NodeSelector {
       return nodes[ctr++];
    }
 
-   public boolean isEmpty() {
-      return ctr == nodes.length;
+   public void assertEmpty() {
+      if (ctr != nodes.length) {
+         throw new IllegalStateException("Not all nodes have been selected, only read " + ctr + " of " + nodes.length);
+      }
    }
 }
