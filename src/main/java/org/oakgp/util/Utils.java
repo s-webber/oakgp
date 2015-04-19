@@ -53,7 +53,7 @@ public final class Utils {
       }
    }
 
-   public static int selectSubNodeIndex(Node tree, Random random) { // TODO test
+   public static int selectSubNodeIndex(Node tree, Random random) {
       int nodeCount = tree.getNodeCount();
       if (nodeCount == 1) {
          return 0;
