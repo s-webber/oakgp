@@ -15,6 +15,7 @@ public final class FunctionSet {
    private final Map<Signature, List<Function>> functionsBySignature;
 
    public FunctionSet(Function... functions) {
+      // TODO validate display names using NodeReader.isValidDisplayName
       this.symbolToInstanceMappings = createInstanceMappings(functions);
       this.functionsByType = groupBy(functions, f -> f.getSignature().getReturnType());
       this.functionsBySignature = groupBy(functions, f -> f.getSignature());
