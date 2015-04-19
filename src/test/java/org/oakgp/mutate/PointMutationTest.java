@@ -3,11 +3,10 @@ package org.oakgp.mutate;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
 import static org.oakgp.TestUtils.integerConstant;
 
 import org.junit.Test;
+import org.oakgp.NodeEvolver;
 import org.oakgp.PrimitiveSet;
 import org.oakgp.function.Function;
 import org.oakgp.function.classify.IsZero;
@@ -17,6 +16,7 @@ import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.selector.DummyNodeSelector;
 import org.oakgp.util.DummyPrimitiveSet;
+import org.oakgp.util.DummyRandom;
 import org.oakgp.util.DummyValuesMap;
 import org.oakgp.util.Random;
 
@@ -25,7 +25,6 @@ public class PointMutationTest {
 
    @Test
    public void testTerminal() {
-      Random mockRandom = mock(Random.class);
       Node input = integerConstant(9);
       Node output = integerConstant(7);
       DummyNodeSelector dummySelector = new DummyNodeSelector(input);
@@ -36,7 +35,7 @@ public class PointMutationTest {
             return alternativeTerminals.next(current);
          }
       };
-      PointMutation pointMutation = new PointMutation(mockRandom, primitiveSet);
+      NodeEvolver pointMutation = new PointMutation(DummyRandom.EMPTY, primitiveSet);
 
       Node offspring = pointMutation.evolve(dummySelector);
 
@@ -46,8 +45,7 @@ public class PointMutationTest {
 
    @Test
    public void testFunctionSubNodes() {
-      Random mockRandom = mock(Random.class);
-      given(mockRandom.nextInt(3)).willReturn(1, 2, 0);
+      Random dummyRandom = new DummyRandom(3, 1, 2, 0);
       Function rootFunction = new IsZero();
       Function inputFunction = new Add();
       Function outputFunction = new Subtract();
@@ -70,7 +68,7 @@ public class PointMutationTest {
             return alternativeTerminals.next(current);
          }
       };
-      PointMutation pointMutation = new PointMutation(mockRandom, primitiveSet);
+      NodeEvolver pointMutation = new PointMutation(dummyRandom, primitiveSet);
 
       assertEquals(new FunctionNode(rootFunction, new FunctionNode(inputFunction, inputArg1, outputArg2)), pointMutation.evolve(dummySelector));
       assertEquals(new FunctionNode(rootFunction, new FunctionNode(outputFunction, inputArg1, inputArg2)), pointMutation.evolve(dummySelector));

@@ -6,9 +6,9 @@ import java.util.Map;
 public class DummyValuesMap<K, V> {
    private final Map<K, DummyValuesQueue<V>> map;
 
-   public DummyValuesMap(K key, V value) {
+   public DummyValuesMap(K key, V... values) {
       map = new HashMap<>();
-      map.put(key, new DummyValuesQueue<>(value));
+      map.put(key, new DummyValuesQueue<>(values));
    }
 
    private DummyValuesMap(Map<K, DummyValuesQueue<V>> map) {

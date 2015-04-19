@@ -2,26 +2,22 @@ package org.oakgp.crossover;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
 import static org.oakgp.TestUtils.writeNode;
 
 import org.junit.Test;
 import org.oakgp.NodeEvolver;
 import org.oakgp.node.Node;
 import org.oakgp.selector.DummyNodeSelector;
+import org.oakgp.util.DummyRandom;
 import org.oakgp.util.Random;
 
 public class SubtreeCrossoverTest {
    @Test
    public void testFunctionNodes() {
-      Random mockRandom = mock(Random.class);
-      given(mockRandom.nextInt(2)).willReturn(1);
-      given(mockRandom.nextInt(5)).willReturn(3);
-
+      Random dummyRandom = new DummyRandom.Builder().setInts(2, 1).setInts(5, 3).build();
       DummyNodeSelector dummySelector = new DummyNodeSelector("(+ 9 5)", "(* 7 (- 8 v5))");
 
-      NodeEvolver c = new SubtreeCrossover(mockRandom);
+      NodeEvolver c = new SubtreeCrossover(dummyRandom);
 
       Node result = c.evolve(dummySelector);
       assertOutputEquals("(+ 9 (- 8 v5))", result);
@@ -30,12 +26,10 @@ public class SubtreeCrossoverTest {
 
    @Test
    public void testConstantNodes() {
-      Random mockRandom = mock(Random.class);
-      given(mockRandom.nextInt(1)).willReturn(0);
-
+      Random dummyRandom = new DummyRandom(1, 0);
       DummyNodeSelector dummySelector = new DummyNodeSelector("1", "2");
 
-      NodeEvolver c = new SubtreeCrossover(mockRandom);
+      NodeEvolver c = new SubtreeCrossover(dummyRandom);
 
       Node result = c.evolve(dummySelector);
       assertOutputEquals("2", result);
@@ -45,15 +39,13 @@ public class SubtreeCrossoverTest {
    /** Test crossover using trees that use a mix of types (booleans and integers) */
    @Test
    public void testMixedTypes() {
-      Random mockRandom = mock(Random.class);
-      given(mockRandom.nextInt(2)).willReturn(0, 1);
-      given(mockRandom.nextInt(5)).willReturn(0, 0, 1, 2, 3, 4);
-
       String input = "(+ 4 5)";
       String output = "(if (< 6 7) 8 9)";
+
+      Random dummyRandom = new DummyRandom.Builder().setInts(2, 0, 1, 1, 1, 1, 1).setInts(5, 0, 0, 1, 2, 3, 4).build();
       DummyNodeSelector dummySelector = new DummyNodeSelector(input, output, input, output, input, output, input, output, input, output, input, output);
 
-      NodeEvolver c = new SubtreeCrossover(mockRandom);
+      NodeEvolver c = new SubtreeCrossover(dummyRandom);
 
       assertOutputEquals("(+ 6 5)", c.evolve(dummySelector));
       assertOutputEquals("(+ 4 6)", c.evolve(dummySelector));
@@ -68,14 +60,13 @@ public class SubtreeCrossoverTest {
    /** Test attempted crossover when selected node in first parent has a type that is not present in the second parent */
    @Test
    public void testNoMatchingTypes() {
-      Random mockRandom = mock(Random.class);
-      given(mockRandom.nextInt(7)).willReturn(2);
-
       String input = "(+ (if (< 6 7) 8 9) 5)";
       String output = "(+ 1 2)";
+
+      Random dummyRandom = new DummyRandom(7, 2);
       DummyNodeSelector dummySelector = new DummyNodeSelector(input, output);
 
-      NodeEvolver c = new SubtreeCrossover(mockRandom);
+      NodeEvolver c = new SubtreeCrossover(dummyRandom);
 
       assertOutputEquals(input, c.evolve(dummySelector));
       assertTrue(dummySelector.isEmpty());
