@@ -4,6 +4,8 @@ import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
+import static org.oakgp.TestUtils.integerConstant;
+import static org.oakgp.TestUtils.readNode;
 import static org.oakgp.Type.booleanType;
 import static org.oakgp.Type.integerType;
 import static org.oakgp.Type.stringType;
@@ -13,6 +15,7 @@ import java.util.Map;
 
 import org.junit.Test;
 import org.oakgp.Type;
+import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
 
 public class UtilsTest {
@@ -46,4 +49,24 @@ public class UtilsTest {
       assertEquals(asList("bag"), groups.get('b'));
       assertEquals(asList("cat", "cake", "caterpillar"), groups.get('c'));
    }
+
+   @Test
+   public void testSelectSubNodeIndexFunctionNode() {
+      assertSelectSubNodeIndex("(+ (+ 1 2) (+ 3 4))", 7, 3);
+      assertSelectSubNodeIndex("(zero? 0)", 2, 1);
+   }
+
+   private void assertSelectSubNodeIndex(String input, int expectedNodeCount, int expectedIndex) {
+      Node tree = readNode(input);
+      assertEquals(expectedNodeCount, tree.getNodeCount());
+      int actual = Utils.selectSubNodeIndex(tree, DummyRandom.getInt(expectedNodeCount - 1).returns(expectedIndex));
+      assertEquals(expectedIndex, actual);
+   }
+
+   @Test
+   public void testSelectSubNodeIndexTerminalNode() {
+      ConstantNode terminal = integerConstant(1);
+      assertEquals(0, Utils.selectSubNodeIndex(terminal, DummyRandom.EMPTY));
+   }
+
 }
