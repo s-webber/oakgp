@@ -44,7 +44,7 @@ public class PointMutationTest {
 
    @Test
    public void testFunctionSubNodes() {
-      DummyRandom dummyRandom = new DummyRandom(3, 1, 2, 0);
+      DummyRandom dummyRandom = DummyRandom.getInt(3).returns(1, 2, 0);
       Function rootFunction = new IsZero();
       Function inputFunction = new Add();
       Function outputFunction = new Subtract();

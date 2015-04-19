@@ -13,7 +13,7 @@ public class DummyRandom implements Random {
       this(null, null, null);
    }
 
-   public DummyRandom(Integer bound, Integer... values) {
+   private DummyRandom(Integer bound, Integer... values) {
       this(new DummyValuesMap<>(bound, values), null, null);
    }
 
@@ -65,14 +65,22 @@ public class DummyRandom implements Random {
       }
    }
 
+   public static GetIntExpectation getInt(int bound) {
+      return new GetIntExpectation(bound);
+   }
+
    public static class Builder {
       private DummyValuesMap.Builder<Integer, Integer> integersBuilder = new DummyValuesMap.Builder<Integer, Integer>();
       private DummyValuesQueue<Double> doubles;
       private DummyValuesQueue<Boolean> booleans;
 
-      public Builder setInts(Integer key, Integer... values) {
+      private Builder setInts(Integer key, Integer... values) {
          integersBuilder.put(key, values);
          return this;
+      }
+
+      public GetIntBuilderExpectation getInt(int bound) {
+         return new GetIntBuilderExpectation(this, bound);
       }
 
       public Builder setDoubles(Double... doubles) {
@@ -93,6 +101,33 @@ public class DummyRandom implements Random {
 
       public DummyRandom build() {
          return new DummyRandom(integersBuilder.build(), doubles, booleans);
+      }
+   }
+
+   public static class GetIntBuilderExpectation {
+      private final Builder builder;
+      private final Integer bound;
+
+      public GetIntBuilderExpectation(Builder builder, Integer bound) {
+         this.builder = builder;
+         this.bound = bound;
+      }
+
+      public Builder returns(Integer... values) {
+         builder.setInts(bound, values);
+         return builder;
+      }
+   }
+
+   public static class GetIntExpectation {
+      private final Integer bound;
+
+      public GetIntExpectation(Integer bound) {
+         this.bound = bound;
+      }
+
+      public DummyRandom returns(Integer... values) {
+         return new DummyRandom(bound, values);
       }
    }
 }
