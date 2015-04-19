@@ -139,6 +139,51 @@ public class NodeReaderTest {
       }
    }
 
+   @Test
+   public void testValidDisplayName() {
+      assertValidDisplayName("x");
+      assertValidDisplayName("X");
+      assertValidDisplayName("hello");
+      assertValidDisplayName("?x_Y-z!");
+
+      // can start with a - as long as the second character is not a number
+      assertValidDisplayName("-->");
+
+      // can include numbers as long as they are not the first character
+      assertValidDisplayName("i5");
+   }
+
+   @Test
+   public void testInvalidDisplayName() {
+      // must contain at least one character
+      assertInvalidDisplayName(null);
+      assertInvalidDisplayName("");
+
+      // no white space
+      assertInvalidDisplayName(" ");
+      assertInvalidDisplayName("hel lo");
+      assertInvalidDisplayName("x ");
+      assertInvalidDisplayName(" x");
+      assertInvalidDisplayName("x\n");
+      assertInvalidDisplayName("\tx");
+
+      // cannot start with a number, or with a minus sign followed by a number
+      assertInvalidDisplayName("-9");
+      assertInvalidDisplayName("9i");
+   }
+
+   private void assertValidDisplayName(String displayName) {
+      assertIsValidDisplayName(displayName, true);
+   }
+
+   private void assertInvalidDisplayName(String displayName) {
+      assertIsValidDisplayName(displayName, false);
+   }
+
+   private void assertIsValidDisplayName(String displayName, boolean isValid) {
+      assertEquals(isValid, NodeReader.isValidDisplayName(displayName));
+   }
+
    private void assertParseLiteral(Object expected) {
       assertParseLiteral(expected.toString(), expected);
    }

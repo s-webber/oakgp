@@ -188,9 +188,18 @@ public final class NodeReader implements Closeable {
       }
    }
 
-   // TODO test, add Utils.isFunctionIdentifier (which calls this) and then use that from FunctionSet
-   public static boolean isFunctionIdentifierPart(char c) {
-      return isFunctionIdentifierPart((int) c);
+   public static boolean isValidDisplayName(String displayName) {
+      if (displayName == null || displayName.length() == 0 || isNumber(displayName)) {
+         return false;
+      }
+
+      for (char c : displayName.toCharArray()) {
+         if (!isFunctionIdentifierPart(c)) {
+            return false;
+         }
+      }
+
+      return true;
    }
 
    private static boolean isFunctionIdentifierPart(int c) {

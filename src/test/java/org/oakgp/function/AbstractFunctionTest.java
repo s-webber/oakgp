@@ -79,10 +79,7 @@ public abstract class AbstractFunctionTest {
    @Test
    public void testDisplayNameValid() {
       String displayName = getFunction().getDisplayName();
-      assertNotNull(displayName);
-      for (int i = 0; i < displayName.length(); i++) {
-         assertTrue(NodeReader.isFunctionIdentifierPart(displayName.charAt(i)));
-      }
+      assertTrue(NodeReader.isValidDisplayName(displayName));
    }
 
    private FunctionNode readInput(String input) {
