@@ -19,8 +19,6 @@ import org.oakgp.util.DummyRandom;
 import org.oakgp.util.DummyValuesMap;
 
 public class PointMutationTest {
-   // TODO test mutating child nodes, not just the root node (which is all the tests currently do)
-
    @Test
    public void testTerminal() {
       Node input = integerConstant(9);
