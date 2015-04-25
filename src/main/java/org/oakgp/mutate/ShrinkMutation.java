@@ -32,7 +32,7 @@ public class ShrinkMutation implements NodeEvolver {
          // that only has terminal nodes as arguments
          return primitiveSet.nextAlternativeTerminal(root);
       } else {
-         // Note: -1 to avoid selecting root node
+         // Note: -1 to avoid selecting root node TODO move selectMutationPoint method
          int index = random.nextInt(nodeCount - 1);
          return root.replaceAt(index, (n) -> primitiveSet.nextAlternativeTerminal(n), treeWalkerStrategy);
       }

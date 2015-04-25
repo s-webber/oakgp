@@ -24,7 +24,7 @@ public class HoistMutation implements NodeEvolver {
          // as the root node is the root node itself
          return root;
       } else {
-         // Note: -1 to avoid selecting root node
+         // Note: -1 to avoid selecting root node TODO move selectMutationPoint method
          int index = random.nextInt(nodeCount - 1);
          return root.getAt(index, treeWalkerStrategy);
       }
