@@ -1,7 +1,7 @@
 package org.oakgp.mutate;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
+import static org.oakgp.TestUtils.assertNodeEquals;
 import static org.oakgp.TestUtils.integerConstant;
 import static org.oakgp.TestUtils.readNode;
 import static org.oakgp.util.DummyRandom.GetIntExpectation.nextInt;
@@ -37,17 +37,15 @@ public class HoistMutationTest {
       DummyRandom random = nextInt(9).returns(3, 4, 5, 2, 1, 8, 6, 7, 0);
       HoistMutation mutator = new HoistMutation(random);
 
-      // TODO better if first arg is String and second uses writeNode
-      // TODO add assertNodeEquals(String, Node) to TestUtils and retro-fit to existing tests
-      assertEquals(readNode("(if (zero? v0) 7 8)"), mutator.evolve(selector));
-      assertEquals(readNode("v1"), mutator.evolve(selector));
-      assertEquals(readNode("(+ (if (zero? v0) 7 8) v1)"), mutator.evolve(selector));
-      assertEquals(readNode("8"), mutator.evolve(selector));
-      assertEquals(readNode("7"), mutator.evolve(selector));
-      assertEquals(readNode("(+ 9 v2)"), mutator.evolve(selector));
-      assertEquals(readNode("9"), mutator.evolve(selector));
-      assertEquals(readNode("v2"), mutator.evolve(selector));
-      assertEquals(readNode("v0"), mutator.evolve(selector));
+      assertNodeEquals("(if (zero? v0) 7 8)", mutator.evolve(selector));
+      assertNodeEquals("v1", mutator.evolve(selector));
+      assertNodeEquals("(+ (if (zero? v0) 7 8) v1)", mutator.evolve(selector));
+      assertNodeEquals("8", mutator.evolve(selector));
+      assertNodeEquals("7", mutator.evolve(selector));
+      assertNodeEquals("(+ 9 v2)", mutator.evolve(selector));
+      assertNodeEquals("9", mutator.evolve(selector));
+      assertNodeEquals("v2", mutator.evolve(selector));
+      assertNodeEquals("v0", mutator.evolve(selector));
 
       selector.assertEmpty();
       random.assertEmpty();
