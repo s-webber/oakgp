@@ -54,7 +54,7 @@ public class UtilsTest {
    @Test
    public void testSelectSubNodeIndexFunctionNode() {
       assertSelectSubNodeIndex("(+ (+ 1 2) (+ 3 4))", 7, 3);
-      assertSelectSubNodeIndex("(zero? 0)", 2, 1);
+      assertSelectSubNodeIndex("(zero? 0)", 2, 0);
    }
 
    private void assertSelectSubNodeIndex(String input, int expectedNodeCount, int expectedIndex) {

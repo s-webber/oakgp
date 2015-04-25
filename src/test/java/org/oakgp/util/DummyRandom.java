@@ -38,7 +38,12 @@ public class DummyRandom implements Random {
    @Override
    public int nextInt(int bound) {
       requireNonNull(integers);
-      return integers.next(bound);
+      int result = integers.next(bound);
+      if (result >= 0 && result < bound) {
+         return result;
+      } else {
+         throw new IllegalStateException("Next int for bound: " + bound + " is: " + result);
+      }
    }
 
    @Override
@@ -63,6 +68,11 @@ public class DummyRandom implements Random {
       if (booleans != null && !booleans.isEmpty()) {
          throw new IllegalArgumentException("Not all booleans have been selected");
       }
+   }
+
+   public static Builder random() {
+      // TODO make Builder constructor private to force use of this
+      return new Builder();
    }
 
    public static class Builder {
