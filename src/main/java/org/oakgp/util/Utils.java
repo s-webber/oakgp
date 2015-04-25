@@ -15,7 +15,6 @@ import java.util.function.Predicate;
 import org.oakgp.Type;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
-import org.oakgp.node.NodeType;
 
 /** Utility methods that support the functionality provided by the rest of the framework. */
 public final class Utils {
@@ -75,29 +74,5 @@ public final class Utils {
          // Note: -1 to avoid selecting root node
          return random.nextInt(nodeCount - 1);
       }
-   }
-
-   public static boolean areFunctions(Node n1, Node n2) {
-      return isFunction(n1) && isFunction(n2);
-   }
-
-   public static boolean isFunction(Node n) {
-      return n.getNodeType() == NodeType.FUNCTION;
-   }
-
-   public static boolean areTerminals(Node n1, Node n2) {
-      return isTerminal(n1) && isTerminal(n2);
-   }
-
-   public static boolean isTerminal(Node n) {
-      return n.getNodeType() != NodeType.FUNCTION;
-   }
-
-   public static boolean isConstant(Node n) {
-      return n.getNodeType() == NodeType.CONSTANT;
-   }
-
-   public static boolean isVariable(Node n) {
-      return n.getNodeType() == NodeType.VARIABLE;
    }
 }

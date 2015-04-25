@@ -6,8 +6,8 @@ import static org.oakgp.function.math.ArithmeticExpressionSimplifier.isAdd;
 import static org.oakgp.function.math.ArithmeticExpressionSimplifier.isMultiply;
 import static org.oakgp.function.math.ArithmeticExpressionSimplifier.isSubtract;
 import static org.oakgp.function.math.ArithmeticExpressionSimplifier.negate;
-import static org.oakgp.util.Utils.isConstant;
-import static org.oakgp.util.Utils.isFunction;
+import static org.oakgp.node.NodeType.isConstant;
+import static org.oakgp.node.NodeType.isFunction;
 
 import org.oakgp.Arguments;
 import org.oakgp.function.Function;

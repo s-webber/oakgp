@@ -1,6 +1,6 @@
 package org.oakgp.serialize;
 
-import static org.oakgp.util.Utils.isFunction;
+import static org.oakgp.node.NodeType.isFunction;
 
 import org.oakgp.Arguments;
 import org.oakgp.function.Function;

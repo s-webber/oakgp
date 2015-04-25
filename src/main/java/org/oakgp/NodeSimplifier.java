@@ -1,8 +1,8 @@
 package org.oakgp;
 
 import static org.oakgp.Arguments.createArguments;
-import static org.oakgp.util.Utils.isConstant;
-import static org.oakgp.util.Utils.isFunction;
+import static org.oakgp.node.NodeType.isConstant;
+import static org.oakgp.node.NodeType.isFunction;
 
 import java.util.HashSet;
 import java.util.Set;

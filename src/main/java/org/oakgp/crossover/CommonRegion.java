@@ -1,7 +1,7 @@
 package org.oakgp.crossover;
 
-import static org.oakgp.util.Utils.areFunctions;
-import static org.oakgp.util.Utils.areTerminals;
+import static org.oakgp.node.NodeType.areFunctions;
+import static org.oakgp.node.NodeType.areTerminals;
 
 import org.oakgp.Arguments;
 import org.oakgp.node.FunctionNode;

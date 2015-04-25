@@ -4,9 +4,9 @@ import static org.oakgp.function.math.ArithmeticExpressionSimplifier.ZERO;
 import static org.oakgp.function.math.ArithmeticExpressionSimplifier.createConstant;
 import static org.oakgp.function.math.ArithmeticExpressionSimplifier.isAddOrSubtract;
 import static org.oakgp.function.math.ArithmeticExpressionSimplifier.multiplyByTwo;
+import static org.oakgp.node.NodeType.isConstant;
+import static org.oakgp.node.NodeType.isFunction;
 import static org.oakgp.util.NodeComparator.NODE_COMPARATOR;
-import static org.oakgp.util.Utils.isConstant;
-import static org.oakgp.util.Utils.isFunction;
 
 import org.oakgp.Arguments;
 import org.oakgp.node.FunctionNode;

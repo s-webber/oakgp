@@ -1,6 +1,6 @@
 package org.oakgp.mutate;
 
-import static org.oakgp.util.Utils.isFunction;
+import static org.oakgp.node.NodeType.isFunction;
 
 import org.oakgp.NodeEvolver;
 import org.oakgp.PrimitiveSet;

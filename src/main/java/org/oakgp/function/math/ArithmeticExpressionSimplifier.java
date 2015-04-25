@@ -1,11 +1,11 @@
 package org.oakgp.function.math;
 
 import static org.oakgp.Type.integerType;
+import static org.oakgp.node.NodeType.areFunctions;
+import static org.oakgp.node.NodeType.isConstant;
+import static org.oakgp.node.NodeType.isFunction;
+import static org.oakgp.node.NodeType.isTerminal;
 import static org.oakgp.util.NodeComparator.NODE_COMPARATOR;
-import static org.oakgp.util.Utils.areFunctions;
-import static org.oakgp.util.Utils.isConstant;
-import static org.oakgp.util.Utils.isFunction;
-import static org.oakgp.util.Utils.isTerminal;
 
 import org.oakgp.Arguments;
 import org.oakgp.Assignments;

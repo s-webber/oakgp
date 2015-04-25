@@ -3,7 +3,7 @@ package org.oakgp.function.choice;
 import static java.lang.Boolean.TRUE;
 import static org.oakgp.Type.booleanType;
 import static org.oakgp.Type.integerType;
-import static org.oakgp.util.Utils.isConstant;
+import static org.oakgp.node.NodeType.isConstant;
 
 import org.oakgp.Arguments;
 import org.oakgp.Assignments;
