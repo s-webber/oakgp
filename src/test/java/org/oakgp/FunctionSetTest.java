@@ -183,10 +183,11 @@ public class FunctionSetTest {
 
    private static FunctionSet createFunctionSet() {
       return new FunctionSet(
-      // arithmetic
+            // arithmetic
             ADD, new Subtract(), new Multiply(),
             // comparison
-            new LessThan(), new LessThanOrEqual(), new GreaterThan(), new GreaterThanOrEqual(), new Equal(), new NotEqual(),
+            new LessThan(integerType()), new LessThanOrEqual(integerType()), new GreaterThan(integerType()), new GreaterThanOrEqual(integerType()), new Equal(
+                  integerType()), new NotEqual(integerType()),
             // selection
             new If(),
             // higher-order functions

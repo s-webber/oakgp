@@ -98,12 +98,12 @@ public class TestUtils {
       functions.add(new Subtract());
       functions.add(new Multiply());
 
-      functions.add(new LessThan());
-      functions.add(new LessThanOrEqual());
-      functions.add(new GreaterThan());
-      functions.add(new GreaterThanOrEqual());
-      functions.add(new Equal());
-      functions.add(new NotEqual());
+      functions.add(new LessThan(integerType()));
+      functions.add(new LessThanOrEqual(integerType()));
+      functions.add(new GreaterThan(integerType()));
+      functions.add(new GreaterThanOrEqual(integerType()));
+      functions.add(new Equal(integerType()));
+      functions.add(new NotEqual(integerType()));
 
       functions.add(new If());
       functions.add(new OrElse(stringType()));

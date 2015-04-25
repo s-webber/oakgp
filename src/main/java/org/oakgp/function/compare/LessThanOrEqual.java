@@ -1,14 +1,16 @@
 package org.oakgp.function.compare;
 
+import org.oakgp.Type;
+
 /** Determines if the number represented by the first argument is less than or equal to the number represented by the second. */
 public final class LessThanOrEqual extends ComparisonOperator {
-   public LessThanOrEqual() {
-      super(true);
+   public LessThanOrEqual(Type type) {
+      super(type, true);
    }
 
    @Override
-   protected boolean evaluate(int arg1, int arg2) {
-      return arg1 <= arg2;
+   protected boolean evaluate(int diff) {
+      return diff <= 0;
    }
 
    @Override

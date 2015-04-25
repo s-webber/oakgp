@@ -1,6 +1,7 @@
 package org.oakgp.examples.gridwar;
 
 import static org.oakgp.TestUtils.createTypeArray;
+import static org.oakgp.Type.integerType;
 import static org.oakgp.examples.SystemTestConfig.GENERATION_SIZE;
 import static org.oakgp.examples.SystemTestConfig.RANDOM;
 
@@ -37,8 +38,8 @@ public class GridWarSystemTest {
       config.useIntegerConstants(NUM_CONSTANTS);
       config.setVariables(VARIABLE_TYPES);
       config.setTerminator(createTerminator());
-      config.setFunctionSet(new Add(), new Subtract(), new Multiply(), new LessThan(), new LessThanOrEqual(), new GreaterThan(), new GreaterThanOrEqual(),
-            new Equal(), new NotEqual(), new If());
+      config.setFunctionSet(new Add(), new Subtract(), new Multiply(), new LessThan(integerType()), new LessThanOrEqual(integerType()), new GreaterThan(
+            integerType()), new GreaterThanOrEqual(integerType()), new Equal(integerType()), new NotEqual(integerType()), new If());
       config.setGenerationProcessor(new RoundRobinTournament(createGridWarGame()));
       config.process();
    }

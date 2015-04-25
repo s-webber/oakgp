@@ -52,6 +52,6 @@ public class IfTest extends AbstractFunctionTest {
 
    @Override
    protected Function[] getFunctionSet() {
-      return new Function[] { getFunction(), new Add(), new Multiply(), new LessThan(), new GreaterThan() };
+      return new Function[] { getFunction(), new Add(), new Multiply(), new LessThan(integerType()), new GreaterThan(integerType()) };
    }
 }

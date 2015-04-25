@@ -33,8 +33,9 @@ public class PrimitiveSetTest {
    private static final double VARIABLE_RATIO = .6;
    private static final ConstantNode[] CONSTANTS = { integerConstant(7), integerConstant(8), integerConstant(9) };
    private static final Type[] VARIABLE_TYPES = createTypeArray(3);
-   private static final Function[] FUNCTIONS = new Function[] { new Add(), new Subtract(), new Multiply(), new If(), new LessThan(), new LessThanOrEqual(),
-         new GreaterThan(), new GreaterThanOrEqual(), new Equal(), new NotEqual() };
+   private static final Function[] FUNCTIONS = new Function[] { new Add(), new Subtract(), new Multiply(), new If(), new LessThan(integerType()),
+         new LessThanOrEqual(integerType()), new GreaterThan(integerType()), new GreaterThanOrEqual(integerType()), new Equal(integerType()),
+         new NotEqual(integerType()) };
 
    @Test
    public void testNextFunction() {

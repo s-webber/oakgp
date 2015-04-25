@@ -95,8 +95,8 @@ public class FitnessFunctionSystemTest {
       config.useIntegerConstants(5);
       config.setVariables(variableTypes);
       config.setTerminator(createTerminator());
-      config.setFunctionSet(new Add(), new Subtract(), new Multiply(), new LessThan(), new LessThanOrEqual(), new GreaterThan(), new GreaterThanOrEqual(),
-            new Equal(), new NotEqual(), new If());
+      config.setFunctionSet(new Add(), new Subtract(), new Multiply(), new LessThan(integerType()), new LessThanOrEqual(integerType()), new GreaterThan(
+            integerType()), new GreaterThanOrEqual(integerType()), new Equal(integerType()), new NotEqual(integerType()), new If());
       FitnessFunction fitnessFunction = createIntegerTestDataFitnessFunction(createTests(variableTypes.length, a -> {
          int x = (int) a.get(0);
          int y = (int) a.get(1);

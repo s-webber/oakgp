@@ -3,18 +3,19 @@ package org.oakgp.function.compare;
 import static org.oakgp.util.NodeComparator.NODE_COMPARATOR;
 
 import org.oakgp.Arguments;
+import org.oakgp.Type;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 
 /** Determines if two numbers are equal. */
 public final class Equal extends ComparisonOperator {
-   public Equal() {
-      super(true);
+   public Equal(Type type) {
+      super(type, true);
    }
 
    @Override
-   protected boolean evaluate(int arg1, int arg2) {
-      return arg1 == arg2;
+   protected boolean evaluate(int diff) {
+      return diff == 0;
    }
 
    @Override

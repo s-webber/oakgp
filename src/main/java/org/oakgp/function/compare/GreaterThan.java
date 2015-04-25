@@ -1,25 +1,27 @@
 package org.oakgp.function.compare;
 
 import org.oakgp.Arguments;
+import org.oakgp.Type;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 
 /** Determines if the number represented by the first argument is greater than the number represented by the second. */
 public final class GreaterThan extends ComparisonOperator {
-   public GreaterThan() {
-      super(false);
+   public GreaterThan(Type type) {
+      super(type, false);
    }
 
    @Override
-   protected boolean evaluate(int arg1, int arg2) {
-      return arg1 > arg2;
+   protected boolean evaluate(int diff) {
+      return diff > 0;
    }
 
    @Override
    public Node simplify(Arguments arguments) {
       Node simplifiedVersion = super.simplify(arguments);
       if (simplifiedVersion == null) {
-         return new FunctionNode(new LessThan(), arguments.secondArg(), arguments.firstArg());
+         // TODO don't create new LessThanOrEqual each time
+         return new FunctionNode(new LessThan(getSignature().getReturnType()), arguments.secondArg(), arguments.firstArg());
       } else {
          return simplifiedVersion;
       }

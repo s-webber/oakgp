@@ -2,6 +2,7 @@ package org.oakgp.function.compare;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
+import static org.oakgp.Type.integerType;
 
 import java.util.List;
 
@@ -11,7 +12,7 @@ import org.oakgp.function.Function;
 public class LessThanOrEqualTest extends AbstractFunctionTest {
    @Override
    protected Function getFunction() {
-      return new LessThanOrEqual();
+      return new LessThanOrEqual(integerType());
    }
 
    @Override
