@@ -1,8 +1,7 @@
 package org.oakgp;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Represents a data type.
@@ -10,7 +9,7 @@ import java.util.Map;
  * e.g. integer, boolean, string, array, function.
  */
 public final class Type implements Comparable<Type> {
-   private static final Map<Type, Type> TYPE_CACHE = new HashMap<>();
+   private static final ConcurrentHashMap<Type, Type> TYPE_CACHE = new ConcurrentHashMap<>();
    private static final Type[] EMPTY_ARRAY = new Type[0];
 
    private final String name;
@@ -65,24 +64,7 @@ public final class Type implements Comparable<Type> {
    }
 
    private static Type type(Type t) {
-      Type e = TYPE_CACHE.get(t);
-      if (e == null) {
-         return store(t);
-      } else {
-         return e;
-      }
-   }
-
-   private static Type store(Type t) {
-      synchronized (TYPE_CACHE) {
-         Type e = TYPE_CACHE.get(t);
-         if (e == null) {
-            TYPE_CACHE.put(t, t);
-            return t;
-         } else {
-            return e;
-         }
-      }
+      return TYPE_CACHE.computeIfAbsent(t, (k) -> k);
    }
 
    /**
