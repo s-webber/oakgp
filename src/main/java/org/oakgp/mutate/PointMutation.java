@@ -1,5 +1,7 @@
 package org.oakgp.mutate;
 
+import static org.oakgp.util.Utils.isFunction;
+
 import org.oakgp.NodeEvolver;
 import org.oakgp.PrimitiveSet;
 import org.oakgp.function.Function;
@@ -24,7 +26,7 @@ public final class PointMutation implements NodeEvolver {
       Node root = selector.next();
       int mutationPoint = Utils.selectSubNodeIndex(root, random);
       return root.replaceAt(mutationPoint, node -> {
-         if (node.getNodeType().isFunction()) {
+         if (isFunction(node)) {
             FunctionNode functionNode = (FunctionNode) node;
             Function function = primitiveSet.nextAlternativeFunction(functionNode.getFunction());
             return new FunctionNode(function, functionNode.getArguments());
