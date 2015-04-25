@@ -19,7 +19,7 @@ public class DummyValuesMap<K, V> {
    public V next(K key) {
       DummyValuesQueue<V> values = map.get(key);
       if (values == null) {
-         throw new IllegalArgumentException("No entry found for key: " + key + " of type: " + key.getClass().getName());
+         throw new IllegalArgumentException("No entry found for key: " + key + " of type: " + key.getClass().getName() + " only: " + map.keySet());
       } else if (values.isEmpty()) {
          throw new IllegalArgumentException("No remaining values found for key: " + key + " of type: " + key.getClass().getName());
       } else {
