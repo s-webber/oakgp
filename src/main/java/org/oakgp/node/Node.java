@@ -53,4 +53,6 @@ public interface Node {
    int getDepth();
 
    Type getType();
+
+   // TODO add NodeType getNodeType so no longer need instanceof checks
 }
