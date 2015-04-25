@@ -5,6 +5,11 @@ import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 
 final class CommonRegion {
+   /** Private constructor as all methods are static. */
+   private CommonRegion() {
+      // do nothing
+   }
+
    static Node crossoverAt(Node n1, Node n2, int crossOverPoint) {
       boolean isFirstFunction = n1 instanceof FunctionNode;
       boolean isSecondFunction = n2 instanceof FunctionNode;
@@ -28,14 +33,14 @@ final class CommonRegion {
          }
       }
 
-      return n1.getType() == n2.getType() ? n2 : n1;
+      return sameType(n1, n2) ? n2 : n1;
    }
 
    static int getNodeCount(Node n1, Node n2) {
       boolean isFirstFunction = n1 instanceof FunctionNode;
       boolean isSecondFunction = n2 instanceof FunctionNode;
       if (isFirstFunction && isSecondFunction) {
-         int total = n1.getType() == n2.getType() ? 1 : 0;
+         int total = sameType(n1, n2) ? 1 : 0;
          FunctionNode f1 = (FunctionNode) n1;
          FunctionNode f2 = (FunctionNode) n2;
          int argCount = f1.getArguments().getArgCount();
@@ -47,10 +52,14 @@ final class CommonRegion {
          return total;
       } else if (!isFirstFunction && !isSecondFunction) {
          // both terminal nodes
-         return n1.getType() == n2.getType() ? 1 : 0;
+         return sameType(n1, n2) ? 1 : 0;
       } else {
          // terminal node does not match with a function node
          return 0;
       }
+   }
+
+   private static boolean sameType(Node n1, Node n2) {
+      return n1.getType() == n2.getType();
    }
 }
