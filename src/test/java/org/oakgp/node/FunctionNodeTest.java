@@ -21,6 +21,7 @@ import org.oakgp.Assignments;
 import org.oakgp.function.Function;
 import org.oakgp.function.math.Add;
 import org.oakgp.function.math.Multiply;
+import org.oakgp.util.Utils;
 
 public class FunctionNodeTest {
    @Test
@@ -105,9 +106,9 @@ public class FunctionNodeTest {
    @Test
    public void testCountStrategy() {
       Node tree = readNode("(+ (+ 1 v0) (+ (+ v0 v1) 2))");
-      assertEquals(3, tree.getNodeCount(n -> n instanceof VariableNode));
-      assertEquals(2, tree.getNodeCount(n -> n instanceof ConstantNode));
-      assertEquals(4, tree.getNodeCount(n -> n instanceof FunctionNode));
+      assertEquals(3, tree.getNodeCount(Utils::isVariable));
+      assertEquals(2, tree.getNodeCount(Utils::isConstant));
+      assertEquals(4, tree.getNodeCount(Utils::isFunction));
    }
 
    @Test
@@ -121,32 +122,32 @@ public class FunctionNodeTest {
       FunctionNode branch2 = new FunctionNode(f, v2, v1);
       FunctionNode tree = new FunctionNode(f, branch1, branch2);
 
-      assertSame(v0, tree.getAt(0, n -> n instanceof VariableNode));
-      assertSame(v2, tree.getAt(1, n -> n instanceof VariableNode));
-      assertSame(v1, tree.getAt(2, n -> n instanceof VariableNode));
+      assertSame(v0, tree.getAt(0, Utils::isVariable));
+      assertSame(v2, tree.getAt(1, Utils::isVariable));
+      assertSame(v1, tree.getAt(2, Utils::isVariable));
 
-      assertSame(c1, tree.getAt(0, n -> n instanceof ConstantNode));
+      assertSame(c1, tree.getAt(0, Utils::isConstant));
 
-      assertSame(branch1, tree.getAt(0, n -> n instanceof FunctionNode));
-      assertSame(branch2, tree.getAt(1, n -> n instanceof FunctionNode));
-      assertSame(tree, tree.getAt(2, n -> n instanceof FunctionNode));
+      assertSame(branch1, tree.getAt(0, Utils::isFunction));
+      assertSame(branch2, tree.getAt(1, Utils::isFunction));
+      assertSame(tree, tree.getAt(2, Utils::isFunction));
    }
 
    @Test
    public void testReplaceStrategy() {
       String input = "(+ (+ 1 v0) (+ (+ v0 v1) 2))";
 
-      assertReplaceStrategy(input, 0, n -> n instanceof VariableNode, "(+ (+ 1 true) (+ (+ v0 v1) 2))");
-      assertReplaceStrategy(input, 1, n -> n instanceof VariableNode, "(+ (+ 1 v0) (+ (+ true v1) 2))");
-      assertReplaceStrategy(input, 2, n -> n instanceof VariableNode, "(+ (+ 1 v0) (+ (+ v0 true) 2))");
+      assertReplaceStrategy(input, 0, Utils::isVariable, "(+ (+ 1 true) (+ (+ v0 v1) 2))");
+      assertReplaceStrategy(input, 1, Utils::isVariable, "(+ (+ 1 v0) (+ (+ true v1) 2))");
+      assertReplaceStrategy(input, 2, Utils::isVariable, "(+ (+ 1 v0) (+ (+ v0 true) 2))");
 
-      assertReplaceStrategy(input, 0, n -> n instanceof ConstantNode, "(+ (+ true v0) (+ (+ v0 v1) 2))");
-      assertReplaceStrategy(input, 1, n -> n instanceof ConstantNode, "(+ (+ 1 v0) (+ (+ v0 v1) true))");
+      assertReplaceStrategy(input, 0, Utils::isConstant, "(+ (+ true v0) (+ (+ v0 v1) 2))");
+      assertReplaceStrategy(input, 1, Utils::isConstant, "(+ (+ 1 v0) (+ (+ v0 v1) true))");
 
-      assertReplaceStrategy(input, 0, n -> n instanceof FunctionNode, "(+ true (+ (+ v0 v1) 2))");
-      assertReplaceStrategy(input, 1, n -> n instanceof FunctionNode, "(+ (+ 1 v0) (+ true 2))");
-      assertReplaceStrategy(input, 2, n -> n instanceof FunctionNode, "(+ (+ 1 v0) true)");
-      assertReplaceStrategy(input, 3, n -> n instanceof FunctionNode, "true");
+      assertReplaceStrategy(input, 0, Utils::isFunction, "(+ true (+ (+ v0 v1) 2))");
+      assertReplaceStrategy(input, 1, Utils::isFunction, "(+ (+ 1 v0) (+ true 2))");
+      assertReplaceStrategy(input, 2, Utils::isFunction, "(+ (+ 1 v0) true)");
+      assertReplaceStrategy(input, 3, Utils::isFunction, "true");
    }
 
    private void assertReplaceStrategy(String input, int index, Predicate<Node> treeWalkerStrategy, String expected) {

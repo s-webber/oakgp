@@ -1,5 +1,7 @@
 package org.oakgp.serialize;
 
+import static org.oakgp.util.Utils.isFunction;
+
 import org.oakgp.Arguments;
 import org.oakgp.function.Function;
 import org.oakgp.node.FunctionNode;
@@ -28,7 +30,7 @@ public final class NodeWriter {
    }
 
    private void writeNode(Node node, StringBuilder sb) {
-      if (node instanceof FunctionNode) {
+      if (isFunction(node)) {
          FunctionNode functionNode = (FunctionNode) node;
          Function function = functionNode.getFunction();
          Arguments arguments = functionNode.getArguments();

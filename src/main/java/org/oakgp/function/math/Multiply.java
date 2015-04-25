@@ -6,6 +6,8 @@ import static org.oakgp.function.math.ArithmeticExpressionSimplifier.createConst
 import static org.oakgp.function.math.ArithmeticExpressionSimplifier.isAddOrSubtract;
 import static org.oakgp.function.math.ArithmeticExpressionSimplifier.isMultiply;
 import static org.oakgp.util.NodeComparator.NODE_COMPARATOR;
+import static org.oakgp.util.Utils.isConstant;
+import static org.oakgp.util.Utils.isFunction;
 
 import org.oakgp.Arguments;
 import org.oakgp.function.Function;
@@ -49,13 +51,13 @@ public final class Multiply extends ArithmeticOperator {
          // should never get here to to earlier ordering of arguments
          throw new IllegalArgumentException("arg1 " + arg1 + " arg2 " + arg2);
       } else {
-         if (arg1 instanceof ConstantNode && arg2 instanceof FunctionNode) {
+         if (isConstant(arg1) && isFunction(arg2)) {
             FunctionNode fn = (FunctionNode) arg2;
             Function f = fn.getFunction();
             Arguments args = fn.getArguments();
             Node fnArg1 = args.firstArg();
             Node fnArg2 = args.secondArg();
-            if (fnArg1 instanceof ConstantNode) {
+            if (isConstant(fnArg1)) {
                if (isAddOrSubtract(f)) {
                   return new FunctionNode(f, multiply(arg1, fnArg1), new FunctionNode(this, arg1, fnArg2));
                } else if (isMultiply(f)) {

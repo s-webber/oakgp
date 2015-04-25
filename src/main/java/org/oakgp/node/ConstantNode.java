@@ -77,6 +77,11 @@ public final class ConstantNode implements Node {
    }
 
    @Override
+   public NodeType getNodeType() {
+      return NodeType.CONSTANT;
+   }
+
+   @Override
    public int hashCode() {
       return value.hashCode();
    }

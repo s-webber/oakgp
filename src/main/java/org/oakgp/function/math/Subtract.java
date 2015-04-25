@@ -6,10 +6,11 @@ import static org.oakgp.function.math.ArithmeticExpressionSimplifier.isAdd;
 import static org.oakgp.function.math.ArithmeticExpressionSimplifier.isMultiply;
 import static org.oakgp.function.math.ArithmeticExpressionSimplifier.isSubtract;
 import static org.oakgp.function.math.ArithmeticExpressionSimplifier.negate;
+import static org.oakgp.util.Utils.isConstant;
+import static org.oakgp.util.Utils.isFunction;
 
 import org.oakgp.Arguments;
 import org.oakgp.function.Function;
-import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 
@@ -44,18 +45,18 @@ public final class Subtract extends ArithmeticOperator {
          FunctionNode fn2 = (FunctionNode) arg2;
          Arguments fn2Arguments = fn2.getArguments();
          return new FunctionNode(this, fn2Arguments.secondArg(), fn2Arguments.firstArg());
-      } else if (arg2 instanceof ConstantNode && ((int) arg2.evaluate(null)) < 0) {
+      } else if (isConstant(arg2) && ((int) arg2.evaluate(null)) < 0) {
          // convert double negatives to addition
          // e.g. (- x -1) -> (+ 1 x)
          return new FunctionNode(new Add(), negate(arg2), arg1);
       } else {
-         if (arg2 instanceof FunctionNode) {
+         if (isFunction(arg2)) {
             FunctionNode fn = (FunctionNode) arg2;
             Function f = fn.getFunction();
             Arguments args = fn.getArguments();
             Node fnArg1 = args.firstArg();
             Node fnArg2 = args.secondArg();
-            if (fnArg1 instanceof ConstantNode && isMultiply(f)) {
+            if (isConstant(fnArg1) && isMultiply(f)) {
                if (ZERO.equals(arg1)) {
                   int i = (int) fnArg1.evaluate(null);
                   return new FunctionNode(f, createConstant(-i), fnArg2);
@@ -65,7 +66,7 @@ public final class Subtract extends ArithmeticOperator {
             } else if (ZERO.equals(arg1) && isAdd(f)) {
                // (- 0 (+ v0 v1) -> (+ (0 - v0) (0 - v1))
                return new FunctionNode(f, negate(fnArg1), negate(fnArg2));
-            } else if (arg1 instanceof ConstantNode && fnArg1 instanceof ConstantNode && isSubtract(fn)) {
+            } else if (isConstant(arg1) && isConstant(fnArg1) && isSubtract(fn)) {
                int i1 = (int) arg1.evaluate(null);
                int i2 = (int) fnArg1.evaluate(null);
                int result;

@@ -54,5 +54,5 @@ public interface Node {
 
    Type getType();
 
-   // TODO add NodeType getNodeType so no longer need instanceof checks
+   NodeType getNodeType();
 }

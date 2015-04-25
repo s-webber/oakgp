@@ -5,9 +5,10 @@ import static org.oakgp.function.math.ArithmeticExpressionSimplifier.createConst
 import static org.oakgp.function.math.ArithmeticExpressionSimplifier.isAddOrSubtract;
 import static org.oakgp.function.math.ArithmeticExpressionSimplifier.multiplyByTwo;
 import static org.oakgp.util.NodeComparator.NODE_COMPARATOR;
+import static org.oakgp.util.Utils.isConstant;
+import static org.oakgp.util.Utils.isFunction;
 
 import org.oakgp.Arguments;
-import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 
@@ -43,19 +44,19 @@ public final class Add extends ArithmeticOperator {
          // anything plus itself is equal to itself multiplied by two
          // e.g. (+ x x) -> (* 2 x)
          return multiplyByTwo(arg1);
-      } else if (arg1 instanceof ConstantNode && ((int) arg1.evaluate(null)) < 0) {
+      } else if (isConstant(arg1) && ((int) arg1.evaluate(null)) < 0) {
          // convert addition of negative numbers to subtraction
          // e.g. (+ -3 x) -> (- x 3)
          return new FunctionNode(new Subtract(), arg2, createConstant(-((int) arg1.evaluate(null))));
-      } else if (arg2 instanceof ConstantNode && ((int) arg2.evaluate(null)) < 0) {
+      } else if (isConstant(arg2) && ((int) arg2.evaluate(null)) < 0) {
          // should never get here as, due to the earlier ordering of arguments,
          // the only time the second argument will be a constant is when the first argument is also a constant -
          // in which case it would of already been simplified to the result of the addition.
          // e.g. (+ 2 7) would have already been simplified to 9 before it got this far
          throw new IllegalArgumentException("arg1 " + arg1 + " arg2 " + arg2);
-      } else if (arg1 instanceof ConstantNode && arg2 instanceof FunctionNode) {
+      } else if (isConstant(arg1) && isFunction(arg2)) {
          FunctionNode fn2 = (FunctionNode) arg2;
-         if (fn2.getArguments().firstArg() instanceof ConstantNode && isAddOrSubtract(fn2.getFunction())) {
+         if (isConstant(fn2.getArguments().firstArg()) && isAddOrSubtract(fn2.getFunction())) {
             int i1 = (int) arg1.evaluate(null);
             int i2 = (int) fn2.getArguments().firstArg().evaluate(null);
             return new FunctionNode(fn2.getFunction(), createConstant(i1 + i2), fn2.getArguments().secondArg());

@@ -9,6 +9,7 @@ import java.util.function.Predicate;
 import org.oakgp.Assignments;
 import org.oakgp.Type;
 import org.oakgp.node.Node;
+import org.oakgp.node.NodeType;
 
 /** Represents a human player in a GridWar game. */
 class Human implements Node {
@@ -43,6 +44,8 @@ class Human implements Node {
    private int readInt() {
       return new Scanner(System.in).nextInt();
    }
+
+   // TODO throw unsupported operation exceptions from following methods:
 
    @Override
    public int getNodeCount() {
@@ -81,6 +84,11 @@ class Human implements Node {
 
    @Override
    public Type getType() {
+      return null;
+   }
+
+   @Override
+   public NodeType getNodeType() {
       return null;
    }
 }

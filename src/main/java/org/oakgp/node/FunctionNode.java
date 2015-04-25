@@ -164,6 +164,11 @@ public final class FunctionNode implements Node {
    }
 
    @Override
+   public NodeType getNodeType() {
+      return NodeType.FUNCTION;
+   }
+
+   @Override
    public int hashCode() {
       return hashCode;
    }

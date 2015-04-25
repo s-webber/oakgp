@@ -3,12 +3,12 @@ package org.oakgp.function.choice;
 import static java.lang.Boolean.TRUE;
 import static org.oakgp.Type.booleanType;
 import static org.oakgp.Type.integerType;
+import static org.oakgp.util.Utils.isConstant;
 
 import org.oakgp.Arguments;
 import org.oakgp.Assignments;
 import org.oakgp.Signature;
 import org.oakgp.function.Function;
-import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
 
 /**
@@ -39,7 +39,7 @@ public final class If implements Function {
    public Node simplify(Arguments arguments) {
       if (arguments.secondArg().equals(arguments.thirdArg())) {
          return arguments.secondArg();
-      } else if (arguments.firstArg() instanceof ConstantNode) {
+      } else if (isConstant(arguments.firstArg())) {
          int index = getOutcomeArgumentIndex(arguments, null);
          return arguments.getArg(index);
       } else {

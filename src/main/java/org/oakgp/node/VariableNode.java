@@ -87,6 +87,11 @@ public final class VariableNode implements Node {
    }
 
    @Override
+   public NodeType getNodeType() {
+      return NodeType.VARIABLE;
+   }
+
+   @Override
    public int hashCode() {
       return hashCode;
    }

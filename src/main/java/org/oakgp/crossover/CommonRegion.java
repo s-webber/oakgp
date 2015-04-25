@@ -1,5 +1,8 @@
 package org.oakgp.crossover;
 
+import static org.oakgp.util.Utils.areFunctions;
+import static org.oakgp.util.Utils.areTerminals;
+
 import org.oakgp.Arguments;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
@@ -11,9 +14,7 @@ final class CommonRegion {
    }
 
    static Node crossoverAt(Node n1, Node n2, int crossOverPoint) {
-      boolean isFirstFunction = n1 instanceof FunctionNode;
-      boolean isSecondFunction = n2 instanceof FunctionNode;
-      if (isFirstFunction && isSecondFunction) {
+      if (areFunctions(n1, n2)) {
          FunctionNode f1 = (FunctionNode) n1;
          FunctionNode f2 = (FunctionNode) n2;
          Arguments arguments = f1.getArguments();
@@ -37,9 +38,7 @@ final class CommonRegion {
    }
 
    static int getNodeCount(Node n1, Node n2) {
-      boolean isFirstFunction = n1 instanceof FunctionNode;
-      boolean isSecondFunction = n2 instanceof FunctionNode;
-      if (isFirstFunction && isSecondFunction) {
+      if (areFunctions(n1, n2)) {
          int total = sameType(n1, n2) ? 1 : 0;
          FunctionNode f1 = (FunctionNode) n1;
          FunctionNode f2 = (FunctionNode) n2;
@@ -50,8 +49,7 @@ final class CommonRegion {
             }
          }
          return total;
-      } else if (!isFirstFunction && !isSecondFunction) {
-         // both terminal nodes
+      } else if (areTerminals(n1, n2)) {
          return sameType(n1, n2) ? 1 : 0;
       } else {
          // terminal node does not match with a function node

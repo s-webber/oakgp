@@ -2,9 +2,8 @@ package org.oakgp.util;
 
 import java.util.Comparator;
 
-import org.oakgp.node.ConstantNode;
-import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
+import org.oakgp.node.NodeType;
 
 /** An implementation of {@code Comparator} for comparing instances of {@link Node}. */
 public final class NodeComparator implements Comparator<Node> {
@@ -18,7 +17,10 @@ public final class NodeComparator implements Comparator<Node> {
 
    @Override
    public int compare(Node o1, Node o2) {
-      if (o1.getClass() == o2.getClass()) {
+      NodeType t1 = o1.getNodeType();
+      NodeType t2 = o2.getNodeType();
+
+      if (t1 == t2) {
          int i = o1.getType().compareTo(o2.getType());
          if (i == 0) {
             int i1 = o1.hashCode();
@@ -33,13 +35,13 @@ public final class NodeComparator implements Comparator<Node> {
          } else {
             return i;
          }
-      } else if (o1 instanceof ConstantNode) {
+      } else if (t1 == NodeType.CONSTANT) {
          return -1;
-      } else if (o2 instanceof ConstantNode) {
+      } else if (t2 == NodeType.CONSTANT) {
          return 1;
-      } else if (o1 instanceof FunctionNode) {
+      } else if (t1 == NodeType.FUNCTION) {
          return 1;
-      } else if (o2 instanceof FunctionNode) {
+      } else if (t2 == NodeType.FUNCTION) {
          return -1;
       } else {
          throw new IllegalStateException();

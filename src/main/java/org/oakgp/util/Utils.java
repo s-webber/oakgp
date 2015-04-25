@@ -75,4 +75,28 @@ public final class Utils {
          return random.nextInt(nodeCount - 1);
       }
    }
+
+   public static boolean areFunctions(Node n1, Node n2) { // TODO test
+      return isFunction(n1) && isFunction(n2);
+   }
+
+   public static boolean isFunction(Node n) { // TODO test
+      return n.getNodeType().isFunction();
+   }
+
+   public static boolean areTerminals(Node n1, Node n2) { // TODO test
+      return n1.getNodeType().isTerminal() && n2.getNodeType().isTerminal();
+   }
+
+   public static boolean isTerminal(Node n) { // TODO test
+      return n.getNodeType().isTerminal();
+   }
+
+   public static boolean isConstant(Node n) { // TODO test
+      return n.getNodeType().isConstant();
+   }
+
+   public static boolean isVariable(Node n) { // TODO test
+      return n.getNodeType().isVariable();
+   }
 }

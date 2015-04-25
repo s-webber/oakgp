@@ -2,6 +2,10 @@ package org.oakgp.function.math;
 
 import static org.oakgp.Type.integerType;
 import static org.oakgp.util.NodeComparator.NODE_COMPARATOR;
+import static org.oakgp.util.Utils.areFunctions;
+import static org.oakgp.util.Utils.isConstant;
+import static org.oakgp.util.Utils.isFunction;
+import static org.oakgp.util.Utils.isTerminal;
 
 import org.oakgp.Arguments;
 import org.oakgp.Assignments;
@@ -37,7 +41,7 @@ final class ArithmeticExpressionSimplifier {
 
    private static Node getSimplifiedVersion(Function function, Node firstArg, Node secondArg) {
       boolean isPos = isAdd(function);
-      if (firstArg instanceof FunctionNode && secondArg instanceof FunctionNode) {
+      if (areFunctions(firstArg, secondArg)) {
          NodePair p = removeFromChildNodes(firstArg, secondArg, isPos);
          if (p != null) {
             return new FunctionNode(function, p.nodeThatHasBeenReduced, p.nodeThatHasBeenExpanded);
@@ -46,9 +50,9 @@ final class ArithmeticExpressionSimplifier {
          if (p != null) {
             return new FunctionNode(function, p.nodeThatHasBeenExpanded, p.nodeThatHasBeenReduced);
          }
-      } else if (firstArg instanceof FunctionNode) {
+      } else if (isFunction(firstArg)) {
          return combineWithChildNodes(firstArg, secondArg, isPos);
-      } else if (secondArg instanceof FunctionNode) {
+      } else if (isFunction(secondArg)) {
          // 3, (+ (* 12 v2) 30) -> (+ (* 12 v2) 33)
          Node tmp = combineWithChildNodes(secondArg, firstArg, isPos);
          if (tmp != null && isSubtract(function)) {
@@ -75,15 +79,15 @@ final class ArithmeticExpressionSimplifier {
     * @return {@code null} if it was not possible to remove (@code nodeToRemove} from {@code nodeToWalk}
     */
    private static NodePair removeFromChildNodes(final Node nodeToWalk, final Node nodeToRemove, final boolean isPos) {
-      if (nodeToWalk instanceof FunctionNode) {
+      if (isFunction(nodeToWalk)) {
          FunctionNode fn = (FunctionNode) nodeToWalk;
          Function f = fn.getFunction();
          Node firstArg = fn.getArguments().firstArg();
          Node secondArg = fn.getArguments().secondArg();
-         if (isMultiply(f) && nodeToRemove instanceof FunctionNode) {
+         if (isMultiply(f) && isFunction(nodeToRemove)) {
             FunctionNode x = (FunctionNode) nodeToRemove;
             Arguments a = x.getArguments();
-            if (isMultiply(x) && firstArg instanceof ConstantNode && a.firstArg() instanceof ConstantNode && secondArg.equals(a.secondArg())) {
+            if (isMultiply(x) && isConstant(firstArg) && isConstant(a.firstArg()) && secondArg.equals(a.secondArg())) {
                int i1 = (int) firstArg.evaluate(null);
                int i2 = (int) a.firstArg().evaluate(null);
                int result;
@@ -144,7 +148,7 @@ final class ArithmeticExpressionSimplifier {
          // TODO is it OK to instead just do nodeToWalk.equals(nodeToAdd)) {
          return combine(nodeToWalk, nodeToAdd, isPos);
       }
-      if (!(nodeToWalk instanceof FunctionNode)) {
+      if (isTerminal(nodeToWalk)) {
          return null;
       }
 
@@ -172,7 +176,7 @@ final class ArithmeticExpressionSimplifier {
          if (tmp != null) {
             return new FunctionNode(currentFunction, firstArg, tmp);
          }
-      } else if (isMultiply(currentFunction) && firstArg instanceof ConstantNode && secondArg.equals(nodeToAdd)) {
+      } else if (isMultiply(currentFunction) && isConstant(firstArg) && secondArg.equals(nodeToAdd)) {
          int inc = isPos ? 1 : -1;
          return new FunctionNode(currentFunction, createConstant((int) ((ConstantNode) firstArg).evaluate(null) + inc), nodeToAdd);
       } else if (isMultiplyingTheSameValue(nodeToWalk, nodeToAdd)) {
@@ -193,8 +197,8 @@ final class ArithmeticExpressionSimplifier {
     * </p>
     */
    private static boolean isSuitableForCombining(Node currentNode, Node nodeToReplace) {
-      if (nodeToReplace instanceof ConstantNode) {
-         return currentNode instanceof ConstantNode;
+      if (isConstant(nodeToReplace)) {
+         return isConstant(currentNode);
       } else {
          return nodeToReplace.equals(currentNode);
       }
@@ -213,7 +217,7 @@ final class ArithmeticExpressionSimplifier {
    private static Node combine(Node first, Node second, boolean isPos) {
       sanityCheck(() -> assertSameClass(first, second));
 
-      if (second instanceof ConstantNode) {
+      if (isConstant(second)) {
          int currentNodeValue = (int) first.evaluate(null);
          int nodeToReplaceValue = (int) second.evaluate(null);
          if (isPos) {
@@ -240,10 +244,10 @@ final class ArithmeticExpressionSimplifier {
     * </p>
     */
    private static boolean isMultiplyingTheSameValue(Node n1, Node n2) {
-      if (n1 instanceof FunctionNode && n2 instanceof FunctionNode) {
+      if (areFunctions(n1, n2)) {
          FunctionNode f1 = (FunctionNode) n1;
          FunctionNode f2 = (FunctionNode) n2;
-         if (isMultiply(f1) && isMultiply(f2) && f1.getArguments().firstArg() instanceof ConstantNode && f2.getArguments().firstArg() instanceof ConstantNode
+         if (isMultiply(f1) && isMultiply(f2) && isConstant(f1.getArguments().firstArg()) && isConstant(f2.getArguments().firstArg())
                && f1.getArguments().secondArg().equals(f2.getArguments().secondArg())) {
             return true;
          }
@@ -329,7 +333,7 @@ final class ArithmeticExpressionSimplifier {
    }
 
    static Node negate(Node arg) {
-      if (arg instanceof ConstantNode) {
+      if (isConstant(arg)) {
          return createConstant(-(int) arg.evaluate(null));
       } else {
          return new FunctionNode(new Subtract(), ZERO, arg);
@@ -349,7 +353,7 @@ final class ArithmeticExpressionSimplifier {
    }
 
    static boolean isSubtract(Node n) {
-      return n instanceof FunctionNode && isSubtract((FunctionNode) n);
+      return isFunction(n) && isSubtract((FunctionNode) n);
    }
 
    static boolean isSubtract(FunctionNode n) {

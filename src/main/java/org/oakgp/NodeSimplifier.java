@@ -1,6 +1,8 @@
 package org.oakgp;
 
 import static org.oakgp.Arguments.createArguments;
+import static org.oakgp.util.Utils.isConstant;
+import static org.oakgp.util.Utils.isFunction;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -50,12 +52,12 @@ public final class NodeSimplifier {
          if (ctr++ > MAX_RETRIES) { // TODO
             throw new IllegalArgumentException(new NodeWriter().writeNode(input));
          }
-      } while (output instanceof FunctionNode && !output.equals(previous));
+      } while (isFunction(output) && !output.equals(previous));
       return output;
    }
 
    private static Node simplifyOnce(Node input) {
-      if (input instanceof FunctionNode) {
+      if (isFunction(input)) {
          return simplifyFunctionNode((FunctionNode) input);
       } else {
          return input;
@@ -75,7 +77,7 @@ public final class NodeSimplifier {
          if (originalArg != simplifiedArgs[i]) {
             modified = true;
          }
-         if (!(simplifiedArgs[i] instanceof ConstantNode)) {
+         if (!isConstant(simplifiedArgs[i])) {
             constants = false;
          }
       }

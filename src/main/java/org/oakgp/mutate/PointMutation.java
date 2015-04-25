@@ -24,7 +24,7 @@ public final class PointMutation implements NodeEvolver {
       Node root = selector.next();
       int mutationPoint = Utils.selectSubNodeIndex(root, random);
       return root.replaceAt(mutationPoint, node -> {
-         if (node instanceof FunctionNode) {
+         if (node.getNodeType().isFunction()) {
             FunctionNode functionNode = (FunctionNode) node;
             Function function = primitiveSet.nextAlternativeFunction(functionNode.getFunction());
             return new FunctionNode(function, functionNode.getArguments());
