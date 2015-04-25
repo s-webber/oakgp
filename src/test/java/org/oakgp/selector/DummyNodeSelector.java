@@ -26,6 +26,14 @@ public class DummyNodeSelector implements NodeSelector {
    private final Node[] nodes;
    private int ctr = 0;
 
+   public static DummyNodeSelector repeat(int count, Node... nodes) { // TODO
+      Node[] result = new Node[nodes.length * count];
+      for (int i = 0; i < count; i++) {
+         System.arraycopy(nodes, 0, result, i * nodes.length, nodes.length);
+      }
+      return new DummyNodeSelector(result);
+   }
+
    public DummyNodeSelector(Node... nodes) {
       this.nodes = nodes;
    }
