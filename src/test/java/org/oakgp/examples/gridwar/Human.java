@@ -45,50 +45,48 @@ class Human implements Node {
       return new Scanner(System.in).nextInt();
    }
 
-   // TODO throw unsupported operation exceptions from following methods:
-
    @Override
    public int getNodeCount() {
-      return 0;
+      throw new UnsupportedOperationException();
    }
 
    @Override
    public int getNodeCount(Predicate<Node> treeWalkerStrategy) {
-      return 0;
+      throw new UnsupportedOperationException();
    }
 
    @Override
    public Node replaceAt(int idx, Function<Node, Node> replacement) {
-      return null;
+      throw new UnsupportedOperationException();
    }
 
    @Override
    public Node replaceAt(int index, Function<Node, Node> replacement, Predicate<Node> treeWalkerStrategy) {
-      return null;
+      throw new UnsupportedOperationException();
    }
 
    @Override
    public Node getAt(int idx) {
-      return null;
+      throw new UnsupportedOperationException();
    }
 
    @Override
    public Node getAt(int index, Predicate<Node> treeWalkerStrategy) {
-      return null;
+      throw new UnsupportedOperationException();
    }
 
    @Override
    public int getDepth() {
-      return 0;
+      throw new UnsupportedOperationException();
    }
 
    @Override
    public Type getType() {
-      return null;
+      throw new UnsupportedOperationException();
    }
 
    @Override
    public NodeType getNodeType() {
-      return null;
+      throw new UnsupportedOperationException();
    }
 }
