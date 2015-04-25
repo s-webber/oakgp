@@ -76,27 +76,27 @@ public final class Utils {
       }
    }
 
-   public static boolean areFunctions(Node n1, Node n2) { // TODO test
+   public static boolean areFunctions(Node n1, Node n2) {
       return isFunction(n1) && isFunction(n2);
    }
 
-   public static boolean isFunction(Node n) { // TODO test
+   public static boolean isFunction(Node n) {
       return n.getNodeType().isFunction();
    }
 
-   public static boolean areTerminals(Node n1, Node n2) { // TODO test
+   public static boolean areTerminals(Node n1, Node n2) {
       return n1.getNodeType().isTerminal() && n2.getNodeType().isTerminal();
    }
 
-   public static boolean isTerminal(Node n) { // TODO test
+   public static boolean isTerminal(Node n) {
       return n.getNodeType().isTerminal();
    }
 
-   public static boolean isConstant(Node n) { // TODO test
+   public static boolean isConstant(Node n) {
       return n.getNodeType().isConstant();
    }
 
-   public static boolean isVariable(Node n) { // TODO test
+   public static boolean isVariable(Node n) {
       return n.getNodeType().isVariable();
    }
 }

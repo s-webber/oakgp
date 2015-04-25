@@ -2,8 +2,11 @@ package org.oakgp.util;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
+import static org.oakgp.TestUtils.createVariable;
 import static org.oakgp.TestUtils.integerConstant;
 import static org.oakgp.TestUtils.readNode;
 import static org.oakgp.Type.booleanType;
@@ -16,10 +19,17 @@ import java.util.Map;
 
 import org.junit.Test;
 import org.oakgp.Type;
+import org.oakgp.function.math.Add;
 import org.oakgp.node.ConstantNode;
+import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
+import org.oakgp.node.VariableNode;
 
 public class UtilsTest {
+   private static final ConstantNode CONSTANT_NODE = integerConstant(7);
+   private static final VariableNode VARIABLE_NODE = createVariable(1);
+   private static final FunctionNode FUNCTION_NODE = new FunctionNode(new Add(), CONSTANT_NODE, VARIABLE_NODE);
+
    @Test
    public void testGroupByType() {
       Node n1 = mockNode(integerType());
@@ -70,4 +80,59 @@ public class UtilsTest {
       assertEquals(0, Utils.selectSubNodeIndex(terminal, DummyRandom.EMPTY));
    }
 
+   @Test
+   public void testIsConstant() {
+      assertTrue(Utils.isConstant(CONSTANT_NODE));
+      assertFalse(Utils.isConstant(FUNCTION_NODE));
+      assertFalse(Utils.isConstant(VARIABLE_NODE));
+   }
+
+   @Test
+   public void testIsFunction() {
+      assertTrue(Utils.isFunction(FUNCTION_NODE));
+      assertFalse(Utils.isFunction(CONSTANT_NODE));
+      assertFalse(Utils.isFunction(VARIABLE_NODE));
+   }
+
+   @Test
+   public void testIsVariable() {
+      assertTrue(Utils.isVariable(VARIABLE_NODE));
+      assertFalse(Utils.isVariable(CONSTANT_NODE));
+      assertFalse(Utils.isVariable(FUNCTION_NODE));
+   }
+
+   @Test
+   public void testIsTerminal() {
+      assertTrue(Utils.isTerminal(CONSTANT_NODE));
+      assertTrue(Utils.isTerminal(VARIABLE_NODE));
+      assertFalse(Utils.isTerminal(FUNCTION_NODE));
+   }
+
+   @Test
+   public void testAreTerminals() {
+      assertTrue(Utils.areTerminals(CONSTANT_NODE, CONSTANT_NODE));
+      assertTrue(Utils.areTerminals(VARIABLE_NODE, VARIABLE_NODE));
+      assertTrue(Utils.areTerminals(VARIABLE_NODE, CONSTANT_NODE));
+      assertTrue(Utils.areTerminals(CONSTANT_NODE, VARIABLE_NODE));
+
+      assertFalse(Utils.areTerminals(FUNCTION_NODE, CONSTANT_NODE));
+      assertFalse(Utils.areTerminals(CONSTANT_NODE, FUNCTION_NODE));
+      assertFalse(Utils.areTerminals(FUNCTION_NODE, VARIABLE_NODE));
+      assertFalse(Utils.areTerminals(VARIABLE_NODE, FUNCTION_NODE));
+      assertFalse(Utils.areTerminals(FUNCTION_NODE, FUNCTION_NODE));
+   }
+
+   @Test
+   public void testAreFunctions() {
+      assertTrue(Utils.areFunctions(FUNCTION_NODE, FUNCTION_NODE));
+
+      assertFalse(Utils.areFunctions(CONSTANT_NODE, CONSTANT_NODE));
+      assertFalse(Utils.areFunctions(VARIABLE_NODE, VARIABLE_NODE));
+      assertFalse(Utils.areFunctions(VARIABLE_NODE, CONSTANT_NODE));
+      assertFalse(Utils.areFunctions(CONSTANT_NODE, VARIABLE_NODE));
+      assertFalse(Utils.areFunctions(FUNCTION_NODE, CONSTANT_NODE));
+      assertFalse(Utils.areFunctions(CONSTANT_NODE, FUNCTION_NODE));
+      assertFalse(Utils.areFunctions(FUNCTION_NODE, VARIABLE_NODE));
+      assertFalse(Utils.areFunctions(VARIABLE_NODE, FUNCTION_NODE));
+   }
 }
