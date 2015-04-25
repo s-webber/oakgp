@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.oakgp.NodeSimplifier.simplify;
+import static org.oakgp.TestUtils.readFunctionNode;
 import static org.oakgp.TestUtils.readNode;
 import static org.oakgp.TestUtils.writeNode;
 
@@ -191,7 +192,7 @@ public abstract class AbstractFunctionTest {
       }
 
       public void put(String input, String expectedOutput, Object[][] assignedValues) {
-         put((FunctionNode) readNode(input), expectedOutput, assignedValues);
+         put(readFunctionNode(input), expectedOutput, assignedValues);
       }
 
       public void put(FunctionNode input, String expectedOutput, Object[][] assignedValues) {

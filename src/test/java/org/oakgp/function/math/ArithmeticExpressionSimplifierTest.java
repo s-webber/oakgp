@@ -7,6 +7,7 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.oakgp.TestUtils.assertNodeEquals;
+import static org.oakgp.TestUtils.readFunctionNode;
 import static org.oakgp.TestUtils.readNode;
 import static org.oakgp.Type.integerType;
 
@@ -231,7 +232,7 @@ public class ArithmeticExpressionSimplifierTest {
    }
 
    private void assertSimplify(String input, String expectedOutput) {
-      FunctionNode in = (FunctionNode) readNode(input);
+      FunctionNode in = readFunctionNode(input);
       Arguments args = in.getArguments();
       Node simplifiedVersion = simplify(in, args).orElse(in);
       assertNodeEquals(expectedOutput, simplifiedVersion);

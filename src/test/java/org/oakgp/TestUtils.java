@@ -31,6 +31,7 @@ import org.oakgp.function.math.Add;
 import org.oakgp.function.math.Multiply;
 import org.oakgp.function.math.Subtract;
 import org.oakgp.node.ConstantNode;
+import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.node.VariableNode;
 import org.oakgp.serialize.NodeReader;
@@ -63,6 +64,10 @@ public class TestUtils {
 
    public static String writeNode(Node input) {
       return new NodeWriter().writeNode(input);
+   }
+
+   public static FunctionNode readFunctionNode(String input) {
+      return (FunctionNode) readNode(input);
    }
 
    public static Node readNode(String input) {
