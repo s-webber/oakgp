@@ -1,9 +1,8 @@
 package org.oakgp.mutate;
 
-import static org.junit.Assert.assertEquals;
+import static org.oakgp.TestUtils.assertNodeEquals;
 import static org.oakgp.TestUtils.integerConstant;
 import static org.oakgp.TestUtils.readNode;
-import static org.oakgp.TestUtils.writeNode;
 import static org.oakgp.util.DummyRandom.GetIntExpectation.nextInt;
 
 import org.junit.Test;
@@ -18,6 +17,6 @@ public class SubTreeMutationTest {
       DummyNodeSelector selector = new DummyNodeSelector(input);
       ConstantNode result = integerConstant(42);
       SubTreeMutation mutator = new SubTreeMutation(nextInt(10).returns(5), (t, d) -> result);
-      assertEquals("(+ (+ (if (zero? v0) 7 8) 42) (+ 9 v2))", writeNode(mutator.evolve(selector)));
+      assertNodeEquals("(+ (+ (if (zero? v0) 7 8) 42) (+ 9 v2))", mutator.evolve(selector));
    }
 }

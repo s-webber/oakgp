@@ -1,7 +1,6 @@
 package org.oakgp.crossover;
 
-import static org.junit.Assert.assertEquals;
-import static org.oakgp.TestUtils.writeNode;
+import static org.oakgp.TestUtils.assertNodeEquals;
 import static org.oakgp.util.DummyRandom.GetIntExpectation.nextInt;
 
 import org.junit.Test;
@@ -20,7 +19,7 @@ public class SubtreeCrossoverTest {
       NodeEvolver c = new SubtreeCrossover(dummyRandom);
 
       Node result = c.evolve(dummySelector);
-      assertOutputEquals("(+ 9 (- 8 v5))", result);
+      assertNodeEquals("(+ 9 (- 8 v5))", result);
 
       dummyRandom.assertEmpty();
       dummySelector.assertEmpty();
@@ -34,7 +33,7 @@ public class SubtreeCrossoverTest {
       NodeEvolver c = new SubtreeCrossover(dummyRandom);
 
       Node result = c.evolve(dummySelector);
-      assertOutputEquals("2", result);
+      assertNodeEquals("2", result);
       dummySelector.assertEmpty();
    }
 
@@ -49,12 +48,12 @@ public class SubtreeCrossoverTest {
 
       NodeEvolver c = new SubtreeCrossover(dummyRandom);
 
-      assertOutputEquals("(+ 6 5)", c.evolve(dummySelector));
-      assertOutputEquals("(+ 4 6)", c.evolve(dummySelector));
-      assertOutputEquals("(+ 4 7)", c.evolve(dummySelector));
-      assertOutputEquals("(+ 4 8)", c.evolve(dummySelector));
-      assertOutputEquals("(+ 4 9)", c.evolve(dummySelector));
-      assertOutputEquals("(+ 4 " + output + ")", c.evolve(dummySelector));
+      assertNodeEquals("(+ 6 5)", c.evolve(dummySelector));
+      assertNodeEquals("(+ 4 6)", c.evolve(dummySelector));
+      assertNodeEquals("(+ 4 7)", c.evolve(dummySelector));
+      assertNodeEquals("(+ 4 8)", c.evolve(dummySelector));
+      assertNodeEquals("(+ 4 9)", c.evolve(dummySelector));
+      assertNodeEquals("(+ 4 " + output + ")", c.evolve(dummySelector));
 
       dummyRandom.assertEmpty();
       dummySelector.assertEmpty();
@@ -71,13 +70,9 @@ public class SubtreeCrossoverTest {
 
       NodeEvolver c = new SubtreeCrossover(dummyRandom);
 
-      assertOutputEquals(input, c.evolve(dummySelector));
+      assertNodeEquals(input, c.evolve(dummySelector));
 
       dummyRandom.assertEmpty();
       dummySelector.assertEmpty();
-   }
-
-   private void assertOutputEquals(String expected, Node actual) {
-      assertEquals(expected, writeNode(actual));
    }
 }

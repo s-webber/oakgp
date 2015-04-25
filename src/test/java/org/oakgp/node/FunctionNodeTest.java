@@ -6,10 +6,10 @@ import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
 import static org.oakgp.Arguments.createArguments;
 import static org.oakgp.Assignments.createAssignments;
+import static org.oakgp.TestUtils.assertNodeEquals;
 import static org.oakgp.TestUtils.createVariable;
 import static org.oakgp.TestUtils.integerConstant;
 import static org.oakgp.TestUtils.readNode;
-import static org.oakgp.TestUtils.writeNode;
 import static org.oakgp.Type.integerType;
 import static org.oakgp.util.Utils.TRUE_NODE;
 
@@ -151,7 +151,7 @@ public class FunctionNodeTest {
 
    private void assertReplaceStrategy(String input, int index, Predicate<Node> treeWalkerStrategy, String expected) {
       Node actual = readNode(input).replaceAt(index, n -> TRUE_NODE, treeWalkerStrategy);
-      assertEquals(expected, writeNode(actual));
+      assertNodeEquals(expected, actual);
    }
 
    @Test

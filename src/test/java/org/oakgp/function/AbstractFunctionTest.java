@@ -50,7 +50,7 @@ public abstract class AbstractFunctionTest {
          Node expectedResult = readNode(test.expectedOutput);
          Node actualResult = simplify(input);
          assertEquals(writeNode(expectedResult), writeNode(actualResult));
-         assertEquals(writeNode(input), expectedResult, actualResult);
+         assertEquals(expectedResult, actualResult);
          assertSame(actualResult, simplify(actualResult));
          assertEquals(actualResult, simplify(input)); // test get same result from multiple calls to simplify with the same input
 
@@ -123,7 +123,7 @@ public abstract class AbstractFunctionTest {
          Assignments assignments = Assignments.createAssignments(a);
          Object expectedOutcome = input.evaluate(assignments);
          Object actualOutcome = actualResult.evaluate(assignments);
-         assertEquals(writeNode(actualResult), expectedOutcome, actualOutcome);
+         assertEquals(expectedOutcome, actualOutcome);
       }
    }
 

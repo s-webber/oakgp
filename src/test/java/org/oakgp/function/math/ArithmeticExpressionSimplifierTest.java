@@ -6,8 +6,8 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.oakgp.TestUtils.assertNodeEquals;
 import static org.oakgp.TestUtils.readNode;
-import static org.oakgp.TestUtils.writeNode;
 import static org.oakgp.Type.integerType;
 
 import java.util.Optional;
@@ -181,7 +181,7 @@ public class ArithmeticExpressionSimplifierTest {
 
    private void assertCombineWithChildNodes(String first, String second, boolean isPos, String expected) {
       Node result = ArithmeticExpressionSimplifier.combineWithChildNodes(readNode(first), readNode(second), isPos);
-      assertEquals(expected, writeNode(result));
+      assertNodeEquals(expected, result);
    }
 
    private void assertCannotCombineWithChildNodes(String first, String second) {
@@ -234,14 +234,13 @@ public class ArithmeticExpressionSimplifierTest {
       FunctionNode in = (FunctionNode) readNode(input);
       Arguments args = in.getArguments();
       Node simplifiedVersion = simplify(in, args).orElse(in);
-      String writeNode = writeNode(simplifiedVersion);
-      assertEquals(expectedOutput, writeNode);
+      assertNodeEquals(expectedOutput, simplifiedVersion);
       if (!simplifiedVersion.equals(in)) {
          int[][] assignedValues = { { 0, 0 }, { 1, 21 }, { 2, 14 }, { 3, -6 }, { 7, 3 }, { -1, 9 }, { -7, 0 } };
          for (int[] assignedValue : assignedValues) {
             Assignments assignments = Assignments.createAssignments(assignedValue[0], assignedValue[1]);
             if (!in.evaluate(assignments).equals(simplifiedVersion.evaluate(assignments))) {
-               throw new RuntimeException(writeNode);
+               throw new RuntimeException(expectedOutput);
             }
          }
       }

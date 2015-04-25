@@ -159,4 +159,8 @@ public class TestUtils {
       assertSame(expectedNode, actual.getNode());
       assertEquals(expectedFitness, actual.getFitness(), 0);
    }
+
+   public static void assertNodeEquals(String expected, Node actual) {
+      assertEquals(expected, writeNode(actual));
+   }
 }

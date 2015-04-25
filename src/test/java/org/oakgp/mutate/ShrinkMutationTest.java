@@ -1,10 +1,9 @@
 package org.oakgp.mutate;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
+import static org.oakgp.TestUtils.assertNodeEquals;
 import static org.oakgp.TestUtils.integerConstant;
 import static org.oakgp.TestUtils.readNode;
-import static org.oakgp.TestUtils.writeNode;
 import static org.oakgp.util.DummyRandom.GetIntExpectation.nextInt;
 
 import org.junit.Test;
@@ -53,10 +52,10 @@ public class ShrinkMutationTest {
       DummyRandom random = nextInt(4).returns(1, 3, 0, 2);
       ShrinkMutation mutator = new ShrinkMutation(random, primitiveSet);
 
-      assertEquals("(+ (+ 42 v1) (+ 9 v2))", writeNode(mutator.evolve(selector)));
-      assertEquals("(+ (+ (if (zero? v0) 7 8) v1) 42)", writeNode(mutator.evolve(selector)));
-      assertEquals("(+ (+ (if 42 7 8) v1) (+ 9 v2))", writeNode(mutator.evolve(selector)));
-      assertEquals("(+ 42 (+ 9 v2))", writeNode(mutator.evolve(selector)));
+      assertNodeEquals("(+ (+ 42 v1) (+ 9 v2))", mutator.evolve(selector));
+      assertNodeEquals("(+ (+ (if (zero? v0) 7 8) v1) 42)", mutator.evolve(selector));
+      assertNodeEquals("(+ (+ (if 42 7 8) v1) (+ 9 v2))", mutator.evolve(selector));
+      assertNodeEquals("(+ 42 (+ 9 v2))", mutator.evolve(selector));
 
       selector.assertEmpty();
       random.assertEmpty();
