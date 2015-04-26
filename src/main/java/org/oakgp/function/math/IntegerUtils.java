@@ -1,5 +1,6 @@
 package org.oakgp.function.math;
 
+import org.oakgp.Assignments;
 import org.oakgp.Type;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
@@ -70,9 +71,9 @@ public final class IntegerUtils implements NumberUtils {
    }
 
    @Override
-   public ConstantNode add(Node n1, Node n2) {
-      int i1 = n1.evaluate(null);
-      int i2 = n2.evaluate(null);
+   public ConstantNode add(Node n1, Node n2, Assignments assignments) {
+      int i1 = n1.evaluate(assignments);
+      int i2 = n2.evaluate(assignments);
       return createConstant(i1 + i2);
    }
 
@@ -82,16 +83,16 @@ public final class IntegerUtils implements NumberUtils {
    }
 
    @Override
-   public ConstantNode subtract(Node n1, Node n2) {
-      int i1 = n1.evaluate(null);
-      int i2 = n2.evaluate(null);
+   public ConstantNode subtract(Node n1, Node n2, Assignments assignments) {
+      int i1 = n1.evaluate(assignments);
+      int i2 = n2.evaluate(assignments);
       return createConstant(i1 - i2);
    }
 
    @Override
-   public ConstantNode multiply(Node n1, Node n2) {
-      int i1 = n1.evaluate(null);
-      int i2 = n2.evaluate(null);
+   public ConstantNode multiply(Node n1, Node n2, Assignments assignments) {
+      int i1 = n1.evaluate(assignments);
+      int i2 = n2.evaluate(assignments);
       return createConstant(i1 * i2);
    }
 

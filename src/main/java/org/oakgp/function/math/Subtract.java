@@ -8,12 +8,13 @@ import static org.oakgp.node.NodeType.isConstant;
 import static org.oakgp.node.NodeType.isFunction;
 
 import org.oakgp.Arguments;
+import org.oakgp.Assignments;
 import org.oakgp.function.Function;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 
 /** Performs subtraction. */
-public final class Subtract extends ArithmeticOperator<Integer> {
+public final class Subtract extends ArithmeticOperator {
    private final NumberUtils numberUtils;
 
    Subtract(NumberUtils numberUtils) {
@@ -27,8 +28,8 @@ public final class Subtract extends ArithmeticOperator<Integer> {
     * @return the result of subtracting {@code arg2} from {@code arg1}
     */
    @Override
-   protected Integer evaluate(Integer arg1, Integer arg2) {
-      return arg1 - arg2;
+   protected Object evaluate(Node arg1, Node arg2, Assignments assignments) {
+      return numberUtils.subtract(arg1, arg2, assignments).evaluate(null);
    }
 
    @Override

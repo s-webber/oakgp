@@ -7,12 +7,13 @@ import static org.oakgp.node.NodeType.isFunction;
 import static org.oakgp.util.NodeComparator.NODE_COMPARATOR;
 
 import org.oakgp.Arguments;
+import org.oakgp.Assignments;
 import org.oakgp.function.Function;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 
 /** Performs multiplication. */
-public final class Multiply extends ArithmeticOperator<Integer> {
+public final class Multiply extends ArithmeticOperator {
    private final NumberUtils numberUtils;
 
    Multiply(NumberUtils numberUtils) {
@@ -26,8 +27,8 @@ public final class Multiply extends ArithmeticOperator<Integer> {
     * @return the result of multiplying {@code arg1} and {@code arg2}
     */
    @Override
-   protected Integer evaluate(Integer arg1, Integer arg2) {
-      return arg1 * arg2;
+   protected Object evaluate(Node arg1, Node arg2, Assignments assignments) {
+      return numberUtils.multiply(arg1, arg2, assignments).evaluate(null);
    }
 
    @Override

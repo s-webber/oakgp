@@ -13,6 +13,7 @@ import java.nio.file.Files;
 import java.util.List;
 
 import org.junit.Test;
+import org.oakgp.Assignments;
 import org.oakgp.Signature;
 import org.oakgp.Type;
 import org.oakgp.function.Function;
@@ -24,9 +25,9 @@ public class ArithmeticOperatorTest {
 
    @Test
    public void testGetSignature() {
-      Function f = new ArithmeticOperator<Integer>(Type.integerType()) {
+      Function f = new ArithmeticOperator(Type.integerType()) {
          @Override
-         protected Integer evaluate(Integer arg1, Integer arg2) {
+         protected Object evaluate(Node arg1, Node arg2, Assignments assignments) {
             throw new UnsupportedOperationException();
          }
       };
