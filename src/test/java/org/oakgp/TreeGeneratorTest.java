@@ -5,7 +5,7 @@ import static org.oakgp.TestUtils.integerConstant;
 
 import org.junit.Test;
 import org.oakgp.function.Function;
-import org.oakgp.function.math.Add;
+import org.oakgp.function.math.IntegerUtils;
 import org.oakgp.node.Node;
 import org.oakgp.util.DummyPrimitiveSet;
 import org.oakgp.util.DummyRandom;
@@ -18,7 +18,7 @@ public class TreeGeneratorTest {
 
          @Override
          public Function nextFunction(Type type) {
-            return new Add();
+            return IntegerUtils.INTEGER_UTILS.getAdd();
          }
 
          @Override
@@ -38,7 +38,7 @@ public class TreeGeneratorTest {
 
          @Override
          public Function nextFunction(Type type) {
-            return new Add();
+            return IntegerUtils.INTEGER_UTILS.getAdd();
          }
 
          @Override

@@ -13,8 +13,7 @@ import org.oakgp.function.AbstractFunctionTest;
 import org.oakgp.function.Function;
 import org.oakgp.function.compare.GreaterThan;
 import org.oakgp.function.compare.LessThan;
-import org.oakgp.function.math.Add;
-import org.oakgp.function.math.Multiply;
+import org.oakgp.function.math.IntegerUtils;
 
 public class IfTest extends AbstractFunctionTest {
    @Override
@@ -52,6 +51,7 @@ public class IfTest extends AbstractFunctionTest {
 
    @Override
    protected Function[] getFunctionSet() {
-      return new Function[] { getFunction(), new Add(), new Multiply(), new LessThan(integerType()), new GreaterThan(integerType()) };
+      return new Function[] { getFunction(), IntegerUtils.INTEGER_UTILS.getAdd(), IntegerUtils.INTEGER_UTILS.getMultiply(), new LessThan(integerType()),
+            new GreaterThan(integerType()) };
    }
 }

@@ -7,17 +7,17 @@ import static org.oakgp.node.NodeType.isFunction;
 import static org.oakgp.util.NodeComparator.NODE_COMPARATOR;
 
 import org.oakgp.Arguments;
-import org.oakgp.Type;
 import org.oakgp.function.Function;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 
 /** Performs multiplication. */
 public final class Multiply extends ArithmeticOperator<Integer> {
-   private final IntegerUtils integerUtils = new IntegerUtils();
+   private final NumberUtils numberUtils;
 
-   public Multiply() {
-      super(Type.integerType());
+   Multiply(NumberUtils numberUtils) {
+      super(numberUtils.getType());
+      this.numberUtils = numberUtils;
    }
 
    /**
@@ -39,18 +39,18 @@ public final class Multiply extends ArithmeticOperator<Integer> {
          // as for addition the order of the arguments is not important, order arguments in a consistent way
          // e.g. (* v1 1) -> (* 1 v1)
          return new FunctionNode(this, arg2, arg1);
-      } else if (integerUtils.ZERO.equals(arg1)) {
+      } else if (numberUtils.isZero(arg1)) {
          // anything multiplied by zero is zero
          // e.g. (* 0 v0) -> 0
-         return integerUtils.ZERO;
-      } else if (integerUtils.ZERO.equals(arg2)) {
+         return numberUtils.zero();
+      } else if (numberUtils.isZero(arg2)) {
          // should never get here to to earlier ordering of arguments
          throw new IllegalArgumentException("arg1 " + arg1 + " arg2 " + arg2);
-      } else if (integerUtils.ONE.equals(arg1)) {
+      } else if (numberUtils.isOne(arg1)) {
          // anything multiplied by one is itself
          // e.g. (* 1 v0) -> v0
          return arg2;
-      } else if (integerUtils.ONE.equals(arg2)) {
+      } else if (numberUtils.isOne(arg2)) {
          // should never get here to to earlier ordering of arguments
          throw new IllegalArgumentException("arg1 " + arg1 + " arg2 " + arg2);
       } else {
@@ -62,9 +62,9 @@ public final class Multiply extends ArithmeticOperator<Integer> {
             Node fnArg2 = args.secondArg();
             if (isConstant(fnArg1)) {
                if (isAddOrSubtract(f)) {
-                  return new FunctionNode(f, integerUtils.multiply(arg1, fnArg1), new FunctionNode(this, arg1, fnArg2));
+                  return new FunctionNode(f, numberUtils.multiply(arg1, fnArg1), new FunctionNode(this, arg1, fnArg2));
                } else if (isMultiply(f)) {
-                  return new FunctionNode(this, integerUtils.multiply(arg1, fnArg1), fnArg2);
+                  return new FunctionNode(this, numberUtils.multiply(arg1, fnArg1), fnArg2);
                } else {
                   throw new IllegalArgumentException();
                }

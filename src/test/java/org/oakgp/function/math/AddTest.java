@@ -8,7 +8,7 @@ import org.oakgp.function.Function;
 public class AddTest extends AbstractFunctionTest {
    @Override
    protected Function getFunction() {
-      return new Add();
+      return IntegerUtils.INTEGER_UTILS.getAdd();
    }
 
    @Override
@@ -87,6 +87,6 @@ public class AddTest extends AbstractFunctionTest {
 
    @Override
    protected Function[] getFunctionSet() {
-      return new Function[] { getFunction(), new Multiply() };
+      return new Function[] { getFunction(), IntegerUtils.INTEGER_UTILS.getMultiply() };
    }
 }

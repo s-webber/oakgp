@@ -10,8 +10,7 @@ import org.oakgp.NodeEvolver;
 import org.oakgp.PrimitiveSet;
 import org.oakgp.function.Function;
 import org.oakgp.function.classify.IsZero;
-import org.oakgp.function.math.Add;
-import org.oakgp.function.math.Subtract;
+import org.oakgp.function.math.IntegerUtils;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.selector.DummyNodeSelector;
@@ -45,8 +44,8 @@ public class PointMutationTest {
    public void testFunctionSubNodes() {
       DummyRandom dummyRandom = nextInt(3).returns(1, 2, 0);
       Function rootFunction = new IsZero();
-      Function inputFunction = new Add();
-      Function outputFunction = new Subtract();
+      Function inputFunction = IntegerUtils.INTEGER_UTILS.getAdd();
+      Function outputFunction = IntegerUtils.INTEGER_UTILS.getSubtract();
       Node inputArg1 = integerConstant(3);
       Node inputArg2 = integerConstant(7);
       Node input = new FunctionNode(rootFunction, new FunctionNode(inputFunction, inputArg1, inputArg2));

@@ -6,8 +6,7 @@ import java.util.List;
 
 import org.oakgp.function.AbstractFunctionTest;
 import org.oakgp.function.Function;
-import org.oakgp.function.math.Add;
-import org.oakgp.function.math.Multiply;
+import org.oakgp.function.math.IntegerUtils;
 
 public class ReduceTest extends AbstractFunctionTest {
    @Override
@@ -34,6 +33,6 @@ public class ReduceTest extends AbstractFunctionTest {
 
    @Override
    protected Function[] getFunctionSet() {
-      return new Function[] { getFunction(), new Add(), new Multiply() };
+      return new Function[] { getFunction(), IntegerUtils.INTEGER_UTILS.getAdd(), IntegerUtils.INTEGER_UTILS.getMultiply() };
    }
 }

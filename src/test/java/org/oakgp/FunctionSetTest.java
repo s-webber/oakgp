@@ -33,12 +33,15 @@ import org.oakgp.function.compare.NotEqual;
 import org.oakgp.function.hof.Filter;
 import org.oakgp.function.hof.Reduce;
 import org.oakgp.function.math.Add;
+import org.oakgp.function.math.IntegerUtils;
 import org.oakgp.function.math.Multiply;
 import org.oakgp.function.math.Subtract;
 
 public class FunctionSetTest {
    private static final List<Type> TWO_INTEGERS = Collections.unmodifiableList(Arrays.asList(integerType(), integerType()));
-   private static final Add ADD = new Add();
+   private static final Add ADD = IntegerUtils.INTEGER_UTILS.getAdd();
+   private static final Subtract SUBTRACT = IntegerUtils.INTEGER_UTILS.getSubtract();
+   private static final Multiply MULTIPLY = IntegerUtils.INTEGER_UTILS.getMultiply();
 
    @Test
    public void testGetFunctionBySymbol() {
@@ -97,17 +100,14 @@ public class FunctionSetTest {
 
    @Test
    public void testGetByType() {
-      Add add = ADD;
-      Subtract subtract = new Subtract();
-      Multiply multiply = new Multiply();
       IsZero isZero = new IsZero();
-      FunctionSet functionSet = new FunctionSet(add, subtract, multiply, isZero);
+      FunctionSet functionSet = new FunctionSet(ADD, SUBTRACT, MULTIPLY, isZero);
 
       List<Function> integers = functionSet.getByType(integerType());
       assertEquals(3, integers.size());
-      assertSame(add, integers.get(0));
-      assertSame(subtract, integers.get(1));
-      assertSame(multiply, integers.get(2));
+      assertSame(ADD, integers.get(0));
+      assertSame(SUBTRACT, integers.get(1));
+      assertSame(MULTIPLY, integers.get(2));
 
       List<Function> booleans = functionSet.getByType(booleanType());
       assertEquals(1, booleans.size());
@@ -125,19 +125,17 @@ public class FunctionSetTest {
 
    @Test
    public void testGetBySignature() {
-      Add add = ADD;
-      Subtract subtract = new Subtract();
       Count countIntegerArray = new Count(integerType());
       Count countBooleanArray = new Count(booleanType());
-      FunctionSet functionSet = new FunctionSet(add, subtract, countIntegerArray, countBooleanArray);
+      FunctionSet functionSet = new FunctionSet(ADD, SUBTRACT, countIntegerArray, countBooleanArray);
 
       // sanity check we have added 4 functions with a return type of integer
       assertEquals(4, functionSet.getByType(integerType()).size());
 
       List<Function> integers = functionSet.getBySignature(createSignature(integerType(), integerType(), integerType()));
       assertEquals(2, integers.size());
-      assertSame(add, integers.get(0));
-      assertSame(subtract, integers.get(1));
+      assertSame(ADD, integers.get(0));
+      assertSame(SUBTRACT, integers.get(1));
 
       List<Function> integerArrays = functionSet.getBySignature(createSignature(integerType(), integerArrayType()));
       assertEquals(1, integerArrays.size());
@@ -183,18 +181,18 @@ public class FunctionSetTest {
 
    private static FunctionSet createFunctionSet() {
       return new FunctionSet(
-            // arithmetic
-            ADD, new Subtract(), new Multiply(),
+      // arithmetic
+            ADD, SUBTRACT, MULTIPLY,
             // comparison
             new LessThan(integerType()), new LessThanOrEqual(integerType()), new GreaterThan(integerType()), new GreaterThanOrEqual(integerType()), new Equal(
                   integerType()), new NotEqual(integerType()),
-            // selection
-            new If(),
-            // higher-order functions
-            new Reduce(integerType()), new Filter(integerType()), new org.oakgp.function.hof.Map(integerType(), booleanType()),
-            // classify
-            new IsPositive(), new IsNegative(), new IsZero(),
-            // collections
-            new Count(integerType()), new Count(booleanType()));
+                  // selection
+                  new If(),
+                  // higher-order functions
+                  new Reduce(integerType()), new Filter(integerType()), new org.oakgp.function.hof.Map(integerType(), booleanType()),
+                  // classify
+                  new IsPositive(), new IsNegative(), new IsZero(),
+                  // collections
+                  new Count(integerType()), new Count(booleanType()));
    }
 }

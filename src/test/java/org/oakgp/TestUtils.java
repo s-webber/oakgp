@@ -27,9 +27,7 @@ import org.oakgp.function.compare.LessThanOrEqual;
 import org.oakgp.function.compare.NotEqual;
 import org.oakgp.function.hof.Filter;
 import org.oakgp.function.hof.Reduce;
-import org.oakgp.function.math.Add;
-import org.oakgp.function.math.Multiply;
-import org.oakgp.function.math.Subtract;
+import org.oakgp.function.math.IntegerUtils;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
@@ -99,9 +97,9 @@ public class TestUtils {
    private static FunctionSet createDefaultFunctionSet() {
       List<Function> functions = new ArrayList<>();
 
-      functions.add(new Add());
-      functions.add(new Subtract());
-      functions.add(new Multiply());
+      functions.add(IntegerUtils.INTEGER_UTILS.getAdd());
+      functions.add(IntegerUtils.INTEGER_UTILS.getSubtract());
+      functions.add(IntegerUtils.INTEGER_UTILS.getMultiply());
 
       functions.add(new LessThan(integerType()));
       functions.add(new LessThanOrEqual(integerType()));

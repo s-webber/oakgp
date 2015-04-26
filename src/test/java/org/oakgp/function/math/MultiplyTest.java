@@ -8,7 +8,7 @@ import org.oakgp.function.Function;
 public class MultiplyTest extends AbstractFunctionTest {
    @Override
    protected Function getFunction() {
-      return new Multiply();
+      return IntegerUtils.INTEGER_UTILS.getMultiply();
    }
 
    @Override

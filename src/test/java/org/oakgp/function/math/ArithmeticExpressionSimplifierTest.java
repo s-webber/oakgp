@@ -91,9 +91,9 @@ public class ArithmeticExpressionSimplifierTest {
 
    @Test
    public void testIsAddOrSubtract() {
-      assertTrue(ArithmeticExpressionSimplifier.isAddOrSubtract(new Add()));
-      assertTrue(ArithmeticExpressionSimplifier.isAddOrSubtract(new Subtract()));
-      assertFalse(ArithmeticExpressionSimplifier.isAddOrSubtract(new Multiply()));
+      assertTrue(ArithmeticExpressionSimplifier.isAddOrSubtract(IntegerUtils.INTEGER_UTILS.getAdd()));
+      assertTrue(ArithmeticExpressionSimplifier.isAddOrSubtract(IntegerUtils.INTEGER_UTILS.getSubtract()));
+      assertFalse(ArithmeticExpressionSimplifier.isAddOrSubtract(IntegerUtils.INTEGER_UTILS.getMultiply()));
       assertFalse(ArithmeticExpressionSimplifier.isAddOrSubtract(new If()));
    }
 

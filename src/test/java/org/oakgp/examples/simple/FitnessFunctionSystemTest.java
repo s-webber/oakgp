@@ -37,9 +37,7 @@ import org.oakgp.function.compare.LessThan;
 import org.oakgp.function.compare.LessThanOrEqual;
 import org.oakgp.function.compare.NotEqual;
 import org.oakgp.function.hof.Filter;
-import org.oakgp.function.math.Add;
-import org.oakgp.function.math.Multiply;
-import org.oakgp.function.math.Subtract;
+import org.oakgp.function.math.IntegerUtils;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
 
@@ -51,7 +49,8 @@ import org.oakgp.node.Node;
  * </p>
  */
 public class FitnessFunctionSystemTest {
-   private static final Function[] ARITHMETIC_FUNCTIONS = { new Add(), new Subtract(), new Multiply() };
+   private static final Function[] ARITHMETIC_FUNCTIONS = { IntegerUtils.INTEGER_UTILS.getAdd(), IntegerUtils.INTEGER_UTILS.getSubtract(),
+      IntegerUtils.INTEGER_UTILS.getMultiply() };
 
    @Test
    public void testTwoVariableArithmeticExpression() {
@@ -95,8 +94,9 @@ public class FitnessFunctionSystemTest {
       config.useIntegerConstants(5);
       config.setVariables(variableTypes);
       config.setTerminator(createTerminator());
-      config.setFunctionSet(new Add(), new Subtract(), new Multiply(), new LessThan(integerType()), new LessThanOrEqual(integerType()), new GreaterThan(
-            integerType()), new GreaterThanOrEqual(integerType()), new Equal(integerType()), new NotEqual(integerType()), new If());
+      config.setFunctionSet(IntegerUtils.INTEGER_UTILS.getAdd(), IntegerUtils.INTEGER_UTILS.getSubtract(), IntegerUtils.INTEGER_UTILS.getMultiply(),
+            new LessThan(integerType()), new LessThanOrEqual(integerType()), new GreaterThan(integerType()), new GreaterThanOrEqual(integerType()), new Equal(
+                  integerType()), new NotEqual(integerType()), new If());
       FitnessFunction fitnessFunction = createIntegerTestDataFitnessFunction(createTests(variableTypes.length, a -> {
          int x = (int) a.get(0);
          int y = (int) a.get(1);

@@ -17,7 +17,7 @@ import org.oakgp.serialize.NodeWriter;
 final class ArithmeticExpressionSimplifier {
    private static boolean SANITY_CHECK = true;
 
-   private static final IntegerUtils integerUtils = new IntegerUtils();
+   private static final NumberUtils integerUtils = new IntegerUtils();
 
    /** Private constructor as all methods are static. */
    private ArithmeticExpressionSimplifier() {
@@ -54,7 +54,7 @@ final class ArithmeticExpressionSimplifier {
          Node tmp = combineWithChildNodes(secondArg, firstArg, isPos);
          if (tmp != null && isSubtract(function)) {
             // 3, (- (* 12 v2) 30) -> (- (* 12 v2) 33) -> (0 - (- (* 12 v2) 33))
-            return new FunctionNode(function, integerUtils.ZERO, tmp);
+            return new FunctionNode(function, integerUtils.zero(), tmp);
          } else {
             return tmp;
          }
@@ -92,12 +92,12 @@ final class ArithmeticExpressionSimplifier {
                   result = integerUtils.subtract(a.firstArg(), firstArg);
                }
                Node tmp = new FunctionNode(f, result, secondArg);
-               return new NodePair(integerUtils.ZERO, tmp);
+               return new NodePair(integerUtils.zero(), tmp);
             }
 
             Node tmp = combineWithChildNodes(nodeToRemove, nodeToWalk, isPos);
             if (tmp != null) {
-               return new NodePair(integerUtils.ZERO, tmp);
+               return new NodePair(integerUtils.zero(), tmp);
             }
          }
 
@@ -117,10 +117,10 @@ final class ArithmeticExpressionSimplifier {
                return new NodePair(new FunctionNode(f, firstArg, p.nodeThatHasBeenReduced), p.nodeThatHasBeenExpanded);
             }
          }
-      } else if (!integerUtils.ZERO.equals(nodeToWalk)) {
+      } else if (!integerUtils.isZero(nodeToWalk)) {
          Node tmp = combineWithChildNodes(nodeToRemove, nodeToWalk, isPos);
          if (tmp != null) {
-            return new NodePair(integerUtils.ZERO, tmp);
+            return new NodePair(integerUtils.zero(), tmp);
          }
       }
       return null;
@@ -222,7 +222,7 @@ final class ArithmeticExpressionSimplifier {
          if (isPos) {
             return multiplyByTwo(second);
          } else {
-            return integerUtils.ZERO;
+            return integerUtils.zero();
          }
       }
    }
@@ -316,14 +316,14 @@ final class ArithmeticExpressionSimplifier {
 
    static FunctionNode multiplyByTwo(Node arg) {
       // TODO don't create a new Multiply each time - reuse the same instance (and do the same for other functions)
-      return new FunctionNode(new Multiply(), integerUtils.TWO, arg);
+      return new FunctionNode(integerUtils.getMultiply(), integerUtils.two(), arg);
    }
 
    static Node negate(Node arg) {
       if (isConstant(arg)) {
          return integerUtils.negate(arg);
       } else {
-         return new FunctionNode(new Subtract(), integerUtils.ZERO, arg);
+         return new FunctionNode(integerUtils.getSubtract(), integerUtils.zero(), arg);
       }
    }
 

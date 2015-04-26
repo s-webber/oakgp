@@ -20,9 +20,7 @@ import org.oakgp.function.compare.GreaterThanOrEqual;
 import org.oakgp.function.compare.LessThan;
 import org.oakgp.function.compare.LessThanOrEqual;
 import org.oakgp.function.compare.NotEqual;
-import org.oakgp.function.math.Add;
-import org.oakgp.function.math.Multiply;
-import org.oakgp.function.math.Subtract;
+import org.oakgp.function.math.IntegerUtils;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.VariableNode;
 import org.oakgp.util.Random;
@@ -33,9 +31,9 @@ public class PrimitiveSetTest {
    private static final double VARIABLE_RATIO = .6;
    private static final ConstantNode[] CONSTANTS = { integerConstant(7), integerConstant(8), integerConstant(9) };
    private static final Type[] VARIABLE_TYPES = createTypeArray(3);
-   private static final Function[] FUNCTIONS = new Function[] { new Add(), new Subtract(), new Multiply(), new If(), new LessThan(integerType()),
-         new LessThanOrEqual(integerType()), new GreaterThan(integerType()), new GreaterThanOrEqual(integerType()), new Equal(integerType()),
-         new NotEqual(integerType()) };
+   private static final Function[] FUNCTIONS = new Function[] { IntegerUtils.INTEGER_UTILS.getAdd(), IntegerUtils.INTEGER_UTILS.getSubtract(),
+         IntegerUtils.INTEGER_UTILS.getMultiply(), new If(), new LessThan(integerType()), new LessThanOrEqual(integerType()), new GreaterThan(integerType()),
+         new GreaterThanOrEqual(integerType()), new Equal(integerType()), new NotEqual(integerType()) };
 
    @Test
    public void testNextFunction() {

@@ -5,12 +5,12 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.oakgp.TestUtils;
-import org.oakgp.function.math.Add;
+import org.oakgp.function.math.IntegerUtils;
 
 public class NodeTypeTest {
    private static final ConstantNode CONSTANT_NODE = TestUtils.integerConstant(7);
    private static final VariableNode VARIABLE_NODE = TestUtils.createVariable(1);
-   private static final FunctionNode FUNCTION_NODE = new FunctionNode(new Add(), CONSTANT_NODE, VARIABLE_NODE);
+   private static final FunctionNode FUNCTION_NODE = new FunctionNode(IntegerUtils.INTEGER_UTILS.getAdd(), CONSTANT_NODE, VARIABLE_NODE);
 
    @Test
    public void testIsConstant() {
