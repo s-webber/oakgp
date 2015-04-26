@@ -7,7 +7,6 @@ import static org.oakgp.NodeSimplifier.simplify;
 import static org.oakgp.TestUtils.integerConstant;
 import static org.oakgp.TestUtils.writeNode;
 import static org.oakgp.Type.booleanType;
-import static org.oakgp.Type.integerType;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -25,7 +24,8 @@ import org.oakgp.PrimitiveSet;
 import org.oakgp.PrimitiveSetImpl;
 import org.oakgp.RankedCandidate;
 import org.oakgp.Runner;
-import org.oakgp.Signature;
+import org.oakgp.TreeGenerator;
+import org.oakgp.TreeGeneratorImpl;
 import org.oakgp.Type;
 import org.oakgp.VariableSet;
 import org.oakgp.crossover.SubtreeCrossover;
@@ -35,7 +35,6 @@ import org.oakgp.fitness.FitnessFunctionGenerationProcessor;
 import org.oakgp.function.Function;
 import org.oakgp.mutate.PointMutation;
 import org.oakgp.node.ConstantNode;
-import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.selector.NodeSelectorFactory;
 import org.oakgp.selector.WeightedNodeSelectorFactory;
@@ -66,14 +65,15 @@ public class SystemTestConfig {
       requireNonNull(generationProcessor);
       requireNonNull(terminator);
 
-      Collection<Node> initialGeneration = createInitialGeneration(getPrimitiveSet(), GENERATION_SIZE, returnType);
+      TreeGenerator treeGenerator = TreeGeneratorImpl.grow(getPrimitiveSet(), RANDOM);
+      Collection<Node> initialGeneration = createInitialGeneration(treeGenerator, returnType, GENERATION_SIZE);
       RankedCandidate best = Runner.process(generationProcessor, getNodeEvolvers(), terminator, initialGeneration);
       System.out.println("Best: " + best);
       System.out.println(writeNode(simplify(best.getNode())));
    }
 
    private GenerationEvolver getNodeEvolvers() {
-      return new GenerationEvolver(ELITISM_SIZE, SELECTOR_FACTORY, createNodeEvolvers(getPrimitiveSet()));
+      return new GenerationEvolver(ELITISM_SIZE, SELECTOR_FACTORY, createNodeEvolvers(returnType, getPrimitiveSet()));
    }
 
    private PrimitiveSet getPrimitiveSet() {
@@ -87,44 +87,22 @@ public class SystemTestConfig {
       return primitiveSet;
    }
 
-   private static Map<NodeEvolver, Long> createNodeEvolvers(PrimitiveSet primitiveSet) {
+   private static Map<NodeEvolver, Long> createNodeEvolvers(Type returnType, PrimitiveSet primitiveSet) {
       Map<NodeEvolver, Long> nodeEvolvers = new HashMap<>();
-      nodeEvolvers.put(t -> makeRandomTree(primitiveSet, 4), 5L);
+      TreeGenerator treeGenerator = TreeGeneratorImpl.grow(primitiveSet, RANDOM);
+      nodeEvolvers.put(t -> treeGenerator.generate(returnType, 4), 5L);
       nodeEvolvers.put(new SubtreeCrossover(RANDOM), 21L);
       nodeEvolvers.put(new PointMutation(RANDOM, primitiveSet), 21L);
       return nodeEvolvers;
    }
 
-   private static Collection<Node> createInitialGeneration(PrimitiveSet primitiveSet, int size, Type type) {
+   private static Collection<Node> createInitialGeneration(TreeGenerator treeGenerator, Type type, int generationSize) {
       Set<Node> initialGeneration = new NodeSet();
-      for (int i = 0; i < size; i++) {
-         Node n = makeRandomTree(primitiveSet, 4, type);
-         if (n.getType() != type) {
-            throw new RuntimeException();
-         }
+      for (int i = 0; i < generationSize; i++) {
+         Node n = treeGenerator.generate(type, 4);
          initialGeneration.add(n);
       }
       return initialGeneration;
-   }
-
-   private static Node makeRandomTree(PrimitiveSet primitiveSet, int depth) {
-      return makeRandomTree(primitiveSet, depth, integerType());
-   }
-
-   private static Node makeRandomTree(PrimitiveSet primitiveSet, int depth, Type type) {
-      if (depth > 0 && RANDOM.nextDouble() < .5) {
-         Function function = primitiveSet.nextFunction(type);
-         Signature signature = function.getSignature();
-         Node[] args = new Node[signature.getArgumentTypesLength()];
-         for (int i = 0; i < args.length; i++) {
-            Type argType = signature.getArgumentType(i);
-            Node arg = makeRandomTree(primitiveSet, depth - 1, argType);
-            args[i] = arg;
-         }
-         return new FunctionNode(function, args);
-      } else {
-         return primitiveSet.nextTerminal(type);
-      }
    }
 
    public void setConstants(ConstantNode... constants) {

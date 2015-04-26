@@ -1,7 +1,7 @@
 package org.oakgp.mutate;
 
 import org.oakgp.NodeEvolver;
-import org.oakgp.Type;
+import org.oakgp.TreeGenerator;
 import org.oakgp.node.Node;
 import org.oakgp.selector.NodeSelector;
 import org.oakgp.util.Random;
@@ -23,9 +23,5 @@ public class SubTreeMutation implements NodeEvolver {
       return root.replaceAt(mutationPoint, node -> {
          return treeGenerator.generate(node.getType(), node.getDepth());
       });
-   }
-
-   public static interface TreeGenerator {
-      Node generate(Type type, int depth);
    }
 }
