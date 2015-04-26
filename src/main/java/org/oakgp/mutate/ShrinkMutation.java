@@ -7,7 +7,7 @@ import org.oakgp.node.NodeType;
 import org.oakgp.selector.NodeSelector;
 import org.oakgp.util.Random;
 
-public class ShrinkMutation implements NodeEvolver {
+public final class ShrinkMutation implements NodeEvolver {
    private final Random random;
    private final PrimitiveSet primitiveSet;
 

@@ -6,7 +6,7 @@ import org.oakgp.Signature;
 import org.oakgp.Type;
 import org.oakgp.function.Function;
 
-public class OrElse implements Function {
+public final class OrElse implements Function {
    private final Signature signature;
 
    public OrElse(Type type) {

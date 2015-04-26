@@ -4,7 +4,7 @@ import org.oakgp.Type;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
 
-class IntegerUtils {
+final class IntegerUtils {
    final ConstantNode ZERO = createConstant(0);
    final ConstantNode ONE = createConstant(1);
    final ConstantNode TWO = createConstant(2);

@@ -5,7 +5,7 @@ import org.oakgp.node.Node;
 import org.oakgp.selector.NodeSelector;
 import org.oakgp.util.Random;
 
-public class CommonRegionCrossover implements NodeEvolver {
+public final class CommonRegionCrossover implements NodeEvolver {
    private final Random random;
 
    public CommonRegionCrossover(Random random) {

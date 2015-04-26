@@ -7,7 +7,7 @@ import org.oakgp.node.Node;
 import org.oakgp.selector.NodeSelector;
 import org.oakgp.util.Random;
 
-public class HoistMutation implements NodeEvolver {
+public final class HoistMutation implements NodeEvolver {
    private final Random random;
 
    public HoistMutation(Random random) {

@@ -8,7 +8,7 @@ import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.util.Random;
 
-public class TreeGeneratorImpl implements TreeGenerator {
+public final class TreeGeneratorImpl implements TreeGenerator {
    private final PrimitiveSet primitiveSet;
    private final IntPredicate strategy;
 

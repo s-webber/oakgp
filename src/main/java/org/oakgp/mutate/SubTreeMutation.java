@@ -7,7 +7,7 @@ import org.oakgp.selector.NodeSelector;
 import org.oakgp.util.Random;
 import org.oakgp.util.Utils;
 
-public class SubTreeMutation implements NodeEvolver {
+public final class SubTreeMutation implements NodeEvolver {
    private final Random random;
    private final TreeGenerator treeGenerator;
 
