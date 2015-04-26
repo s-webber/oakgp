@@ -1,7 +1,5 @@
 package org.oakgp.function.math;
 
-import static org.oakgp.function.math.ArithmeticExpressionSimplifier.ZERO;
-import static org.oakgp.function.math.ArithmeticExpressionSimplifier.createConstant;
 import static org.oakgp.function.math.ArithmeticExpressionSimplifier.isAddOrSubtract;
 import static org.oakgp.function.math.ArithmeticExpressionSimplifier.multiplyByTwo;
 import static org.oakgp.node.NodeType.isConstant;
@@ -9,18 +7,25 @@ import static org.oakgp.node.NodeType.isFunction;
 import static org.oakgp.util.NodeComparator.NODE_COMPARATOR;
 
 import org.oakgp.Arguments;
+import org.oakgp.Type;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 
 /** Performs addition. */
-public final class Add extends ArithmeticOperator {
+public final class Add extends ArithmeticOperator<Integer> {
+   private final IntegerUtils integerUtils = new IntegerUtils();
+
+   public Add() {
+      super(Type.integerType());
+   }
+
    /**
     * Returns the result of adding the two elements of the specified arguments.
     *
     * @return the result of adding {@code arg1} and {@code arg2}
     */
    @Override
-   protected int evaluate(int arg1, int arg2) {
+   protected Integer evaluate(Integer arg1, Integer arg2) {
       return arg1 + arg2;
    }
 
@@ -33,22 +38,22 @@ public final class Add extends ArithmeticOperator {
          // as for addition the order of the arguments is not important, order arguments in a consistent way
          // e.g. (+ v1 1) -> (+ 1 v1)
          return new FunctionNode(this, arg2, arg1);
-      } else if (ZERO.equals(arg1)) {
+      } else if (integerUtils.ZERO.equals(arg1)) {
          // anything plus zero is itself
          // e.g. (+ 0 v0) -> v0
          return arg2;
-      } else if (ZERO.equals(arg2)) {
+      } else if (integerUtils.ZERO.equals(arg2)) {
          // should never get here to to earlier ordering of arguments
          throw new IllegalArgumentException("arg1 " + arg1 + " arg2 " + arg2);
       } else if (arg1.equals(arg2)) {
          // anything plus itself is equal to itself multiplied by two
          // e.g. (+ x x) -> (* 2 x)
          return multiplyByTwo(arg1);
-      } else if (isConstant(arg1) && ((int) arg1.evaluate(null)) < 0) {
+      } else if (isConstant(arg1) && integerUtils.isNegative(arg1)) {
          // convert addition of negative numbers to subtraction
          // e.g. (+ -3 x) -> (- x 3)
-         return new FunctionNode(new Subtract(), arg2, createConstant(-((int) arg1.evaluate(null))));
-      } else if (isConstant(arg2) && ((int) arg2.evaluate(null)) < 0) {
+         return new FunctionNode(new Subtract(), arg2, integerUtils.negate(arg1));
+      } else if (isConstant(arg2) && integerUtils.isNegative(arg2)) {
          // should never get here as, due to the earlier ordering of arguments,
          // the only time the second argument will be a constant is when the first argument is also a constant -
          // in which case it would of already been simplified to the result of the addition.
@@ -57,9 +62,7 @@ public final class Add extends ArithmeticOperator {
       } else if (isConstant(arg1) && isFunction(arg2)) {
          FunctionNode fn2 = (FunctionNode) arg2;
          if (isConstant(fn2.getArguments().firstArg()) && isAddOrSubtract(fn2.getFunction())) {
-            int i1 = (int) arg1.evaluate(null);
-            int i2 = (int) fn2.getArguments().firstArg().evaluate(null);
-            return new FunctionNode(fn2.getFunction(), createConstant(i1 + i2), fn2.getArguments().secondArg());
+            return new FunctionNode(fn2.getFunction(), integerUtils.add(arg1, fn2.getArguments().firstArg()), fn2.getArguments().secondArg());
          }
       }
 

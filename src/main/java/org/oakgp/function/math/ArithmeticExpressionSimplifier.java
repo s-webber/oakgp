@@ -1,6 +1,5 @@
 package org.oakgp.function.math;
 
-import static org.oakgp.Type.integerType;
 import static org.oakgp.node.NodeType.areFunctions;
 import static org.oakgp.node.NodeType.isConstant;
 import static org.oakgp.node.NodeType.isFunction;
@@ -18,9 +17,7 @@ import org.oakgp.serialize.NodeWriter;
 final class ArithmeticExpressionSimplifier {
    private static boolean SANITY_CHECK = true;
 
-   static final ConstantNode ZERO = createConstant(0);
-   static final ConstantNode ONE = createConstant(1);
-   static final ConstantNode TWO = createConstant(2);
+   private static final IntegerUtils integerUtils = new IntegerUtils();
 
    /** Private constructor as all methods are static. */
    private ArithmeticExpressionSimplifier() {
@@ -57,7 +54,7 @@ final class ArithmeticExpressionSimplifier {
          Node tmp = combineWithChildNodes(secondArg, firstArg, isPos);
          if (tmp != null && isSubtract(function)) {
             // 3, (- (* 12 v2) 30) -> (- (* 12 v2) 33) -> (0 - (- (* 12 v2) 33))
-            return new FunctionNode(function, ZERO, tmp);
+            return new FunctionNode(function, integerUtils.ZERO, tmp);
          } else {
             return tmp;
          }
@@ -88,21 +85,19 @@ final class ArithmeticExpressionSimplifier {
             FunctionNode x = (FunctionNode) nodeToRemove;
             Arguments a = x.getArguments();
             if (isMultiply(x) && isConstant(firstArg) && isConstant(a.firstArg()) && secondArg.equals(a.secondArg())) {
-               int i1 = (int) firstArg.evaluate(null);
-               int i2 = (int) a.firstArg().evaluate(null);
-               int result;
+               ConstantNode result;
                if (isPos) {
-                  result = i2 + i1;
+                  result = integerUtils.add(a.firstArg(), firstArg);
                } else {
-                  result = i2 - i1;
+                  result = integerUtils.subtract(a.firstArg(), firstArg);
                }
-               Node tmp = new FunctionNode(f, createConstant(result), secondArg);
-               return new NodePair(ZERO, tmp);
+               Node tmp = new FunctionNode(f, result, secondArg);
+               return new NodePair(integerUtils.ZERO, tmp);
             }
 
             Node tmp = combineWithChildNodes(nodeToRemove, nodeToWalk, isPos);
             if (tmp != null) {
-               return new NodePair(ZERO, tmp);
+               return new NodePair(integerUtils.ZERO, tmp);
             }
          }
 
@@ -122,10 +117,10 @@ final class ArithmeticExpressionSimplifier {
                return new NodePair(new FunctionNode(f, firstArg, p.nodeThatHasBeenReduced), p.nodeThatHasBeenExpanded);
             }
          }
-      } else if (!ZERO.equals(nodeToWalk)) {
+      } else if (!integerUtils.ZERO.equals(nodeToWalk)) {
          Node tmp = combineWithChildNodes(nodeToRemove, nodeToWalk, isPos);
          if (tmp != null) {
-            return new NodePair(ZERO, tmp);
+            return new NodePair(integerUtils.ZERO, tmp);
          }
       }
       return null;
@@ -178,7 +173,7 @@ final class ArithmeticExpressionSimplifier {
          }
       } else if (isMultiply(currentFunction) && isConstant(firstArg) && secondArg.equals(nodeToAdd)) {
          int inc = isPos ? 1 : -1;
-         return new FunctionNode(currentFunction, createConstant((int) ((ConstantNode) firstArg).evaluate(null) + inc), nodeToAdd);
+         return new FunctionNode(currentFunction, integerUtils.add(firstArg, inc), nodeToAdd);
       } else if (isMultiplyingTheSameValue(nodeToWalk, nodeToAdd)) {
          return combineMultipliers(nodeToWalk, nodeToAdd, isPos);
       }
@@ -218,18 +213,16 @@ final class ArithmeticExpressionSimplifier {
       sanityCheck(() -> assertSameClass(first, second));
 
       if (isConstant(second)) {
-         int currentNodeValue = (int) first.evaluate(null);
-         int nodeToReplaceValue = (int) second.evaluate(null);
          if (isPos) {
-            return createConstant(currentNodeValue + nodeToReplaceValue);
+            return integerUtils.add(first, second);
          } else {
-            return createConstant(currentNodeValue - nodeToReplaceValue);
+            return integerUtils.subtract(first, second);
          }
       } else {
          if (isPos) {
             return multiplyByTwo(second);
          } else {
-            return ZERO;
+            return integerUtils.ZERO;
          }
       }
    }
@@ -259,15 +252,13 @@ final class ArithmeticExpressionSimplifier {
    private static Node combineMultipliers(Node n1, Node n2, boolean isPos) {
       FunctionNode f1 = (FunctionNode) n1;
       FunctionNode f2 = (FunctionNode) n2;
-      int i1 = (int) f1.getArguments().firstArg().evaluate(null);
-      int i2 = (int) f2.getArguments().firstArg().evaluate(null);
-      int result;
+      ConstantNode result;
       if (isPos) {
-         result = i1 + i2;
+         result = integerUtils.add(f1.getArguments().firstArg(), f2.getArguments().firstArg());
       } else {
-         result = i1 - i2;
+         result = integerUtils.subtract(f1.getArguments().firstArg(), f2.getArguments().firstArg());
       }
-      return new FunctionNode(f1.getFunction(), createConstant(result), f1.getArguments().secondArg());
+      return new FunctionNode(f1.getFunction(), result, f1.getArguments().secondArg());
    }
 
    private static void sanityCheck(Runnable r) {
@@ -323,20 +314,16 @@ final class ArithmeticExpressionSimplifier {
       }
    }
 
-   static ConstantNode createConstant(int i) {
-      return new ConstantNode(i, integerType());
-   }
-
    static FunctionNode multiplyByTwo(Node arg) {
       // TODO don't create a new Multiply each time - reuse the same instance (and do the same for other functions)
-      return new FunctionNode(new Multiply(), TWO, arg);
+      return new FunctionNode(new Multiply(), integerUtils.TWO, arg);
    }
 
    static Node negate(Node arg) {
       if (isConstant(arg)) {
-         return createConstant(-(int) arg.evaluate(null));
+         return integerUtils.negate(arg);
       } else {
-         return new FunctionNode(new Subtract(), ZERO, arg);
+         return new FunctionNode(new Subtract(), integerUtils.ZERO, arg);
       }
    }
 

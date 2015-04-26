@@ -1,26 +1,29 @@
 package org.oakgp.function.math;
 
-import static org.oakgp.Type.integerType;
-
 import org.oakgp.Arguments;
 import org.oakgp.Assignments;
 import org.oakgp.Signature;
+import org.oakgp.Type;
 import org.oakgp.function.Function;
 
-abstract class ArithmeticOperator implements Function {
-   private static final Signature SIGNATURE = Signature.createSignature(integerType(), integerType(), integerType());
+abstract class ArithmeticOperator<T extends Number> implements Function {
+   private final Signature signature;
 
-   @Override
-   public final Object evaluate(Arguments arguments, Assignments assignments) {
-      int i1 = (int) arguments.firstArg().evaluate(assignments);
-      int i2 = (int) arguments.secondArg().evaluate(assignments);
-      return evaluate(i1, i2);
+   protected ArithmeticOperator(Type type) {
+      signature = Signature.createSignature(type, type, type);
    }
 
-   protected abstract int evaluate(int arg1, int arg2);
+   @Override
+   public final T evaluate(Arguments arguments, Assignments assignments) {
+      T n1 = arguments.firstArg().evaluate(assignments);
+      T n2 = arguments.secondArg().evaluate(assignments);
+      return evaluate(n1, n2);
+   }
+
+   protected abstract T evaluate(T arg1, T arg2);
 
    @Override
    public final Signature getSignature() {
-      return SIGNATURE;
+      return signature;
    }
 }

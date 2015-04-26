@@ -14,6 +14,7 @@ import java.util.List;
 
 import org.junit.Test;
 import org.oakgp.Signature;
+import org.oakgp.Type;
 import org.oakgp.function.Function;
 import org.oakgp.node.Node;
 
@@ -23,9 +24,9 @@ public class ArithmeticOperatorTest {
 
    @Test
    public void testGetSignature() {
-      Function f = new ArithmeticOperator() {
+      Function f = new ArithmeticOperator<Integer>(Type.integerType()) {
          @Override
-         protected int evaluate(int arg1, int arg2) {
+         protected Integer evaluate(Integer arg1, Integer arg2) {
             throw new UnsupportedOperationException();
          }
       };

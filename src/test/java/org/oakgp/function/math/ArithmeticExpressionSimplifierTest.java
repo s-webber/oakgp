@@ -3,13 +3,11 @@ package org.oakgp.function.math;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.oakgp.TestUtils.assertNodeEquals;
 import static org.oakgp.TestUtils.readFunctionNode;
 import static org.oakgp.TestUtils.readNode;
-import static org.oakgp.Type.integerType;
 
 import java.util.Optional;
 
@@ -17,28 +15,10 @@ import org.junit.Test;
 import org.oakgp.Arguments;
 import org.oakgp.Assignments;
 import org.oakgp.function.choice.If;
-import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 
 public class ArithmeticExpressionSimplifierTest {
-   @Test
-   public void testCreateConstant() {
-      assertCreateConstant(0);
-      assertCreateConstant(1);
-      assertCreateConstant(-1);
-      assertCreateConstant(7);
-      assertCreateConstant(-7);
-      assertCreateConstant(Integer.MAX_VALUE);
-      assertCreateConstant(Integer.MIN_VALUE);
-   }
-
-   private void assertCreateConstant(int value) {
-      ConstantNode n = ArithmeticExpressionSimplifier.createConstant(value);
-      assertEquals(value, (int) n.evaluate(null));
-      assertSame(integerType(), n.getType());
-   }
-
    @Test
    public void testMultiplyByTwo() {
       assertMultiplyByTwo("v0", "(* 2 v0)");
