@@ -34,7 +34,9 @@ interface NumberUtils {
       return add(n1, n2, null);
    }
 
-   ConstantNode add(Node n, int i);
+   ConstantNode increment(Node n);
+
+   ConstantNode decrement(Node n);
 
    ConstantNode subtract(Node n1, Node n2, Assignments assignments);
 

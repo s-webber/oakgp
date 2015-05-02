@@ -50,7 +50,7 @@ public class LongUtils implements NumberUtils {
 
    @Override
    public ConstantNode negate(Node n) {
-      return createConstant(-(long) n.evaluate(null));
+      return createConstant(-evaluate(n));
    }
 
    @Override
@@ -80,7 +80,7 @@ public class LongUtils implements NumberUtils {
 
    @Override
    public boolean isNegative(Node n) {
-      return ((int) n.evaluate(null)) < 0;
+      return evaluate(n) < 0;
    }
 
    @Override
@@ -91,8 +91,13 @@ public class LongUtils implements NumberUtils {
    }
 
    @Override
-   public ConstantNode add(Node n, int i) {
-      return createConstant((long) n.evaluate(null) + i);
+   public ConstantNode increment(Node n) {
+      return createConstant(evaluate(n) + 1);
+   }
+
+   @Override
+   public ConstantNode decrement(Node n) {
+      return createConstant(evaluate(n) - 1);
    }
 
    @Override
@@ -111,5 +116,9 @@ public class LongUtils implements NumberUtils {
 
    private ConstantNode createConstant(long i) {
       return new ConstantNode(i, TYPE);
+   }
+
+   private int evaluate(Node n) {
+      return n.evaluate(null);
    }
 }

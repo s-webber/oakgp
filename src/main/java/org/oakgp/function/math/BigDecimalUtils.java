@@ -95,11 +95,15 @@ public final class BigDecimalUtils implements NumberUtils {
    }
 
    @Override
-   public ConstantNode add(Node n, int i) {
+   public ConstantNode increment(Node n) {
       BigDecimal bd = n.evaluate(null);
-      // TODO having to do new BigDecimal(i) each time
-      // TODO replace this method with inc(Node) and dec(Node)
-      return createConstant(bd.add(new BigDecimal(i)));
+      return createConstant(bd.add(BigDecimal.ONE));
+   }
+
+   @Override
+   public ConstantNode decrement(Node n) {
+      BigDecimal bd = n.evaluate(null);
+      return createConstant(bd.subtract(BigDecimal.ONE));
    }
 
    @Override

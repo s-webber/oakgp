@@ -171,8 +171,13 @@ final class ArithmeticExpressionSimplifier {
             return new FunctionNode(currentFunction, firstArg, tmp);
          }
       } else if (isMultiply(currentFunction) && isConstant(firstArg) && secondArg.equals(nodeToAdd)) {
-         int inc = isPos ? 1 : -1;
-         return new FunctionNode(currentFunction, numberUtils.add(firstArg, inc), nodeToAdd);
+         ConstantNode multiplier;
+         if (isPos) {
+            multiplier = numberUtils.increment(firstArg);
+         } else {
+            multiplier = numberUtils.decrement(firstArg);
+         }
+         return new FunctionNode(currentFunction, multiplier, nodeToAdd);
       } else if (isMultiplyingTheSameValue(nodeToWalk, nodeToAdd)) {
          return combineMultipliers(nodeToWalk, nodeToAdd, isPos);
       }
