@@ -55,7 +55,7 @@ public final class Subtract extends ArithmeticOperator {
       } else if (isConstant(arg2) && numberUtils.isNegative(arg2)) {
          // convert double negatives to addition
          // e.g. (- x -1) -> (+ 1 x)
-         return new FunctionNode(numberUtils.getAdd(), simplifier.negate(arg2), arg1);
+         return new FunctionNode(numberUtils.getAdd(), numberUtils.negate(arg2), arg1);
       } else {
          if (isFunction(arg2)) {
             FunctionNode fn = (FunctionNode) arg2;
@@ -71,7 +71,7 @@ public final class Subtract extends ArithmeticOperator {
                }
             } else if (numberUtils.isZero(arg1) && isAdd(f)) {
                // (- 0 (+ v0 v1) -> (+ (0 - v0) (0 - v1))
-               return new FunctionNode(f, simplifier.negate(fnArg1), simplifier.negate(fnArg2));
+               return new FunctionNode(f, numberUtils.negate(fnArg1), numberUtils.negate(fnArg2));
             } else if (isConstant(arg1) && isConstant(fnArg1) && isSubtract(fn)) {
                if (numberUtils.isZero(arg1)) {
                   // added exception to confirm we never actually get here

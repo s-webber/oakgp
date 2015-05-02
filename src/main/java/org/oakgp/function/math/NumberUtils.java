@@ -1,8 +1,11 @@
 package org.oakgp.function.math;
 
+import static org.oakgp.node.NodeType.isConstant;
+
 import org.oakgp.Assignments;
 import org.oakgp.Type;
 import org.oakgp.node.ConstantNode;
+import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 
 interface NumberUtils {
@@ -51,4 +54,12 @@ interface NumberUtils {
    }
 
    ConstantNode negateConstant(Node n);
+
+   default Node negate(Node arg) {
+      if (isConstant(arg)) {
+         return negateConstant(arg);
+      } else {
+         return new FunctionNode(getSubtract(), zero(), arg);
+      }
+   }
 }

@@ -100,19 +100,6 @@ public class ArithmeticExpressionSimplifierTest {
    }
 
    @Test
-   public void testNegate() {
-      assertNegate("1", "-1");
-      assertNegate("-1", "1");
-      assertNegate("(+ v0 v1)", "(- 0 (+ v0 v1))");
-   }
-
-   private void assertNegate(String before, String after) {
-      Node input = readNode(before);
-      Node output = readNode(after);
-      assertEquals(output, SIMPLIFIER.negate(input));
-   }
-
-   @Test
    public void testCombineWithChildNodes() {
       // constants
       assertCombineWithChildNodes("3", "7", true, "10");

@@ -322,14 +322,6 @@ final class ArithmeticExpressionSimplifier {
       return new FunctionNode(numberUtils.getMultiply(), numberUtils.two(), arg);
    }
 
-   Node negate(Node arg) {
-      if (isConstant(arg)) {
-         return numberUtils.negateConstant(arg);
-      } else {
-         return new FunctionNode(numberUtils.getSubtract(), numberUtils.zero(), arg);
-      }
-   }
-
    static boolean isAddOrSubtract(Function f) {
       return isAdd(f) || isSubtract(f);
    }
