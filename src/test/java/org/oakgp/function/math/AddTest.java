@@ -14,12 +14,21 @@ public class AddTest extends AbstractFunctionTest {
 
    @Override
    protected void getEvaluateTests(EvaluateTestCases testCases) {
+      // int
       testCases.put("(+ 3 21)", 24);
       testCases.put("(+ 2147483647 1)", -2147483648);
 
+      // long
+      testCases.put("(+ 3L 21L)", 24L);
+      testCases.put("(+ 2147483647L 1L)", 2147483648L);
+      testCases.put("(+ 9223372036854775807L 1L)", -9223372036854775808L);
+
+      // BigDecimal
+      testCases.put("(+ 3D 21D)", new BigDecimal("24"));
+      testCases.put("(+ 2147483647D 1D)", new BigDecimal("2147483648"));
+      testCases.put("(+ 9223372036854775807D 1D)", new BigDecimal("9223372036854775808"));
       testCases.put("(+ 7.5D -0.025D)", new BigDecimal("7.475"));
       testCases.put("(+ 1.7976931348623157E308D 1D)", BigDecimal.valueOf(Double.MAX_VALUE).add(BigDecimal.ONE));
-      testCases.put("(+ 2147483647D 1D)", new BigDecimal("2147483648"));
    }
 
    @Override
@@ -94,6 +103,6 @@ public class AddTest extends AbstractFunctionTest {
    @Override
    protected Function[] getFunctionSet() {
       return new Function[] { getFunction(), IntegerUtils.INTEGER_UTILS.getMultiply(), BigDecimalUtils.BIG_DECIMAL_UTILS.getAdd(),
-            BigDecimalUtils.BIG_DECIMAL_UTILS.getMultiply() };
+            BigDecimalUtils.BIG_DECIMAL_UTILS.getMultiply(), LongUtils.LONG_UTILS.getAdd(), LongUtils.LONG_UTILS.getMultiply() };
    }
 }
