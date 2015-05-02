@@ -17,15 +17,14 @@ import org.oakgp.serialize.NodeWriter;
 final class ArithmeticExpressionSimplifier {
    private static boolean SANITY_CHECK = true;
 
-   private static final NumberUtils integerUtils = IntegerUtils.INTEGER_UTILS;
+   private final NumberUtils numberUtils;
 
-   /** Private constructor as all methods are static. */
-   private ArithmeticExpressionSimplifier() {
-      // do nothing
+   ArithmeticExpressionSimplifier(NumberUtils numberUtils) {
+      this.numberUtils = numberUtils;
    }
 
    /** @return {@code null} if it was not possible to simplify the expression. */
-   static Node simplify(Function function, Node firstArg, Node secondArg) {
+   Node simplify(Function function, Node firstArg, Node secondArg) {
       sanityCheck(() -> {
          assertAddOrSubtract(function);
          assertArgumentsOrdered(function, firstArg, secondArg);
@@ -36,7 +35,7 @@ final class ArithmeticExpressionSimplifier {
       return simplifiedVersion;
    }
 
-   private static Node getSimplifiedVersion(Function function, Node firstArg, Node secondArg) {
+   private Node getSimplifiedVersion(Function function, Node firstArg, Node secondArg) {
       boolean isPos = isAdd(function);
       if (areFunctions(firstArg, secondArg)) {
          NodePair p = removeFromChildNodes(firstArg, secondArg, isPos);
@@ -54,7 +53,7 @@ final class ArithmeticExpressionSimplifier {
          Node tmp = combineWithChildNodes(secondArg, firstArg, isPos);
          if (tmp != null && isSubtract(function)) {
             // 3, (- (* 12 v2) 30) -> (- (* 12 v2) 33) -> (0 - (- (* 12 v2) 33))
-            return new FunctionNode(function, integerUtils.zero(), tmp);
+            return new FunctionNode(function, numberUtils.zero(), tmp);
          } else {
             return tmp;
          }
@@ -75,7 +74,7 @@ final class ArithmeticExpressionSimplifier {
     *           {@code nodeToAdd} should be added to {@code nodeToWalk}
     * @return {@code null} if it was not possible to remove (@code nodeToRemove} from {@code nodeToWalk}
     */
-   private static NodePair removeFromChildNodes(final Node nodeToWalk, final Node nodeToRemove, final boolean isPos) {
+   private NodePair removeFromChildNodes(final Node nodeToWalk, final Node nodeToRemove, final boolean isPos) {
       if (isFunction(nodeToWalk)) {
          FunctionNode fn = (FunctionNode) nodeToWalk;
          Function f = fn.getFunction();
@@ -87,17 +86,17 @@ final class ArithmeticExpressionSimplifier {
             if (isMultiply(x) && isConstant(firstArg) && isConstant(a.firstArg()) && secondArg.equals(a.secondArg())) {
                ConstantNode result;
                if (isPos) {
-                  result = integerUtils.add(a.firstArg(), firstArg);
+                  result = numberUtils.add(a.firstArg(), firstArg);
                } else {
-                  result = integerUtils.subtract(a.firstArg(), firstArg);
+                  result = numberUtils.subtract(a.firstArg(), firstArg);
                }
                Node tmp = new FunctionNode(f, result, secondArg);
-               return new NodePair(integerUtils.zero(), tmp);
+               return new NodePair(numberUtils.zero(), tmp);
             }
 
             Node tmp = combineWithChildNodes(nodeToRemove, nodeToWalk, isPos);
             if (tmp != null) {
-               return new NodePair(integerUtils.zero(), tmp);
+               return new NodePair(numberUtils.zero(), tmp);
             }
          }
 
@@ -117,10 +116,10 @@ final class ArithmeticExpressionSimplifier {
                return new NodePair(new FunctionNode(f, firstArg, p.nodeThatHasBeenReduced), p.nodeThatHasBeenExpanded);
             }
          }
-      } else if (!integerUtils.isZero(nodeToWalk)) {
+      } else if (!numberUtils.isZero(nodeToWalk)) {
          Node tmp = combineWithChildNodes(nodeToRemove, nodeToWalk, isPos);
          if (tmp != null) {
-            return new NodePair(integerUtils.zero(), tmp);
+            return new NodePair(numberUtils.zero(), tmp);
          }
       }
       return null;
@@ -138,7 +137,7 @@ final class ArithmeticExpressionSimplifier {
     *           should be subtracted from {@code nodeToWalk}
     * @return {@code null} if it was not possible to merge (@code nodeToAdd} into {@code nodeToWalk}
     */
-   static Node combineWithChildNodes(final Node nodeToWalk, final Node nodeToAdd, final boolean isPos) {
+   Node combineWithChildNodes(final Node nodeToWalk, final Node nodeToAdd, final boolean isPos) {
       if (isSuitableForCombining(nodeToWalk, nodeToAdd)) {
          // TODO is it OK to instead just do nodeToWalk.equals(nodeToAdd)) {
          return combine(nodeToWalk, nodeToAdd, isPos);
@@ -173,7 +172,7 @@ final class ArithmeticExpressionSimplifier {
          }
       } else if (isMultiply(currentFunction) && isConstant(firstArg) && secondArg.equals(nodeToAdd)) {
          int inc = isPos ? 1 : -1;
-         return new FunctionNode(currentFunction, integerUtils.add(firstArg, inc), nodeToAdd);
+         return new FunctionNode(currentFunction, numberUtils.add(firstArg, inc), nodeToAdd);
       } else if (isMultiplyingTheSameValue(nodeToWalk, nodeToAdd)) {
          return combineMultipliers(nodeToWalk, nodeToAdd, isPos);
       }
@@ -209,20 +208,20 @@ final class ArithmeticExpressionSimplifier {
     *           {@code true} to indicate that {@code second} should be added to {@code first}, else {@code false} to indicate that {@code second} should be
     *           subtracted from {@code first}
     */
-   private static Node combine(Node first, Node second, boolean isPos) {
+   private Node combine(Node first, Node second, boolean isPos) {
       sanityCheck(() -> assertSameClass(first, second));
 
       if (isConstant(second)) {
          if (isPos) {
-            return integerUtils.add(first, second);
+            return numberUtils.add(first, second);
          } else {
-            return integerUtils.subtract(first, second);
+            return numberUtils.subtract(first, second);
          }
       } else {
          if (isPos) {
             return multiplyByTwo(second);
          } else {
-            return integerUtils.zero();
+            return numberUtils.zero();
          }
       }
    }
@@ -249,14 +248,14 @@ final class ArithmeticExpressionSimplifier {
    }
 
    /** e.g. arguments: {@code (* 3 v0), (* 7 v0)} would produce: {@code (* 10 v0)} */
-   private static Node combineMultipliers(Node n1, Node n2, boolean isPos) {
+   private Node combineMultipliers(Node n1, Node n2, boolean isPos) {
       FunctionNode f1 = (FunctionNode) n1;
       FunctionNode f2 = (FunctionNode) n2;
       ConstantNode result;
       if (isPos) {
-         result = integerUtils.add(f1.getArguments().firstArg(), f2.getArguments().firstArg());
+         result = numberUtils.add(f1.getArguments().firstArg(), f2.getArguments().firstArg());
       } else {
-         result = integerUtils.subtract(f1.getArguments().firstArg(), f2.getArguments().firstArg());
+         result = numberUtils.subtract(f1.getArguments().firstArg(), f2.getArguments().firstArg());
       }
       return new FunctionNode(f1.getFunction(), result, f1.getArguments().secondArg());
    }
@@ -314,16 +313,15 @@ final class ArithmeticExpressionSimplifier {
       }
    }
 
-   static FunctionNode multiplyByTwo(Node arg) {
-      // TODO don't create a new Multiply each time - reuse the same instance (and do the same for other functions)
-      return new FunctionNode(integerUtils.getMultiply(), integerUtils.two(), arg);
+   FunctionNode multiplyByTwo(Node arg) {
+      return new FunctionNode(numberUtils.getMultiply(), numberUtils.two(), arg);
    }
 
-   static Node negate(Node arg) {
+   Node negate(Node arg) {
       if (isConstant(arg)) {
-         return integerUtils.negate(arg);
+         return numberUtils.negate(arg);
       } else {
-         return new FunctionNode(integerUtils.getSubtract(), integerUtils.zero(), arg);
+         return new FunctionNode(numberUtils.getSubtract(), numberUtils.zero(), arg);
       }
    }
 

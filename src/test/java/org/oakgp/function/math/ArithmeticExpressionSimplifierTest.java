@@ -19,6 +19,8 @@ import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 
 public class ArithmeticExpressionSimplifierTest {
+   private static final ArithmeticExpressionSimplifier SIMPLIFIER = IntegerUtils.INTEGER_UTILS.getSimplifier();
+
    @Test
    public void testMultiplyByTwo() {
       assertMultiplyByTwo("v0", "(* 2 v0)");
@@ -28,7 +30,7 @@ public class ArithmeticExpressionSimplifierTest {
    private void assertMultiplyByTwo(String before, String after) {
       Node input = readNode(before);
       Node output = readNode(after);
-      assertEquals(output, ArithmeticExpressionSimplifier.multiplyByTwo(input));
+      assertEquals(output, SIMPLIFIER.multiplyByTwo(input));
    }
 
    @Test
@@ -107,7 +109,7 @@ public class ArithmeticExpressionSimplifierTest {
    private void assertNegate(String before, String after) {
       Node input = readNode(before);
       Node output = readNode(after);
-      assertEquals(output, ArithmeticExpressionSimplifier.negate(input));
+      assertEquals(output, SIMPLIFIER.negate(input));
    }
 
    @Test
@@ -161,13 +163,13 @@ public class ArithmeticExpressionSimplifierTest {
    }
 
    private void assertCombineWithChildNodes(String first, String second, boolean isPos, String expected) {
-      Node result = ArithmeticExpressionSimplifier.combineWithChildNodes(readNode(first), readNode(second), isPos);
+      Node result = SIMPLIFIER.combineWithChildNodes(readNode(first), readNode(second), isPos);
       assertNodeEquals(expected, result);
    }
 
    private void assertCannotCombineWithChildNodes(String first, String second) {
-      assertNull(ArithmeticExpressionSimplifier.combineWithChildNodes(readNode(first), readNode(second), true));
-      assertNull(ArithmeticExpressionSimplifier.combineWithChildNodes(readNode(first), readNode(second), false));
+      assertNull(SIMPLIFIER.combineWithChildNodes(readNode(first), readNode(second), true));
+      assertNull(SIMPLIFIER.combineWithChildNodes(readNode(first), readNode(second), false));
    }
 
    @Test
@@ -228,7 +230,7 @@ public class ArithmeticExpressionSimplifierTest {
    }
 
    private Optional<Node> simplify(FunctionNode in, Arguments args) {
-      return Optional.ofNullable(ArithmeticExpressionSimplifier.simplify(in.getFunction(), args.firstArg(), args.secondArg()));
+      return Optional.ofNullable(SIMPLIFIER.simplify(in.getFunction(), args.firstArg(), args.secondArg()));
    }
 
    @Test

@@ -1,7 +1,6 @@
 package org.oakgp.function.math;
 
 import static org.oakgp.function.math.ArithmeticExpressionSimplifier.isAddOrSubtract;
-import static org.oakgp.function.math.ArithmeticExpressionSimplifier.multiplyByTwo;
 import static org.oakgp.node.NodeType.isConstant;
 import static org.oakgp.node.NodeType.isFunction;
 import static org.oakgp.util.NodeComparator.NODE_COMPARATOR;
@@ -14,10 +13,12 @@ import org.oakgp.node.Node;
 /** Performs addition. */
 public final class Add extends ArithmeticOperator {
    private final NumberUtils numberUtils;
+   private final ArithmeticExpressionSimplifier simplifier;
 
    Add(NumberUtils numberUtils) {
       super(numberUtils.getType());
       this.numberUtils = numberUtils;
+      this.simplifier = numberUtils.getSimplifier();
    }
 
    /**
@@ -49,7 +50,7 @@ public final class Add extends ArithmeticOperator {
       } else if (arg1.equals(arg2)) {
          // anything plus itself is equal to itself multiplied by two
          // e.g. (+ x x) -> (* 2 x)
-         return multiplyByTwo(arg1);
+         return simplifier.multiplyByTwo(arg1);
       } else if (isConstant(arg1) && numberUtils.isNegative(arg1)) {
          // convert addition of negative numbers to subtraction
          // e.g. (+ -3 x) -> (- x 3)
@@ -67,7 +68,7 @@ public final class Add extends ArithmeticOperator {
          }
       }
 
-      return ArithmeticExpressionSimplifier.simplify(this, arg1, arg2);
+      return simplifier.simplify(this, arg1, arg2);
    }
 
    @Override

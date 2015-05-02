@@ -8,8 +8,11 @@ import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
 
 public final class BigDecimalUtils implements NumberUtils {
+   private static final Type TYPE = Type.bigDecimalType();
+
    public static final BigDecimalUtils BIG_DECIMAL_UTILS = new BigDecimalUtils();
 
+   private final ArithmeticExpressionSimplifier simplifier = new ArithmeticExpressionSimplifier(this);
    private final ConstantNode zero = createConstant(BigDecimal.ZERO);
    private final ConstantNode one = createConstant(BigDecimal.ONE);
    private final ConstantNode two = createConstant(BigDecimal.valueOf(2));
@@ -24,7 +27,12 @@ public final class BigDecimalUtils implements NumberUtils {
 
    @Override
    public Type getType() {
-      return Type.bigDecimalType();
+      return TYPE;
+   }
+
+   @Override
+   public ArithmeticExpressionSimplifier getSimplifier() {
+      return simplifier;
    }
 
    @Override
@@ -109,6 +117,6 @@ public final class BigDecimalUtils implements NumberUtils {
    }
 
    private ConstantNode createConstant(BigDecimal bd) {
-      return new ConstantNode(bd, Type.bigDecimalType());
+      return new ConstantNode(bd, TYPE);
    }
 }

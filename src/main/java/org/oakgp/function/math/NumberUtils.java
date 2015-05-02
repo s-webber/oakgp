@@ -8,6 +8,8 @@ import org.oakgp.node.Node;
 interface NumberUtils {
    Type getType();
 
+   ArithmeticExpressionSimplifier getSimplifier();
+
    Add getAdd();
 
    Subtract getSubtract();

@@ -3,7 +3,6 @@ package org.oakgp.function.math;
 import static org.oakgp.function.math.ArithmeticExpressionSimplifier.isAdd;
 import static org.oakgp.function.math.ArithmeticExpressionSimplifier.isMultiply;
 import static org.oakgp.function.math.ArithmeticExpressionSimplifier.isSubtract;
-import static org.oakgp.function.math.ArithmeticExpressionSimplifier.negate;
 import static org.oakgp.node.NodeType.isConstant;
 import static org.oakgp.node.NodeType.isFunction;
 
@@ -16,10 +15,12 @@ import org.oakgp.node.Node;
 /** Performs subtraction. */
 public final class Subtract extends ArithmeticOperator {
    private final NumberUtils numberUtils;
+   private final ArithmeticExpressionSimplifier simplifier;
 
    Subtract(NumberUtils numberUtils) {
       super(numberUtils.getType());
       this.numberUtils = numberUtils;
+      this.simplifier = numberUtils.getSimplifier();
    }
 
    /**
@@ -54,7 +55,7 @@ public final class Subtract extends ArithmeticOperator {
       } else if (isConstant(arg2) && numberUtils.isNegative(arg2)) {
          // convert double negatives to addition
          // e.g. (- x -1) -> (+ 1 x)
-         return new FunctionNode(numberUtils.getAdd(), negate(arg2), arg1);
+         return new FunctionNode(numberUtils.getAdd(), simplifier.negate(arg2), arg1);
       } else {
          if (isFunction(arg2)) {
             FunctionNode fn = (FunctionNode) arg2;
@@ -70,7 +71,7 @@ public final class Subtract extends ArithmeticOperator {
                }
             } else if (numberUtils.isZero(arg1) && isAdd(f)) {
                // (- 0 (+ v0 v1) -> (+ (0 - v0) (0 - v1))
-               return new FunctionNode(f, negate(fnArg1), negate(fnArg2));
+               return new FunctionNode(f, simplifier.negate(fnArg1), simplifier.negate(fnArg2));
             } else if (isConstant(arg1) && isConstant(fnArg1) && isSubtract(fn)) {
                if (numberUtils.isZero(arg1)) {
                   // added exception to confirm we never actually get here
@@ -87,7 +88,7 @@ public final class Subtract extends ArithmeticOperator {
             }
          }
 
-         return ArithmeticExpressionSimplifier.simplify(this, arg1, arg2);
+         return simplifier.simplify(this, arg1, arg2);
       }
    }
 

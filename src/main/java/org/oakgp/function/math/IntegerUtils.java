@@ -6,14 +6,17 @@ import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
 
 public final class IntegerUtils implements NumberUtils {
+   private static final Type TYPE = Type.integerType();
+
    public static final IntegerUtils INTEGER_UTILS = new IntegerUtils();
 
-   private final ConstantNode zero = createConstant(0);
-   private final ConstantNode one = createConstant(1);
-   private final ConstantNode two = createConstant(2);
+   private final ArithmeticExpressionSimplifier simplifier = new ArithmeticExpressionSimplifier(this);
    private final Add add = new Add(this);
    private final Subtract subtract = new Subtract(this);
    private final Multiply multiply = new Multiply(this);
+   private final ConstantNode zero = createConstant(0);
+   private final ConstantNode one = createConstant(1);
+   private final ConstantNode two = createConstant(2);
 
    /** @see #INTEGER_UTILS */
    private IntegerUtils() {
@@ -22,7 +25,12 @@ public final class IntegerUtils implements NumberUtils {
 
    @Override
    public Type getType() {
-      return Type.integerType();
+      return TYPE;
+   }
+
+   @Override
+   public ArithmeticExpressionSimplifier getSimplifier() {
+      return simplifier;
    }
 
    @Override
@@ -102,6 +110,6 @@ public final class IntegerUtils implements NumberUtils {
    }
 
    private ConstantNode createConstant(int i) {
-      return new ConstantNode(i, Type.integerType());
+      return new ConstantNode(i, TYPE);
    }
 }
