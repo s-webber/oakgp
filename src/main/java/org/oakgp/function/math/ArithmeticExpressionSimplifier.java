@@ -322,10 +322,6 @@ final class ArithmeticExpressionSimplifier {
       return isAdd(f) || isSubtract(f);
    }
 
-   static boolean isAdd(FunctionNode n) {
-      return isAdd(n.getFunction());
-   }
-
    static boolean isAdd(Function f) {
       return isFunctionOfType(f, Add.class);
    }

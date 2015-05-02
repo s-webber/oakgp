@@ -33,7 +33,6 @@ public class ArithmeticExpressionSimplifierTest {
    private void assertIsAdd(String input, boolean expectedResult) {
       Node n = readNode(input);
       if (n instanceof FunctionNode) {
-         assertEquals(expectedResult, ArithmeticExpressionSimplifier.isAdd((FunctionNode) n));
          assertEquals(expectedResult, ArithmeticExpressionSimplifier.isAdd(((FunctionNode) n).getFunction()));
       } else {
          assertFalse(expectedResult);
