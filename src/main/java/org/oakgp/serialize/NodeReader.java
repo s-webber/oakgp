@@ -4,6 +4,7 @@ import static org.oakgp.Arguments.createArguments;
 import static org.oakgp.Type.arrayType;
 import static org.oakgp.Type.bigDecimalType;
 import static org.oakgp.Type.integerType;
+import static org.oakgp.Type.longType;
 import static org.oakgp.Type.stringType;
 
 import java.io.BufferedReader;
@@ -138,6 +139,8 @@ public final class NodeReader implements Closeable {
             case 'D':
                // TODO find way of not calling new BigDecimal(String) each time (reuse ZERO, ONE, etc)
                return new ConstantNode(new BigDecimal(token.substring(0, token.length() - 1)), bigDecimalType());
+            case 'L':
+               return new ConstantNode(Long.valueOf(token.substring(0, token.length() - 1)), longType());
             default:
                return new ConstantNode(Integer.parseInt(token), integerType());
             }

@@ -46,6 +46,12 @@ public class NodeReaderTest {
    }
 
    @Test
+   public void testLong() {
+      assertParseLiteral("147L", 147L);
+      assertParseLiteral("9223372036854775807L", Long.MAX_VALUE);
+   }
+
+   @Test
    public void testBigDecimal() {
       assertParseLiteral("42.5D", new BigDecimal("42.5"));
       assertParseLiteral("1.7976931348623157E308D", BigDecimal.valueOf(Double.MAX_VALUE));
