@@ -28,6 +28,10 @@ public final class Type implements Comparable<Type> {
       return type("integer");
    }
 
+   public static Type longType() {
+      return type("long");
+   }
+
    public static Type bigDecimalType() {
       return type("BigDecimal");
    }

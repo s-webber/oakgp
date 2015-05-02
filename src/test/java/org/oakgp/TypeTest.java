@@ -22,6 +22,11 @@ public class TypeTest {
    }
 
    @Test
+   public void testLong() {
+      assertType("long", Type::longType);
+   }
+
+   @Test
    public void testBigDecimal() {
       assertType("BigDecimal", Type::bigDecimalType);
    }
