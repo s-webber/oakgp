@@ -19,4 +19,16 @@ public class NumberUtilsTest {
       Node output = readNode(after);
       assertEquals(output, IntegerUtils.INTEGER_UTILS.negate(input));
    }
+
+   @Test
+   public void testMultiplyByTwo() {
+      assertMultiplyByTwo("v0", "(* 2 v0)");
+      assertMultiplyByTwo("(+ v0 v1)", "(* 2 (+ v0 v1))");
+   }
+
+   private void assertMultiplyByTwo(String before, String after) {
+      Node input = readNode(before);
+      Node output = readNode(after);
+      assertEquals(output, IntegerUtils.INTEGER_UTILS.multiplyByTwo(input));
+   }
 }

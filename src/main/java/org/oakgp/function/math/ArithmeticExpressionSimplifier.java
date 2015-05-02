@@ -224,7 +224,7 @@ final class ArithmeticExpressionSimplifier {
          }
       } else {
          if (isPos) {
-            return multiplyByTwo(second);
+            return numberUtils.multiplyByTwo(second);
          } else {
             return numberUtils.zero();
          }
@@ -316,10 +316,6 @@ final class ArithmeticExpressionSimplifier {
          NodeWriter writer = new NodeWriter();
          throw new IllegalArgumentException(writer.writeNode(first) + " = " + firstResult + " " + writer.writeNode(second) + " = " + secondResult);
       }
-   }
-
-   FunctionNode multiplyByTwo(Node arg) {
-      return new FunctionNode(numberUtils.getMultiply(), numberUtils.two(), arg);
    }
 
    static boolean isAddOrSubtract(Function f) {

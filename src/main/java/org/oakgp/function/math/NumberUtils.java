@@ -62,4 +62,8 @@ interface NumberUtils {
          return new FunctionNode(getSubtract(), zero(), arg);
       }
    }
+
+   default FunctionNode multiplyByTwo(Node arg) {
+      return new FunctionNode(getMultiply(), two(), arg);
+   }
 }

@@ -22,18 +22,6 @@ public class ArithmeticExpressionSimplifierTest {
    private static final ArithmeticExpressionSimplifier SIMPLIFIER = IntegerUtils.INTEGER_UTILS.getSimplifier();
 
    @Test
-   public void testMultiplyByTwo() {
-      assertMultiplyByTwo("v0", "(* 2 v0)");
-      assertMultiplyByTwo("(+ v0 v1)", "(* 2 (+ v0 v1))");
-   }
-
-   private void assertMultiplyByTwo(String before, String after) {
-      Node input = readNode(before);
-      Node output = readNode(after);
-      assertEquals(output, SIMPLIFIER.multiplyByTwo(input));
-   }
-
-   @Test
    public void testIsAdd() {
       assertIsAdd("(+ 1 2)", true);
       assertIsAdd("(- 1 2)", false);

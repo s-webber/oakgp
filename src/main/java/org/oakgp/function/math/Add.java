@@ -50,7 +50,7 @@ public final class Add extends ArithmeticOperator {
       } else if (arg1.equals(arg2)) {
          // anything plus itself is equal to itself multiplied by two
          // e.g. (+ x x) -> (* 2 x)
-         return simplifier.multiplyByTwo(arg1);
+         return numberUtils.multiplyByTwo(arg1);
       } else if (isConstant(arg1) && numberUtils.isNegative(arg1)) {
          // convert addition of negative numbers to subtraction
          // e.g. (+ -3 x) -> (- x 3)
