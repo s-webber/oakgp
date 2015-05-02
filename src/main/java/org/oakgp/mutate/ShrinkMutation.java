@@ -6,6 +6,7 @@ import org.oakgp.node.Node;
 import org.oakgp.node.NodeType;
 import org.oakgp.selector.NodeSelector;
 import org.oakgp.util.Random;
+import org.oakgp.util.Utils;
 
 public final class ShrinkMutation implements NodeEvolver {
    private final Random random;
@@ -29,8 +30,7 @@ public final class ShrinkMutation implements NodeEvolver {
          // that only has terminal nodes as arguments
          return primitiveSet.nextAlternativeTerminal(root);
       } else {
-         // Note: -1 to avoid selecting root node TODO move selectMutationPoint method
-         int index = random.nextInt(nodeCount - 1);
+         int index = Utils.selectSubNodeIndex(random, nodeCount);
          return root.replaceAt(index, (n) -> primitiveSet.nextAlternativeTerminal(n), NodeType::isFunction);
       }
    }

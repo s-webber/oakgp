@@ -60,13 +60,19 @@ public class UtilsTest {
    private void assertSelectSubNodeIndex(String input, int expectedNodeCount, int expectedIndex) {
       Node tree = readNode(input);
       assertEquals(expectedNodeCount, tree.getNodeCount());
-      int actual = Utils.selectSubNodeIndex(tree, nextInt(expectedNodeCount - 1).returns(expectedIndex));
+      int actual = Utils.selectSubNodeIndex(nextInt(expectedNodeCount - 1).returns(expectedIndex), tree);
       assertEquals(expectedIndex, actual);
    }
 
    @Test
    public void testSelectSubNodeIndexTerminalNode() {
       ConstantNode terminal = integerConstant(1);
-      assertEquals(0, Utils.selectSubNodeIndex(terminal, DummyRandom.EMPTY));
+      assertEquals(0, Utils.selectSubNodeIndex(DummyRandom.EMPTY, terminal));
+   }
+
+   @Test
+   public void testSelectSubNodeIndex() {
+      int expected = 2;
+      assertEquals(expected, Utils.selectSubNodeIndex(nextInt(4).returns(expected), 5));
    }
 }

@@ -21,7 +21,7 @@ public final class SubtreeCrossover implements NodeEvolver {
    public Node evolve(NodeSelector selector) {
       Node parent1 = selector.next();
       Node parent2 = selector.next();
-      int to = Utils.selectSubNodeIndex(parent1, random);
+      int to = Utils.selectSubNodeIndex(random, parent1);
       return parent1.replaceAt(to, t -> {
          Type toType = t.getType();
          Predicate<Node> treeWalkerStrategy = n -> n.getType() == toType;

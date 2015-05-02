@@ -6,6 +6,7 @@ import org.oakgp.NodeEvolver;
 import org.oakgp.node.Node;
 import org.oakgp.selector.NodeSelector;
 import org.oakgp.util.Random;
+import org.oakgp.util.Utils;
 
 public final class HoistMutation implements NodeEvolver {
    private final Random random;
@@ -24,8 +25,7 @@ public final class HoistMutation implements NodeEvolver {
          // as the root node is the root node itself
          return root;
       } else {
-         // Note: -1 to avoid selecting root node TODO move selectMutationPoint method
-         int index = random.nextInt(nodeCount - 1);
+         int index = Utils.selectSubNodeIndex(random, nodeCount);
          return root.getAt(index, treeWalkerStrategy);
       }
    }

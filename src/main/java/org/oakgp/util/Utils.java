@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-import java.util.function.Predicate;
 
 import org.oakgp.Type;
 import org.oakgp.node.ConstantNode;
@@ -54,25 +53,18 @@ public final class Utils {
       }
    }
 
-   public static int selectSubNodeIndex(Node tree, Random random) {
+   public static int selectSubNodeIndex(Random random, Node tree) {
       int nodeCount = tree.getNodeCount();
       if (nodeCount == 1) {
          // will get here if and only if 'tree' is a terminal (i.e. variable or constant) rather than a function node
          return 0;
       } else {
-         // Note: -1 to avoid selecting root node
-         return random.nextInt(nodeCount - 1);
+         return selectSubNodeIndex(random, nodeCount);
       }
    }
 
-   public static int selectSubNodeIndex(Node tree, Random random, Predicate<Node> treeWalkerStrategy) {
-      int nodeCount = tree.getNodeCount(treeWalkerStrategy);
-      // TODO what if nodeCount==0
-      if (nodeCount == 1) {
-         return 0;
-      } else {
-         // Note: -1 to avoid selecting root node
-         return random.nextInt(nodeCount - 1);
-      }
+   public static int selectSubNodeIndex(Random random, int nodeCount) {
+      // Note: -1 to avoid selecting root node
+      return random.nextInt(nodeCount - 1);
    }
 }

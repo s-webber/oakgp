@@ -19,7 +19,7 @@ public final class SubTreeMutation implements NodeEvolver {
    @Override
    public Node evolve(NodeSelector selector) {
       Node root = selector.next();
-      int mutationPoint = Utils.selectSubNodeIndex(root, random);
+      int mutationPoint = Utils.selectSubNodeIndex(random, root);
       return root.replaceAt(mutationPoint, node -> {
          return treeGenerator.generate(node.getType(), node.getDepth());
       });
