@@ -324,7 +324,7 @@ final class ArithmeticExpressionSimplifier {
 
    Node negate(Node arg) {
       if (isConstant(arg)) {
-         return numberUtils.negate(arg);
+         return numberUtils.negateConstant(arg);
       } else {
          return new FunctionNode(numberUtils.getSubtract(), numberUtils.zero(), arg);
       }

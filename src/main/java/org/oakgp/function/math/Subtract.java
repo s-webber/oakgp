@@ -65,9 +65,9 @@ public final class Subtract extends ArithmeticOperator {
             Node fnArg2 = args.secondArg();
             if (isConstant(fnArg1) && isMultiply(f)) {
                if (numberUtils.isZero(arg1)) {
-                  return new FunctionNode(f, numberUtils.negate(fnArg1), fnArg2);
+                  return new FunctionNode(f, numberUtils.negateConstant(fnArg1), fnArg2);
                } else if (numberUtils.isNegative(fnArg1)) {
-                  return new FunctionNode(numberUtils.getAdd(), arg1, new FunctionNode(f, numberUtils.negate(fnArg1), fnArg2));
+                  return new FunctionNode(numberUtils.getAdd(), arg1, new FunctionNode(f, numberUtils.negateConstant(fnArg1), fnArg2));
                }
             } else if (numberUtils.isZero(arg1) && isAdd(f)) {
                // (- 0 (+ v0 v1) -> (+ (0 - v0) (0 - v1))

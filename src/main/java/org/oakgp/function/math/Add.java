@@ -54,7 +54,7 @@ public final class Add extends ArithmeticOperator {
       } else if (isConstant(arg1) && numberUtils.isNegative(arg1)) {
          // convert addition of negative numbers to subtraction
          // e.g. (+ -3 x) -> (- x 3)
-         return new FunctionNode(numberUtils.getSubtract(), arg2, numberUtils.negate(arg1));
+         return new FunctionNode(numberUtils.getSubtract(), arg2, numberUtils.negateConstant(arg1));
       } else if (isConstant(arg2) && numberUtils.isNegative(arg2)) {
          // should never get here as, due to the earlier ordering of arguments,
          // the only time the second argument will be a constant is when the first argument is also a constant -

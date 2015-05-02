@@ -51,7 +51,7 @@ public final class BigDecimalUtils implements NumberUtils {
    }
 
    @Override
-   public ConstantNode negate(Node n) {
+   public ConstantNode negateConstant(Node n) {
       BigDecimal bd = n.evaluate(null);
       return createConstant(bd.negate());
    }

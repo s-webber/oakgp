@@ -49,7 +49,7 @@ public class LongUtils implements NumberUtils {
    }
 
    @Override
-   public ConstantNode negate(Node n) {
+   public ConstantNode negateConstant(Node n) {
       return createConstant(-evaluate(n));
    }
 

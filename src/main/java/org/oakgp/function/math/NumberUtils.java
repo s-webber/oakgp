@@ -50,5 +50,5 @@ interface NumberUtils {
       return multiply(n1, n2, null);
    }
 
-   ConstantNode negate(Node n);
+   ConstantNode negateConstant(Node n);
 }
