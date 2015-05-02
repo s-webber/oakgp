@@ -36,7 +36,7 @@ final class ArithmeticExpressionSimplifier {
    }
 
    private Node getSimplifiedVersion(Function function, Node firstArg, Node secondArg) {
-      boolean isPos = isAdd(function);
+      boolean isPos = numberUtils.isAdd(function);
       if (areFunctions(firstArg, secondArg)) {
          NodePair p = removeFromChildNodes(firstArg, secondArg, isPos);
          if (p != null) {
@@ -51,7 +51,7 @@ final class ArithmeticExpressionSimplifier {
       } else if (isFunction(secondArg)) {
          // 3, (+ (* 12 v2) 30) -> (+ (* 12 v2) 33)
          Node tmp = combineWithChildNodes(secondArg, firstArg, isPos);
-         if (tmp != null && isSubtract(function)) {
+         if (tmp != null && numberUtils.isSubtract(function)) {
             // 3, (- (* 12 v2) 30) -> (- (* 12 v2) 33) -> (0 - (- (* 12 v2) 33))
             return new FunctionNode(function, numberUtils.zero(), tmp);
          } else {
@@ -80,10 +80,10 @@ final class ArithmeticExpressionSimplifier {
          Function f = fn.getFunction();
          Node firstArg = fn.getArguments().firstArg();
          Node secondArg = fn.getArguments().secondArg();
-         if (isMultiply(f) && isFunction(nodeToRemove)) {
+         if (numberUtils.isMultiply(f) && isFunction(nodeToRemove)) {
             FunctionNode x = (FunctionNode) nodeToRemove;
             Arguments a = x.getArguments();
-            if (isMultiply(x) && isConstant(firstArg) && isConstant(a.firstArg()) && secondArg.equals(a.secondArg())) {
+            if (numberUtils.isMultiply(x) && isConstant(firstArg) && isConstant(a.firstArg()) && secondArg.equals(a.secondArg())) {
                ConstantNode result;
                if (isPos) {
                   result = numberUtils.add(a.firstArg(), firstArg);
@@ -100,8 +100,8 @@ final class ArithmeticExpressionSimplifier {
             }
          }
 
-         boolean isSubtract = isSubtract(f);
-         if (isAdd(f) || isSubtract) {
+         boolean isSubtract = numberUtils.isSubtract(f);
+         if (numberUtils.isAdd(f) || isSubtract) {
             NodePair p = removeFromChildNodes(firstArg, nodeToRemove, isPos);
             if (p != null) {
                NodePair p2 = removeFromChildNodes(secondArg, p.nodeThatHasBeenExpanded, isSubtract ? !isPos : isPos);
@@ -150,8 +150,8 @@ final class ArithmeticExpressionSimplifier {
       Node firstArg = currentFunctionNode.getArguments().firstArg();
       Node secondArg = currentFunctionNode.getArguments().secondArg();
       Function currentFunction = currentFunctionNode.getFunction();
-      boolean isAdd = isAdd(currentFunction);
-      boolean isSubtract = isSubtract(currentFunction);
+      boolean isAdd = numberUtils.isAdd(currentFunction);
+      boolean isSubtract = numberUtils.isSubtract(currentFunction);
       if (isAdd || isSubtract) {
          boolean recursiveIsPos = isPos;
          if (isSubtract) {
@@ -170,7 +170,7 @@ final class ArithmeticExpressionSimplifier {
          if (tmp != null) {
             return new FunctionNode(currentFunction, firstArg, tmp);
          }
-      } else if (isMultiply(currentFunction) && isConstant(firstArg) && secondArg.equals(nodeToAdd)) {
+      } else if (numberUtils.isMultiply(currentFunction) && isConstant(firstArg) && secondArg.equals(nodeToAdd)) {
          ConstantNode multiplier;
          if (isPos) {
             multiplier = numberUtils.increment(firstArg);
@@ -240,11 +240,11 @@ final class ArithmeticExpressionSimplifier {
     * Examples of arguments that would return false: {@code (* 3 v0), (+ 7 v0)} or {@code (* 1 v0), (* -8 v1)}
     * </p>
     */
-   private static boolean isMultiplyingTheSameValue(Node n1, Node n2) {
+   private boolean isMultiplyingTheSameValue(Node n1, Node n2) {
       if (areFunctions(n1, n2)) {
          FunctionNode f1 = (FunctionNode) n1;
          FunctionNode f2 = (FunctionNode) n2;
-         if (isMultiply(f1) && isMultiply(f2) && isConstant(f1.getArguments().firstArg()) && isConstant(f2.getArguments().firstArg())
+         if (numberUtils.isMultiply(f1) && numberUtils.isMultiply(f2) && isConstant(f1.getArguments().firstArg()) && isConstant(f2.getArguments().firstArg())
                && f1.getArguments().secondArg().equals(f2.getArguments().secondArg())) {
             return true;
          }
@@ -272,14 +272,14 @@ final class ArithmeticExpressionSimplifier {
       }
    }
 
-   private static void assertAddOrSubtract(Function f) {
-      if (!isAddOrSubtract(f)) {
+   private void assertAddOrSubtract(Function f) {
+      if (!numberUtils.isAddOrSubtract(f)) {
          throw new IllegalArgumentException(f.getClass().getName());
       }
    }
 
-   private static void assertArgumentsOrdered(Function f, Node firstArg, Node secondArg) {
-      if (!isSubtract(f) && NODE_COMPARATOR.compare(firstArg, secondArg) > 0) {
+   private void assertArgumentsOrdered(Function f, Node firstArg, Node secondArg) {
+      if (!numberUtils.isSubtract(f) && NODE_COMPARATOR.compare(firstArg, secondArg) > 0) {
          throw new IllegalArgumentException("arg1 " + firstArg + " arg2 " + secondArg);
       }
    }
@@ -316,38 +316,6 @@ final class ArithmeticExpressionSimplifier {
          NodeWriter writer = new NodeWriter();
          throw new IllegalArgumentException(writer.writeNode(first) + " = " + firstResult + " " + writer.writeNode(second) + " = " + secondResult);
       }
-   }
-
-   static boolean isAddOrSubtract(Function f) {
-      return isAdd(f) || isSubtract(f);
-   }
-
-   static boolean isAdd(Function f) {
-      return isFunctionOfType(f, Add.class);
-   }
-
-   static boolean isSubtract(Node n) {
-      return isFunction(n) && isSubtract((FunctionNode) n);
-   }
-
-   static boolean isSubtract(FunctionNode n) {
-      return isSubtract(n.getFunction());
-   }
-
-   static boolean isSubtract(Function f) {
-      return isFunctionOfType(f, Subtract.class);
-   }
-
-   static boolean isMultiply(FunctionNode n) {
-      return isMultiply(n.getFunction());
-   }
-
-   static boolean isMultiply(Function f) {
-      return isFunctionOfType(f, Multiply.class);
-   }
-
-   private static boolean isFunctionOfType(Function f, Class<? extends Function> functionClass) {
-      return f.getClass() == functionClass;
    }
 
    private static class NodePair {

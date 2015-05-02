@@ -1,9 +1,7 @@
 package org.oakgp.function.math;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.oakgp.TestUtils.assertNodeEquals;
 import static org.oakgp.TestUtils.readFunctionNode;
@@ -14,77 +12,11 @@ import java.util.Optional;
 import org.junit.Test;
 import org.oakgp.Arguments;
 import org.oakgp.Assignments;
-import org.oakgp.function.choice.If;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 
 public class ArithmeticExpressionSimplifierTest {
    private static final ArithmeticExpressionSimplifier SIMPLIFIER = IntegerUtils.INTEGER_UTILS.getSimplifier();
-
-   @Test
-   public void testIsAdd() {
-      assertIsAdd("(+ 1 2)", true);
-      assertIsAdd("(- 1 2)", false);
-      assertIsAdd("(* 1 2)", false);
-      assertIsAdd("1", false);
-      assertIsAdd("true", false);
-   }
-
-   private void assertIsAdd(String input, boolean expectedResult) {
-      Node n = readNode(input);
-      if (n instanceof FunctionNode) {
-         assertEquals(expectedResult, ArithmeticExpressionSimplifier.isAdd(((FunctionNode) n).getFunction()));
-      } else {
-         assertFalse(expectedResult);
-      }
-   }
-
-   @Test
-   public void testIsSubtract() {
-      assertIsSubtract("(- 1 2)", true);
-      assertIsSubtract("(+ 1 2)", false);
-      assertIsSubtract("(* 1 2)", false);
-      assertIsSubtract("1", false);
-      assertIsSubtract("true", false);
-   }
-
-   private void assertIsSubtract(String input, boolean expectedResult) {
-      Node n = readNode(input);
-      assertEquals(expectedResult, ArithmeticExpressionSimplifier.isSubtract(n));
-      if (n instanceof FunctionNode) {
-         assertEquals(expectedResult, ArithmeticExpressionSimplifier.isSubtract((FunctionNode) n));
-         assertEquals(expectedResult, ArithmeticExpressionSimplifier.isSubtract(((FunctionNode) n).getFunction()));
-      } else {
-         assertFalse(expectedResult);
-      }
-   }
-
-   @Test
-   public void testIsMultiply() {
-      assertIsMultiply("(* 1 2)", true);
-      assertIsMultiply("(+ 1 2)", false);
-      assertIsMultiply("(- 1 2)", false);
-      assertIsMultiply("1", false);
-      assertIsMultiply("true", false);
-   }
-
-   private void assertIsMultiply(String input, boolean expectedResult) {
-      Node n = readNode(input);
-      if (n instanceof FunctionNode) {
-         assertEquals(expectedResult, ArithmeticExpressionSimplifier.isMultiply((FunctionNode) n));
-         assertEquals(expectedResult, ArithmeticExpressionSimplifier.isMultiply(((FunctionNode) n).getFunction()));
-      } else {
-         assertFalse(expectedResult);
-      }
-   }
-
-   @Test
-   public void testIsAddOrSubtract() {
-      assertTrue(ArithmeticExpressionSimplifier.isAddOrSubtract(IntegerUtils.INTEGER_UTILS.getAdd()));
-      assertTrue(ArithmeticExpressionSimplifier.isAddOrSubtract(IntegerUtils.INTEGER_UTILS.getSubtract()));
-      assertFalse(ArithmeticExpressionSimplifier.isAddOrSubtract(IntegerUtils.INTEGER_UTILS.getMultiply()));
-      assertFalse(ArithmeticExpressionSimplifier.isAddOrSubtract(new If()));
-   }
 
    @Test
    public void testCombineWithChildNodes() {

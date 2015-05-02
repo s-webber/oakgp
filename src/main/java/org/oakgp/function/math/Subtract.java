@@ -1,8 +1,5 @@
 package org.oakgp.function.math;
 
-import static org.oakgp.function.math.ArithmeticExpressionSimplifier.isAdd;
-import static org.oakgp.function.math.ArithmeticExpressionSimplifier.isMultiply;
-import static org.oakgp.function.math.ArithmeticExpressionSimplifier.isSubtract;
 import static org.oakgp.node.NodeType.isConstant;
 import static org.oakgp.node.NodeType.isFunction;
 
@@ -46,7 +43,7 @@ public final class Subtract extends ArithmeticOperator {
          // anything minus zero is itself
          // e.g. (- x 0) -> x
          return arg1;
-      } else if (numberUtils.isZero(arg1) && isSubtract(arg2)) {
+      } else if (numberUtils.isZero(arg1) && numberUtils.isSubtract(arg2)) {
          // simplify "zero minus ?" expressions
          // e.g. (- 0 (- x y) -> (- y x)
          FunctionNode fn2 = (FunctionNode) arg2;
@@ -63,16 +60,16 @@ public final class Subtract extends ArithmeticOperator {
             Arguments args = fn.getArguments();
             Node fnArg1 = args.firstArg();
             Node fnArg2 = args.secondArg();
-            if (isConstant(fnArg1) && isMultiply(f)) {
+            if (isConstant(fnArg1) && numberUtils.isMultiply(f)) {
                if (numberUtils.isZero(arg1)) {
                   return new FunctionNode(f, numberUtils.negateConstant(fnArg1), fnArg2);
                } else if (numberUtils.isNegative(fnArg1)) {
                   return new FunctionNode(numberUtils.getAdd(), arg1, new FunctionNode(f, numberUtils.negateConstant(fnArg1), fnArg2));
                }
-            } else if (numberUtils.isZero(arg1) && isAdd(f)) {
+            } else if (numberUtils.isZero(arg1) && numberUtils.isAdd(f)) {
                // (- 0 (+ v0 v1) -> (+ (0 - v0) (0 - v1))
                return new FunctionNode(f, numberUtils.negate(fnArg1), numberUtils.negate(fnArg2));
-            } else if (isConstant(arg1) && isConstant(fnArg1) && isSubtract(fn)) {
+            } else if (isConstant(arg1) && isConstant(fnArg1) && numberUtils.isSubtract(fn)) {
                if (numberUtils.isZero(arg1)) {
                   // added exception to confirm we never actually get here
                   throw new IllegalArgumentException();

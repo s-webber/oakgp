@@ -1,6 +1,5 @@
 package org.oakgp.function.math;
 
-import static org.oakgp.function.math.ArithmeticExpressionSimplifier.isAddOrSubtract;
 import static org.oakgp.node.NodeType.isConstant;
 import static org.oakgp.node.NodeType.isFunction;
 import static org.oakgp.util.NodeComparator.NODE_COMPARATOR;
@@ -63,7 +62,7 @@ public final class Add extends ArithmeticOperator {
          throw new IllegalArgumentException("arg1 " + arg1 + " arg2 " + arg2);
       } else if (isConstant(arg1) && isFunction(arg2)) {
          FunctionNode fn2 = (FunctionNode) arg2;
-         if (isConstant(fn2.getArguments().firstArg()) && isAddOrSubtract(fn2.getFunction())) {
+         if (isConstant(fn2.getArguments().firstArg()) && numberUtils.isAddOrSubtract(fn2.getFunction())) {
             return new FunctionNode(fn2.getFunction(), numberUtils.add(arg1, fn2.getArguments().firstArg()), fn2.getArguments().secondArg());
          }
       }

@@ -1,7 +1,5 @@
 package org.oakgp.function.math;
 
-import static org.oakgp.function.math.ArithmeticExpressionSimplifier.isAddOrSubtract;
-import static org.oakgp.function.math.ArithmeticExpressionSimplifier.isMultiply;
 import static org.oakgp.node.NodeType.isConstant;
 import static org.oakgp.node.NodeType.isFunction;
 import static org.oakgp.util.NodeComparator.NODE_COMPARATOR;
@@ -62,14 +60,14 @@ public final class Multiply extends ArithmeticOperator {
             Node fnArg1 = args.firstArg();
             Node fnArg2 = args.secondArg();
             if (isConstant(fnArg1)) {
-               if (isAddOrSubtract(f)) {
+               if (numberUtils.isAddOrSubtract(f)) {
                   return new FunctionNode(f, numberUtils.multiply(arg1, fnArg1), new FunctionNode(this, arg1, fnArg2));
-               } else if (isMultiply(f)) {
+               } else if (numberUtils.isMultiply(f)) {
                   return new FunctionNode(this, numberUtils.multiply(arg1, fnArg1), fnArg2);
                } else {
                   throw new IllegalArgumentException();
                }
-            } else if (isAddOrSubtract(f)) {
+            } else if (numberUtils.isAddOrSubtract(f)) {
                return new FunctionNode(f, new FunctionNode(this, arg1, fnArg1), new FunctionNode(this, arg1, fnArg2));
             }
          }
