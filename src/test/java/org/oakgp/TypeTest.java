@@ -22,6 +22,11 @@ public class TypeTest {
    }
 
    @Test
+   public void testBigDecimal() {
+      assertType("BigDecimal", Type::bigDecimalType);
+   }
+
+   @Test
    public void testBoolean() {
       assertType("boolean", Type::booleanType);
    }
