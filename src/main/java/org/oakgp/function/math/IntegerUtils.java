@@ -15,6 +15,11 @@ public final class IntegerUtils implements NumberUtils {
    private final Subtract subtract = new Subtract(this);
    private final Multiply multiply = new Multiply(this);
 
+   /** @see #INTEGER_UTILS */
+   private IntegerUtils() {
+      // do nothing
+   }
+
    @Override
    public Type getType() {
       return Type.integerType();

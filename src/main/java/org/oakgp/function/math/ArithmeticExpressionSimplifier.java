@@ -17,7 +17,7 @@ import org.oakgp.serialize.NodeWriter;
 final class ArithmeticExpressionSimplifier {
    private static boolean SANITY_CHECK = true;
 
-   private static final NumberUtils integerUtils = new IntegerUtils();
+   private static final NumberUtils integerUtils = IntegerUtils.INTEGER_UTILS;
 
    /** Private constructor as all methods are static. */
    private ArithmeticExpressionSimplifier() {
