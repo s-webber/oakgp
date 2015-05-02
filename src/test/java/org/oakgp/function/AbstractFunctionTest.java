@@ -48,6 +48,7 @@ public abstract class AbstractFunctionTest {
       assertFalse(testCases.tests.isEmpty());
       for (SimplifyTest test : testCases.tests) {
          FunctionNode input = test.input;
+         // TODO use version of readNode that accepts function and variable set
          Node expectedResult = readNode(test.expectedOutput);
          Node actualResult = simplify(input);
          assertEquals(writeNode(expectedResult), writeNode(actualResult));
