@@ -2,6 +2,7 @@ package org.oakgp.serialize;
 
 import static org.oakgp.Arguments.createArguments;
 import static org.oakgp.Type.arrayType;
+import static org.oakgp.Type.bigDecimalType;
 import static org.oakgp.Type.integerType;
 import static org.oakgp.Type.stringType;
 
@@ -9,6 +10,7 @@ import java.io.BufferedReader;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.StringReader;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -131,7 +133,14 @@ public final class NodeReader implements Closeable {
          return Utils.FALSE_NODE;
       default:
          if (isNumber(token)) {
-            return new ConstantNode(Integer.parseInt(token), integerType());
+            char suffix = token.charAt(token.length() - 1);
+            switch (suffix) {
+            case 'D':
+               // TODO find way of not calling new BigDecimal(String) each time (reuse ZERO, ONE, etc)
+               return new ConstantNode(new BigDecimal(token.substring(0, token.length() - 1)), bigDecimalType());
+            default:
+               return new ConstantNode(Integer.parseInt(token), integerType());
+            }
          } else {
             Function function = functionSet.getFunction(token);
             return new ConstantNode(function, getFunctionType(function));

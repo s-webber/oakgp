@@ -10,6 +10,7 @@ import static org.oakgp.TestUtils.readNodes;
 import static org.oakgp.Type.integerToBooleanFunctionType;
 import static org.oakgp.Type.integerType;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.junit.Test;
@@ -42,6 +43,12 @@ public class NodeReaderTest {
    @Test
    public void testMulipleCharacterConstantNode() {
       assertParseLiteral(147);
+   }
+
+   @Test
+   public void testBigDecimal() {
+      assertParseLiteral("42.5D", new BigDecimal("42.5"));
+      assertParseLiteral("1.7976931348623157E308D", BigDecimal.valueOf(Double.MAX_VALUE));
    }
 
    @Test
@@ -192,7 +199,8 @@ public class NodeReaderTest {
       Node output = readNode(input);
       assertSame(ConstantNode.class, output.getClass());
       assertEquals(expected.toString(), output.toString());
-      assertEquals(expected, ((ConstantNode) output).evaluate(null));
+      assertSame(expected.getClass(), output.evaluate(null).getClass());
+      assertEquals(expected, output.evaluate(null));
    }
 
    private void assertParseFunction(String input, Class<? extends Function> expected) {
