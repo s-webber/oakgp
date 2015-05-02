@@ -1,5 +1,6 @@
 package org.oakgp.function.math;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.oakgp.function.AbstractFunctionTest;
@@ -14,6 +15,11 @@ public class AddTest extends AbstractFunctionTest {
    @Override
    protected void getEvaluateTests(EvaluateTestCases testCases) {
       testCases.put("(+ 3 21)", 24);
+      testCases.put("(+ 2147483647 1)", -2147483648);
+
+      testCases.put("(+ 7.5D -0.025D)", new BigDecimal("7.475"));
+      testCases.put("(+ 1.7976931348623157E308D 1D)", BigDecimal.valueOf(Double.MAX_VALUE).add(BigDecimal.ONE));
+      testCases.put("(+ 2147483647D 1D)", new BigDecimal("2147483648"));
    }
 
    @Override
@@ -87,6 +93,7 @@ public class AddTest extends AbstractFunctionTest {
 
    @Override
    protected Function[] getFunctionSet() {
-      return new Function[] { getFunction(), IntegerUtils.INTEGER_UTILS.getMultiply() };
+      return new Function[] { getFunction(), IntegerUtils.INTEGER_UTILS.getMultiply(), BigDecimalUtils.BIG_DECIMAL_UTILS.getAdd(),
+            BigDecimalUtils.BIG_DECIMAL_UTILS.getMultiply() };
    }
 }
