@@ -90,7 +90,7 @@ public class DummyRandom implements Random {
       }
 
       public Builder setDoubles(Double... doubles) {
-         if (doubles != null) {
+         if (this.doubles != null) {
             throw new IllegalStateException();
          }
          this.doubles = new DummyValuesQueue<Double>(doubles);
@@ -98,7 +98,7 @@ public class DummyRandom implements Random {
       }
 
       public Builder setBooleans(Boolean... booleans) {
-         if (booleans != null) {
+         if (this.booleans != null) {
             throw new IllegalStateException();
          }
          this.booleans = new DummyValuesQueue<Boolean>(booleans);
