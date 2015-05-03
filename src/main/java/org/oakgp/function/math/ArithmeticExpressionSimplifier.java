@@ -15,7 +15,7 @@ import org.oakgp.node.Node;
 import org.oakgp.serialize.NodeWriter;
 
 final class ArithmeticExpressionSimplifier {
-   private static boolean SANITY_CHECK = true;
+   private static final boolean SANITY_CHECK = true;
 
    private final NumberUtils numberUtils;
 
