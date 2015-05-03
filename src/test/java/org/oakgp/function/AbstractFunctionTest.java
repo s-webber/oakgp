@@ -49,7 +49,7 @@ public abstract class AbstractFunctionTest {
       for (SimplifyTest test : testCases.tests) {
          FunctionNode input = test.input;
          // TODO use version of readNode that accepts function and variable set
-         Node expectedResult = readNode(test.expectedOutput);
+         Node expectedResult = test.expectedOutput;
          Node actualResult = simplify(input);
          assertEquals(writeNode(expectedResult), writeNode(actualResult));
          assertEquals(expectedResult, actualResult);
@@ -184,6 +184,10 @@ public abstract class AbstractFunctionTest {
          put(input, expectedOutput, new Object[0][0]);
       }
 
+      public void put(FunctionNode input, Node expectedOutput) {
+         put(input, expectedOutput, new Object[0][0]);
+      }
+
       public void put(String input, String expectedOutput) {
          put(input, expectedOutput, new Object[0][0]);
       }
@@ -197,16 +201,20 @@ public abstract class AbstractFunctionTest {
       }
 
       public void put(FunctionNode input, String expectedOutput, Object[][] assignedValues) {
+         put(input, readNode(expectedOutput), assignedValues);
+      }
+
+      public void put(FunctionNode input, Node expectedOutput, Object[][] assignedValues) {
          tests.add(new SimplifyTest(input, expectedOutput, assignedValues));
       }
    }
 
    private static class SimplifyTest {
       final FunctionNode input;
-      final String expectedOutput;
+      final Node expectedOutput;
       final Object[][] assignedValues;
 
-      SimplifyTest(FunctionNode input, String expectedOutput, Object[][] assignedValues) {
+      SimplifyTest(FunctionNode input, Node expectedOutput, Object[][] assignedValues) {
          this.input = input;
          this.expectedOutput = expectedOutput;
          this.assignedValues = assignedValues;
