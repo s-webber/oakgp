@@ -19,7 +19,6 @@ import org.junit.Test;
 import org.oakgp.Arguments;
 import org.oakgp.Assignments;
 import org.oakgp.function.Function;
-import org.oakgp.function.math.Add;
 import org.oakgp.function.math.IntegerUtils;
 
 public class FunctionNodeTest {
@@ -116,7 +115,7 @@ public class FunctionNodeTest {
       VariableNode v1 = createVariable(1);
       VariableNode v2 = createVariable(2);
       ConstantNode c1 = integerConstant(0);
-      Add f = IntegerUtils.INTEGER_UTILS.getAdd();
+      Function f = IntegerUtils.INTEGER_UTILS.getAdd();
       FunctionNode branch1 = new FunctionNode(f, v0, c1);
       FunctionNode branch2 = new FunctionNode(f, v2, v1);
       FunctionNode tree = new FunctionNode(f, branch1, branch2);

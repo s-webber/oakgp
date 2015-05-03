@@ -32,30 +32,27 @@ import org.oakgp.function.compare.LessThanOrEqual;
 import org.oakgp.function.compare.NotEqual;
 import org.oakgp.function.hof.Filter;
 import org.oakgp.function.hof.Reduce;
-import org.oakgp.function.math.Add;
 import org.oakgp.function.math.IntegerUtils;
-import org.oakgp.function.math.Multiply;
-import org.oakgp.function.math.Subtract;
 
 public class FunctionSetTest {
    private static final List<Type> TWO_INTEGERS = Collections.unmodifiableList(Arrays.asList(integerType(), integerType()));
-   private static final Add ADD = IntegerUtils.INTEGER_UTILS.getAdd();
-   private static final Subtract SUBTRACT = IntegerUtils.INTEGER_UTILS.getSubtract();
-   private static final Multiply MULTIPLY = IntegerUtils.INTEGER_UTILS.getMultiply();
+   private static final Function ADD = IntegerUtils.INTEGER_UTILS.getAdd();
+   private static final Function SUBTRACT = IntegerUtils.INTEGER_UTILS.getSubtract();
+   private static final Function MULTIPLY = IntegerUtils.INTEGER_UTILS.getMultiply();
 
    @Test
    public void testGetFunctionBySymbol() {
       FunctionSet functionSet = createFunctionSet();
-      assertSame(Add.class, functionSet.getFunction("+", TWO_INTEGERS).getClass());
-      assertSame(Subtract.class, functionSet.getFunction("-", TWO_INTEGERS).getClass());
-      assertSame(Multiply.class, functionSet.getFunction("*", TWO_INTEGERS).getClass());
+      assertSame(ADD, functionSet.getFunction("+", TWO_INTEGERS));
+      assertSame(SUBTRACT, functionSet.getFunction("-", TWO_INTEGERS));
+      assertSame(MULTIPLY, functionSet.getFunction("*", TWO_INTEGERS));
    }
 
    @Test
    public void testGetFunctionByClassName() {
       FunctionSet functionSet = createFunctionSet();
       try {
-         functionSet.getFunction(Add.class.getName(), TWO_INTEGERS);
+         functionSet.getFunction(ADD.getClass().getName(), TWO_INTEGERS);
          fail();
       } catch (IllegalArgumentException e) {
          assertEquals("Could not find function: org.oakgp.function.math.Add", e.getMessage());

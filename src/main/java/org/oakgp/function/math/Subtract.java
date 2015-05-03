@@ -10,7 +10,7 @@ import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 
 /** Performs subtraction. */
-public final class Subtract extends ArithmeticOperator {
+final class Subtract extends ArithmeticOperator {
    private final NumberUtils numberUtils;
    private final ArithmeticExpressionSimplifier simplifier;
 

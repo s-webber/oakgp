@@ -11,7 +11,7 @@ import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 
 /** Performs multiplication. */
-public final class Multiply extends ArithmeticOperator {
+final class Multiply extends ArithmeticOperator {
    private final NumberUtils numberUtils;
 
    Multiply(NumberUtils numberUtils) {
