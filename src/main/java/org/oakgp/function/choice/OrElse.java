@@ -40,26 +40,28 @@ public final class OrElse implements Function {
       List<Node> nodes = new ArrayList<>();
       nodes.add(arguments.firstArg());
       Node next = arguments.secondArg();
-      boolean hasDuplicates = false;
+      int indexOfLastDuplicate = 0;
+      Node nodeAfterLastDuplicate = null;
       while (isFunction(next) && ((FunctionNode) next).getFunction() == this) {
          FunctionNode fn = ((FunctionNode) next);
          Arguments args = fn.getArguments();
          if (nodes.contains(args.firstArg())) {
-            hasDuplicates = true;
+            indexOfLastDuplicate = nodes.size();
+            nodeAfterLastDuplicate = args.secondArg();
          } else {
             nodes.add(args.firstArg());
          }
          next = args.secondArg();
       }
 
-      if (!hasDuplicates) {
+      if (indexOfLastDuplicate == 0) {
          return null;
       }
 
-      FunctionNode fn = new FunctionNode(this, nodes.get(nodes.size() - 1), next);
-      for (int i = nodes.size() - 2; i > -1; i--) {
-         fn = new FunctionNode(this, nodes.get(i), fn);
+      Node n = nodeAfterLastDuplicate;
+      for (int i = indexOfLastDuplicate - 1; i > -1; i--) {
+         n = new FunctionNode(this, nodes.get(i), n);
       }
-      return fn;
+      return n;
    }
 }

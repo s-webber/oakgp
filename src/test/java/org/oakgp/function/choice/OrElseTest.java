@@ -35,11 +35,17 @@ public class OrElseTest extends AbstractFunctionTest {
    protected void getCanSimplifyTests(SimplifyTestCases testCases) {
       ConstantNode arg1 = new ConstantNode("hello", optionalType(stringType()));
       ConstantNode arg2 = new ConstantNode("world!", stringType());
-      // testCases.put(new FunctionNode(getFunction(), arg1, arg2), "\"hello\"");
+      testCases.put(new FunctionNode(getFunction(), arg1, arg2), "\"hello\"");
 
-      VariableNode v = new VariableNode(0, Type.stringType());
-      FunctionNode fn = new FunctionNode(getFunction(), v, arg2);
-      testCases.put(new FunctionNode(getFunction(), v, fn), fn);
+      VariableNode v0 = new VariableNode(0, Type.stringType());
+      FunctionNode fn = new FunctionNode(getFunction(), v0, arg2);
+      testCases.put(new FunctionNode(getFunction(), v0, fn), fn);
+
+      testCases.put(new FunctionNode(getFunction(), v0, new FunctionNode(getFunction(), v0, new FunctionNode(getFunction(), v0, fn))), fn);
+
+      VariableNode v1 = new VariableNode(1, Type.stringType());
+      testCases.put(new FunctionNode(getFunction(), v0, new FunctionNode(getFunction(), v1, new FunctionNode(getFunction(), v0, fn))), new FunctionNode(
+            getFunction(), v0, new FunctionNode(getFunction(), v1, arg2)));
    }
 
    @Override
