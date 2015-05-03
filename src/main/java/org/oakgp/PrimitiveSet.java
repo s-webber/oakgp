@@ -14,7 +14,7 @@ public interface PrimitiveSet {
     *
     * @return a randomly selected terminal node
     */
-   public Node nextTerminal(Type type);
+   Node nextTerminal(Type type);
 
    /**
     * Returns a randomly selected terminal node that is not the same as the specified {@code Node}.
