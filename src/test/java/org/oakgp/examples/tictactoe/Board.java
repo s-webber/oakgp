@@ -13,14 +13,11 @@ import static org.oakgp.examples.tictactoe.Move.MIDDLE_RIGHT;
 import static org.oakgp.examples.tictactoe.Move.TOP_CENTRE;
 import static org.oakgp.examples.tictactoe.Move.TOP_LEFT;
 import static org.oakgp.examples.tictactoe.Move.TOP_RIGHT;
-import static org.oakgp.examples.tictactoe.Symbol.O;
 import static org.oakgp.examples.tictactoe.Symbol.X;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 final class Board {
@@ -46,47 +43,53 @@ final class Board {
    private static final EnumSet<Move> CORNERS = of(TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT);
    private static final EnumSet<Move> SIDES = of(TOP_CENTRE, MIDDLE_RIGHT, BOTTOM_CENTRE, BOTTOM_LEFT);
 
-   private final Map<Symbol, EnumSet<Move>> state;
+   private final EnumSet<Move> oState;
+   private final EnumSet<Move> xState;
 
    Board() {
-      this.state = new HashMap<>();
-      state.put(O, NONE);
-      state.put(X, NONE);
+      this(NONE, NONE);
    }
 
-   private Board(Map<Symbol, EnumSet<Move>> state) {
-      this.state = state;
+   private Board(EnumSet<Move> oState, EnumSet<Move> xState) {
+      this.oState = oState;
+      this.xState = xState;
    }
 
    Board update(Symbol symbol, Move move) {
       if (isInvalid(move)) {
-         throw new IllegalArgumentException("Invalid move:" + move + " state: " + state);
+         throw new IllegalArgumentException("Invalid move:" + move + " o: " + oState + " x: " + xState);
+      } else if (symbol == X) {
+         return new Board(oState, copyAndAdd(xState, move));
+      } else {
+         return new Board(copyAndAdd(oState, move), xState);
       }
+   }
 
-      Map<Symbol, EnumSet<Move>> copy = new HashMap<>();
-      copy.put(symbol.getOpponent(), state.get(symbol.getOpponent()));
-      EnumSet<Move> updatedMoves = copyOf(state.get(symbol));
+   private EnumSet<Move> copyAndAdd(EnumSet<Move> original, Move move) {
+      EnumSet<Move> updatedMoves = copyOf(original);
       updatedMoves.add(move);
-      copy.put(symbol, updatedMoves);
-      return new Board(copy);
+      return updatedMoves;
    }
 
    private boolean isInvalid(Move move) {
-      return !isFree(move) || isWinner(X) || isWinner(O) || isDraw();
+      return !isFree(move) || isWinner(xState) || isWinner(oState) || isDraw();
    }
 
    boolean isDraw() {
-      return state.get(Symbol.O).size() + state.get(Symbol.X).size() == MAX_MOVES;
+      return oState.size() + xState.size() == MAX_MOVES;
    }
 
    boolean isWinner(Symbol symbol) {
-      EnumSet<Move> moves = state.get(symbol);
+      return isWinner(getState(symbol));
+   }
+
+   boolean isWinner(EnumSet<Move> moves) {
       return LINES.stream().filter(l -> getIntersectionSize(l, moves) == 3).findFirst().isPresent();
    }
 
    Move getWinningMove(Symbol symbol) {
-      EnumSet<Move> moves = state.get(symbol);
-      EnumSet<Move> opponents = state.get(symbol.getOpponent());
+      EnumSet<Move> moves = getState(symbol);
+      EnumSet<Move> opponents = getState(symbol.getOpponent());
       Optional<EnumSet<Move>> o = LINES.stream().filter(l -> getIntersectionSize(l, moves) == 2 && getIntersectionSize(l, opponents) == 0).findFirst();
       return o.map(l -> first(difference(l, moves))).orElse(null);
    }
@@ -128,10 +131,14 @@ final class Board {
    }
 
    private boolean isFree(Move m) {
-      return !state.get(O).contains(m) && !state.get(X).contains(m);
+      return !oState.contains(m) && !xState.contains(m);
    }
 
    private Move first(EnumSet<Move> s) {
       return s.iterator().next();
+   }
+
+   private EnumSet<Move> getState(Symbol s) {
+      return s == X ? xState : oState;
    }
 }
