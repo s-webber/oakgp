@@ -163,12 +163,10 @@ public final class NodeReader implements Closeable {
 
    private static boolean isNumber(String token) {
       char firstChar = token.charAt(0);
-      if (isNumber(firstChar)) {
-         return true;
-      } else if (firstChar == '-' && token.length() > 1 && isNumber(token.charAt(1))) {
-         return true;
+      if (firstChar == '-') {
+         return token.length() > 1 && isNumber(token.charAt(1));
       } else {
-         return false;
+         return isNumber(firstChar);
       }
    }
 
