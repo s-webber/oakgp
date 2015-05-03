@@ -5,7 +5,7 @@ import org.oakgp.Type;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
 
-public class LongUtils implements NumberUtils {
+public final class LongUtils implements NumberUtils {
    private static final Type TYPE = Type.longType();
 
    public static final LongUtils LONG_UTILS = new LongUtils();
