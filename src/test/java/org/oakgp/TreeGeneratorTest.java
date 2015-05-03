@@ -2,10 +2,14 @@ package org.oakgp;
 
 import static org.oakgp.TestUtils.assertNodeEquals;
 import static org.oakgp.TestUtils.integerConstant;
+import static org.oakgp.Type.integerType;
+import static org.oakgp.Type.type;
+import static org.oakgp.function.math.IntegerUtils.INTEGER_UTILS;
+import static org.oakgp.util.DummyRandom.random;
 
 import org.junit.Test;
 import org.oakgp.function.Function;
-import org.oakgp.function.math.IntegerUtils;
+import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
 import org.oakgp.util.DummyPrimitiveSet;
 import org.oakgp.util.DummyRandom;
@@ -13,32 +17,45 @@ import org.oakgp.util.DummyRandom;
 public class TreeGeneratorTest {
    @Test
    public void testFull() {
-      PrimitiveSet p = new DummyPrimitiveSet() {
-         int terminalCtr = 1;
-
-         @Override
-         public Function nextFunction(Type type) {
-            return IntegerUtils.INTEGER_UTILS.getAdd();
-         }
-
-         @Override
-         public Node nextTerminal(Type type) {
-            return integerConstant(terminalCtr++);
-         }
-      };
+      PrimitiveSet p = createPrimitiveSet();
       TreeGenerator g = TreeGeneratorImpl.full(p);
-      Node result = g.generate(Type.integerType(), 3);
+      Node result = g.generate(integerType(), 3);
       assertNodeEquals("(+ (+ (+ 1 2) (+ 3 4)) (+ (+ 5 6) (+ 7 8)))", result);
    }
 
    @Test
    public void testGrow() {
+      PrimitiveSet p = createPrimitiveSet();
+      TreeGenerator g = TreeGeneratorImpl.grow(p, random().setBooleans(true, true, false, true, true, true, false).build());
+      Node result = g.generate(integerType(), 3);
+      assertNodeEquals("(+ (+ 1 (+ 2 3)) (+ (+ 4 5) 6))", result);
+   }
+
+   /**
+    * Tests building a tree when the return types of the elements of the primitive set force a specific result.
+    * <p>
+    * i.e. In this test there is only one function or terminal node for each of the required types.
+    */
+   @Test
+   public void testWhenTypesEnforceStructure() {
+      Function f1 = createFunction("f1", type("a"), type("b"));
+      Function f2 = createFunction("f2", type("b"), type("c"), type("d"));
+      ConstantNode c = new ConstantNode("X", type("c"));
+
+      DummyRandom random = random().setDoubles(1d, 1d).build();
+      PrimitiveSet p = new PrimitiveSetImpl(new FunctionSet(f1, f2), new ConstantSet(c), VariableSet.createVariableSet(type("d")), random, .5);
+      TreeGenerator g = TreeGeneratorImpl.full(p);
+      Node result = g.generate(type("a"), 3);
+      assertNodeEquals("(f1 (f2 X v0))", result);
+   }
+
+   private PrimitiveSet createPrimitiveSet() {
       PrimitiveSet p = new DummyPrimitiveSet() {
          int terminalCtr = 1;
 
          @Override
          public Function nextFunction(Type type) {
-            return IntegerUtils.INTEGER_UTILS.getAdd();
+            return INTEGER_UTILS.getAdd();
          }
 
          @Override
@@ -46,8 +63,25 @@ public class TreeGeneratorTest {
             return integerConstant(terminalCtr++);
          }
       };
-      TreeGenerator g = TreeGeneratorImpl.grow(p, new DummyRandom(true, true, false, true, true, true, false));
-      Node result = g.generate(Type.integerType(), 3);
-      assertNodeEquals("(+ (+ 1 (+ 2 3)) (+ (+ 4 5) 6))", result);
+      return p;
+   }
+
+   private Function createFunction(String displayName, Type returnType, Type... arguments) {
+      return new Function() {
+         @Override
+         public Object evaluate(Arguments arguments, Assignments assignments) {
+            throw new UnsupportedOperationException();
+         }
+
+         @Override
+         public Signature getSignature() {
+            return Signature.createSignature(returnType, arguments);
+         }
+
+         @Override
+         public String getDisplayName() {
+            return displayName;
+         }
+      };
    }
 }

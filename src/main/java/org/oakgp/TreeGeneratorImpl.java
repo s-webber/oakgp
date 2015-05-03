@@ -28,7 +28,7 @@ public final class TreeGeneratorImpl implements TreeGenerator {
 
    @Override
    public Node generate(Type type, int depth) {
-      if (strategy.test(depth)) {
+      if (shouldCreateFunction(type, depth)) {
          Function function = primitiveSet.nextFunction(type);
          Signature signature = function.getSignature();
          Node[] args = new Node[signature.getArgumentTypesLength()];
@@ -40,6 +40,16 @@ public final class TreeGeneratorImpl implements TreeGenerator {
          return new FunctionNode(function, args);
       } else {
          return primitiveSet.nextTerminal(type);
+      }
+   }
+
+   private boolean shouldCreateFunction(Type type, int depth) {
+      if (!primitiveSet.hasTerminals(type)) {
+         return true;
+      } else if (!primitiveSet.hasFunctions(type)) {
+         return false;
+      } else {
+         return strategy.test(depth);
       }
    }
 }

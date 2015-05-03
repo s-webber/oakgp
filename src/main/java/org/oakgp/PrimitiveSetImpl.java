@@ -22,6 +22,16 @@ public final class PrimitiveSetImpl implements PrimitiveSet {
       this.ratioVariables = ratioVariables;
    }
 
+   @Override
+   public boolean hasTerminals(Type type) {
+      return variableSet.getByType(type) != null || constantSet.getByType(type) != null;
+   }
+
+   @Override
+   public boolean hasFunctions(Type type) {
+      return functionSet.getByType(type) != null;
+   }
+
    /**
     * Returns a randomly selected terminal node.
     *
@@ -87,7 +97,7 @@ public final class PrimitiveSetImpl implements PrimitiveSet {
       if (typeFunctions == null) {
          throw new IllegalArgumentException("No functions with return type: " + type);
       }
-      int index = random.nextInt(typeFunctions.size());
+      int index = nextInt(typeFunctions.size());
       return typeFunctions.get(index);
    }
 
@@ -111,14 +121,17 @@ public final class PrimitiveSetImpl implements PrimitiveSet {
       }
 
       int possibilitiesSize = possibilities.size();
-      int randomIndex = random.nextInt(possibilitiesSize);
+      if (possibilitiesSize < 1) {
+         throw new IllegalStateException(currentVersion.toString()); // TODO
+      }
+      int randomIndex = nextInt(possibilitiesSize);
       C next = possibilities.get(randomIndex);
       if (next == currentVersion) {
          if (possibilitiesSize == 1) {
             return currentVersion;
          }
 
-         int secondRandomIndex = random.nextInt(possibilitiesSize - 1);
+         int secondRandomIndex = nextInt(possibilitiesSize - 1);
          if (secondRandomIndex >= randomIndex) {
             return possibilities.get(secondRandomIndex + 1);
          } else {
@@ -127,5 +140,9 @@ public final class PrimitiveSetImpl implements PrimitiveSet {
       } else {
          return next;
       }
+   }
+
+   private int nextInt(int bound) {
+      return bound == 1 ? 0 : random.nextInt(bound);
    }
 }

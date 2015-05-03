@@ -5,6 +5,10 @@ import org.oakgp.node.Node;
 
 /** Represents the range of possible functions and terminal nodes to use during a genetic programming run. */
 public interface PrimitiveSet {
+   boolean hasTerminals(Type type);
+
+   boolean hasFunctions(Type type);
+
    /**
     * Returns a randomly selected terminal node.
     *

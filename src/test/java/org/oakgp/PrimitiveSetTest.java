@@ -1,6 +1,8 @@
 package org.oakgp;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.oakgp.TestUtils.assertConstant;
@@ -10,6 +12,7 @@ import static org.oakgp.TestUtils.createVariable;
 import static org.oakgp.TestUtils.integerConstant;
 import static org.oakgp.Type.booleanType;
 import static org.oakgp.Type.integerType;
+import static org.oakgp.Type.stringType;
 
 import org.junit.Test;
 import org.oakgp.function.Function;
@@ -23,6 +26,7 @@ import org.oakgp.function.compare.NotEqual;
 import org.oakgp.function.math.IntegerUtils;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.VariableNode;
+import org.oakgp.util.DummyRandom;
 import org.oakgp.util.Random;
 
 public class PrimitiveSetTest {
@@ -34,6 +38,20 @@ public class PrimitiveSetTest {
    private static final Function[] FUNCTIONS = new Function[] { IntegerUtils.INTEGER_UTILS.getAdd(), IntegerUtils.INTEGER_UTILS.getSubtract(),
          IntegerUtils.INTEGER_UTILS.getMultiply(), new If(), new LessThan(integerType()), new LessThanOrEqual(integerType()), new GreaterThan(integerType()),
          new GreaterThanOrEqual(integerType()), new Equal(integerType()), new NotEqual(integerType()) };
+
+   @Test
+   public void testHasFunctions() {
+      PrimitiveSet p = createWithFunctions(DummyRandom.EMPTY);
+      assertTrue(p.hasFunctions(integerType()));
+      assertFalse(p.hasFunctions(stringType()));
+   }
+
+   @Test
+   public void testHasTerminals() {
+      PrimitiveSet p = createWithTerminals(DummyRandom.EMPTY);
+      assertTrue(p.hasTerminals(integerType()));
+      assertFalse(p.hasTerminals(stringType()));
+   }
 
    @Test
    public void testNextFunction() {
