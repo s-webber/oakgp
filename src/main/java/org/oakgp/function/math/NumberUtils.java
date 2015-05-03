@@ -21,6 +21,8 @@ interface NumberUtils {
 
    Multiply getMultiply();
 
+   Divide getDivide();
+
    boolean isZero(Node n);
 
    boolean isOne(Node arg1);
@@ -54,6 +56,8 @@ interface NumberUtils {
    default ConstantNode multiply(Node n1, Node n2) {
       return multiply(n1, n2, null);
    }
+
+   ConstantNode divide(Node n1, Node n2, Assignments assignments);
 
    ConstantNode negateConstant(Node n);
 

@@ -14,6 +14,7 @@ public final class IntegerUtils implements NumberUtils {
    private final Add add = new Add(this);
    private final Subtract subtract = new Subtract(this);
    private final Multiply multiply = new Multiply(this);
+   private final Divide divide = new Divide(this);
    private final ConstantNode zero = createConstant(0);
    private final ConstantNode one = createConstant(1);
    private final ConstantNode two = createConstant(2);
@@ -46,6 +47,11 @@ public final class IntegerUtils implements NumberUtils {
    @Override
    public Multiply getMultiply() {
       return multiply;
+   }
+
+   @Override
+   public Divide getDivide() {
+      return divide;
    }
 
    @Override
@@ -112,6 +118,13 @@ public final class IntegerUtils implements NumberUtils {
       int i1 = n1.evaluate(assignments);
       int i2 = n2.evaluate(assignments);
       return createConstant(i1 * i2);
+   }
+
+   @Override
+   public ConstantNode divide(Node n1, Node n2, Assignments assignments) {
+      int i1 = n1.evaluate(assignments);
+      int i2 = n2.evaluate(assignments);
+      return createConstant(i1 / i2);
    }
 
    private ConstantNode createConstant(int i) {

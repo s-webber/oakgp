@@ -100,6 +100,7 @@ public class TestUtils {
       functions.add(IntegerUtils.INTEGER_UTILS.getAdd());
       functions.add(IntegerUtils.INTEGER_UTILS.getSubtract());
       functions.add(IntegerUtils.INTEGER_UTILS.getMultiply());
+      functions.add(IntegerUtils.INTEGER_UTILS.getDivide());
 
       functions.add(new LessThan(integerType()));
       functions.add(new LessThanOrEqual(integerType()));

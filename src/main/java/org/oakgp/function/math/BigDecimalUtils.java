@@ -19,6 +19,7 @@ public final class BigDecimalUtils implements NumberUtils {
    private final Add add = new Add(this);
    private final Subtract subtract = new Subtract(this);
    private final Multiply multiply = new Multiply(this);
+   private final Divide divide = new Divide(this);
 
    /** @see #BIG_DECIMAL_UTILS */
    private BigDecimalUtils() {
@@ -48,6 +49,11 @@ public final class BigDecimalUtils implements NumberUtils {
    @Override
    public Multiply getMultiply() {
       return multiply;
+   }
+
+   @Override
+   public Divide getDivide() {
+      return divide;
    }
 
    @Override
@@ -118,6 +124,13 @@ public final class BigDecimalUtils implements NumberUtils {
       BigDecimal bd1 = n1.evaluate(assignments);
       BigDecimal bd2 = n2.evaluate(assignments);
       return createConstant(bd1.multiply(bd2));
+   }
+
+   @Override
+   public ConstantNode divide(Node n1, Node n2, Assignments assignments) {
+      BigDecimal bd1 = n1.evaluate(assignments);
+      BigDecimal bd2 = n2.evaluate(assignments);
+      return createConstant(bd1.divide(bd2));
    }
 
    private ConstantNode createConstant(BigDecimal bd) {

@@ -17,6 +17,7 @@ public class LongUtils implements NumberUtils {
    private final Add add = new Add(this);
    private final Subtract subtract = new Subtract(this);
    private final Multiply multiply = new Multiply(this);
+   private final Divide divide = new Divide(this);
 
    /** @see #INTEGER_UTILS */
    private LongUtils() {
@@ -46,6 +47,11 @@ public class LongUtils implements NumberUtils {
    @Override
    public Multiply getMultiply() {
       return multiply;
+   }
+
+   @Override
+   public Divide getDivide() {
+      return divide;
    }
 
    @Override
@@ -112,6 +118,13 @@ public class LongUtils implements NumberUtils {
       long i1 = n1.evaluate(assignments);
       long i2 = n2.evaluate(assignments);
       return createConstant(i1 * i2);
+   }
+
+   @Override
+   public ConstantNode divide(Node n1, Node n2, Assignments assignments) {
+      long i1 = n1.evaluate(assignments);
+      long i2 = n2.evaluate(assignments);
+      return createConstant(i1 / i2);
    }
 
    private ConstantNode createConstant(long i) {
