@@ -33,9 +33,10 @@ public class GridWarSystemTest {
    @Test
    public void test() {
       SystemTestConfig config = new SystemTestConfig();
+      config.setReturnType(integerType());
+      config.setTerminator(createTerminator());
       config.useIntegerConstants(NUM_CONSTANTS);
       config.setVariables(VARIABLE_TYPES);
-      config.setTerminator(createTerminator());
       config.setFunctionSet(IntegerUtils.INTEGER_UTILS.getAdd(), IntegerUtils.INTEGER_UTILS.getSubtract(), IntegerUtils.INTEGER_UTILS.getMultiply(),
             new LessThan(integerType()), new LessThanOrEqual(integerType()), new GreaterThan(integerType()), new GreaterThanOrEqual(integerType()), new Equal(
                   integerType()), new NotEqual(integerType()), new If());

@@ -55,10 +55,9 @@ public class FitnessFunctionSystemTest {
    @Test
    public void testTwoVariableArithmeticExpression() {
       Type[] variableTypes = createTypeArray(2);
-      SystemTestConfig config = new SystemTestConfig();
+      SystemTestConfig config = createSystemTestConfig();
       config.useIntegerConstants(11);
       config.setVariables(variableTypes);
-      config.setTerminator(createTerminator());
       config.setFunctionSet(ARITHMETIC_FUNCTIONS);
       FitnessFunction fitnessFunction = createIntegerTestDataFitnessFunction(createTests(variableTypes.length, a -> {
          int x = (int) a.get(0);
@@ -72,10 +71,9 @@ public class FitnessFunctionSystemTest {
    @Test
    public void testThreeVariableArithmeticExpression() {
       Type[] variableTypes = createTypeArray(3);
-      SystemTestConfig config = new SystemTestConfig();
+      SystemTestConfig config = createSystemTestConfig();
       config.useIntegerConstants(11);
       config.setVariables(variableTypes);
-      config.setTerminator(createTerminator());
       config.setFunctionSet(ARITHMETIC_FUNCTIONS);
       FitnessFunction fitnessFunction = createIntegerTestDataFitnessFunction(createTests(variableTypes.length, a -> {
          int x = (int) a.get(0);
@@ -90,10 +88,9 @@ public class FitnessFunctionSystemTest {
    @Test
    public void testTwoVariableBooleanLogicExpression() {
       Type[] variableTypes = createTypeArray(2);
-      SystemTestConfig config = new SystemTestConfig();
+      SystemTestConfig config = createSystemTestConfig();
       config.useIntegerConstants(5);
       config.setVariables(variableTypes);
-      config.setTerminator(createTerminator());
       config.setFunctionSet(IntegerUtils.INTEGER_UTILS.getAdd(), IntegerUtils.INTEGER_UTILS.getSubtract(), IntegerUtils.INTEGER_UTILS.getMultiply(),
             new LessThan(integerType()), new LessThanOrEqual(integerType()), new GreaterThan(integerType()), new GreaterThanOrEqual(integerType()), new Equal(
                   integerType()), new NotEqual(integerType()), new If());
@@ -112,13 +109,12 @@ public class FitnessFunctionSystemTest {
       IsNegative isNegative = new IsNegative();
       IsZero isZero = new IsZero();
 
-      SystemTestConfig config = new SystemTestConfig();
+      SystemTestConfig config = createSystemTestConfig();
       config.setConstants(new ConstantNode[] { new ConstantNode(Boolean.TRUE, booleanType()), new ConstantNode(Boolean.FALSE, booleanType()),
             new ConstantNode(isPositive, integerToBooleanFunctionType()), new ConstantNode(isNegative, integerToBooleanFunctionType()),
             new ConstantNode(isZero, integerToBooleanFunctionType()), new ConstantNode(Arguments.createArguments(), integerArrayType()),
             new ConstantNode(0, integerType()) });
       config.setVariables(integerArrayType());
-      config.setTerminator(createTerminator());
 
       FunctionSet functions = new FunctionSet(new Filter(integerType()), isPositive, isNegative, isZero, new Count(integerType()),
             createIdentity(integerArrayType()), createIdentity(integerType()), createIdentity(integerToBooleanFunctionType()));
@@ -156,6 +152,13 @@ public class FitnessFunctionSystemTest {
             return arguments.firstArg();
          }
       };
+   }
+
+   private SystemTestConfig createSystemTestConfig() {
+      SystemTestConfig config = new SystemTestConfig();
+      config.setReturnType(integerType());
+      config.setTerminator(createTerminator());
+      return config;
    }
 
    private static Map<Assignments, Integer> createTests(int numVariables, java.util.function.Function<Assignments, Integer> f) {

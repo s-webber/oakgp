@@ -59,11 +59,12 @@ public class SystemTestConfig {
    private PrimitiveSet primitiveSet;
    private GenerationProcessor generationProcessor;
    private Predicate<List<RankedCandidate>> terminator;
-   private final Type returnType = Type.integerType();
+   private Type returnType;
 
    public void process() {
       requireNonNull(generationProcessor);
       requireNonNull(terminator);
+      requireNonNull(returnType);
 
       TreeGenerator treeGenerator = TreeGeneratorImpl.grow(getPrimitiveSet(), RANDOM);
       Collection<Node> initialGeneration = createInitialGeneration(treeGenerator, returnType, GENERATION_SIZE);
@@ -103,6 +104,11 @@ public class SystemTestConfig {
          initialGeneration.add(n);
       }
       return initialGeneration;
+   }
+
+   public void setReturnType(Type returnType) {
+      requireNull(this.returnType);
+      this.returnType = returnType;
    }
 
    public void setConstants(ConstantNode... constants) {
