@@ -137,8 +137,7 @@ public final class NodeReader implements Closeable {
             char suffix = token.charAt(token.length() - 1);
             switch (suffix) {
             case 'D':
-               // TODO find way of not calling new BigDecimal(String) each time (reuse ZERO, ONE, etc)
-               return new ConstantNode(new BigDecimal(token.substring(0, token.length() - 1)), bigDecimalType());
+               return new ConstantNode(toBigDecimal(token.substring(0, token.length() - 1)), bigDecimalType());
             case 'L':
                return new ConstantNode(Long.valueOf(token.substring(0, token.length() - 1)), longType());
             default:
@@ -148,6 +147,19 @@ public final class NodeReader implements Closeable {
             Function function = functionSet.getFunction(token);
             return new ConstantNode(function, getFunctionType(function));
          }
+      }
+   }
+
+   private BigDecimal toBigDecimal(String number) {
+      switch (number) {
+      case "0":
+         return BigDecimal.ZERO;
+      case "1":
+         return BigDecimal.ONE;
+      case "10":
+         return BigDecimal.TEN;
+      default:
+         return new BigDecimal(number);
       }
    }
 

@@ -57,6 +57,14 @@ public class NodeReaderTest {
       assertParseLiteral("1.7976931348623157E308D", BigDecimal.valueOf(Double.MAX_VALUE));
    }
 
+   /** Tests that, when available, parser uses constants defined in BigDecimal. */
+   @Test
+   public void testBigDecimalReuse() {
+      assertSame(BigDecimal.ZERO, readConstant("0D").evaluate(null));
+      assertSame(BigDecimal.ONE, readConstant("1D").evaluate(null));
+      assertSame(BigDecimal.TEN, readConstant("10D").evaluate(null));
+   }
+
    @Test
    public void testTrue() {
       assertParseLiteral(Boolean.TRUE);
@@ -97,7 +105,7 @@ public class NodeReaderTest {
 
    @Test
    public void testMixedTypeArray() {
-      assetReadException("[true 9 false v0]", "Mixed type array elements: boolean and integer");
+      assertReadException("[true 9 false v0]", "Mixed type array elements: boolean and integer");
    }
 
    @Test
@@ -202,16 +210,14 @@ public class NodeReaderTest {
    }
 
    private void assertParseLiteral(String input, Object expected) {
-      Node output = readNode(input);
-      assertSame(ConstantNode.class, output.getClass());
+      Node output = readConstant(input);
       assertEquals(expected.toString(), output.toString());
       assertSame(expected.getClass(), output.evaluate(null).getClass());
       assertEquals(expected, output.evaluate(null));
    }
 
    private void assertParseFunction(String input, Class<? extends Function> expected) {
-      Node output = readNode(input);
-      assertSame(ConstantNode.class, output.getClass());
+      Node output = readConstant(input);
       assertSame(integerToBooleanFunctionType(), output.getType());
       assertEquals(expected, ((ConstantNode) output).evaluate(null).getClass());
    }
@@ -230,12 +236,18 @@ public class NodeReaderTest {
       assertEquals(expected, output.toString());
    }
 
-   private void assetReadException(String input, String expectedMessage) {
+   private void assertReadException(String input, String expectedMessage) {
       try {
          readNode(input);
          fail();
       } catch (RuntimeException e) {
          assertEquals(expectedMessage, e.getMessage());
       }
+   }
+
+   private ConstantNode readConstant(String input) {
+      Node output = readNode(input);
+      assertSame(ConstantNode.class, output.getClass());
+      return (ConstantNode) output;
    }
 }
