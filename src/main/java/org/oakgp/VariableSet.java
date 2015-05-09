@@ -1,9 +1,14 @@
 package org.oakgp;
 
+import java.util.List;
+import java.util.Map;
+
 import org.oakgp.node.VariableNode;
+import org.oakgp.util.Utils;
 
 /** Represents the range of possible variables to use during a genetic programming run. */
-public final class VariableSet extends AbstractTerminalSet<VariableNode> {
+public final class VariableSet {
+   private final Map<Type, List<VariableNode>> variablesByType;
    private final VariableNode[] variables;
 
    public static VariableSet createVariableSet(Type... variableTypes) {
@@ -15,8 +20,12 @@ public final class VariableSet extends AbstractTerminalSet<VariableNode> {
    }
 
    private VariableSet(VariableNode[] variables) {
-      super(variables);
+      variablesByType = Utils.groupByType(variables);
       this.variables = variables;
+   }
+
+   public List<VariableNode> getByType(Type type) {
+      return variablesByType.get(type);
    }
 
    public VariableNode getById(int id) {
