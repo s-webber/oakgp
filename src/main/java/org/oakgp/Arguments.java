@@ -23,7 +23,7 @@ public final class Arguments {
     *           the values to be stored in the {@code Arguments}
     * @return a new {@code Arguments} which contains the values specified by {@code args}
     */
-   public static Arguments createArguments(List<Node> args) {
+   public static Arguments createArguments(List<? extends Node> args) {
       return new Arguments(args.toArray(new Node[args.size()]));
    }
 
