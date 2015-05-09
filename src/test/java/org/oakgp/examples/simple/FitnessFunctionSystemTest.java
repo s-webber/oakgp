@@ -20,7 +20,6 @@ import org.oakgp.Arguments;
 import org.oakgp.Assignments;
 import org.oakgp.FunctionSet;
 import org.oakgp.RankedCandidate;
-import org.oakgp.Signature;
 import org.oakgp.Type;
 import org.oakgp.examples.SystemTestConfig;
 import org.oakgp.fitness.FitnessFunction;
@@ -39,7 +38,6 @@ import org.oakgp.function.compare.NotEqual;
 import org.oakgp.function.hof.Filter;
 import org.oakgp.function.math.IntegerUtils;
 import org.oakgp.node.ConstantNode;
-import org.oakgp.node.Node;
 
 /**
  * Performs full genetic programming runs without relying on any mock objects.
@@ -50,7 +48,7 @@ import org.oakgp.node.Node;
  */
 public class FitnessFunctionSystemTest {
    private static final Function[] ARITHMETIC_FUNCTIONS = { IntegerUtils.INTEGER_UTILS.getAdd(), IntegerUtils.INTEGER_UTILS.getSubtract(),
-      IntegerUtils.INTEGER_UTILS.getMultiply() };
+         IntegerUtils.INTEGER_UTILS.getMultiply() };
 
    @Test
    public void testTwoVariableArithmeticExpression() {
@@ -116,8 +114,7 @@ public class FitnessFunctionSystemTest {
             new ConstantNode(0, integerType()) });
       config.setVariables(integerArrayType());
 
-      FunctionSet functions = new FunctionSet(new Filter(integerType()), isPositive, isNegative, isZero, new Count(integerType()),
-            createIdentity(integerArrayType()), createIdentity(integerType()), createIdentity(integerToBooleanFunctionType()));
+      FunctionSet functions = new FunctionSet(new Filter(integerType()), isPositive, isNegative, isZero, new Count(integerType()));
       config.setFunctionSet(functions);
 
       Map<Assignments, Integer> testData = new HashMap<>();
@@ -133,25 +130,6 @@ public class FitnessFunctionSystemTest {
 
       config.setFitnessFunction(fitnessFunction);
       config.process();
-   }
-
-   private Function createIdentity(final Type type) {
-      return new Function() {
-         @Override
-         public Object evaluate(Arguments arguments, Assignments assignments) {
-            return arguments.firstArg().evaluate(assignments);
-         }
-
-         @Override
-         public Signature getSignature() {
-            return Signature.createSignature(type, type);
-         }
-
-         @Override
-         public Node simplify(Arguments arguments) {
-            return arguments.firstArg();
-         }
-      };
    }
 
    private SystemTestConfig createSystemTestConfig() {

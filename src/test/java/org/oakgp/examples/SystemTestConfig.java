@@ -6,7 +6,6 @@ import static java.util.Objects.requireNonNull;
 import static org.oakgp.NodeSimplifier.simplify;
 import static org.oakgp.TestUtils.integerConstant;
 import static org.oakgp.TestUtils.writeNode;
-import static org.oakgp.Type.booleanType;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -146,12 +145,10 @@ public class SystemTestConfig {
    }
 
    public void useIntegerConstants(int numberOfConstants) {
-      ConstantNode[] constants = new ConstantNode[numberOfConstants + 2];
+      ConstantNode[] constants = new ConstantNode[numberOfConstants];
       for (int i = 0; i < numberOfConstants; i++) {
          constants[i] = integerConstant(i);
       }
-      constants[numberOfConstants] = new ConstantNode(Boolean.TRUE, booleanType());
-      constants[numberOfConstants + 1] = new ConstantNode(Boolean.FALSE, booleanType());
       setConstants(constants);
    }
 
