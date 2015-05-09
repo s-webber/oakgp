@@ -1,8 +1,5 @@
 package org.oakgp.node;
 
-import java.util.function.Function;
-import java.util.function.Predicate;
-
 import org.oakgp.Assignments;
 import org.oakgp.Type;
 
@@ -11,7 +8,7 @@ import org.oakgp.Type;
  * <p>
  * Return the same value each time is it evaluated.
  */
-public final class ConstantNode implements Node {
+public final class ConstantNode extends TerminalNode {
    private final Object value;
    private final Type type;
 
@@ -34,41 +31,6 @@ public final class ConstantNode implements Node {
    @Override
    public Object evaluate(Assignments assignments) {
       return value;
-   }
-
-   @Override
-   public int getNodeCount() {
-      return 1;
-   }
-
-   @Override
-   public int getNodeCount(Predicate<Node> treeWalkerStrategy) {
-      return treeWalkerStrategy.test(this) ? 1 : 0;
-   }
-
-   @Override
-   public Node replaceAt(int index, Function<Node, Node> replacement) {
-      return replacement.apply(this);
-   }
-
-   @Override
-   public Node replaceAt(int index, Function<Node, Node> replacement, Predicate<Node> treeWalkerStrategy) {
-      return replaceAt(index, replacement);
-   }
-
-   @Override
-   public Node getAt(int index) {
-      return this;
-   }
-
-   @Override
-   public Node getAt(int index, Predicate<Node> treeWalkerStrategy) {
-      return getAt(index);
-   }
-
-   @Override
-   public int getDepth() {
-      return 1;
    }
 
    @Override

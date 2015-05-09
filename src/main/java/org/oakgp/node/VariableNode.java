@@ -1,8 +1,5 @@
 package org.oakgp.node;
 
-import java.util.function.Function;
-import java.util.function.Predicate;
-
 import org.oakgp.Assignments;
 import org.oakgp.Type;
 
@@ -11,7 +8,7 @@ import org.oakgp.Type;
  * <p>
  * The result of evaluating this node will vary based on the {@link Assignments} specified.
  */
-public final class VariableNode implements Node {
+public final class VariableNode extends TerminalNode {
    private final int id;
    private final Type type;
    private final int hashCode;
@@ -44,41 +41,6 @@ public final class VariableNode implements Node {
    @Override
    public Object evaluate(Assignments assignments) {
       return assignments.get(id);
-   }
-
-   @Override
-   public int getNodeCount() {
-      return 1;
-   }
-
-   @Override
-   public int getNodeCount(Predicate<Node> treeWalkerStrategy) {
-      return treeWalkerStrategy.test(this) ? 1 : 0;
-   }
-
-   @Override
-   public Node replaceAt(int index, Function<Node, Node> replacement) {
-      return replacement.apply(this);
-   }
-
-   @Override
-   public Node replaceAt(int index, Function<Node, Node> replacement, Predicate<Node> treeWalkerStrategy) {
-      return replaceAt(index, replacement); // TODO review what correct behaviour should be (plus ConstantNode version)
-   }
-
-   @Override
-   public Node getAt(int index) {
-      return this;
-   }
-
-   @Override
-   public Node getAt(int index, Predicate<Node> treeWalkerStrategy) {
-      return getAt(index); // TODO review what correct behaviour should be (plus ConstantNode version)
-   }
-
-   @Override
-   public int getDepth() {
-      return 1;
    }
 
    @Override
