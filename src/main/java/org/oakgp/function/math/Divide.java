@@ -2,15 +2,18 @@ package org.oakgp.function.math;
 
 import org.oakgp.Arguments;
 import org.oakgp.Assignments;
+import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
 
 /** Performs addition. */
 final class Divide extends ArithmeticOperator {
    private final NumberUtils numberUtils;
+   private final ConstantNode minusOne;
 
    Divide(NumberUtils numberUtils) {
       super(numberUtils.getType());
       this.numberUtils = numberUtils;
+      this.minusOne = numberUtils.negateConstant(numberUtils.one());
    }
 
    @Override
@@ -27,12 +30,13 @@ final class Divide extends ArithmeticOperator {
       Node arg2 = arguments.secondArg();
       if (numberUtils.isZero(arg2)) {
          return numberUtils.one();
-      } else if (numberUtils.one().equals(arg2)) {
+      } else if (numberUtils.isOne(arg2)) {
          return arguments.firstArg();
+      } else if (minusOne.equals(arg2)) {
+         return numberUtils.negate(arguments.firstArg());
       } else {
          return null;
       }
-      // TODO when second arg is -2 ?
    }
 
    @Override

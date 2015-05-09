@@ -23,6 +23,9 @@ public class DivideTest extends AbstractFunctionTest {
    protected void getCanSimplifyTests(SimplifyTestCases testCases) {
       testCases.put("(/ 4 0)", "1");
       testCases.put("(/ 4 1)", "4");
+      testCases.put("(/ 4 -1)", "-4");
+      testCases.put("(/ -4 -1)", "4");
+      testCases.put("(/ v0 -1)", "(- 0 v0)");
    }
 
    @Override

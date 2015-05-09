@@ -131,7 +131,7 @@ public final class LongUtils implements NumberUtils {
       return new ConstantNode(i, TYPE);
    }
 
-   private int evaluate(Node n) {
+   private long evaluate(Node n) {
       return n.evaluate(null);
    }
 }

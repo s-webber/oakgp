@@ -7,17 +7,16 @@ import org.oakgp.node.Node;
 
 public final class IntegerUtils implements NumberUtils {
    private static final Type TYPE = Type.integerType();
-
    public static final IntegerUtils INTEGER_UTILS = new IntegerUtils();
 
    private final ArithmeticExpressionSimplifier simplifier = new ArithmeticExpressionSimplifier(this);
+   private final ConstantNode zero = createConstant(0);
+   private final ConstantNode one = createConstant(1);
+   private final ConstantNode two = createConstant(2);
    private final Add add = new Add(this);
    private final Subtract subtract = new Subtract(this);
    private final Multiply multiply = new Multiply(this);
    private final Divide divide = new Divide(this);
-   private final ConstantNode zero = createConstant(0);
-   private final ConstantNode one = createConstant(1);
-   private final ConstantNode two = createConstant(2);
 
    /** @see #INTEGER_UTILS */
    private IntegerUtils() {
