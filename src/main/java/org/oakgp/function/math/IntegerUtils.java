@@ -59,16 +59,6 @@ public final class IntegerUtils implements NumberUtils {
    }
 
    @Override
-   public boolean isZero(Node n) {
-      return zero.equals(n);
-   }
-
-   @Override
-   public boolean isOne(Node n) {
-      return one.equals(n);
-   }
-
-   @Override
    public ConstantNode zero() {
       return zero;
    }

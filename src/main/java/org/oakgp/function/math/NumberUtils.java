@@ -23,9 +23,13 @@ interface NumberUtils {
 
    Divide getDivide();
 
-   boolean isZero(Node n);
+   default boolean isZero(Node n) {
+      return zero().equals(n);
+   }
 
-   boolean isOne(Node arg1);
+   default boolean isOne(Node n) {
+      return one().equals(n);
+   }
 
    ConstantNode zero();
 
