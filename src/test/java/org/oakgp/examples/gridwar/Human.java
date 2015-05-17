@@ -3,16 +3,12 @@ package org.oakgp.examples.gridwar;
 import static org.oakgp.examples.gridwar.GridWar.GRID_WIDTH;
 
 import java.util.Scanner;
-import java.util.function.Function;
-import java.util.function.Predicate;
 
 import org.oakgp.Assignments;
-import org.oakgp.Type;
-import org.oakgp.node.Node;
-import org.oakgp.node.NodeType;
+import org.oakgp.util.DummyNode;
 
 /** Represents a human player in a GridWar game. */
-class Human implements Node {
+class Human extends DummyNode {
    @Override
    public Integer evaluate(Assignments assignments) {
       int playerX = (int) assignments.get(0);
@@ -43,50 +39,5 @@ class Human implements Node {
    @SuppressWarnings("resource")
    private int readInt() {
       return new Scanner(System.in).nextInt();
-   }
-
-   @Override
-   public int getNodeCount() {
-      throw new UnsupportedOperationException();
-   }
-
-   @Override
-   public int getNodeCount(Predicate<Node> treeWalkerStrategy) {
-      throw new UnsupportedOperationException();
-   }
-
-   @Override
-   public Node replaceAt(int idx, Function<Node, Node> replacement) {
-      throw new UnsupportedOperationException();
-   }
-
-   @Override
-   public Node replaceAt(int index, Function<Node, Node> replacement, Predicate<Node> treeWalkerStrategy) {
-      throw new UnsupportedOperationException();
-   }
-
-   @Override
-   public Node getAt(int idx) {
-      throw new UnsupportedOperationException();
-   }
-
-   @Override
-   public Node getAt(int index, Predicate<Node> treeWalkerStrategy) {
-      throw new UnsupportedOperationException();
-   }
-
-   @Override
-   public int getHeight() {
-      throw new UnsupportedOperationException();
-   }
-
-   @Override
-   public Type getType() {
-      throw new UnsupportedOperationException();
-   }
-
-   @Override
-   public NodeType getNodeType() {
-      throw new UnsupportedOperationException();
    }
 }
