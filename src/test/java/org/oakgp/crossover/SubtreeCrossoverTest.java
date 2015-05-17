@@ -1,6 +1,7 @@
 package org.oakgp.crossover;
 
 import static org.oakgp.TestUtils.assertNodeEquals;
+import static org.oakgp.util.DummyRandom.random;
 import static org.oakgp.util.DummyRandom.GetIntExpectation.nextInt;
 
 import org.junit.Test;
@@ -8,12 +9,11 @@ import org.oakgp.NodeEvolver;
 import org.oakgp.node.Node;
 import org.oakgp.selector.DummyNodeSelector;
 import org.oakgp.util.DummyRandom;
-import org.oakgp.util.DummyRandom.Builder;
 
 public class SubtreeCrossoverTest {
    @Test
    public void testFunctionNodes() {
-      DummyRandom dummyRandom = new Builder().nextInt(2).returns(1).nextInt(5).returns(3).build();
+      DummyRandom dummyRandom = random().nextInt(2).returns(1).nextInt(5).returns(3).build();
       DummyNodeSelector dummySelector = new DummyNodeSelector("(+ 9 5)", "(* 7 (- 8 v5))");
 
       NodeEvolver c = new SubtreeCrossover(dummyRandom);
@@ -43,7 +43,7 @@ public class SubtreeCrossoverTest {
       String input = "(+ 4 5)";
       String output = "(if (< 6 7) 8 9)";
 
-      DummyRandom dummyRandom = new Builder().nextInt(2).returns(0, 1, 1, 1, 1, 1).nextInt(5).returns(0, 0, 1, 2, 3, 4).build();
+      DummyRandom dummyRandom = random().nextInt(2).returns(0, 1, 1, 1, 1, 1).nextInt(5).returns(0, 0, 1, 2, 3, 4).build();
       DummyNodeSelector dummySelector = new DummyNodeSelector(input, output, input, output, input, output, input, output, input, output, input, output);
 
       NodeEvolver c = new SubtreeCrossover(dummyRandom);

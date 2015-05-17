@@ -71,7 +71,6 @@ public class DummyRandom implements Random {
    }
 
    public static Builder random() {
-      // TODO make Builder constructor private to force use of this
       return new Builder();
    }
 
@@ -79,6 +78,10 @@ public class DummyRandom implements Random {
       private DummyValuesMap.Builder<Integer, Integer> integersBuilder = new DummyValuesMap.Builder<Integer, Integer>();
       private DummyValuesQueue<Double> doubles;
       private DummyValuesQueue<Boolean> booleans;
+
+      /** @see DummyRandom#random() */
+      private Builder() {
+      }
 
       private Builder setInts(Integer key, Integer... values) {
          integersBuilder.put(key, values);
