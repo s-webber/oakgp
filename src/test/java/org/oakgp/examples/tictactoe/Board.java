@@ -110,6 +110,14 @@ final class Board {
       return getFree(ALL);
    }
 
+   boolean isOccupied(Move m, Symbol s) {
+      return getState(s).contains(m);
+   }
+
+   boolean isFree(Move m) {
+      return !oState.contains(m) && !xState.contains(m);
+   }
+
    private Move getFree(EnumSet<Move> possibles) {
       return possibles.stream().filter(this::isFree).findFirst().orElse(null);
    }
@@ -128,10 +136,6 @@ final class Board {
       EnumSet<Move> intersection = copyOf(a);
       intersection.removeAll(b);
       return intersection;
-   }
-
-   private boolean isFree(Move m) {
-      return !oState.contains(m) && !xState.contains(m);
    }
 
    private Move first(EnumSet<Move> s) {
