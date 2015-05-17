@@ -149,13 +149,13 @@ public final class FunctionNode implements Node {
    }
 
    @Override
-   public int getDepth() {
+   public int getHeight() {
       // TODO cache on first call
-      int depth = 0;
+      int height = 0;
       for (int i = 0; i < arguments.getArgCount(); i++) {
-         depth = Math.max(depth, arguments.getArg(i).getDepth());
+         height = Math.max(height, arguments.getArg(i).getHeight());
       }
-      return depth + 1;
+      return height + 1;
    }
 
    @Override

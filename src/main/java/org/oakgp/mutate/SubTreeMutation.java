@@ -21,7 +21,7 @@ public final class SubTreeMutation implements NodeEvolver {
       Node root = selector.next();
       int mutationPoint = Utils.selectSubNodeIndex(random, root);
       return root.replaceAt(mutationPoint, node -> {
-         return treeGenerator.generate(node.getType(), node.getDepth());
+         return treeGenerator.generate(node.getType(), node.getHeight());
       });
    }
 }

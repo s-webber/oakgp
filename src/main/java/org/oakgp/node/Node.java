@@ -50,7 +50,8 @@ public interface Node {
 
    Node getAt(int index, Predicate<Node> treeWalkerStrategy);
 
-   int getDepth();
+   /** The height of a node is the number of edges on the longest downward path between that node and a leaf. */
+   int getHeight();
 
    Type getType();
 

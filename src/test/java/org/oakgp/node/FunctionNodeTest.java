@@ -84,21 +84,21 @@ public class FunctionNodeTest {
    }
 
    @Test
-   public void testCountAndDepth() {
-      assertCountAndDepth("(* 7 7)", 3, 2);
-      assertCountAndDepth("(* (+ 8 9) 7)", 5, 3);
-      assertCountAndDepth("(* 7 (+ 8 9))", 5, 3);
-      assertCountAndDepth("(zero? (+ (* 4 5) (- 6 (+ 7 8))))", 10, 5);
-      assertCountAndDepth("(zero? (+ (- 6 (+ 7 8)) (* 4 5)))", 10, 5);
-      assertCountAndDepth("(if (zero? v0) v1 v2)", 5, 3);
-      assertCountAndDepth("(if (zero? v0) v1 (+ v0 (* v1 v2)))", 9, 4);
-      assertCountAndDepth("(if (zero? v0) (+ v0 (* v1 v2)) v1)", 9, 4);
+   public void testCountAndHeight() {
+      assertCountAndHeight("(* 7 7)", 3, 2);
+      assertCountAndHeight("(* (+ 8 9) 7)", 5, 3);
+      assertCountAndHeight("(* 7 (+ 8 9))", 5, 3);
+      assertCountAndHeight("(zero? (+ (* 4 5) (- 6 (+ 7 8))))", 10, 5);
+      assertCountAndHeight("(zero? (+ (- 6 (+ 7 8)) (* 4 5)))", 10, 5);
+      assertCountAndHeight("(if (zero? v0) v1 v2)", 5, 3);
+      assertCountAndHeight("(if (zero? v0) v1 (+ v0 (* v1 v2)))", 9, 4);
+      assertCountAndHeight("(if (zero? v0) (+ v0 (* v1 v2)) v1)", 9, 4);
    }
 
-   private void assertCountAndDepth(String expression, int nodeCount, int depth) {
+   private void assertCountAndHeight(String expression, int nodeCount, int height) {
       Node n = readNode(expression);
       assertEquals(nodeCount, n.getNodeCount());
-      assertEquals(depth, n.getDepth());
+      assertEquals(height, n.getHeight());
    }
 
    @Test

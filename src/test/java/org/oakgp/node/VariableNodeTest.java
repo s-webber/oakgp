@@ -20,7 +20,7 @@ public class VariableNodeTest {
       final VariableNode v = createVariable(id);
       assertEquals(id, v.getId());
       assertEquals(1, v.getNodeCount());
-      assertEquals(1, v.getDepth());
+      assertEquals(1, v.getHeight());
       assertSame(integerType(), v.getType());
    }
 

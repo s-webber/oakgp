@@ -76,7 +76,7 @@ class Human implements Node {
    }
 
    @Override
-   public int getDepth() {
+   public int getHeight() {
       throw new UnsupportedOperationException();
    }
 

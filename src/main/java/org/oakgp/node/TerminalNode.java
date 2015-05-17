@@ -5,7 +5,7 @@ import java.util.function.Predicate;
 
 abstract class TerminalNode implements Node {
    @Override
-   public final int getDepth() {
+   public final int getHeight() {
       return 1;
    }
 
