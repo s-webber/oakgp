@@ -39,7 +39,7 @@ public class GridWarSystemTest {
       config.setVariables(VARIABLE_TYPES);
       config.setFunctionSet(IntegerUtils.INTEGER_UTILS.getAdd(), IntegerUtils.INTEGER_UTILS.getSubtract(), IntegerUtils.INTEGER_UTILS.getMultiply(),
             new LessThan(integerType()), new LessThanOrEqual(integerType()), new GreaterThan(integerType()), new GreaterThanOrEqual(integerType()), new Equal(
-                  integerType()), new NotEqual(integerType()), new If());
+                  integerType()), new NotEqual(integerType()), new If(integerType()));
       config.setGenerationProcessor(new RoundRobinTournament(createGridWarGame()));
       config.process();
    }

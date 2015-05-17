@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.oakgp.TestUtils.readNode;
+import static org.oakgp.Type.integerType;
 
 import org.junit.Test;
 import org.oakgp.function.choice.If;
@@ -100,6 +101,6 @@ public class NumberUtilsTest {
       assertTrue(NUMBER_UTILS.isAddOrSubtract(NUMBER_UTILS.getAdd()));
       assertTrue(NUMBER_UTILS.isAddOrSubtract(NUMBER_UTILS.getSubtract()));
       assertFalse(NUMBER_UTILS.isAddOrSubtract(NUMBER_UTILS.getMultiply()));
-      assertFalse(NUMBER_UTILS.isAddOrSubtract(new If()));
+      assertFalse(NUMBER_UTILS.isAddOrSubtract(new If(integerType())));
    }
 }

@@ -18,7 +18,7 @@ import org.oakgp.function.math.IntegerUtils;
 public class IfTest extends AbstractFunctionTest {
    @Override
    protected Function getFunction() {
-      return new If();
+      return new If(integerType());
    }
 
    @Override

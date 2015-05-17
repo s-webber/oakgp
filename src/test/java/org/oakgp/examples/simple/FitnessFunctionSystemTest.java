@@ -48,7 +48,7 @@ import org.oakgp.node.ConstantNode;
  */
 public class FitnessFunctionSystemTest {
    private static final Function[] ARITHMETIC_FUNCTIONS = { IntegerUtils.INTEGER_UTILS.getAdd(), IntegerUtils.INTEGER_UTILS.getSubtract(),
-         IntegerUtils.INTEGER_UTILS.getMultiply() };
+      IntegerUtils.INTEGER_UTILS.getMultiply() };
 
    @Test
    public void testTwoVariableArithmeticExpression() {
@@ -91,7 +91,7 @@ public class FitnessFunctionSystemTest {
       config.setVariables(variableTypes);
       config.setFunctionSet(IntegerUtils.INTEGER_UTILS.getAdd(), IntegerUtils.INTEGER_UTILS.getSubtract(), IntegerUtils.INTEGER_UTILS.getMultiply(),
             new LessThan(integerType()), new LessThanOrEqual(integerType()), new GreaterThan(integerType()), new GreaterThanOrEqual(integerType()), new Equal(
-                  integerType()), new NotEqual(integerType()), new If());
+                  integerType()), new NotEqual(integerType()), new If(integerType()));
       FitnessFunction fitnessFunction = createIntegerTestDataFitnessFunction(createTests(variableTypes.length, a -> {
          int x = (int) a.get(0);
          int y = (int) a.get(1);

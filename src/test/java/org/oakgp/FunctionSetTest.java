@@ -178,18 +178,18 @@ public class FunctionSetTest {
 
    private static FunctionSet createFunctionSet() {
       return new FunctionSet(
-      // arithmetic
+            // arithmetic
             ADD, SUBTRACT, MULTIPLY,
             // comparison
             new LessThan(integerType()), new LessThanOrEqual(integerType()), new GreaterThan(integerType()), new GreaterThanOrEqual(integerType()), new Equal(
                   integerType()), new NotEqual(integerType()),
-                  // selection
-                  new If(),
-                  // higher-order functions
-                  new Reduce(integerType()), new Filter(integerType()), new org.oakgp.function.hof.Map(integerType(), booleanType()),
-                  // classify
-                  new IsPositive(), new IsNegative(), new IsZero(),
-                  // collections
-                  new Count(integerType()), new Count(booleanType()));
+            // selection
+            new If(integerType()),
+            // higher-order functions
+            new Reduce(integerType()), new Filter(integerType()), new org.oakgp.function.hof.Map(integerType(), booleanType()),
+            // classify
+            new IsPositive(), new IsNegative(), new IsZero(),
+            // collections
+            new Count(integerType()), new Count(booleanType()));
    }
 }

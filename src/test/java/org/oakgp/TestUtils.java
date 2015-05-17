@@ -109,7 +109,7 @@ public class TestUtils {
       functions.add(new Equal(integerType()));
       functions.add(new NotEqual(integerType()));
 
-      functions.add(new If());
+      functions.add(new If(integerType()));
       functions.add(new OrElse(stringType()));
       functions.add(new OrElse(integerType()));
 
