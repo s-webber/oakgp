@@ -60,7 +60,7 @@ public class SystemTestConfig {
    private Predicate<List<RankedCandidate>> terminator;
    private Type returnType;
 
-   public void process() {
+   public Node process() {
       requireNonNull(generationProcessor);
       requireNonNull(terminator);
       requireNonNull(returnType);
@@ -69,7 +69,9 @@ public class SystemTestConfig {
       Collection<Node> initialGeneration = createInitialGeneration(treeGenerator, returnType, GENERATION_SIZE);
       RankedCandidate best = Runner.process(generationProcessor, getNodeEvolvers(), terminator, initialGeneration);
       System.out.println("Best: " + best);
-      System.out.println(writeNode(simplify(best.getNode())));
+      Node simplifiedBestNode = simplify(best.getNode());
+      System.out.println(writeNode(simplifiedBestNode));
+      return simplifiedBestNode;
    }
 
    private GenerationEvolver getNodeEvolvers() {
