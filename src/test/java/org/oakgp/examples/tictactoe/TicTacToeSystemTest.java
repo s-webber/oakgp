@@ -9,6 +9,7 @@ import java.util.function.Predicate;
 import org.junit.Test;
 import org.oakgp.Assignments;
 import org.oakgp.RankedCandidate;
+import org.oakgp.TestUtils;
 import org.oakgp.Type;
 import org.oakgp.examples.SystemTestConfig;
 import org.oakgp.fitness.FitnessFunction;
@@ -71,11 +72,7 @@ public class TicTacToeSystemTest {
    }
 
    private ConstantNode[] getMoveConstants() {
-      ConstantNode[] constants = new ConstantNode[Move.values().length];
-      for (int i = 0; i < constants.length; i++) {
-         constants[i] = new ConstantNode(Move.values()[i], POSSIBLE_MOVE);
-      }
-      return constants;
+      return TestUtils.createEnumConstants(Move.class, POSSIBLE_MOVE);
    }
 
    private TwoPlayerGame createTicTacToeGame() {

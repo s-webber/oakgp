@@ -167,4 +167,13 @@ public class TestUtils {
    public static void assertNodeEquals(String expected, Node actual) {
       assertEquals(expected, writeNode(actual));
    }
+
+   public static ConstantNode[] createEnumConstants(Class<? extends Enum<?>> e, Type t) {
+      Enum<?>[] enumConstants = e.getEnumConstants();
+      ConstantNode[] constants = new ConstantNode[enumConstants.length];
+      for (int i = 0; i < enumConstants.length; i++) {
+         constants[i] = new ConstantNode(enumConstants[i], t);
+      }
+      return constants;
+   }
 }
