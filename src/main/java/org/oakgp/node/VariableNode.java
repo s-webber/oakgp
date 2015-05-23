@@ -58,7 +58,13 @@ public final class VariableNode extends TerminalNode {
       return hashCode;
    }
 
-   // NOTE: *not* over-riding equals(Object) as two VariableNode references are only "equal" if they refer to the same instance
+   /** Two VariableNode references are only "equal" if they refer to the same instance. */
+   @Override
+   public boolean equals(Object o) {
+      // Even though this implementation is the same as Object.equals(Object),
+      // still overriding in order to be explicit about the behaviour and to be able to add javadoc.
+      return this == o;
+   }
 
    @Override
    public String toString() {
