@@ -32,11 +32,17 @@ public class IfTest extends AbstractFunctionTest {
       testCases.put("(if (< 1 2) 4 7)", "4");
       testCases.put("(if (> 1 2) 4 7)", "7");
       testCases.put("(if (> v0 v1) v2 v2)", "v2");
+
+      testCases.put("(if (> v0 v1) v3 v4)", "(if (< v1 v0) v3 v4)");
+
+      testCases.put("(if (< v0 v1) (if (< v0 v1) v2 v3) v4)", "(if (< v0 v1) v2 v4)");
+      testCases.put("(if (< v0 v1) v2 (if (< v0 v1) v3 v4))", "(if (< v0 v1) v2 v3)");
    }
 
    @Override
    protected void getCannotSimplifyTests(List<String> testCases) {
       testCases.add("(if (< v0 v1) 1 2)");
+      testCases.add("(if (< v0 v1) v2 v3)");
    }
 
    @Test
