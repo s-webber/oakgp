@@ -1,7 +1,7 @@
 package org.oakgp.examples.tictactoe;
 
 import static org.oakgp.Signature.createSignature;
-import static org.oakgp.Type.optionalType;
+import static org.oakgp.Type.nullableType;
 import static org.oakgp.Type.type;
 
 import org.oakgp.Arguments;
@@ -10,7 +10,7 @@ import org.oakgp.Signature;
 import org.oakgp.function.Function;
 
 final class GetPossibleMove implements Function {
-   private static final Signature SIGNATURE = createSignature(optionalType(type("move")), type("board"));
+   private static final Signature SIGNATURE = createSignature(nullableType(type("move")), type("board"));
 
    private final String displayName;
    private final java.util.function.Function<Board, Move> f;

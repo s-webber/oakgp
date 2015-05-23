@@ -47,13 +47,13 @@ public class TypeTest {
    }
 
    @Test
-   public void testOptionalInteger() {
-      assertOptionalType("integer", Type::integerType);
+   public void testNullableInteger() {
+      assertNullableType("integer", Type::integerType);
    }
 
    @Test
-   public void testOptionalBooleanArray() {
-      assertOptionalType("array [boolean]", Type::booleanArrayType);
+   public void testNullableBooleanArray() {
+      assertNullableType("array [boolean]", Type::booleanArrayType);
    }
 
    @Test
@@ -127,11 +127,11 @@ public class TypeTest {
       assertEquals("array [" + name + "]", t.toString());
    }
 
-   private void assertOptionalType(String name, Supplier<Type> s) {
-      Type t = Type.type("optional", s.get());
-      assertSame(t, Type.type("optional", s.get()));
-      assertSame(t, Type.optionalType(s.get()));
-      assertEquals("optional [" + name + "]", t.toString());
+   private void assertNullableType(String name, Supplier<Type> s) {
+      Type t = Type.type("nullable", s.get());
+      assertSame(t, Type.type("nullable", s.get()));
+      assertSame(t, Type.nullableType(s.get()));
+      assertEquals("nullable [" + name + "]", t.toString());
    }
 
    private void assertSameTypes(Type[] a, Type[] b) {

@@ -17,7 +17,7 @@ public final class OrElse implements Function {
    private final Signature signature;
 
    public OrElse(Type type) {
-      signature = Signature.createSignature(type, Type.optionalType(type), type);
+      signature = Signature.createSignature(type, Type.nullableType(type), type);
    }
 
    @Override

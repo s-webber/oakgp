@@ -40,8 +40,8 @@ public final class Type implements Comparable<Type> {
       return functionType(booleanType(), integerType());
    }
 
-   public static Type optionalType(Type t) {
-      return type("optional", t);
+   public static Type nullableType(Type t) {
+      return type("nullable", t);
    }
 
    public static Type functionType(Type... signature) {
