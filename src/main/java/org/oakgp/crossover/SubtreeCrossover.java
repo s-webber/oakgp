@@ -26,11 +26,11 @@ public final class SubtreeCrossover implements NodeEvolver {
          Type toType = t.getType();
          Predicate<Node> treeWalkerStrategy = n -> n.getType() == toType;
          int nodeCount = parent2.getNodeCount(treeWalkerStrategy);
-         if (nodeCount != 0) {
+         if (nodeCount == 0) {
+            return t;
+         } else {
             int from = random.nextInt(nodeCount);
             return parent2.getAt(from, treeWalkerStrategy);
-         } else {
-            return t;
          }
       });
    }
