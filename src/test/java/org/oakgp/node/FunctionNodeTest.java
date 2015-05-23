@@ -1,6 +1,7 @@
 package org.oakgp.node;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
@@ -217,6 +218,8 @@ public class FunctionNodeTest {
 
       // test not equal to other non-Node instances
       assertNotEquals(n, new Object());
+
+      assertFalse(n.equals(null));
    }
 
    @Test

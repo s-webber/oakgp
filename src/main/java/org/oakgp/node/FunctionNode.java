@@ -178,7 +178,7 @@ public final class FunctionNode implements Node {
    public boolean equals(Object o) {
       if (this == o) {
          return true;
-      } else if (hashCode() != o.hashCode()) {
+      } else if (o == null || this.hashCode != o.hashCode()) {
          return false;
       } else if (o instanceof FunctionNode) {
          FunctionNode fn = (FunctionNode) o;
