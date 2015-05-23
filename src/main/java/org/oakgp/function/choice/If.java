@@ -24,6 +24,9 @@ import org.oakgp.node.Node;
  * </ol>
  */
 public final class If implements Function {
+   private static final int TRUE_IDX = 1;
+   private static final int FALSE_IDX = 2;
+
    private final Signature signature;
 
    public If(Type type) {
@@ -43,24 +46,31 @@ public final class If implements Function {
 
    @Override
    public Node simplify(Arguments arguments) {
-      if (arguments.secondArg().equals(arguments.thirdArg())) {
-         return arguments.secondArg();
+      Node trueBranch = arguments.secondArg();
+      Node falseBranch = arguments.thirdArg();
+      if (trueBranch.equals(falseBranch)) {
+         return trueBranch;
       }
 
-      if (isConstant(arguments.firstArg())) {
+      Node condition = arguments.firstArg();
+      if (isConstant(condition)) {
          int index = getOutcomeArgumentIndex(arguments, null);
-         return arguments.getArg(index);
+         return index == TRUE_IDX ? trueBranch : falseBranch;
       }
 
-      Node result = removeRedundantIf(arguments, 1);
+      return removeRedundantIf(condition, arguments);
+   }
+
+   private Node removeRedundantIf(Node condition, Arguments arguments) {
+      Node result = removeRedundantIf(condition, arguments, TRUE_IDX);
       if (result != null) {
          return result;
       } else {
-         return removeRedundantIf(arguments, 2);
+         return removeRedundantIf(condition, arguments, FALSE_IDX);
       }
    }
 
-   private Node removeRedundantIf(Arguments arguments, int branchIdx) {
+   private Node removeRedundantIf(Node condition, Arguments arguments, int branchIdx) {
       Node branch = arguments.getArg(branchIdx);
       if (isFunction(branch)) {
          FunctionNode fn = (FunctionNode) branch;
@@ -72,6 +82,6 @@ public final class If implements Function {
    }
 
    private int getOutcomeArgumentIndex(Arguments arguments, Assignments assignments) {
-      return TRUE.equals(arguments.firstArg().evaluate(assignments)) ? 1 : 2;
+      return TRUE.equals(arguments.firstArg().evaluate(assignments)) ? TRUE_IDX : FALSE_IDX;
    }
 }
