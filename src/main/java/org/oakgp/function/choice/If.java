@@ -62,20 +62,37 @@ public final class If implements Function {
    }
 
    private Node removeRedundantIf(Node condition, Arguments arguments) {
-      Node result = removeRedundantIf(condition, arguments, TRUE_IDX);
+      Node result = removeRedundantIf(this, condition, arguments, TRUE_IDX);
       if (result != null) {
          return result;
       } else {
-         return removeRedundantIf(condition, arguments, FALSE_IDX);
+         return removeRedundantIf(this, condition, arguments, FALSE_IDX);
       }
    }
 
-   private Node removeRedundantIf(Node condition, Arguments arguments, int branchIdx) {
+   private Node removeRedundantIf(Function f, Node condition, Arguments arguments, int branchIdx) {
       Node branch = arguments.getArg(branchIdx);
       if (isFunction(branch)) {
          FunctionNode fn = (FunctionNode) branch;
-         if (fn.getFunction() == this && fn.getArguments().firstArg().equals(arguments.firstArg())) {
-            return new FunctionNode(this, arguments.replaceAt(branchIdx, fn.getArguments().secondArg()));
+         if (fn.getFunction() == this && fn.getArguments().firstArg().equals(condition)) {
+            return new FunctionNode(f, arguments.replaceAt(branchIdx, fn.getArguments().secondArg()));
+         } else {
+            Node n = removeRedundantIf(condition, fn);
+            if (n != null) {
+               return new FunctionNode(f, arguments.replaceAt(branchIdx, n));
+            }
+         }
+      }
+      return null;
+   }
+
+   private Node removeRedundantIf(Node condition, FunctionNode fn) {
+      Function function = fn.getFunction();
+      Arguments arguments = fn.getArguments();
+      for (int i = 0; i < arguments.getArgCount(); i++) {
+         Node result = removeRedundantIf(function, condition, arguments, i);
+         if (result != null) {
+            return result;
          }
       }
       return null;
