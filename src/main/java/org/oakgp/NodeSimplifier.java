@@ -10,7 +10,6 @@ import java.util.Set;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
-import org.oakgp.serialize.NodeWriter;
 
 /**
  * Simplifies tree structures by replacing expressions with their values.
@@ -39,18 +38,18 @@ public final class NodeSimplifier {
 
    public static Node simplify(Node input) {
       int ctr = 0;
-      Set<String> s = new HashSet<>();
+      Set<Node> s = new HashSet<>();
       Node previous;
       Node output = input;
       do {
          previous = output;
          output = simplifyOnce(output);
-         if (!output.equals(previous) && !s.add(new NodeWriter().writeNode(output))) { // TODO
+         if (!output.equals(previous) && !s.add(output)) { // TODO
             // throw new IllegalArgumentException(new NodeWriter().writeNode(output) + " " + new NodeWriter().writeNode(previous));
             return output;
          }
          if (ctr++ > MAX_RETRIES) { // TODO
-            throw new IllegalArgumentException(new NodeWriter().writeNode(input));
+            throw new IllegalArgumentException(input.toString());
          }
       } while (isFunction(output) && !output.equals(previous));
       return output;
