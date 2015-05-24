@@ -81,6 +81,11 @@ public class SubtractTest extends AbstractFunctionTest {
       testCases.put("(- 0 (* 2 v0))", "(* -2 v0)", assignedValues);
 
       testCases.put("(- 0 (* -162 v0))", "(* 162 v0)", assignedValues);
+
+      // TODO "(- (- 0 v2) (- -3 v0))" is simplified to "(- (- 3 v2) (- 0 v0))" and "(- (- 3 v2) (- 0 v0))" is simplified to "(- (- 0 v2) (- -3 v0))"
+      // - resolve this behaviour so results are consistent and stable
+      // testCases.put("(- (- 0 v2) (- -3 v0))", "(- (- 3 v2) (- 0 v0))");
+      // testCases.put("(- (- 3 v2) (- 0 v0))", "(- (- 0 v2) (- -3 v0))");
    }
 
    @Override
