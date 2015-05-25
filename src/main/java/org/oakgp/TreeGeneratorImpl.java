@@ -8,18 +8,48 @@ import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.util.Random;
 
+/**
+ * Provides different strategies for creating a tree data structure.
+ * <p>
+ * Can be used to create randomly generate the initial population of a genetic programming run.
+ *
+ * @see #full(PrimitiveSet)
+ * @see #grow(PrimitiveSet, Random)
+ */
 public final class TreeGeneratorImpl implements TreeGenerator {
    private final PrimitiveSet primitiveSet;
    private final IntPredicate strategy;
 
-   public static TreeGeneratorImpl full(PrimitiveSet primitiveSet) {
+   /**
+    * Creates a {@code TreeGenerator} that uses the "full" approach to creating trees.
+    * <p>
+    * The "full" approach constructs trees where all terminal nodes (i.e. leaf nodes) are at the same depth.
+    *
+    * @param primitiveSet
+    *           the collection of functions, variables and constants from which tree will be constructed
+    * @return a {@code TreeGenerator} that uses the "full" approach to creating trees.
+    */
+   public static TreeGenerator full(PrimitiveSet primitiveSet) {
       return new TreeGeneratorImpl(primitiveSet, d -> d > 0);
    }
 
-   public static TreeGeneratorImpl grow(PrimitiveSet primitiveSet, Random random) {
+   /**
+    * Creates a {@code TreeGenerator} that uses the "grow" approach to creating trees.
+    * <p>
+    * The "grow" approach constructs trees where terminal nodes (i.e. leaf nodes) are located at random depths, within a maximum limit.
+    *
+    * @param primitiveSet
+    *           the collection of functions, variables and constants from which tree will be constructed
+    * @return a {@code TreeGenerator} that uses the "grow" approach to creating trees.
+    */
+   public static TreeGenerator grow(PrimitiveSet primitiveSet, Random random) {
       return new TreeGeneratorImpl(primitiveSet, d -> d > 0 && random.nextBoolean());
    }
 
+   /**
+    * @see #full(PrimitiveSet)
+    * @see #grow(PrimitiveSet, Random)
+    */
    private TreeGeneratorImpl(PrimitiveSet primitiveSet, IntPredicate strategy) {
       Objects.requireNonNull(primitiveSet);
       this.primitiveSet = primitiveSet;

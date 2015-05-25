@@ -1,7 +1,17 @@
 package org.oakgp.node;
 
+/**
+ * Defines the node types used to construct tree structures.
+ *
+ * @see Node#getNodeType()
+ */
 public enum NodeType {
-   FUNCTION, CONSTANT, VARIABLE;
+   /** @see FunctionNode */
+   FUNCTION,
+   /** @see ConstantNode */
+   CONSTANT,
+   /** @see VariableNode */
+   VARIABLE;
 
    public static boolean areFunctions(Node n1, Node n2) {
       return isFunction(n1) && isFunction(n2);

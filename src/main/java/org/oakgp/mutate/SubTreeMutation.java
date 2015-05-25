@@ -7,6 +7,7 @@ import org.oakgp.selector.NodeSelector;
 import org.oakgp.util.Random;
 import org.oakgp.util.Utils;
 
+/** Randomly replaces a subtree of the parent with a newly generated subtree. */
 public final class SubTreeMutation implements NodeEvolver {
    private final Random random;
    private final TreeGenerator treeGenerator;

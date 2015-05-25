@@ -7,7 +7,11 @@ import org.oakgp.Type;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 
-/** Determines if two numbers are equal. */
+/**
+ * Determines if two object are equal.
+ * <p>
+ * <b>Note:</b> Equality is checked using {@code Comparable#compareTo(Object)} rather than {@code Object#equals(Object)}.
+ */
 public final class Equal extends ComparisonOperator {
    public Equal(Type type) {
       super(type, true);

@@ -3,6 +3,7 @@ package org.oakgp.node;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+/** Represents a node that has no children. */
 abstract class TerminalNode implements Node {
    @Override
    public final int getHeight() {

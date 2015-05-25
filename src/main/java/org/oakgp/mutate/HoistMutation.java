@@ -8,6 +8,11 @@ import org.oakgp.selector.NodeSelector;
 import org.oakgp.util.Random;
 import org.oakgp.util.Utils;
 
+/**
+ * Selects a subtree of the parent as a new offspring.
+ * <p>
+ * The resulting offspring will be smaller than the parent.
+ */
 public final class HoistMutation implements NodeEvolver {
    private final Random random;
 

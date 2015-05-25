@@ -9,7 +9,11 @@ import org.oakgp.selector.NodeSelector;
 import org.oakgp.util.Random;
 import org.oakgp.util.Utils;
 
-/** Performs subtree crossover. */
+/**
+ * Performs subtree crossover.
+ * <p>
+ * A subtree is selected at random from each of the parents. The subtree of the first is replaced by the subtree of the second.
+ */
 public final class SubtreeCrossover implements NodeEvolver {
    private final Random random;
 

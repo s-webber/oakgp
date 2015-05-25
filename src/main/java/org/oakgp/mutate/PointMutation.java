@@ -11,7 +11,15 @@ import org.oakgp.selector.NodeSelector;
 import org.oakgp.util.Random;
 import org.oakgp.util.Utils;
 
-/** Performs mutation (also known as node replacement mutation). */
+/**
+ * Randomly changes a point (node) in the parent.
+ * <p>
+ * A node in the parent is selected at random and replaced with another primitive of the same type and arity.
+ * </p>
+ * <p>
+ * Also known as node replacement mutation.
+ * <p>
+ */
 public final class PointMutation implements NodeEvolver {
    private final Random random;
    private final PrimitiveSet primitiveSet;
