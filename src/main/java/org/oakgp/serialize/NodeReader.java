@@ -114,7 +114,7 @@ public final class NodeReader implements Closeable {
          if (t == null) {
             t = n.getType();
          } else if (t != n.getType()) {
-            throw new RuntimeException("Mixed type array elements: " + t + " and " + n.getType());
+            throw new IllegalStateException("Mixed type array elements: " + t + " and " + n.getType());
          }
          arguments.add(n);
       }
@@ -128,38 +128,38 @@ public final class NodeReader implements Closeable {
 
    private ConstantNode nextLiteral(String token) {
       switch (token) {
-      case "true":
-         return Utils.TRUE_NODE;
-      case "false":
-         return Utils.FALSE_NODE;
-      default:
-         if (isNumber(token)) {
-            char suffix = token.charAt(token.length() - 1);
-            switch (suffix) {
-            case 'D':
-               return new ConstantNode(toBigDecimal(token.substring(0, token.length() - 1)), bigDecimalType());
-            case 'L':
-               return new ConstantNode(Long.valueOf(token.substring(0, token.length() - 1)), longType());
-            default:
-               return new ConstantNode(Integer.parseInt(token), integerType());
+         case "true":
+            return Utils.TRUE_NODE;
+         case "false":
+            return Utils.FALSE_NODE;
+         default:
+            if (isNumber(token)) {
+               char suffix = token.charAt(token.length() - 1);
+               switch (suffix) {
+                  case 'D':
+                     return new ConstantNode(toBigDecimal(token.substring(0, token.length() - 1)), bigDecimalType());
+                  case 'L':
+                     return new ConstantNode(Long.valueOf(token.substring(0, token.length() - 1)), longType());
+                  default:
+                     return new ConstantNode(Integer.parseInt(token), integerType());
+               }
+            } else {
+               Function function = functionSet.getFunction(token);
+               return new ConstantNode(function, getFunctionType(function));
             }
-         } else {
-            Function function = functionSet.getFunction(token);
-            return new ConstantNode(function, getFunctionType(function));
-         }
       }
    }
 
    private BigDecimal toBigDecimal(String number) {
       switch (number) {
-      case "0":
-         return BigDecimal.ZERO;
-      case "1":
-         return BigDecimal.ONE;
-      case "10":
-         return BigDecimal.TEN;
-      default:
-         return new BigDecimal(number);
+         case "0":
+            return BigDecimal.ZERO;
+         case "1":
+            return BigDecimal.ONE;
+         case "10":
+            return BigDecimal.TEN;
+         default:
+            return new BigDecimal(number);
       }
    }
 
