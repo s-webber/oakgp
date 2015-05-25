@@ -10,6 +10,8 @@ import org.oakgp.selector.DummyNodeSelector;
 import org.oakgp.util.DummyRandom;
 
 public class CommonRegionCrossoverTest {
+   // TODO test mixed types
+
    @Test
    public void testFunctionNodes() {
       DummyRandom dummyRandom = nextInt(4).returns(1);
