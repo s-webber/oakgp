@@ -1,8 +1,8 @@
 package org.oakgp.examples.gridwar;
 
+import static org.oakgp.TestUtils.createIntegerConstants;
 import static org.oakgp.TestUtils.createTypeArray;
 import static org.oakgp.Type.integerType;
-import static org.oakgp.examples.SystemTestConfig.GENERATION_SIZE;
 import static org.oakgp.examples.SystemTestConfig.RANDOM;
 
 import java.util.List;
@@ -21,9 +21,7 @@ import org.oakgp.function.compare.LessThanOrEqual;
 import org.oakgp.function.compare.NotEqual;
 import org.oakgp.function.math.IntegerUtils;
 import org.oakgp.tournament.FirstPlayerAdvantageGame;
-import org.oakgp.tournament.RoundRobinTournament;
 import org.oakgp.tournament.TwoPlayerGame;
-import org.oakgp.tournament.TwoPlayerGameCache;
 
 public class GridWarSystemTest {
    private static final int NUM_GENERATIONS = 100;
@@ -35,18 +33,17 @@ public class GridWarSystemTest {
       SystemTestConfig config = new SystemTestConfig();
       config.setReturnType(integerType());
       config.setTerminator(createTerminator());
-      config.useIntegerConstants(NUM_CONSTANTS);
+      config.setConstants(createIntegerConstants(NUM_CONSTANTS));
       config.setVariables(VARIABLE_TYPES);
       config.setFunctionSet(IntegerUtils.INTEGER_UTILS.getAdd(), IntegerUtils.INTEGER_UTILS.getSubtract(), IntegerUtils.INTEGER_UTILS.getMultiply(),
             new LessThan(integerType()), new LessThanOrEqual(integerType()), new GreaterThan(integerType()), new GreaterThanOrEqual(integerType()), new Equal(
                   integerType()), new NotEqual(integerType()), new If(integerType()));
-      config.setGenerationProcessor(new RoundRobinTournament(createGridWarGame()));
+      config.setTwoPlayerGame(createGridWarGame());
       config.process();
    }
 
    private TwoPlayerGame createGridWarGame() {
-      TwoPlayerGame game = new FirstPlayerAdvantageGame(new GridWar(RANDOM));
-      return new TwoPlayerGameCache(GENERATION_SIZE * 2, game);
+      return new FirstPlayerAdvantageGame(new GridWar(RANDOM));
    }
 
    private Predicate<List<RankedCandidate>> createTerminator() {

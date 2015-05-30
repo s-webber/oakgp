@@ -1,10 +1,7 @@
 package org.oakgp.examples;
 
-import static java.util.Objects.isNull;
-import static java.util.Objects.nonNull;
 import static java.util.Objects.requireNonNull;
 import static org.oakgp.NodeSimplifier.simplify;
-import static org.oakgp.TestUtils.integerConstant;
 import static org.oakgp.TestUtils.writeNode;
 
 import java.util.Collection;
@@ -13,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
+import java.util.logging.Logger;
 
 import org.oakgp.ConstantSet;
 import org.oakgp.FunctionSet;
@@ -37,6 +36,9 @@ import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
 import org.oakgp.selector.NodeSelectorFactory;
 import org.oakgp.selector.WeightedNodeSelectorFactory;
+import org.oakgp.tournament.RoundRobinTournament;
+import org.oakgp.tournament.TwoPlayerGame;
+import org.oakgp.tournament.TwoPlayerGameCache;
 import org.oakgp.util.JavaUtilRandomAdapter;
 import org.oakgp.util.NodeSet;
 import org.oakgp.util.Random;
@@ -45,60 +47,53 @@ public class SystemTestConfig {
    // TODO enable all values to be overridden
    // TODO provide default terminator implementation
 
-   public static final Random RANDOM = new JavaUtilRandomAdapter();
-   public static final int GENERATION_SIZE = 50;
+   public static final JavaUtilRandomAdapter RANDOM = new JavaUtilRandomAdapter();
 
-   private static final NodeSelectorFactory SELECTOR_FACTORY = new WeightedNodeSelectorFactory(RANDOM);
-   private static final int ELITISM_SIZE = 3;
-   private static final double RATIO_VARIABLES = .6;
+   private static final int DEFAULT_GENERATION_SIZE = 50;
+   private static final int DEFAULT_CACHE_SIZE = 10000;
+   private static final int ELITISM_SIZE = 3; // TODO
+   private static final double RATIO_VARIABLES = .6; // TODO
 
-   private FunctionSet functionSet;
-   private ConstantSet constantSet;
-   private VariableSet variableSet;
-   private PrimitiveSet primitiveSet;
-   private GenerationProcessor generationProcessor;
-   private Predicate<List<RankedCandidate>> terminator;
-   private Type returnType;
+   private int generationSize = 0;
+   private final Property<Random> random = new Property<>("random");
+   private final Property<NodeSelectorFactory> nodeSelectorFactory = new Property<>("nodeSelectorFactory");
+   private final Property<FunctionSet> functionSet = new Property<>("functionSet");
+   private final Property<ConstantSet> constantSet = new Property<>("constantSet");
+   private final Property<VariableSet> variableSet = new Property<>("variableSet");
+   private final Property<PrimitiveSet> primitiveSet = new Property<>("primitiveSet");
+   private final Property<GenerationProcessor> generationProcessor = new Property<>("generationProcessor");
+   private final Property<Predicate<List<RankedCandidate>>> terminator = new Property<>("terminator");
+   private final Property<Type> returnType = new Property<>("returnType");
 
    public Node process() {
-      requireNonNull(generationProcessor);
-      requireNonNull(terminator);
-      requireNonNull(returnType);
+      setDefaultGenerationSize();
+      random.setIfAbsent(() -> RANDOM);
+      nodeSelectorFactory.setIfAbsent(() -> new WeightedNodeSelectorFactory(random.get()));
+      primitiveSet.set(new PrimitiveSetImpl(functionSet.get(), constantSet.get(), variableSet.get(), random.get(), RATIO_VARIABLES));
 
-      TreeGenerator treeGenerator = TreeGeneratorImpl.grow(getPrimitiveSet(), RANDOM);
-      Collection<Node> initialGeneration = createInitialGeneration(treeGenerator, returnType, GENERATION_SIZE);
-      RankedCandidate best = Runner.process(generationProcessor, getNodeEvolvers(), terminator, initialGeneration);
+      TreeGenerator treeGenerator = TreeGeneratorImpl.grow(primitiveSet.get(), random.get());
+      Collection<Node> initialGeneration = createInitialGeneration(treeGenerator, returnType.get(), generationSize);
+      RankedCandidate best = Runner.process(generationProcessor.get(), getNodeEvolvers(), terminator.get(), initialGeneration);
       System.out.println("Best: " + best);
       Node simplifiedBestNode = simplify(best.getNode());
       System.out.println(writeNode(simplifiedBestNode));
       return simplifiedBestNode;
    }
 
-   private GenerationEvolver getNodeEvolvers() {
-      return new GenerationEvolver(ELITISM_SIZE, SELECTOR_FACTORY, createNodeEvolvers(returnType, getPrimitiveSet()));
+   private GenerationEvolver getNodeEvolvers() { // TODO
+      return new GenerationEvolver(ELITISM_SIZE, nodeSelectorFactory.get(), createNodeEvolvers(returnType.get(), primitiveSet.get()));
    }
 
-   private PrimitiveSet getPrimitiveSet() {
-      if (isNull(primitiveSet)) {
-         requireNonNull(functionSet);
-         requireNonNull(constantSet);
-         requireNonNull(variableSet);
-
-         primitiveSet = new PrimitiveSetImpl(functionSet, constantSet, variableSet, RANDOM, RATIO_VARIABLES);
-      }
-      return primitiveSet;
-   }
-
-   private static Map<NodeEvolver, Long> createNodeEvolvers(Type returnType, PrimitiveSet primitiveSet) {
+   private Map<NodeEvolver, Long> createNodeEvolvers(Type returnType, PrimitiveSet primitiveSet) { // TODO
       Map<NodeEvolver, Long> nodeEvolvers = new HashMap<>();
-      TreeGenerator treeGenerator = TreeGeneratorImpl.grow(primitiveSet, RANDOM);
+      TreeGenerator treeGenerator = TreeGeneratorImpl.grow(primitiveSet, random.get());
       nodeEvolvers.put(t -> treeGenerator.generate(returnType, 4), 5L);
-      nodeEvolvers.put(new SubtreeCrossover(RANDOM), 21L);
-      nodeEvolvers.put(new PointMutation(RANDOM, primitiveSet), 21L);
+      nodeEvolvers.put(new SubtreeCrossover(random.get()), 21L);
+      nodeEvolvers.put(new PointMutation(random.get(), primitiveSet), 21L);
       return nodeEvolvers;
    }
 
-   private static Collection<Node> createInitialGeneration(TreeGenerator treeGenerator, Type type, int generationSize) {
+   private static Collection<Node> createInitialGeneration(TreeGenerator treeGenerator, Type type, int generationSize) { // TODO
       Set<Node> initialGeneration = new NodeSet();
       for (int i = 0; i < generationSize; i++) {
          Node n = treeGenerator.generate(type, 4);
@@ -108,23 +103,19 @@ public class SystemTestConfig {
    }
 
    public void setReturnType(Type returnType) {
-      requireNull(this.returnType);
-      this.returnType = returnType;
+      this.returnType.set(returnType);
    }
 
    public void setConstants(ConstantNode... constants) {
-      requireNull(this.constantSet);
-      this.constantSet = new ConstantSet(constants);
+      this.constantSet.set(new ConstantSet(constants));
    }
 
    public void setVariables(Type... variableTypes) {
-      requireNull(this.variableSet);
-      this.variableSet = VariableSet.createVariableSet(variableTypes);
+      this.variableSet.set(VariableSet.createVariableSet(variableTypes));
    }
 
-   public void setFunctionSet(FunctionSet functionSet) {
-      requireNull(this.functionSet);
-      this.functionSet = functionSet;
+   private void setFunctionSet(FunctionSet functionSet) {
+      this.functionSet.set(functionSet);
    }
 
    public void setFunctionSet(Function... functions) {
@@ -132,31 +123,88 @@ public class SystemTestConfig {
    }
 
    public void setGenerationProcessor(GenerationProcessor generationProcessor) {
-      requireNull(this.generationProcessor);
-      this.generationProcessor = generationProcessor;
+      this.generationProcessor.set(generationProcessor);
    }
 
    public void setTerminator(Predicate<List<RankedCandidate>> terminator) {
-      requireNull(this.terminator);
-      this.terminator = terminator;
+      this.terminator.set(terminator);
    }
 
    public void setFitnessFunction(FitnessFunction fitnessFunction) {
-      FitnessFunction fitnessFunctionCache = new FitnessFunctionCache(GENERATION_SIZE, fitnessFunction);
-      setGenerationProcessor(new FitnessFunctionGenerationProcessor(fitnessFunctionCache));
+      setGenerationProcessor(new FitnessFunctionGenerationProcessor(ensureCached(fitnessFunction)));
    }
 
-   public void useIntegerConstants(int numberOfConstants) {
-      ConstantNode[] constants = new ConstantNode[numberOfConstants];
-      for (int i = 0; i < numberOfConstants; i++) {
-         constants[i] = integerConstant(i);
+   private FitnessFunction ensureCached(FitnessFunction fitnessFunction) {
+      if (fitnessFunction instanceof FitnessFunctionCache) {
+         return fitnessFunction;
+      } else {
+         return new FitnessFunctionCache(DEFAULT_CACHE_SIZE, fitnessFunction);
       }
-      setConstants(constants);
    }
 
-   private void requireNull(Object o) {
-      if (nonNull(o)) {
-         throw new RuntimeException();
+   public void setTwoPlayerGame(TwoPlayerGame twoPlayerGame) {
+      setGenerationProcessor(new RoundRobinTournament(ensureCached(twoPlayerGame)));
+   }
+
+   private TwoPlayerGame ensureCached(TwoPlayerGame twoPlayerGame) {
+      if (twoPlayerGame instanceof TwoPlayerGameCache) {
+         return twoPlayerGame;
+      } else {
+         return new TwoPlayerGameCache(DEFAULT_CACHE_SIZE, twoPlayerGame);
+      }
+   }
+
+   public void setRandom(Random random) {
+      this.random.set(random);
+   }
+
+   public void setNodeSelectorFactory(NodeSelectorFactory nodeSelectorFactory) {
+      this.nodeSelectorFactory.set(nodeSelectorFactory);
+   }
+
+   public void setGenerationSize(int generationSize) {
+      if (this.generationSize > 0) {
+         throw new IllegalStateException("Property [generationSize] has already been assigned to [" + this.generationSize + "] so cannot be reassigned to ["
+               + generationSize + "]");
+      } else if (generationSize < 1) {
+         throw new IllegalArgumentException("Property [generationSize] can only be set to a positive value, so cannot be set to [" + generationSize + "]");
+      } else {
+         this.generationSize = generationSize;
+      }
+   }
+
+   private void setDefaultGenerationSize() {
+      if (generationSize == 0) {
+         setGenerationSize(DEFAULT_GENERATION_SIZE);
+      }
+   }
+
+   private static class Property<T> {
+      private final String name;
+      private T value;
+
+      Property(String name) {
+         this.name = name;
+      }
+
+      T get() {
+         return requireNonNull(value, "Property  [" + name + "] has not been set");
+      }
+
+      void set(T value) {
+         if (this.value != null) {
+            throw new IllegalStateException("Property [" + name + "] has already been assigned to [" + this.value + "] so cannot be reassigned to [" + value
+                  + "]");
+         }
+         this.value = requireNonNull(value, "Cannot set property [" + name + "] to null");
+      }
+
+      void setIfAbsent(Supplier<T> supplier) {
+         if (value == null) {
+            T defaultValue = supplier.get();
+            Logger.getGlobal().info("Setting property  [" + name + "] to default value of [" + value + "]");
+            set(defaultValue);
+         }
       }
    }
 }

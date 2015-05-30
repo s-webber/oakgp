@@ -1,7 +1,6 @@
 package org.oakgp.examples.tictactoe;
 
 import static org.oakgp.Type.type;
-import static org.oakgp.examples.SystemTestConfig.GENERATION_SIZE;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -13,15 +12,12 @@ import org.oakgp.TestUtils;
 import org.oakgp.Type;
 import org.oakgp.examples.SystemTestConfig;
 import org.oakgp.fitness.FitnessFunction;
-import org.oakgp.fitness.FitnessFunctionGenerationProcessor;
 import org.oakgp.function.choice.If;
 import org.oakgp.function.choice.OrElse;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
 import org.oakgp.tournament.FirstPlayerAdvantageGame;
-import org.oakgp.tournament.RoundRobinTournament;
 import org.oakgp.tournament.TwoPlayerGame;
-import org.oakgp.tournament.TwoPlayerGameCache;
 import org.oakgp.util.DummyNode;
 
 public class TicTacToeSystemTest {
@@ -40,7 +36,7 @@ public class TicTacToeSystemTest {
       config.setTerminator(createTerminator());
       config.setFunctionSet(new GetPossibleMove("corner", Board::getFreeCorner), new GetPossibleMove("centre", Board::getFreeCentre), new GetPossibleMove(
             "side", Board::getFreeSide), new GetWinningMove(), new GetAnyMove(), new OrElse(MOVE_TYPE));
-      config.setGenerationProcessor(new RoundRobinTournament(createTicTacToeGame()));
+      config.setTwoPlayerGame(createTicTacToeGame());
       config.process();
    }
 
@@ -52,7 +48,7 @@ public class TicTacToeSystemTest {
       config.setVariables(BOARD_TYPE, SYMBOL_TYPE, SYMBOL_TYPE);
       config.setTerminator(createTerminator());
       config.setFunctionSet(new IsFree(), new IsOccupied(), new GetAnyMove(), new IfValidMove(), new OrElse(MOVE_TYPE), new And(), new If(POSSIBLE_MOVE));
-      config.setGenerationProcessor(new RoundRobinTournament(createTicTacToeGame()));
+      config.setTwoPlayerGame(createTicTacToeGame());
       config.process();
    }
 
@@ -65,8 +61,7 @@ public class TicTacToeSystemTest {
       config.setTerminator(createTerminator());
       config.setFunctionSet(new IsFree(), new IsOccupied(), new GetAnyMove(), new IfValidMove(), new OrElse(MOVE_TYPE), new And(), new If(POSSIBLE_MOVE));
       TicTacToeFitnessFunction fitnessFunction = new TicTacToeFitnessFunction();
-      FitnessFunctionGenerationProcessor generationProcessor = new FitnessFunctionGenerationProcessor(fitnessFunction);
-      config.setGenerationProcessor(generationProcessor);
+      config.setFitnessFunction(fitnessFunction);
       Node result = config.process();
       System.out.println(fitnessFunction.evaluate(result));
    }
@@ -76,8 +71,7 @@ public class TicTacToeSystemTest {
    }
 
    private TwoPlayerGame createTicTacToeGame() {
-      TwoPlayerGame game = new FirstPlayerAdvantageGame(new TicTacToe());
-      return new TwoPlayerGameCache(GENERATION_SIZE * 2, game);
+      return new FirstPlayerAdvantageGame(new TicTacToe());
    }
 
    private Predicate<List<RankedCandidate>> createTerminator() {

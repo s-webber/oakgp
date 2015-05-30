@@ -2,6 +2,7 @@ package org.oakgp.examples.simple;
 
 import static org.oakgp.Assignments.createAssignments;
 import static org.oakgp.TestUtils.createArguments;
+import static org.oakgp.TestUtils.createIntegerConstants;
 import static org.oakgp.TestUtils.createTypeArray;
 import static org.oakgp.Type.booleanType;
 import static org.oakgp.Type.integerArrayType;
@@ -18,7 +19,6 @@ import java.util.function.Predicate;
 import org.junit.Test;
 import org.oakgp.Arguments;
 import org.oakgp.Assignments;
-import org.oakgp.FunctionSet;
 import org.oakgp.RankedCandidate;
 import org.oakgp.Type;
 import org.oakgp.examples.SystemTestConfig;
@@ -48,13 +48,13 @@ import org.oakgp.node.ConstantNode;
  */
 public class FitnessFunctionSystemTest {
    private static final Function[] ARITHMETIC_FUNCTIONS = { IntegerUtils.INTEGER_UTILS.getAdd(), IntegerUtils.INTEGER_UTILS.getSubtract(),
-      IntegerUtils.INTEGER_UTILS.getMultiply() };
+         IntegerUtils.INTEGER_UTILS.getMultiply() };
 
    @Test
    public void testTwoVariableArithmeticExpression() {
       Type[] variableTypes = createTypeArray(2);
       SystemTestConfig config = createSystemTestConfig();
-      config.useIntegerConstants(11);
+      config.setConstants(createIntegerConstants(11));
       config.setVariables(variableTypes);
       config.setFunctionSet(ARITHMETIC_FUNCTIONS);
       FitnessFunction fitnessFunction = createIntegerTestDataFitnessFunction(createTests(variableTypes.length, a -> {
@@ -70,7 +70,7 @@ public class FitnessFunctionSystemTest {
    public void testThreeVariableArithmeticExpression() {
       Type[] variableTypes = createTypeArray(3);
       SystemTestConfig config = createSystemTestConfig();
-      config.useIntegerConstants(11);
+      config.setConstants(createIntegerConstants(11));
       config.setVariables(variableTypes);
       config.setFunctionSet(ARITHMETIC_FUNCTIONS);
       FitnessFunction fitnessFunction = createIntegerTestDataFitnessFunction(createTests(variableTypes.length, a -> {
@@ -87,7 +87,7 @@ public class FitnessFunctionSystemTest {
    public void testTwoVariableBooleanLogicExpression() {
       Type[] variableTypes = createTypeArray(2);
       SystemTestConfig config = createSystemTestConfig();
-      config.useIntegerConstants(5);
+      config.setConstants(createIntegerConstants(5));
       config.setVariables(variableTypes);
       config.setFunctionSet(IntegerUtils.INTEGER_UTILS.getAdd(), IntegerUtils.INTEGER_UTILS.getSubtract(), IntegerUtils.INTEGER_UTILS.getMultiply(),
             new LessThan(integerType()), new LessThanOrEqual(integerType()), new GreaterThan(integerType()), new GreaterThanOrEqual(integerType()), new Equal(
@@ -114,8 +114,7 @@ public class FitnessFunctionSystemTest {
             new ConstantNode(0, integerType()) });
       config.setVariables(integerArrayType());
 
-      FunctionSet functions = new FunctionSet(new Filter(integerType()), isPositive, isNegative, isZero, new Count(integerType()));
-      config.setFunctionSet(functions);
+      config.setFunctionSet(new Filter(integerType()), isPositive, isNegative, isZero, new Count(integerType()));
 
       Map<Assignments, Integer> testData = new HashMap<>();
       testData.put(createAssignments(createArguments("0", "0", "0", "0", "0", "0", "0", "0")), 8);
