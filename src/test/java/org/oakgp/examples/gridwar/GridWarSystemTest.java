@@ -34,9 +34,9 @@ public class GridWarSystemTest {
 
    @Test
    public void test() {
-      Function[] functions = new Function[] { IntegerUtils.INTEGER_UTILS.getAdd(), IntegerUtils.INTEGER_UTILS.getSubtract(),
-            IntegerUtils.INTEGER_UTILS.getMultiply(), new LessThan(integerType()), new LessThanOrEqual(integerType()), new GreaterThan(integerType()),
-            new GreaterThanOrEqual(integerType()), new Equal(integerType()), new NotEqual(integerType()), new If(integerType()) };
+      Function[] functions = { IntegerUtils.INTEGER_UTILS.getAdd(), IntegerUtils.INTEGER_UTILS.getSubtract(), IntegerUtils.INTEGER_UTILS.getMultiply(),
+            new LessThan(integerType()), new LessThanOrEqual(integerType()), new GreaterThan(integerType()), new GreaterThanOrEqual(integerType()),
+            new Equal(integerType()), new NotEqual(integerType()), new If(integerType()) };
       ConstantNode[] constants = createIntegerConstants(NUM_CONSTANTS);
       Type[] variables = createTypeArray(NUM_VARIABLES);
       TwoPlayerGame game = new FirstPlayerAdvantageGame(new GridWar(RANDOM));
