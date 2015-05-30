@@ -10,8 +10,9 @@ import org.oakgp.Assignments;
 import org.oakgp.RankedCandidate;
 import org.oakgp.TestUtils;
 import org.oakgp.Type;
-import org.oakgp.examples.SystemTestConfig;
+import org.oakgp.examples.RunBuilder;
 import org.oakgp.fitness.FitnessFunction;
+import org.oakgp.function.Function;
 import org.oakgp.function.choice.If;
 import org.oakgp.function.choice.OrElse;
 import org.oakgp.node.ConstantNode;
@@ -22,48 +23,48 @@ import org.oakgp.util.DummyNode;
 
 public class TicTacToeSystemTest {
    private static final int NUM_GENERATIONS = 10;
+   private static final int INITIAL_GENERATION_SIZE = 50;
+   private static final int INITIAL_GENERATION_MAX_DEPTH = 4;
    private static final Type BOARD_TYPE = type("board");
    private static final Type MOVE_TYPE = type("move");
    private static final Type POSSIBLE_MOVE = type("possibleMove");
    private static final Type SYMBOL_TYPE = type("symbol");
+   private static final Type[] VARIABLE_TYPES = { BOARD_TYPE, SYMBOL_TYPE, SYMBOL_TYPE };
 
    @Test
    public void testHighLevel() {
-      SystemTestConfig config = new SystemTestConfig();
-      config.setConstants();
-      config.setReturnType(MOVE_TYPE);
-      config.setVariables(BOARD_TYPE, SYMBOL_TYPE, SYMBOL_TYPE);
-      config.setTerminator(createTerminator());
-      config.setFunctionSet(new GetPossibleMove("corner", Board::getFreeCorner), new GetPossibleMove("centre", Board::getFreeCentre), new GetPossibleMove(
-            "side", Board::getFreeSide), new GetWinningMove(), new GetAnyMove(), new OrElse(MOVE_TYPE));
-      config.setTwoPlayerGame(createTicTacToeGame());
-      config.process();
+      Function[] functions = { new GetPossibleMove("corner", Board::getFreeCorner), new GetPossibleMove("centre", Board::getFreeCentre),
+            new GetPossibleMove("side", Board::getFreeSide), new GetWinningMove(), new GetAnyMove(), new OrElse(MOVE_TYPE) };
+      TwoPlayerGame game = createTicTacToeGame();
+      Predicate<List<RankedCandidate>> terminator = createTerminator();
+
+      new RunBuilder().setReturnType(MOVE_TYPE).useDefaultRandom().setFunctionSet(functions).setConstants().setVariables(VARIABLE_TYPES).setTwoPlayerGame(game)
+            .useDefaultGenerationEvolver().setTerminator(terminator).setInitialGenerationSize(INITIAL_GENERATION_SIZE)
+            .setTreeDepth(INITIAL_GENERATION_MAX_DEPTH).process();
    }
 
    @Test
    public void testLowLevelTournament() {
-      SystemTestConfig config = new SystemTestConfig();
-      config.setConstants(getMoveConstants());
-      config.setReturnType(MOVE_TYPE);
-      config.setVariables(BOARD_TYPE, SYMBOL_TYPE, SYMBOL_TYPE);
-      config.setTerminator(createTerminator());
-      config.setFunctionSet(new IsFree(), new IsOccupied(), new GetAnyMove(), new IfValidMove(), new OrElse(MOVE_TYPE), new And(), new If(POSSIBLE_MOVE));
-      config.setTwoPlayerGame(createTicTacToeGame());
-      config.process();
+      Function[] functions = { new IsFree(), new IsOccupied(), new GetAnyMove(), new IfValidMove(), new OrElse(MOVE_TYPE), new And(), new If(POSSIBLE_MOVE) };
+      ConstantNode[] constants = getMoveConstants();
+      TwoPlayerGame game = createTicTacToeGame();
+      Predicate<List<RankedCandidate>> terminator = createTerminator();
+
+      new RunBuilder().setReturnType(MOVE_TYPE).useDefaultRandom().setFunctionSet(functions).setConstants(constants).setVariables(VARIABLE_TYPES)
+            .setTwoPlayerGame(game).useDefaultGenerationEvolver().setTerminator(terminator).setInitialGenerationSize(INITIAL_GENERATION_SIZE)
+            .setTreeDepth(INITIAL_GENERATION_MAX_DEPTH).process();
    }
 
    @Test
    public void testLowLevelFitnessFunction() {
-      SystemTestConfig config = new SystemTestConfig();
-      config.setConstants(getMoveConstants());
-      config.setReturnType(MOVE_TYPE);
-      config.setVariables(BOARD_TYPE, SYMBOL_TYPE, SYMBOL_TYPE);
-      config.setTerminator(createTerminator());
-      config.setFunctionSet(new IsFree(), new IsOccupied(), new GetAnyMove(), new IfValidMove(), new OrElse(MOVE_TYPE), new And(), new If(POSSIBLE_MOVE));
+      Function[] functions = { new IsFree(), new IsOccupied(), new GetAnyMove(), new IfValidMove(), new OrElse(MOVE_TYPE), new And(), new If(POSSIBLE_MOVE) };
+      ConstantNode[] constants = getMoveConstants();
       TicTacToeFitnessFunction fitnessFunction = new TicTacToeFitnessFunction();
-      config.setFitnessFunction(fitnessFunction);
-      Node result = config.process();
-      System.out.println(fitnessFunction.evaluate(result));
+      Predicate<List<RankedCandidate>> terminator = createTerminator();
+
+      new RunBuilder().setReturnType(MOVE_TYPE).useDefaultRandom().setFunctionSet(functions).setConstants(constants).setVariables(VARIABLE_TYPES)
+            .setFitnessFunction(fitnessFunction).useDefaultGenerationEvolver().setTerminator(terminator).setInitialGenerationSize(INITIAL_GENERATION_SIZE)
+            .setTreeDepth(INITIAL_GENERATION_MAX_DEPTH).process();
    }
 
    private ConstantNode[] getMoveConstants() {
@@ -91,71 +92,71 @@ public class TicTacToeSystemTest {
    private class TicTacToeFitnessFunction implements FitnessFunction {
       private TicTacToe ticTacToe = new TicTacToe();
       private Node[] ais = new Node[] {//
-      new DummyNode() {
-         @Override
-         public Move evaluate(Assignments assignments) {
-            Board board = (Board) assignments.get(0);
-            return board.getFreeMove();
-         }
-      }, new DummyNode() {
-         @Override
-         public Move evaluate(Assignments assignments) {
-            Board board = (Board) assignments.get(0);
-            Move nextMove = board.getWinningMove(Symbol.X);
-            if (nextMove == null) {
-               nextMove = board.getFreeMove();
-            }
-            return nextMove;
-         }
-      }, new DummyNode() {
-         @Override
-         public Move evaluate(Assignments assignments) {
-            Board board = (Board) assignments.get(0);
-            Move nextMove = board.getWinningMove(Symbol.O);
-            if (nextMove == null) {
-               nextMove = board.getFreeMove();
-            }
-            return nextMove;
-         }
-      }, new DummyNode() {
-         @Override
-         public Move evaluate(Assignments assignments) {
-            Board board = (Board) assignments.get(0);
-            Move nextMove = board.getWinningMove(Symbol.X);
-            if (nextMove == null) {
-               nextMove = board.getWinningMove(Symbol.O);
-            }
-            if (nextMove == null) {
-               nextMove = board.getFreeCorner();
-            }
-            if (nextMove == null) {
-               nextMove = board.getFreeCentre();
-            }
-            if (nextMove == null) {
-               nextMove = board.getFreeMove();
-            }
-            return nextMove;
-         }
-      }, new DummyNode() {
-         @Override
-         public Move evaluate(Assignments assignments) {
-            Board board = (Board) assignments.get(0);
-            Move nextMove = board.getWinningMove(Symbol.X);
-            if (nextMove == null) {
-               nextMove = board.getWinningMove(Symbol.O);
-            }
-            if (nextMove == null) {
-               nextMove = board.getFreeCorner();
-            }
-            if (nextMove == null) {
-               nextMove = board.getFreeCentre();
-            }
-            if (nextMove == null) {
-               nextMove = board.getFreeMove();
-            }
-            return nextMove;
-         }
-      } };
+            new DummyNode() {
+               @Override
+               public Move evaluate(Assignments assignments) {
+                  Board board = (Board) assignments.get(0);
+                  return board.getFreeMove();
+               }
+            }, new DummyNode() {
+               @Override
+               public Move evaluate(Assignments assignments) {
+                  Board board = (Board) assignments.get(0);
+                  Move nextMove = board.getWinningMove(Symbol.X);
+                  if (nextMove == null) {
+                     nextMove = board.getFreeMove();
+                  }
+                  return nextMove;
+               }
+            }, new DummyNode() {
+               @Override
+               public Move evaluate(Assignments assignments) {
+                  Board board = (Board) assignments.get(0);
+                  Move nextMove = board.getWinningMove(Symbol.O);
+                  if (nextMove == null) {
+                     nextMove = board.getFreeMove();
+                  }
+                  return nextMove;
+               }
+            }, new DummyNode() {
+               @Override
+               public Move evaluate(Assignments assignments) {
+                  Board board = (Board) assignments.get(0);
+                  Move nextMove = board.getWinningMove(Symbol.X);
+                  if (nextMove == null) {
+                     nextMove = board.getWinningMove(Symbol.O);
+                  }
+                  if (nextMove == null) {
+                     nextMove = board.getFreeCorner();
+                  }
+                  if (nextMove == null) {
+                     nextMove = board.getFreeCentre();
+                  }
+                  if (nextMove == null) {
+                     nextMove = board.getFreeMove();
+                  }
+                  return nextMove;
+               }
+            }, new DummyNode() {
+               @Override
+               public Move evaluate(Assignments assignments) {
+                  Board board = (Board) assignments.get(0);
+                  Move nextMove = board.getWinningMove(Symbol.X);
+                  if (nextMove == null) {
+                     nextMove = board.getWinningMove(Symbol.O);
+                  }
+                  if (nextMove == null) {
+                     nextMove = board.getFreeCorner();
+                  }
+                  if (nextMove == null) {
+                     nextMove = board.getFreeCentre();
+                  }
+                  if (nextMove == null) {
+                     nextMove = board.getFreeMove();
+                  }
+                  return nextMove;
+               }
+            } };
 
       @Override
       public double evaluate(Node candidate) {
