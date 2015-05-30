@@ -12,7 +12,6 @@ import org.oakgp.function.Function;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
-import org.oakgp.serialize.NodeWriter;
 
 final class ArithmeticExpressionSimplifier {
    private static final boolean SANITY_CHECK = true;
@@ -313,8 +312,7 @@ final class ArithmeticExpressionSimplifier {
       Object firstResult = first.evaluate(assignments);
       Object secondResult = second.evaluate(assignments);
       if (!firstResult.equals(secondResult)) {
-         NodeWriter writer = new NodeWriter();
-         throw new IllegalArgumentException(writer.writeNode(first) + " = " + firstResult + " " + writer.writeNode(second) + " = " + secondResult);
+         throw new IllegalArgumentException(first + " = " + firstResult + " " + second + " = " + secondResult);
       }
    }
 
