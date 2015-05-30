@@ -44,9 +44,6 @@ import org.oakgp.util.NodeSet;
 import org.oakgp.util.Random;
 
 public class SystemTestConfig {
-   // TODO enable all values to be overridden
-   // TODO provide default terminator implementation
-
    public static final Random RANDOM = new JavaUtilRandomAdapter();
 
    private static final int DEFAULT_GENERATION_SIZE = 50;
@@ -74,7 +71,6 @@ public class SystemTestConfig {
    private final Property<Predicate<List<RankedCandidate>>> terminator = new Property<>("terminator");
    private final Property<Type> returnType = new Property<>("returnType");
    private final Property<java.util.function.Function<Config, Collection<Node>>> initialGenerationCreator = new Property<>("initialGenerationCreator");
-   private final Property<java.util.function.Function<Config, GenerationEvolver>> generationEvolverCreator = new Property<>("generationEvolverCreator");
 
    public Node process() {
       setDefaultGenerationSize();
