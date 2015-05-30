@@ -176,4 +176,12 @@ public class TestUtils {
       }
       return constants;
    }
+
+   public static ConstantNode[] createIntegerConstants(int numberOfConstants) {
+      ConstantNode[] constants = new ConstantNode[numberOfConstants];
+      for (int i = 0; i < numberOfConstants; i++) {
+         constants[i] = integerConstant(i);
+      }
+      return constants;
+   }
 }
