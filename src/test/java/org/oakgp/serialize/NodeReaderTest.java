@@ -120,13 +120,12 @@ public class NodeReaderTest {
 
    @Test
    public void testFunctionNodeSpecifiedBySymbol() {
-      assertParseFunction("(+ 7 21)", "(org.oakgp.function.math.Add 7 21)");
+      assertParseFunction("(+ 7 21)");
    }
 
    @Test
    public void testFunctionNodeWithFunctionNodeArguments() {
-      assertParseFunction("(+ (- v0 587) (* 43 v1))",
-            "(org.oakgp.function.math.Add (org.oakgp.function.math.Subtract v0 587) (org.oakgp.function.math.Multiply 43 v1))");
+      assertParseFunction("(+ (- v0 587) (* 43 v1))");
    }
 
    @Test
@@ -156,7 +155,7 @@ public class NodeReaderTest {
       List<Node> outputs = readNodes(combinedInput);
       assertEquals(inputs.length, outputs.size());
       for (int i = 0; i < inputs.length; i++) {
-         assertEquals(inputs[i].toString().replace("+", "org.oakgp.function.math.Add"), outputs.get(i).toString());
+         assertEquals(inputs[i], outputs.get(i).toString());
       }
    }
 
@@ -230,10 +229,10 @@ public class NodeReaderTest {
       assertEquals(input, output.toString());
    }
 
-   private void assertParseFunction(String input, String expected) {
+   private void assertParseFunction(String input) {
       Node output = readNode(input);
       assertSame(FunctionNode.class, output.getClass());
-      assertEquals(expected, output.toString());
+      assertEquals(input, output.toString());
    }
 
    private void assertReadException(String input, String expectedMessage) {

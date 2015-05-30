@@ -52,6 +52,6 @@ public class RankedCandidateTest {
    @Test
    public void testToString() {
       RankedCandidate rankedCandidate = new RankedCandidate(readNode("(+ 2 v0)"), 85.75);
-      assertEquals("[(org.oakgp.function.math.Add 2 v0) 85.75]", rankedCandidate.toString());
+      assertEquals("[(+ 2 v0) 85.75]", rankedCandidate.toString());
    }
 }

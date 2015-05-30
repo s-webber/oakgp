@@ -57,7 +57,7 @@ public class NodeSimplifierTest {
       Node input = readNode("(+ (- 5 6) (* v0 (- (* 6 7) (+ 2 3))))");
       Node output = NodeSimplifier.simplify(input);
       assertSame(FunctionNode.class, output.getClass());
-      assertEquals("(org.oakgp.function.math.Subtract (org.oakgp.function.math.Multiply 37 v0) 1)", output.toString());
+      assertEquals("(- (* 37 v0) 1)", output.toString());
       assertEquals(73, (int) output.evaluate(Assignments.createAssignments(2)));
    }
 

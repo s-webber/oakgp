@@ -192,7 +192,7 @@ public final class FunctionNode implements Node {
    @Override
    public String toString() {
       StringBuilder sb = new StringBuilder();
-      sb.append('(').append(function.getClass().getName());
+      sb.append('(').append(function.getDisplayName());
       for (int i = 0; i < arguments.getArgCount(); i++) {
          sb.append(' ').append(arguments.getArg(i));
       }
