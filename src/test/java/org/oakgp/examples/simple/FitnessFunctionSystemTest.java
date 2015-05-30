@@ -21,7 +21,7 @@ import org.oakgp.Arguments;
 import org.oakgp.Assignments;
 import org.oakgp.RankedCandidate;
 import org.oakgp.Type;
-import org.oakgp.examples.SystemTestConfig;
+import org.oakgp.examples.RunBuilder;
 import org.oakgp.fitness.FitnessFunction;
 import org.oakgp.function.Function;
 import org.oakgp.function.choice.If;
@@ -47,58 +47,64 @@ import org.oakgp.node.ConstantNode;
  * </p>
  */
 public class FitnessFunctionSystemTest {
+   private static final int INITIAL_GENERATION_SIZE = 50;
+   private static final int INITIAL_GENERATION_MAX_DEPTH = 4;
    private static final Function[] ARITHMETIC_FUNCTIONS = { IntegerUtils.INTEGER_UTILS.getAdd(), IntegerUtils.INTEGER_UTILS.getSubtract(),
-         IntegerUtils.INTEGER_UTILS.getMultiply() };
+      IntegerUtils.INTEGER_UTILS.getMultiply() };
 
    @Test
    public void testTwoVariableArithmeticExpression() {
+      ConstantNode[] constants = createIntegerConstants(11);
       Type[] variableTypes = createTypeArray(2);
-      SystemTestConfig config = createSystemTestConfig();
-      config.setConstants(createIntegerConstants(11));
-      config.setVariables(variableTypes);
-      config.setFunctionSet(ARITHMETIC_FUNCTIONS);
+      Predicate<List<RankedCandidate>> terminator = createTerminator();
+
       FitnessFunction fitnessFunction = createIntegerTestDataFitnessFunction(createTests(variableTypes.length, a -> {
          int x = (int) a.get(0);
          int y = (int) a.get(1);
          return (x * x) + 2 * y + 3 * x + 5;
       }));
-      config.setFitnessFunction(fitnessFunction);
-      config.process();
+
+      new RunBuilder().setReturnType(integerType()).useDefaultRandom().setFunctionSet(ARITHMETIC_FUNCTIONS).setConstants(constants).setVariables(variableTypes)
+            .setFitnessFunction(fitnessFunction).useDefaultGenerationEvolver().setTerminator(terminator).setInitialGenerationSize(INITIAL_GENERATION_SIZE)
+            .setTreeDepth(INITIAL_GENERATION_MAX_DEPTH).process();
    }
 
    @Test
    public void testThreeVariableArithmeticExpression() {
+      ConstantNode[] constants = createIntegerConstants(11);
       Type[] variableTypes = createTypeArray(3);
-      SystemTestConfig config = createSystemTestConfig();
-      config.setConstants(createIntegerConstants(11));
-      config.setVariables(variableTypes);
-      config.setFunctionSet(ARITHMETIC_FUNCTIONS);
+      Predicate<List<RankedCandidate>> terminator = createTerminator();
+
       FitnessFunction fitnessFunction = createIntegerTestDataFitnessFunction(createTests(variableTypes.length, a -> {
          int x = (int) a.get(0);
          int y = (int) a.get(1);
          int z = (int) a.get(2);
          return (x * -3) + (y * 5) - z;
       }));
-      config.setFitnessFunction(fitnessFunction);
-      config.process();
+
+      new RunBuilder().setReturnType(integerType()).useDefaultRandom().setFunctionSet(ARITHMETIC_FUNCTIONS).setConstants(constants).setVariables(variableTypes)
+            .setFitnessFunction(fitnessFunction).useDefaultGenerationEvolver().setTerminator(terminator).setInitialGenerationSize(INITIAL_GENERATION_SIZE)
+            .setTreeDepth(INITIAL_GENERATION_MAX_DEPTH).process();
    }
 
    @Test
    public void testTwoVariableBooleanLogicExpression() {
+      ConstantNode[] constants = createIntegerConstants(5);
       Type[] variableTypes = createTypeArray(2);
-      SystemTestConfig config = createSystemTestConfig();
-      config.setConstants(createIntegerConstants(5));
-      config.setVariables(variableTypes);
-      config.setFunctionSet(IntegerUtils.INTEGER_UTILS.getAdd(), IntegerUtils.INTEGER_UTILS.getSubtract(), IntegerUtils.INTEGER_UTILS.getMultiply(),
-            new LessThan(integerType()), new LessThanOrEqual(integerType()), new GreaterThan(integerType()), new GreaterThanOrEqual(integerType()), new Equal(
-                  integerType()), new NotEqual(integerType()), new If(integerType()));
+      Function[] functions = { IntegerUtils.INTEGER_UTILS.getAdd(), IntegerUtils.INTEGER_UTILS.getSubtract(), IntegerUtils.INTEGER_UTILS.getMultiply(),
+            new LessThan(integerType()), new LessThanOrEqual(integerType()), new GreaterThan(integerType()), new GreaterThanOrEqual(integerType()),
+            new Equal(integerType()), new NotEqual(integerType()), new If(integerType()) };
+      Predicate<List<RankedCandidate>> terminator = createTerminator();
+
       FitnessFunction fitnessFunction = createIntegerTestDataFitnessFunction(createTests(variableTypes.length, a -> {
          int x = (int) a.get(0);
          int y = (int) a.get(1);
          return x > 20 ? x : y;
       }));
-      config.setFitnessFunction(fitnessFunction);
-      config.process();
+
+      new RunBuilder().setReturnType(integerType()).useDefaultRandom().setFunctionSet(functions).setConstants(constants).setVariables(variableTypes)
+            .setFitnessFunction(fitnessFunction).useDefaultGenerationEvolver().setTerminator(terminator).setInitialGenerationSize(INITIAL_GENERATION_SIZE)
+            .setTreeDepth(INITIAL_GENERATION_MAX_DEPTH).process();
    }
 
    @Test
@@ -106,15 +112,13 @@ public class FitnessFunctionSystemTest {
       IsPositive isPositive = new IsPositive();
       IsNegative isNegative = new IsNegative();
       IsZero isZero = new IsZero();
-
-      SystemTestConfig config = createSystemTestConfig();
-      config.setConstants(new ConstantNode[] { new ConstantNode(Boolean.TRUE, booleanType()), new ConstantNode(Boolean.FALSE, booleanType()),
+      ConstantNode[] constants = { new ConstantNode(Boolean.TRUE, booleanType()), new ConstantNode(Boolean.FALSE, booleanType()),
             new ConstantNode(isPositive, integerToBooleanFunctionType()), new ConstantNode(isNegative, integerToBooleanFunctionType()),
             new ConstantNode(isZero, integerToBooleanFunctionType()), new ConstantNode(Arguments.createArguments(), integerArrayType()),
-            new ConstantNode(0, integerType()) });
-      config.setVariables(integerArrayType());
-
-      config.setFunctionSet(new Filter(integerType()), isPositive, isNegative, isZero, new Count(integerType()));
+            new ConstantNode(0, integerType()) };
+      Type[] variableTypes = { integerArrayType() };
+      Function[] functions = { new Filter(integerType()), isPositive, isNegative, isZero, new Count(integerType()) };
+      Predicate<List<RankedCandidate>> terminator = createTerminator();
 
       Map<Assignments, Integer> testData = new HashMap<>();
       testData.put(createAssignments(createArguments("0", "0", "0", "0", "0", "0", "0", "0")), 8);
@@ -127,15 +131,9 @@ public class FitnessFunctionSystemTest {
       testData.put(createAssignments(createArguments("0", "0", "0")), 3);
       FitnessFunction fitnessFunction = createIntegerTestDataFitnessFunction(testData);
 
-      config.setFitnessFunction(fitnessFunction);
-      config.process();
-   }
-
-   private SystemTestConfig createSystemTestConfig() {
-      SystemTestConfig config = new SystemTestConfig();
-      config.setReturnType(integerType());
-      config.setTerminator(createTerminator());
-      return config;
+      new RunBuilder().setReturnType(integerType()).useDefaultRandom().setFunctionSet(functions).setConstants(constants).setVariables(variableTypes)
+            .setFitnessFunction(fitnessFunction).useDefaultGenerationEvolver().setTerminator(terminator).setInitialGenerationSize(INITIAL_GENERATION_SIZE)
+            .setTreeDepth(INITIAL_GENERATION_MAX_DEPTH).process();
    }
 
    private static Map<Assignments, Integer> createTests(int numVariables, java.util.function.Function<Assignments, Integer> f) {
