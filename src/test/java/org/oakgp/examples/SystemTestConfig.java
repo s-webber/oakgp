@@ -47,10 +47,19 @@ public class SystemTestConfig {
    // TODO enable all values to be overridden
    // TODO provide default terminator implementation
 
-   public static final JavaUtilRandomAdapter RANDOM = new JavaUtilRandomAdapter();
+   public static final Random RANDOM = new JavaUtilRandomAdapter();
 
    private static final int DEFAULT_GENERATION_SIZE = 50;
    private static final int DEFAULT_CACHE_SIZE = 10000;
+   private static final java.util.function.Function<Config, Collection<Node>> DEFAULT_INITIAL_GENERATION_CREATOR = (config) -> {
+      Set<Node> initialGeneration = new NodeSet();
+      TreeGenerator treeGenerator = TreeGeneratorImpl.grow(config.getPrimitiveSet(), config.getRandom());
+      for (int i = 0; i < config.getGenerationSize(); i++) {
+         Node n = treeGenerator.generate(config.getReturnType(), 4);
+         initialGeneration.add(n);
+      }
+      return initialGeneration;
+   };
    private static final int ELITISM_SIZE = 3; // TODO
    private static final double RATIO_VARIABLES = .6; // TODO
 
@@ -64,15 +73,17 @@ public class SystemTestConfig {
    private final Property<GenerationProcessor> generationProcessor = new Property<>("generationProcessor");
    private final Property<Predicate<List<RankedCandidate>>> terminator = new Property<>("terminator");
    private final Property<Type> returnType = new Property<>("returnType");
+   private final Property<java.util.function.Function<Config, Collection<Node>>> initialGenerationCreator = new Property<>("initialGenerationCreator");
+   private final Property<java.util.function.Function<Config, GenerationEvolver>> generationEvolverCreator = new Property<>("generationEvolverCreator");
 
    public Node process() {
       setDefaultGenerationSize();
-      random.setIfAbsent(() -> RANDOM);
+      random.setIfAbsent(RANDOM);
       nodeSelectorFactory.setIfAbsent(() -> new WeightedNodeSelectorFactory(random.get()));
       primitiveSet.set(new PrimitiveSetImpl(functionSet.get(), constantSet.get(), variableSet.get(), random.get(), RATIO_VARIABLES));
+      initialGenerationCreator.setIfAbsent(DEFAULT_INITIAL_GENERATION_CREATOR);
 
-      TreeGenerator treeGenerator = TreeGeneratorImpl.grow(primitiveSet.get(), random.get());
-      Collection<Node> initialGeneration = createInitialGeneration(treeGenerator, returnType.get(), generationSize);
+      Collection<Node> initialGeneration = initialGenerationCreator.get().apply(new Config());
       RankedCandidate best = Runner.process(generationProcessor.get(), getNodeEvolvers(), terminator.get(), initialGeneration);
       System.out.println("Best: " + best);
       Node simplifiedBestNode = simplify(best.getNode());
@@ -91,15 +102,6 @@ public class SystemTestConfig {
       nodeEvolvers.put(new SubtreeCrossover(random.get()), 21L);
       nodeEvolvers.put(new PointMutation(random.get(), primitiveSet), 21L);
       return nodeEvolvers;
-   }
-
-   private static Collection<Node> createInitialGeneration(TreeGenerator treeGenerator, Type type, int generationSize) { // TODO
-      Set<Node> initialGeneration = new NodeSet();
-      for (int i = 0; i < generationSize; i++) {
-         Node n = treeGenerator.generate(type, 4);
-         initialGeneration.add(n);
-      }
-      return initialGeneration;
    }
 
    public void setReturnType(Type returnType) {
@@ -162,6 +164,14 @@ public class SystemTestConfig {
       this.nodeSelectorFactory.set(nodeSelectorFactory);
    }
 
+   public void setInitialGenerationCreator(java.util.function.Function<Config, Collection<Node>> initialGenerationCreator) {
+      this.initialGenerationCreator.set(initialGenerationCreator);
+   }
+
+   public void setInitialGeneration(Collection<Node> initialGeneration) {
+      this.initialGenerationCreator.set((c) -> initialGeneration);
+   }
+
    public void setGenerationSize(int generationSize) {
       if (this.generationSize > 0) {
          throw new IllegalStateException("Property [generationSize] has already been assigned to [" + this.generationSize + "] so cannot be reassigned to ["
@@ -201,10 +211,33 @@ public class SystemTestConfig {
 
       void setIfAbsent(Supplier<T> supplier) {
          if (value == null) {
-            T defaultValue = supplier.get();
-            Logger.getGlobal().info("Setting property  [" + name + "] to default value of [" + value + "]");
+            set(supplier.get());
+         }
+      }
+
+      void setIfAbsent(T defaultValue) {
+         if (value == null) {
+            Logger.getGlobal().info("Setting property  [" + name + "] to default value of [" + defaultValue + "]");
             set(defaultValue);
          }
+      }
+   }
+
+   public class Config {
+      public int getGenerationSize() {
+         return generationSize;
+      }
+
+      public Random getRandom() {
+         return random.get();
+      }
+
+      public PrimitiveSet getPrimitiveSet() {
+         return primitiveSet.get();
+      }
+
+      public Type getReturnType() {
+         return returnType.get();
       }
    }
 }
