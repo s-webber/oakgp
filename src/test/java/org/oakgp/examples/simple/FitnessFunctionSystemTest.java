@@ -53,6 +53,11 @@ public class FitnessFunctionSystemTest {
       IntegerUtils.INTEGER_UTILS.getMultiply() };
 
    @Test
+   public void testSymbolicRegressionExample() {
+      SymbolicRegressionExample.main(null);
+   }
+
+   @Test
    public void testTwoVariableArithmeticExpression() {
       ConstantNode[] constants = createIntegerConstants(11);
       Type[] variableTypes = createTypeArray(2);
