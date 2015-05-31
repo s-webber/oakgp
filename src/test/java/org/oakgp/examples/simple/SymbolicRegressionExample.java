@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.oakgp.Assignments;
-import org.oakgp.TestUtils;
 import org.oakgp.Type;
 import org.oakgp.examples.RunBuilder;
 import org.oakgp.fitness.FitnessFunction;
@@ -12,6 +11,7 @@ import org.oakgp.fitness.TestDataFitnessFunction;
 import org.oakgp.function.Function;
 import org.oakgp.function.math.IntegerUtils;
 import org.oakgp.node.ConstantNode;
+import org.oakgp.util.Utils;
 
 public class SymbolicRegressionExample {
    private static final int NUM_GENERATIONS = 500;
@@ -22,7 +22,7 @@ public class SymbolicRegressionExample {
 
    // x2 + x + 1
    public static void main(String[] args) {
-      ConstantNode[] constants = TestUtils.createIntegerConstants(11); // TODO move createIntegerConstants method to main Utils rather than TestUtils
+      ConstantNode[] constants = Utils.createIntegerConstants(0, 10);
       Type[] variableTypes = { Type.integerType() };
       FitnessFunction fitnessFunction = TestDataFitnessFunction.createIntegerTestDataFitnessFunction(createTests());
 

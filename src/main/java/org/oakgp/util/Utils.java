@@ -4,6 +4,7 @@ import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.util.Collections.unmodifiableList;
 import static org.oakgp.Type.booleanType;
+import static org.oakgp.Type.integerType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -73,6 +74,14 @@ public final class Utils {
       ConstantNode[] constants = new ConstantNode[enumConstants.length];
       for (int i = 0; i < enumConstants.length; i++) {
          constants[i] = new ConstantNode(enumConstants[i], t);
+      }
+      return constants;
+   }
+
+   public static ConstantNode[] createIntegerConstants(int minInclusive, int maxInclusive) {
+      ConstantNode[] constants = new ConstantNode[maxInclusive - minInclusive + 1];
+      for (int n = minInclusive, i = 0; n <= maxInclusive; i++, n++) {
+         constants[i] = new ConstantNode(n, integerType());
       }
       return constants;
    }

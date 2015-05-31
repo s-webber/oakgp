@@ -78,6 +78,20 @@ public class UtilsTest {
    }
 
    @Test
+   public void testCreateIntegerConstants() {
+      int minInclusive = 7;
+      int maxInclusive = 12;
+
+      ConstantNode[] result = Utils.createIntegerConstants(minInclusive, maxInclusive);
+
+      assertEquals(6, result.length);
+      for (int i = 0; i < result.length; i++) {
+         assertSame(integerType(), result[i].getType());
+         assertEquals(i + minInclusive, result[i].evaluate(null));
+      }
+   }
+
+   @Test
    public void testCreateEnumConstants() {
       Type type = Type.type("testCreateEnumConstants");
       TestCreateEnumConstantsEnum[] input = TestCreateEnumConstantsEnum.values();
@@ -86,7 +100,6 @@ public class UtilsTest {
 
       assertEquals(input.length, result.length);
       for (int i = 0; i < input.length; i++) {
-         assertSame(ConstantNode.class, result[i].getClass());
          assertSame(type, result[i].getType());
          assertSame(input[i], result[i].evaluate(null));
       }

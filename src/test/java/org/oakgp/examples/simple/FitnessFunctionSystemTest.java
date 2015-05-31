@@ -2,7 +2,6 @@ package org.oakgp.examples.simple;
 
 import static org.oakgp.Assignments.createAssignments;
 import static org.oakgp.TestUtils.createArguments;
-import static org.oakgp.TestUtils.createIntegerConstants;
 import static org.oakgp.TestUtils.createTypeArray;
 import static org.oakgp.Type.booleanType;
 import static org.oakgp.Type.integerArrayType;
@@ -10,6 +9,7 @@ import static org.oakgp.Type.integerToBooleanFunctionType;
 import static org.oakgp.Type.integerType;
 import static org.oakgp.examples.SystemTestConfig.RANDOM;
 import static org.oakgp.fitness.TestDataFitnessFunction.createIntegerTestDataFitnessFunction;
+import static org.oakgp.util.Utils.createIntegerConstants;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -57,7 +57,7 @@ public class FitnessFunctionSystemTest {
 
    @Test
    public void testTwoVariableArithmeticExpression() {
-      ConstantNode[] constants = createIntegerConstants(11);
+      ConstantNode[] constants = createIntegerConstants(0, 11);
       Type[] variableTypes = createTypeArray(2);
 
       FitnessFunction fitnessFunction = createIntegerTestDataFitnessFunction(createTests(variableTypes.length, a -> {
@@ -73,7 +73,7 @@ public class FitnessFunctionSystemTest {
 
    @Test
    public void testThreeVariableArithmeticExpression() {
-      ConstantNode[] constants = createIntegerConstants(11);
+      ConstantNode[] constants = createIntegerConstants(0, 11);
       Type[] variableTypes = createTypeArray(3);
 
       FitnessFunction fitnessFunction = createIntegerTestDataFitnessFunction(createTests(variableTypes.length, a -> {
@@ -90,7 +90,7 @@ public class FitnessFunctionSystemTest {
 
    @Test
    public void testTwoVariableBooleanLogicExpression() {
-      ConstantNode[] constants = createIntegerConstants(5);
+      ConstantNode[] constants = createIntegerConstants(0, 5);
       Type[] variableTypes = createTypeArray(2);
       Function[] functions = { IntegerUtils.INTEGER_UTILS.getAdd(), IntegerUtils.INTEGER_UTILS.getSubtract(), IntegerUtils.INTEGER_UTILS.getMultiply(),
             new LessThan(integerType()), new LessThanOrEqual(integerType()), new GreaterThan(integerType()), new GreaterThanOrEqual(integerType()),

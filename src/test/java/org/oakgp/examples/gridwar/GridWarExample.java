@@ -1,6 +1,5 @@
 package org.oakgp.examples.gridwar;
 
-import static org.oakgp.TestUtils.createIntegerConstants;
 import static org.oakgp.TestUtils.createTypeArray;
 import static org.oakgp.Type.integerType;
 import static org.oakgp.examples.SystemTestConfig.RANDOM;
@@ -19,11 +18,11 @@ import org.oakgp.function.math.IntegerUtils;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.tournament.FirstPlayerAdvantageGame;
 import org.oakgp.tournament.TwoPlayerGame;
+import org.oakgp.util.Utils;
 
 public class GridWarExample {
    private static final int NUM_VARIABLES = 5;
    private static final int NUM_GENERATIONS = 100;
-   private static final int NUM_CONSTANTS = 5;
    private static final int INITIAL_GENERATION_SIZE = 50;
    private static final int INITIAL_GENERATION_MAX_DEPTH = 4;
 
@@ -31,7 +30,7 @@ public class GridWarExample {
       Function[] functions = { IntegerUtils.INTEGER_UTILS.getAdd(), IntegerUtils.INTEGER_UTILS.getSubtract(), IntegerUtils.INTEGER_UTILS.getMultiply(),
             new LessThan(integerType()), new LessThanOrEqual(integerType()), new GreaterThan(integerType()), new GreaterThanOrEqual(integerType()),
             new Equal(integerType()), new NotEqual(integerType()), new If(integerType()) };
-      ConstantNode[] constants = createIntegerConstants(NUM_CONSTANTS);
+      ConstantNode[] constants = Utils.createIntegerConstants(0, 4);
       Type[] variables = createTypeArray(NUM_VARIABLES);
       TwoPlayerGame game = new FirstPlayerAdvantageGame(new GridWar(RANDOM));
 

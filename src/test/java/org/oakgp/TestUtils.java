@@ -167,12 +167,4 @@ public class TestUtils {
    public static void assertNodeEquals(String expected, Node actual) {
       assertEquals(expected, writeNode(actual));
    }
-
-   public static ConstantNode[] createIntegerConstants(int numberOfConstants) {
-      ConstantNode[] constants = new ConstantNode[numberOfConstants];
-      for (int i = 0; i < numberOfConstants; i++) {
-         constants[i] = integerConstant(i);
-      }
-      return constants;
-   }
 }
