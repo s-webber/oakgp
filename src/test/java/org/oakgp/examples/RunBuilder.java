@@ -41,7 +41,7 @@ import org.oakgp.util.JavaUtilRandomAdapter;
 import org.oakgp.util.NodeSet;
 import org.oakgp.util.Random;
 
-public class RunBuilder {
+public final class RunBuilder {
    private static final Random RANDOM = new JavaUtilRandomAdapter();
    private static final int ELITISM_SIZE = 3; // TODO
    private static final double RATIO_VARIABLES = .6; // TODO
@@ -55,7 +55,7 @@ public class RunBuilder {
    private Predicate<List<RankedCandidate>> _terminator;
    private Collection<Node> _initialGeneration;
 
-   public RandomSetter setReturnType(Type returnType) {
+   public RandomSetter setReturnType(final Type returnType) {
       _returnType = requireNonNull(returnType);
       return new RandomSetter();
    }
@@ -64,7 +64,7 @@ public class RunBuilder {
       private RandomSetter() {
       }
 
-      public PrimitiveSetSetter setRandom(Random random) {
+      public PrimitiveSetSetter setRandom(final Random random) {
          _random = requireNonNull(random);
          return new PrimitiveSetSetter();
       }
@@ -78,27 +78,27 @@ public class RunBuilder {
       private PrimitiveSetSetter() {
       }
 
-      public GenerationProcessorSetter setPrimitiveSet(PrimitiveSet primitiveSet) {
+      public GenerationProcessorSetter setPrimitiveSet(final PrimitiveSet primitiveSet) {
          _primitiveSet = requireNonNull(primitiveSet);
          return new GenerationProcessorSetter();
       }
 
-      public ConstantsSetter setFunctionSet(FunctionSet functionSet) {
+      public ConstantsSetter setFunctionSet(final FunctionSet functionSet) {
          return new ConstantsSetter(requireNonNull(functionSet));
       }
 
-      public ConstantsSetter setFunctionSet(Function... functions) {
+      public ConstantsSetter setFunctionSet(final Function... functions) {
          return setFunctionSet(new FunctionSet(functions));
       }
 
       public class ConstantsSetter {
          private final FunctionSet functionSet;
 
-         private ConstantsSetter(FunctionSet functionSet) {
+         private ConstantsSetter(final FunctionSet functionSet) {
             this.functionSet = functionSet;
          }
 
-         public VariablesSetter setConstants(ConstantNode... constants) {
+         public VariablesSetter setConstants(final ConstantNode... constants) {
             ConstantSet constantSet = new ConstantSet(constants);
             return new VariablesSetter(functionSet, constantSet);
          }
@@ -108,12 +108,12 @@ public class RunBuilder {
          private final FunctionSet functionSet;
          private final ConstantSet constantSet;
 
-         private VariablesSetter(FunctionSet functionSet, ConstantSet constantSet) {
+         private VariablesSetter(final FunctionSet functionSet, final ConstantSet constantSet) {
             this.functionSet = functionSet;
             this.constantSet = constantSet;
          }
 
-         public GenerationProcessorSetter setVariables(Type... variableTypes) {
+         public GenerationProcessorSetter setVariables(final Type... variableTypes) {
             VariableSet variableSet = VariableSet.createVariableSet(variableTypes);
             PrimitiveSet primitiveSet = new PrimitiveSetImpl(functionSet, constantSet, variableSet, _random, RATIO_VARIABLES);
             return setPrimitiveSet(primitiveSet);
@@ -125,16 +125,16 @@ public class RunBuilder {
       private GenerationProcessorSetter() {
       }
 
-      public GenerationEvolverSetter setGenerationProcessor(GenerationProcessor generationProcessor) {
+      public GenerationEvolverSetter setGenerationProcessor(final GenerationProcessor generationProcessor) {
          _generationProcessor = requireNonNull(generationProcessor);
          return new GenerationEvolverSetter();
       }
 
-      public GenerationEvolverSetter setFitnessFunction(FitnessFunction fitnessFunction) {
+      public GenerationEvolverSetter setFitnessFunction(final FitnessFunction fitnessFunction) {
          return setGenerationProcessor(new FitnessFunctionGenerationProcessor(ensureCached(fitnessFunction)));
       }
 
-      private FitnessFunction ensureCached(FitnessFunction fitnessFunction) {
+      private FitnessFunction ensureCached(final FitnessFunction fitnessFunction) {
          if (fitnessFunction instanceof FitnessFunctionCache) {
             return fitnessFunction;
          } else {
@@ -142,11 +142,11 @@ public class RunBuilder {
          }
       }
 
-      public GenerationEvolverSetter setTwoPlayerGame(TwoPlayerGame twoPlayerGame) {
+      public GenerationEvolverSetter setTwoPlayerGame(final TwoPlayerGame twoPlayerGame) {
          return setGenerationProcessor(new RoundRobinTournament(ensureCached(twoPlayerGame)));
       }
 
-      private TwoPlayerGame ensureCached(TwoPlayerGame twoPlayerGame) {
+      private TwoPlayerGame ensureCached(final TwoPlayerGame twoPlayerGame) {
          if (twoPlayerGame instanceof TwoPlayerGameCache) {
             return twoPlayerGame;
          } else {
@@ -159,7 +159,7 @@ public class RunBuilder {
       private GenerationEvolverSetter() {
       }
 
-      public TerminatorSetter setGenerationEvolver(GenerationEvolver generationEvolver) {
+      public TerminatorSetter setGenerationEvolver(final GenerationEvolver generationEvolver) {
          _generationEvolver = requireNonNull(generationEvolver);
          return new TerminatorSetter();
       }
@@ -184,13 +184,13 @@ public class RunBuilder {
       private TerminatorSetter() {
       }
 
-      public InitialGenerationSetter setTerminator(Predicate<List<RankedCandidate>> terminator) {
+      public InitialGenerationSetter setTerminator(final Predicate<List<RankedCandidate>> terminator) {
          _terminator = requireNonNull(terminator);
          return new InitialGenerationSetter();
       }
 
       public InitialGenerationSetter useDefaultTerminator() {
-         return setTerminator(null);
+         return setTerminator(null); // TODO
       }
    }
 
@@ -198,23 +198,23 @@ public class RunBuilder {
       private InitialGenerationSetter() {
       }
 
-      public ProccessRunner setInitialGeneration(Collection<Node> initialGeneration) {
+      public ProccessRunner setInitialGeneration(final Collection<Node> initialGeneration) {
          _initialGeneration = requireNonNull(initialGeneration);
          return new ProccessRunner();
       }
 
-      public TreeDepthSetter setInitialGenerationSize(int generationSize) {
+      public TreeDepthSetter setInitialGenerationSize(final int generationSize) {
          return new TreeDepthSetter(generationSize);
       }
 
       public class TreeDepthSetter {
          private final int generationSize;
 
-         private TreeDepthSetter(int generationSize) {
+         private TreeDepthSetter(final int generationSize) {
             this.generationSize = requiresPositive(generationSize);
          }
 
-         public ProccessRunner setTreeDepth(int treeDepth) {
+         public ProccessRunner setTreeDepth(final int treeDepth) {
             requiresPositive(treeDepth);
 
             Set<Node> initialGeneration = new NodeSet();
@@ -241,7 +241,7 @@ public class RunBuilder {
       }
    }
 
-   private static int requiresPositive(int i) { // TODO move to Utils
+   private static int requiresPositive(final int i) { // TODO move to Utils
       if (i > 0) {
          return i;
       } else {
