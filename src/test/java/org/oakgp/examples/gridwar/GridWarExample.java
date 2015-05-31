@@ -5,10 +5,6 @@ import static org.oakgp.TestUtils.createTypeArray;
 import static org.oakgp.Type.integerType;
 import static org.oakgp.examples.SystemTestConfig.RANDOM;
 
-import java.util.List;
-import java.util.function.Predicate;
-
-import org.oakgp.RankedCandidate;
 import org.oakgp.Type;
 import org.oakgp.examples.RunBuilder;
 import org.oakgp.function.Function;
@@ -38,24 +34,9 @@ public class GridWarExample {
       ConstantNode[] constants = createIntegerConstants(NUM_CONSTANTS);
       Type[] variables = createTypeArray(NUM_VARIABLES);
       TwoPlayerGame game = new FirstPlayerAdvantageGame(new GridWar(RANDOM));
-      Predicate<List<RankedCandidate>> terminator = createTerminator();
 
       new RunBuilder().setReturnType(integerType()).useDefaultRandom().setFunctionSet(functions).setConstants(constants).setVariables(variables)
-            .setTwoPlayerGame(game).useDefaultGenerationEvolver().setTerminator(terminator).setInitialGenerationSize(INITIAL_GENERATION_SIZE)
+            .setTwoPlayerGame(game).useDefaultGenerationEvolver().setMaxGenerations(NUM_GENERATIONS).setInitialGenerationSize(INITIAL_GENERATION_SIZE)
             .setTreeDepth(INITIAL_GENERATION_MAX_DEPTH).process();
-   }
-
-   private static Predicate<List<RankedCandidate>> createTerminator() {
-      return new Predicate<List<RankedCandidate>>() {
-         int ctr = 1;
-
-         @Override
-         public boolean test(List<RankedCandidate> t) {
-            if (ctr % 50 == 0) {
-               System.out.println(ctr);
-            }
-            return ctr++ > NUM_GENERATIONS;
-         }
-      };
    }
 }

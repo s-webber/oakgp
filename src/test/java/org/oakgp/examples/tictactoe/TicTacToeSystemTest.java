@@ -2,12 +2,8 @@ package org.oakgp.examples.tictactoe;
 
 import static org.oakgp.Type.type;
 
-import java.util.List;
-import java.util.function.Predicate;
-
 import org.junit.Test;
 import org.oakgp.Assignments;
-import org.oakgp.RankedCandidate;
 import org.oakgp.TestUtils;
 import org.oakgp.Type;
 import org.oakgp.examples.RunBuilder;
@@ -36,10 +32,9 @@ public class TicTacToeSystemTest {
       Function[] functions = { new GetPossibleMove("corner", Board::getFreeCorner), new GetPossibleMove("centre", Board::getFreeCentre),
             new GetPossibleMove("side", Board::getFreeSide), new GetWinningMove(), new GetAnyMove(), new OrElse(MOVE_TYPE) };
       TwoPlayerGame game = createTicTacToeGame();
-      Predicate<List<RankedCandidate>> terminator = createTerminator();
 
       new RunBuilder().setReturnType(MOVE_TYPE).useDefaultRandom().setFunctionSet(functions).setConstants().setVariables(VARIABLE_TYPES).setTwoPlayerGame(game)
-            .useDefaultGenerationEvolver().setTerminator(terminator).setInitialGenerationSize(INITIAL_GENERATION_SIZE)
+            .useDefaultGenerationEvolver().setMaxGenerations(NUM_GENERATIONS).setInitialGenerationSize(INITIAL_GENERATION_SIZE)
             .setTreeDepth(INITIAL_GENERATION_MAX_DEPTH).process();
    }
 
@@ -48,10 +43,9 @@ public class TicTacToeSystemTest {
       Function[] functions = { new IsFree(), new IsOccupied(), new GetAnyMove(), new IfValidMove(), new OrElse(MOVE_TYPE), new And(), new If(POSSIBLE_MOVE) };
       ConstantNode[] constants = getMoveConstants();
       TwoPlayerGame game = createTicTacToeGame();
-      Predicate<List<RankedCandidate>> terminator = createTerminator();
 
       new RunBuilder().setReturnType(MOVE_TYPE).useDefaultRandom().setFunctionSet(functions).setConstants(constants).setVariables(VARIABLE_TYPES)
-            .setTwoPlayerGame(game).useDefaultGenerationEvolver().setTerminator(terminator).setInitialGenerationSize(INITIAL_GENERATION_SIZE)
+            .setTwoPlayerGame(game).useDefaultGenerationEvolver().setMaxGenerations(NUM_GENERATIONS).setInitialGenerationSize(INITIAL_GENERATION_SIZE)
             .setTreeDepth(INITIAL_GENERATION_MAX_DEPTH).process();
    }
 
@@ -60,11 +54,10 @@ public class TicTacToeSystemTest {
       Function[] functions = { new IsFree(), new IsOccupied(), new GetAnyMove(), new IfValidMove(), new OrElse(MOVE_TYPE), new And(), new If(POSSIBLE_MOVE) };
       ConstantNode[] constants = getMoveConstants();
       TicTacToeFitnessFunction fitnessFunction = new TicTacToeFitnessFunction();
-      Predicate<List<RankedCandidate>> terminator = createTerminator();
 
       new RunBuilder().setReturnType(MOVE_TYPE).useDefaultRandom().setFunctionSet(functions).setConstants(constants).setVariables(VARIABLE_TYPES)
-            .setFitnessFunction(fitnessFunction).useDefaultGenerationEvolver().setTerminator(terminator).setInitialGenerationSize(INITIAL_GENERATION_SIZE)
-            .setTreeDepth(INITIAL_GENERATION_MAX_DEPTH).process();
+            .setFitnessFunction(fitnessFunction).useDefaultGenerationEvolver().setMaxGenerations(NUM_GENERATIONS)
+            .setInitialGenerationSize(INITIAL_GENERATION_SIZE).setTreeDepth(INITIAL_GENERATION_MAX_DEPTH).process();
    }
 
    private ConstantNode[] getMoveConstants() {
@@ -73,20 +66,6 @@ public class TicTacToeSystemTest {
 
    private TwoPlayerGame createTicTacToeGame() {
       return new FirstPlayerAdvantageGame(new TicTacToe());
-   }
-
-   private Predicate<List<RankedCandidate>> createTerminator() {
-      return new Predicate<List<RankedCandidate>>() {
-         int ctr = 1;
-
-         @Override
-         public boolean test(List<RankedCandidate> t) {
-            if (ctr % 50 == 0) {
-               System.out.println(ctr + " " + t.iterator().next());
-            }
-            return ctr++ > NUM_GENERATIONS;
-         }
-      };
    }
 
    private class TicTacToeFitnessFunction implements FitnessFunction {

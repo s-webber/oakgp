@@ -189,8 +189,8 @@ public final class RunBuilder {
          return new InitialGenerationSetter();
       }
 
-      public InitialGenerationSetter useDefaultTerminator() {
-         return setTerminator(null); // TODO
+      public InitialGenerationSetter setMaxGenerations(final int maxGenerations) {
+         return setTerminator(new MaxGenerationTerminator(maxGenerations));
       }
    }
 
