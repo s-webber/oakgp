@@ -67,4 +67,13 @@ public final class Utils {
       // Note: -1 to avoid selecting root node
       return random.nextInt(nodeCount - 1);
    }
+
+   public static ConstantNode[] createEnumConstants(Class<? extends Enum<?>> e, Type t) {
+      Enum<?>[] enumConstants = e.getEnumConstants();
+      ConstantNode[] constants = new ConstantNode[enumConstants.length];
+      for (int i = 0; i < enumConstants.length; i++) {
+         constants[i] = new ConstantNode(enumConstants[i], t);
+      }
+      return constants;
+   }
 }

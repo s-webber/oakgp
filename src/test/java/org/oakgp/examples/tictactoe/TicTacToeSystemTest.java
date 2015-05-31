@@ -4,7 +4,6 @@ import static org.oakgp.Type.type;
 
 import org.junit.Test;
 import org.oakgp.Assignments;
-import org.oakgp.TestUtils;
 import org.oakgp.Type;
 import org.oakgp.examples.RunBuilder;
 import org.oakgp.fitness.FitnessFunction;
@@ -16,6 +15,7 @@ import org.oakgp.node.Node;
 import org.oakgp.tournament.FirstPlayerAdvantageGame;
 import org.oakgp.tournament.TwoPlayerGame;
 import org.oakgp.util.DummyNode;
+import org.oakgp.util.Utils;
 
 public class TicTacToeSystemTest {
    private static final int NUM_GENERATIONS = 10;
@@ -61,7 +61,7 @@ public class TicTacToeSystemTest {
    }
 
    private ConstantNode[] getMoveConstants() {
-      return TestUtils.createEnumConstants(Move.class, POSSIBLE_MOVE);
+      return Utils.createEnumConstants(Move.class, POSSIBLE_MOVE);
    }
 
    private TwoPlayerGame createTicTacToeGame() {

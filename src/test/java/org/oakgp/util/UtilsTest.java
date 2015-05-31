@@ -2,6 +2,7 @@ package org.oakgp.util;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.oakgp.TestUtils.integerConstant;
@@ -74,5 +75,24 @@ public class UtilsTest {
    public void testSelectSubNodeIndex() {
       int expected = 2;
       assertEquals(expected, Utils.selectSubNodeIndex(nextInt(4).returns(expected), 5));
+   }
+
+   @Test
+   public void testCreateEnumConstants() {
+      Type type = Type.type("testCreateEnumConstants");
+      TestCreateEnumConstantsEnum[] input = TestCreateEnumConstantsEnum.values();
+
+      ConstantNode[] result = Utils.createEnumConstants(TestCreateEnumConstantsEnum.class, type);
+
+      assertEquals(input.length, result.length);
+      for (int i = 0; i < input.length; i++) {
+         assertSame(ConstantNode.class, result[i].getClass());
+         assertSame(type, result[i].getType());
+         assertSame(input[i], result[i].evaluate(null));
+      }
+   }
+
+   private enum TestCreateEnumConstantsEnum {
+      A, B, C
    }
 }
