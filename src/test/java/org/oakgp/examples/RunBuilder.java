@@ -198,9 +198,9 @@ public final class RunBuilder {
       private InitialGenerationSetter() {
       }
 
-      public ProccessRunner setInitialGeneration(final Collection<Node> initialGeneration) {
+      public ProcessRunner setInitialGeneration(final Collection<Node> initialGeneration) {
          _initialGeneration = requireNonNull(initialGeneration);
-         return new ProccessRunner();
+         return new ProcessRunner();
       }
 
       public TreeDepthSetter setInitialGenerationSize(final int generationSize) {
@@ -214,7 +214,7 @@ public final class RunBuilder {
             this.generationSize = requiresPositive(generationSize);
          }
 
-         public ProccessRunner setTreeDepth(final int treeDepth) {
+         public ProcessRunner setTreeDepth(final int treeDepth) {
             requiresPositive(treeDepth);
 
             Set<Node> initialGeneration = new NodeSet();
@@ -228,8 +228,8 @@ public final class RunBuilder {
       }
    }
 
-   public class ProccessRunner {
-      private ProccessRunner() {
+   public class ProcessRunner {
+      private ProcessRunner() {
       }
 
       public Node process() {
