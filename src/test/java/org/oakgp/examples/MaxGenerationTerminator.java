@@ -2,6 +2,7 @@ package org.oakgp.examples;
 
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.logging.Logger;
 
 import org.oakgp.RankedCandidate;
 
@@ -17,13 +18,14 @@ public class MaxGenerationTerminator implements Predicate<List<RankedCandidate>>
    @Override
    public boolean test(List<RankedCandidate> t) {
       ctr++;
-      double best = t.get(0).getFitness();
-      boolean finished = ctr > maxGenerations || best == 0;
-      if (previousBest != best) {
-         previousBest = best;
-         System.out.println(ctr + " " + best);
+      RankedCandidate bestCandidate = t.get(0);
+      double bestRank = bestCandidate.getFitness();
+      boolean finished = ctr > maxGenerations || bestRank == 0;
+      if (previousBest != bestRank) {
+         previousBest = bestRank;
+         Logger.getGlobal().info(ctr + " " + bestRank + " " + bestCandidate);
       } else if (finished || ctr % 100 == 0) {
-         System.out.println(ctr + " " + best);
+         Logger.getGlobal().info(ctr + " " + bestRank);
       }
       return finished;
    }
