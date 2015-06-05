@@ -9,7 +9,7 @@ import org.oakgp.function.Function;
 
 /** Contains a function (operator) and the arguments (operands) to apply to it. */
 public final class FunctionNode implements Node {
-   private static final int PRIMES[] = { 2, 3, 5, 7, 11, 13, 19 };
+   private static final int PRIMES[] = { 2, 3, 5, 7, 11, 13, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97 };
    private final Function function;
    private final Arguments arguments;
    private final int nodeCount;
