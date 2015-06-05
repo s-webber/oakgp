@@ -9,6 +9,8 @@ import static org.oakgp.TestUtils.createVariable;
 import static org.oakgp.TestUtils.integerConstant;
 import static org.oakgp.Type.integerType;
 
+import java.util.function.Function;
+
 import org.junit.Test;
 import org.oakgp.Assignments;
 import org.oakgp.Type;
@@ -44,6 +46,15 @@ public class VariableNodeTest {
       final ConstantNode c = integerConstant(Integer.MAX_VALUE);
       assertSame(v, v.replaceAt(0, t -> t));
       assertSame(c, v.replaceAt(0, t -> c));
+   }
+
+   @Test
+   public void testReplaceAll() {
+      final VariableNode v = createVariable(0);
+      final ConstantNode c = integerConstant(Integer.MAX_VALUE);
+      Function<Node, Node> replacement = n -> c;
+      assertSame(c, v.replaceAll(n -> n == v, replacement));
+      assertSame(v, v.replaceAll(n -> n == c, replacement));
    }
 
    @Test

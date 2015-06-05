@@ -29,6 +29,11 @@ public abstract class DummyNode implements Node {
    }
 
    @Override
+   public Node replaceAll(Predicate<Node> criteria, java.util.function.Function<Node, Node> replacement) {
+      throw new UnsupportedOperationException();
+   }
+
+   @Override
    public Node getAt(int index) {
       throw new UnsupportedOperationException();
    }

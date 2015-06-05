@@ -103,6 +103,29 @@ public final class FunctionNode implements Node {
    }
 
    @Override
+   public Node replaceAll(Predicate<Node> criteria, java.util.function.Function<Node, Node> replacement) {
+      if (criteria.test(this)) {
+         return replacement.apply(this).replaceAll(criteria, replacement);
+      } else {
+         boolean updated = false;
+         Node[] replacementArgs = new Node[arguments.getArgCount()];
+         for (int i = 0; i < arguments.getArgCount(); i++) {
+            Node arg = arguments.getArg(i);
+            Node replacedArg = arg.replaceAll(criteria, replacement);
+            if (arg != replacedArg) {
+               updated = true;
+            }
+            replacementArgs[i] = replacedArg;
+         }
+         if (updated) {
+            return new FunctionNode(function, Arguments.createArguments(replacementArgs));
+         } else {
+            return this;
+         }
+      }
+   }
+
+   @Override
    public Node getAt(int index) {
       int total = 0;
       for (int i = 0; i < arguments.getArgCount(); i++) {

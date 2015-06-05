@@ -32,6 +32,15 @@ abstract class TerminalNode implements Node {
    }
 
    @Override
+   public Node replaceAll(Predicate<Node> criteria, java.util.function.Function<Node, Node> replacement) {
+      if (criteria.test(this)) {
+         return replacement.apply(this);
+      } else {
+         return this;
+      }
+   }
+
+   @Override
    public final Node getAt(int index) {
       return this;
    }
