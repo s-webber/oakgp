@@ -29,6 +29,8 @@ public class IfTest extends AbstractFunctionTest {
 
    @Override
    protected void getCanSimplifyTests(SimplifyTestCases testCases) {
+      // TODO test using SimplifyTestCases.put(String, String, Object[][])
+
       testCases.put("(if (< 1 2) 4 7)", "4");
       testCases.put("(if (> 1 2) 4 7)", "7");
       testCases.put("(if (> v0 v1) v2 v2)", "v2");
@@ -36,13 +38,13 @@ public class IfTest extends AbstractFunctionTest {
       testCases.put("(if (> v0 v1) v3 v4)", "(if (< v1 v0) v3 v4)");
 
       testCases.put("(if (< v0 v1) (if (< v0 v1) v2 v3) v4)", "(if (< v0 v1) v2 v4)");
-      testCases.put("(if (< v0 v1) v2 (if (< v0 v1) v3 v4))", "(if (< v0 v1) v2 v3)");
+      testCases.put("(if (< v0 v1) v2 (if (< v0 v1) v3 v4))", "(if (< v0 v1) v2 v4)");
 
       testCases.put("(if (< v0 v1) (+ v2 (if (< v0 v1) v3 v4)) v5)", "(if (< v0 v1) (+ v2 v3) v5)");
-      testCases.put("(if (< v0 v1) v5 (+ v2 (if (< v0 v1) v3 v4)))", "(if (< v0 v1) v5 (+ v2 v3))");
+      testCases.put("(if (< v0 v1) v5 (+ v2 (if (< v0 v1) v3 v4)))", "(if (< v0 v1) v5 (+ v2 v4))");
 
       testCases.put("(if (< v0 v1) (if (< v2 v3) (if (< v0 v1) v4 v5) v6) v7)", "(if (< v0 v1) (if (< v2 v3) v4 v6) v7)");
-      testCases.put("(if (< v0 v1) v7 (if (< v2 v3) (if (< v0 v1) v4 v5) v6))", "(if (< v0 v1) v7 (if (< v2 v3) v4 v6))");
+      testCases.put("(if (< v0 v1) v7 (if (< v2 v3) (if (< v0 v1) v4 v5) v6))", "(if (< v0 v1) v7 (if (< v2 v3) v5 v6))");
    }
 
    @Override

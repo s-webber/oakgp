@@ -3,7 +3,8 @@ package org.oakgp.function.choice;
 import static java.lang.Boolean.TRUE;
 import static org.oakgp.Type.booleanType;
 import static org.oakgp.node.NodeType.isConstant;
-import static org.oakgp.node.NodeType.isFunction;
+
+import java.util.function.Predicate;
 
 import org.oakgp.Arguments;
 import org.oakgp.Assignments;
@@ -12,6 +13,7 @@ import org.oakgp.Type;
 import org.oakgp.function.Function;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
+import org.oakgp.util.Utils;
 
 /**
  * A selection operator.
@@ -58,44 +60,14 @@ public final class If implements Function {
          return index == TRUE_IDX ? trueBranch : falseBranch;
       }
 
-      return removeRedundantIf(condition, arguments);
-   }
-
-   private Node removeRedundantIf(Node condition, Arguments arguments) {
-      Node result = removeRedundantIf(this, condition, arguments, TRUE_IDX);
-      if (result != null) {
-         return result;
+      Predicate<Node> criteria = n -> n.equals(condition);
+      Node simplifiedTrueBranch = trueBranch.replaceAll(criteria, n -> Utils.TRUE_NODE);
+      Node simplifiedFalseBranch = falseBranch.replaceAll(criteria, n -> Utils.FALSE_NODE);
+      if (trueBranch != simplifiedTrueBranch || falseBranch != simplifiedFalseBranch) {
+         return new FunctionNode(this, condition, simplifiedTrueBranch, simplifiedFalseBranch);
       } else {
-         return removeRedundantIf(this, condition, arguments, FALSE_IDX);
+         return null;
       }
-   }
-
-   private Node removeRedundantIf(Function f, Node condition, Arguments arguments, int branchIdx) {
-      Node branch = arguments.getArg(branchIdx);
-      if (isFunction(branch)) {
-         FunctionNode fn = (FunctionNode) branch;
-         if (fn.getFunction() == this && fn.getArguments().firstArg().equals(condition)) {
-            return new FunctionNode(f, arguments.replaceAt(branchIdx, fn.getArguments().secondArg()));
-         } else {
-            Node n = removeRedundantIf(condition, fn);
-            if (n != null) {
-               return new FunctionNode(f, arguments.replaceAt(branchIdx, n));
-            }
-         }
-      }
-      return null;
-   }
-
-   private Node removeRedundantIf(Node condition, FunctionNode fn) {
-      Function function = fn.getFunction();
-      Arguments arguments = fn.getArguments();
-      for (int i = 0; i < arguments.getArgCount(); i++) {
-         Node result = removeRedundantIf(function, condition, arguments, i);
-         if (result != null) {
-            return result;
-         }
-      }
-      return null;
    }
 
    private int getOutcomeArgumentIndex(Arguments arguments, Assignments assignments) {
