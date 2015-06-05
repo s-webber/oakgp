@@ -55,7 +55,7 @@ public class FunctionSetTest {
          functionSet.getFunction(ADD.getClass().getName(), TWO_INTEGERS);
          fail();
       } catch (IllegalArgumentException e) {
-         assertEquals("Could not find function: org.oakgp.function.math.Add", e.getMessage());
+         assertStartsWith("Could not find function: org.oakgp.function.math.Add", e.getMessage());
       }
    }
 
@@ -66,7 +66,7 @@ public class FunctionSetTest {
          functionSet.getFunction("^", TWO_INTEGERS);
          fail();
       } catch (IllegalArgumentException e) {
-         assertEquals("Could not find function: ^", e.getMessage());
+         assertStartsWith("Could not find function: ^", e.getMessage());
       }
    }
 
@@ -164,7 +164,7 @@ public class FunctionSetTest {
 
    @Test
    public void testGetSymbolDuplicates() {
-      assertTrue(getGetSymbolExceptionMessage("count").startsWith("Found more than one function: count"));
+      assertStartsWith("Found more than one function: count", getGetSymbolExceptionMessage("count"));
    }
 
    private String getGetSymbolExceptionMessage(String symbol) {
@@ -191,5 +191,9 @@ public class FunctionSetTest {
             new IsPositive(), new IsNegative(), new IsZero(),
             // collections
             new Count(integerType()), new Count(booleanType()));
+   }
+
+   private void assertStartsWith(String expectedPrefix, String input) {
+      assertTrue(input.startsWith(expectedPrefix));
    }
 }
