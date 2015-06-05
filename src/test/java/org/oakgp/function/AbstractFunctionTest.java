@@ -171,7 +171,7 @@ public abstract class AbstractFunctionTest {
          return this;
       }
 
-      public void expect(String expectedOutput) {
+      public void expect(Object expectedOutput) {
          this.expectedOutput = expectedOutput;
       }
    }
