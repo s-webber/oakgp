@@ -5,6 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
+import static org.mockito.Mockito.mock;
 import static org.oakgp.Arguments.createArguments;
 import static org.oakgp.Assignments.createAssignments;
 import static org.oakgp.TestUtils.assertNodeEquals;
@@ -268,6 +269,21 @@ public class FunctionNodeTest {
       Node n1 = readNode("(- (- (* -1 v3) 0) (- 13 v1))");
       Node n2 = readNode("(- (- (* -1 v3) 13) (- 0 v1))");
       assertNotEquals(n1.hashCode(), n2.hashCode());
+   }
+
+   @Test
+   public void testLargeNumberOfArguments() {
+      Node[] args = new Node[1000];
+      for (int i = 0; i < args.length; i++) {
+         args[i] = integerConstant(i);
+      }
+
+      FunctionNode n = new FunctionNode(mock(Function.class), args);
+
+      assertEquals(args.length, n.getArguments().getArgCount());
+      for (int i = 0; i < args.length; i++) {
+         assertSame(args[i], n.getArguments().getArg(i));
+      }
    }
 
    /** Returns representation of: {@code (x*y)+z+1} */

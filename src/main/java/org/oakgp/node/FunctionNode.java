@@ -52,9 +52,12 @@ public final class FunctionNode implements Node {
 
    private static int createHashCode(Arguments arguments, int nodeCount) {
       int hashCode = 0;
+      int primesIdx = 0;
       for (int i = 0; i < arguments.getArgCount(); i++) {
-         // TODO avoid array index out of bounds when arg count > PRIMES.length
-         hashCode += arguments.getArg(i).hashCode() * (PRIMES[i] + nodeCount);
+         hashCode += arguments.getArg(i).hashCode() * (PRIMES[primesIdx] + nodeCount);
+         if (++primesIdx == PRIMES.length) {
+            primesIdx = 0;
+         }
       }
       return hashCode;
    }
