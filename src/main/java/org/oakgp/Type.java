@@ -9,12 +9,17 @@ import java.util.concurrent.ConcurrentHashMap;
  * e.g. integer, boolean, string, array, function.
  */
 public final class Type implements Comparable<Type> {
+   private static final String NULLABLE = "nullable";
    private static final ConcurrentHashMap<Type, Type> TYPE_CACHE = new ConcurrentHashMap<>();
    private static final Type[] EMPTY_ARRAY = new Type[0];
 
    private final String name;
    private final Type[] args;
    private final int hashCode;
+
+   public static boolean isNullable(Type t) {
+      return t.name.equals(NULLABLE) && t.args.length == 1;
+   }
 
    public static Type stringType() {
       return type("string");
@@ -41,7 +46,7 @@ public final class Type implements Comparable<Type> {
    }
 
    public static Type nullableType(Type t) {
-      return type("nullable", t);
+      return type(NULLABLE, t);
    }
 
    public static Type functionType(Type... signature) {

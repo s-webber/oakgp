@@ -57,6 +57,27 @@ public class TypeTest {
    }
 
    @Test
+   public void testIsNullable() {
+      String nullableName = "nullable";
+      Type integerType = Type.integerType();
+      Type booleanType = Type.booleanType();
+
+      assertNullable(Type.type(nullableName, integerType));
+      assertNullable(Type.type(nullableName, booleanType));
+
+      assertNotNullable(integerType);
+      assertNotNullable(Type.type(nullableName, integerType, integerType));
+   }
+
+   private void assertNullable(Type t) {
+      assertTrue(Type.isNullable(t));
+   }
+
+   private void assertNotNullable(Type t) {
+      assertFalse(Type.isNullable(t));
+   }
+
+   @Test
    public void testIntegerToBooleanFunction() {
       Type t = Type.integerToBooleanFunctionType();
       assertSame(t, Type.integerToBooleanFunctionType());
