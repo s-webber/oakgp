@@ -1,5 +1,6 @@
 package org.oakgp.function.choice;
 
+import static org.oakgp.Type.isNullable;
 import static org.oakgp.node.NodeType.isFunction;
 
 import org.oakgp.Arguments;
@@ -16,7 +17,7 @@ public final class SwitchEnum implements Function {
 
    public SwitchEnum(Class<? extends Enum<?>> enumClass, Type enumType, Type returnType) {
       this.enumConstants = enumClass.getEnumConstants();
-      Type[] types = new Type[enumConstants.length + 1];
+      Type[] types = new Type[enumConstants.length + (isNullable(enumType) ? 2 : 1)];
       types[0] = enumType;
       for (int i = 1; i < types.length; i++) {
          types[i] = returnType;
@@ -27,7 +28,8 @@ public final class SwitchEnum implements Function {
    @Override
    public Object evaluate(Arguments arguments, Assignments assignments) {
       Enum<?> input = arguments.firstArg().evaluate(assignments);
-      return arguments.getArg(input.ordinal() + 1).evaluate(assignments);
+      int index = (input == null ? enumConstants.length : input.ordinal()) + 1;
+      return arguments.getArg(index).evaluate(assignments);
    }
 
    @Override
