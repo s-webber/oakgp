@@ -29,7 +29,9 @@ import org.oakgp.fitness.FitnessFunction;
 import org.oakgp.fitness.FitnessFunctionCache;
 import org.oakgp.fitness.FitnessFunctionGenerationProcessor;
 import org.oakgp.function.Function;
+import org.oakgp.mutate.ConstantToFunctionMutation;
 import org.oakgp.mutate.PointMutation;
+import org.oakgp.mutate.SubTreeMutation;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
 import org.oakgp.selector.NodeSelectorFactory;
@@ -173,9 +175,11 @@ public final class RunBuilder {
       private Map<NodeEvolver, Long> createNodeEvolvers() {
          Map<NodeEvolver, Long> nodeEvolvers = new HashMap<>();
          TreeGenerator treeGenerator = TreeGeneratorImpl.grow(_primitiveSet, _random);
-         nodeEvolvers.put(t -> treeGenerator.generate(_returnType, 4), 5L);
-         nodeEvolvers.put(new SubtreeCrossover(_random), 21L);
-         nodeEvolvers.put(new PointMutation(_random, _primitiveSet), 21L);
+         nodeEvolvers.put(t -> treeGenerator.generate(_returnType, 4), 4L);
+         nodeEvolvers.put(new SubtreeCrossover(_random), 19L);
+         nodeEvolvers.put(new PointMutation(_random, _primitiveSet), 19L);
+         nodeEvolvers.put(new SubTreeMutation(_random, treeGenerator), 2L);
+         nodeEvolvers.put(new ConstantToFunctionMutation(_random, TreeGeneratorImpl.full(_primitiveSet)), 2L);
          return nodeEvolvers;
       }
    }
