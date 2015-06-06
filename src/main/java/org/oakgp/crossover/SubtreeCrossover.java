@@ -13,6 +13,10 @@ import org.oakgp.util.Utils;
  * Performs subtree crossover.
  * <p>
  * A subtree is selected at random from each of the parents. The subtree of the first is replaced by the subtree of the second.
+ * </p>
+ * <p>
+ * Also known as one-point crossover.
+ * </p>
  */
 public final class SubtreeCrossover implements NodeEvolver {
    private final Random random;
