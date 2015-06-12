@@ -33,17 +33,17 @@ public class SwitchEnumTest extends AbstractFunctionTest {
    }
 
    @Override
-   protected void getEvaluateTests(EvaluateTestCases testCases) {
+   public void testEvaluate() {
       String input = "(switchenum v0 9 5 6)";
-      testCases.when(input).assigned(A).expect(9);
-      testCases.when(input).assigned(B).expect(5);
-      testCases.when(input).assigned(C).expect(6);
+      evaluate(input).assigned(A).to(9);
+      evaluate(input).assigned(B).to(5);
+      evaluate(input).assigned(C).to(6);
 
       String nullableInput = "(switchenum v0 9 5 6 7)";
-      testCases.when(nullableInput).assigned(nullable(A)).expect(9);
-      testCases.when(nullableInput).assigned(nullable(B)).expect(5);
-      testCases.when(nullableInput).assigned(nullable(C)).expect(6);
-      testCases.when(nullableInput).assigned(NULL).expect(7);
+      evaluate(nullableInput).assigned(nullable(A)).to(9);
+      evaluate(nullableInput).assigned(nullable(B)).to(5);
+      evaluate(nullableInput).assigned(nullable(C)).to(6);
+      evaluate(nullableInput).assigned(NULL).to(7);
    }
 
    private ConstantNode nullable(ConstantNode n) {

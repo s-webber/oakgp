@@ -15,15 +15,15 @@ public class GreaterThanTest extends AbstractFunctionTest {
    }
 
    @Override
-   protected void getEvaluateTests(EvaluateTestCases t) {
-      t.put("(> 7 8)", FALSE);
-      t.put("(> 8 8)", FALSE);
-      t.put("(> 9 8)", TRUE);
+   public void testEvaluate() {
+      evaluate("(> 7 8)").to(FALSE);
+      evaluate("(> 8 8)").to(FALSE);
+      evaluate("(> 9 8)").to(TRUE);
 
       // TODO have similar String comparison tests in other comparison function tests
-      t.put("(> \"dog\" \"zebra\")", FALSE);
-      t.put("(> \"dog\" \"dog\")", FALSE);
-      t.put("(> \"dog\" \"apple\")", TRUE);
+      evaluate("(> \"dog\" \"zebra\")").to(FALSE);
+      evaluate("(> \"dog\" \"dog\")").to(FALSE);
+      evaluate("(> \"dog\" \"apple\")").to(TRUE);
    }
 
    @Override

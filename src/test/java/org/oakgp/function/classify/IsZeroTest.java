@@ -10,12 +10,12 @@ public class IsZeroTest extends AbstractFunctionTest {
    }
 
    @Override
-   protected void getEvaluateTests(EvaluateTestCases testCases) {
-      testCases.put("(zero? 0)", true);
-      testCases.put("(zero? 27)", false);
-      testCases.put("(zero? 1)", false);
-      testCases.put("(zero? -1)", false);
-      testCases.put("(zero? -27)", false);
+   public void testEvaluate() {
+      evaluate("(zero? 0)").to(true);
+      evaluate("(zero? 27)").to(false);
+      evaluate("(zero? 1)").to(false);
+      evaluate("(zero? -1)").to(false);
+      evaluate("(zero? -27)").to(false);
    }
 
    @Override

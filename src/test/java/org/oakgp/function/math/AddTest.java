@@ -14,22 +14,22 @@ public class AddTest extends AbstractFunctionTest {
    }
 
    @Override
-   protected void getEvaluateTests(EvaluateTestCases testCases) {
+   public void testEvaluate() {
       // int
-      testCases.put("(+ 3 21)", 24);
-      testCases.put("(+ 2147483647 1)", -2147483648);
+      evaluate("(+ 3 21)").to(24);
+      evaluate("(+ 2147483647 1)").to(-2147483648);
 
       // long
-      testCases.put("(+ 3L 21L)", 24L);
-      testCases.put("(+ 2147483647L 1L)", 2147483648L);
-      testCases.put("(+ 9223372036854775807L 1L)", -9223372036854775808L);
+      evaluate("(+ 3L 21L)").to(24L);
+      evaluate("(+ 2147483647L 1L)").to(2147483648L);
+      evaluate("(+ 9223372036854775807L 1L)").to(-9223372036854775808L);
 
       // BigDecimal
-      testCases.put("(+ 3D 21D)", new BigDecimal("24"));
-      testCases.put("(+ 2147483647D 1D)", new BigDecimal("2147483648"));
-      testCases.put("(+ 9223372036854775807D 1D)", new BigDecimal("9223372036854775808"));
-      testCases.put("(+ 7.5D -0.025D)", new BigDecimal("7.475"));
-      testCases.put("(+ 1.7976931348623157E308D 1D)", BigDecimal.valueOf(Double.MAX_VALUE).add(BigDecimal.ONE));
+      evaluate("(+ 3D 21D)").to(new BigDecimal("24"));
+      evaluate("(+ 2147483647D 1D)").to(new BigDecimal("2147483648"));
+      evaluate("(+ 9223372036854775807D 1D)").to(new BigDecimal("9223372036854775808"));
+      evaluate("(+ 7.5D -0.025D)").to(new BigDecimal("7.475"));
+      evaluate("(+ 1.7976931348623157E308D 1D)").to(BigDecimal.valueOf(Double.MAX_VALUE).add(BigDecimal.ONE));
    }
 
    @Override

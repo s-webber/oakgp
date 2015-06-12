@@ -14,10 +14,10 @@ public class NotEqualTest extends AbstractFunctionTest {
    }
 
    @Override
-   protected void getEvaluateTests(EvaluateTestCases t) {
-      t.put("(!= 7 8)", TRUE);
-      t.put("(!= 8 8)", FALSE);
-      t.put("(!= 9 8)", TRUE);
+   public void testEvaluate() {
+      evaluate("(!= 7 8)").to(TRUE);
+      evaluate("(!= 8 8)").to(FALSE);
+      evaluate("(!= 9 8)").to(TRUE);
    }
 
    @Override

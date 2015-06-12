@@ -14,10 +14,10 @@ public class LessThanOrEqualTest extends AbstractFunctionTest {
    }
 
    @Override
-   protected void getEvaluateTests(EvaluateTestCases t) {
-      t.put("(<= 7 8)", TRUE);
-      t.put("(<= 8 8)", TRUE);
-      t.put("(<= 9 8)", FALSE);
+   public void testEvaluate() {
+      evaluate("(<= 7 8)").to(TRUE);
+      evaluate("(<= 8 8)").to(TRUE);
+      evaluate("(<= 9 8)").to(FALSE);
    }
 
    @Override

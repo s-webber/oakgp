@@ -17,10 +17,10 @@ public class MapTest extends AbstractFunctionTest {
    }
 
    @Override
-   protected void getEvaluateTests(EvaluateTestCases testCases) {
-      testCases.put("(map pos? [2 -12 8 -3 -7 6])", createArguments("true", "false", "true", "false", "false", "true"));
-      testCases.put("(map neg? [2 -12 8 -3 -7 6])", createArguments("false", "true", "false", "true", "true", "false"));
-      testCases.put("(map zero? [2 -12 8 -3 -7 6])", createArguments("false", "false", "false", "false", "false", "false"));
+   public void testEvaluate() {
+      evaluate("(map pos? [2 -12 8 -3 -7 6])").to(createArguments("true", "false", "true", "false", "false", "true"));
+      evaluate("(map neg? [2 -12 8 -3 -7 6])").to(createArguments("false", "true", "false", "true", "true", "false"));
+      evaluate("(map zero? [2 -12 8 -3 -7 6])").to(createArguments("false", "false", "false", "false", "false", "false"));
    }
 
    @Override

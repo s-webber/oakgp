@@ -10,12 +10,12 @@ public class IsPositiveTest extends AbstractFunctionTest {
    }
 
    @Override
-   protected void getEvaluateTests(EvaluateTestCases testCases) {
-      testCases.put("(pos? 27)", true);
-      testCases.put("(pos? 1)", true);
-      testCases.put("(pos? 0)", false);
-      testCases.put("(pos? -1)", false);
-      testCases.put("(pos? -27)", false);
+   public void testEvaluate() {
+      evaluate("(pos? 27)").to(true);
+      evaluate("(pos? 1)").to(true);
+      evaluate("(pos? 0)").to(false);
+      evaluate("(pos? -1)").to(false);
+      evaluate("(pos? -27)").to(false);
    }
 
    @Override

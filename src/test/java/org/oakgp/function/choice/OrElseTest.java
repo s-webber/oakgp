@@ -19,14 +19,14 @@ public class OrElseTest extends AbstractFunctionTest {
    }
 
    @Override
-   protected void getEvaluateTests(EvaluateTestCases testCases) {
+   public void testEvaluate() {
       ConstantNode neverNullValue = new ConstantNode("default", stringType());
 
       ConstantNode nullValue = new ConstantNode(null, nullableType(stringType()));
-      testCases.when("(orelse v0 v1)").assigned(nullValue, neverNullValue).expect("default");
+      evaluate("(orelse v0 v1)").assigned(nullValue, neverNullValue).to("default");
 
       ConstantNode nonNullValue = new ConstantNode("hello", nullableType(stringType()));
-      testCases.when("(orelse v0 v1)").assigned(nonNullValue, neverNullValue).expect("hello");
+      evaluate("(orelse v0 v1)").assigned(nonNullValue, neverNullValue).to("hello");
    }
 
    @Override

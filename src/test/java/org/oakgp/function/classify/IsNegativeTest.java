@@ -10,12 +10,12 @@ public class IsNegativeTest extends AbstractFunctionTest {
    }
 
    @Override
-   protected void getEvaluateTests(EvaluateTestCases testCases) {
-      testCases.put("(neg? -27)", true);
-      testCases.put("(neg? -1)", true);
-      testCases.put("(neg? 0)", false);
-      testCases.put("(neg? 1)", false);
-      testCases.put("(neg? 27)", false);
+   public void testEvaluate() {
+      evaluate("(neg? -27)").to(true);
+      evaluate("(neg? -1)").to(true);
+      evaluate("(neg? 0)").to(false);
+      evaluate("(neg? 1)").to(false);
+      evaluate("(neg? 27)").to(false);
    }
 
    @Override

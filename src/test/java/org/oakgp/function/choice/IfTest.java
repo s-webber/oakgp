@@ -20,9 +20,9 @@ public class IfTest extends AbstractFunctionTest {
    }
 
    @Override
-   protected void getEvaluateTests(EvaluateTestCases testCases) {
-      testCases.put("(if (< 8 9) (+ 1 2) (* 6 3))", 3);
-      testCases.put("(if (> 8 9) (+ 1 2) (* 6 3))", 18);
+   public void testEvaluate() {
+      evaluate("(if (< 8 9) (+ 1 2) (* 6 3))").to(3);
+      evaluate("(if (> 8 9) (+ 1 2) (* 6 3))").to(18);
    }
 
    @Override

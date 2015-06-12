@@ -16,10 +16,10 @@ public class FilterTest extends AbstractFunctionTest {
    }
 
    @Override
-   protected void getEvaluateTests(EvaluateTestCases testCases) {
-      testCases.put("(filter pos? [2 -12 8 -3 -7 6])", createArguments("2", "8", "6"));
-      testCases.put("(filter neg? [2 -12 8 -3 -7 6])", createArguments("-12", "-3", "-7"));
-      testCases.put("(filter zero? [2 -12 8 -3 -7 6])", createArguments());
+   public void testEvaluate() {
+      evaluate("(filter pos? [2 -12 8 -3 -7 6])").to(createArguments("2", "8", "6"));
+      evaluate("(filter neg? [2 -12 8 -3 -7 6])").to(createArguments("-12", "-3", "-7"));
+      evaluate("(filter zero? [2 -12 8 -3 -7 6])").to(createArguments());
    }
 
    @Override

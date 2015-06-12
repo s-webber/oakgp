@@ -12,10 +12,10 @@ public class CountTest extends AbstractFunctionTest {
    }
 
    @Override
-   protected void getEvaluateTests(EvaluateTestCases testCases) {
+   public void testEvaluate() {
       // testCases.put("(count [])", 0); TODO
-      testCases.put("(count [2 -12 8])", 3);
-      testCases.put("(count [2 -12 8 -3 -7])", 5);
+      evaluate("(count [2 -12 8])").to(3);
+      evaluate("(count [2 -12 8 -3 -7])").to(5);
    }
 
    @Override

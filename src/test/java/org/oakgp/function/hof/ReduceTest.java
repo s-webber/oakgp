@@ -13,11 +13,10 @@ public class ReduceTest extends AbstractFunctionTest {
    }
 
    @Override
-   protected void getEvaluateTests(EvaluateTestCases testCases) {
-      testCases.put("(reduce + 0 [2 12 8])", 22);
-      testCases.put("(reduce + 5 [2 12 8])", 27);
-
-      testCases.put("(reduce * 1 [2 12 8])", 192);
+   public void testEvaluate() {
+      evaluate("(reduce + 0 [2 12 8])").to(22);
+      evaluate("(reduce + 5 [2 12 8])").to(27);
+      evaluate("(reduce * 1 [2 12 8])").to(192);
    }
 
    @Override

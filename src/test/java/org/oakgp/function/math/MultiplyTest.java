@@ -12,8 +12,8 @@ public class MultiplyTest extends AbstractFunctionTest {
    }
 
    @Override
-   protected void getEvaluateTests(EvaluateTestCases t) {
-      t.put("(* 3 21)", 63);
+   public void testEvaluate() {
+      evaluate("(* 3 21)").to(63);
    }
 
    @Override

@@ -35,28 +35,13 @@ public abstract class AbstractFunctionTest {
 
    protected abstract Function getFunction();
 
-   protected abstract void getEvaluateTests(EvaluateTestCases testCases);
-
    protected abstract void getCanSimplifyTests(SimplifyTestCases testCases);
 
    @Test
    public abstract void testCannotSimplify();
 
    @Test
-   public final void testEvaluate() {
-      EvaluateTestCases testCases = new EvaluateTestCases();
-      getEvaluateTests(testCases);
-      assertFalse(testCases.tests.isEmpty());
-      for (EvaluateTest test : testCases.tests) {
-         Assignments assignments = toAssignments(test.constants);
-         Type[] variableTypes = toVariableTypes(test.constants);
-
-         FunctionNode input = readInput(test.input, variableTypes);
-         Object actualResult = input.evaluate(assignments);
-
-         assertEquals(test.expectedOutput, actualResult);
-      }
-   }
+   public abstract void testEvaluate();
 
    @Test
    public final void testCanSimplify() {
@@ -90,32 +75,51 @@ public abstract class AbstractFunctionTest {
       assertTrue(NodeReader.isValidDisplayName(displayName));
    }
 
-   private FunctionNode readInput(String input, Type... variableTypes) {
-      Node node = readNode(input, variableTypes);
-      assertSame(node.toString(), FunctionNode.class, node.getClass());
-      FunctionNode functionNode = (FunctionNode) node;
-      assertSame(getFunction().getClass(), functionNode.getFunction().getClass());
-      return functionNode;
+   public EvaluateExpectation evaluate(String input) {
+      return new EvaluateExpectation(input);
+   }
+
+   protected class EvaluateExpectation {
+      private final String input;
+      private ConstantNode[] assignedValues = {};
+
+      private EvaluateExpectation(String input) {
+         this.input = input;
+      }
+
+      public EvaluateExpectation assigned(ConstantNode... assignedValues) {
+         this.assignedValues = assignedValues;
+         return this;
+      }
+
+      public void to(Object expectedResult) {
+         Type[] variableTypes = toVariableTypes(assignedValues);
+         FunctionNode functionNode = readFunctionNode(input, variableTypes);
+         Assignments assignments = toAssignments(assignedValues);
+         // assert evaluate consistently returns the expected result
+         assertEquals(expectedResult, functionNode.evaluate(assignments));
+         assertEquals(expectedResult, functionNode.evaluate(assignments));
+      }
+
+      private Assignments toAssignments(ConstantNode[] constants) {
+         Object[] values = new Object[constants.length];
+         for (int i = 0; i < constants.length; i++) {
+            values[i] = constants[i].evaluate(null);
+         }
+         return Assignments.createAssignments(values);
+      }
+
+      private Type[] toVariableTypes(ConstantNode[] constants) {
+         Type[] types = new Type[constants.length];
+         for (int i = 0; i < constants.length; i++) {
+            types[i] = constants[i].getType();
+         }
+         return types;
+      }
    }
 
    protected Function[] getFunctionSet() {
       return new Function[] { getFunction() };
-   }
-
-   private Assignments toAssignments(ConstantNode[] constants) {
-      Object[] values = new Object[constants.length];
-      for (int i = 0; i < constants.length; i++) {
-         values[i] = constants[i].evaluate(null);
-      }
-      return Assignments.createAssignments(values);
-   }
-
-   private Type[] toVariableTypes(ConstantNode[] constants) {
-      Type[] types = new Type[constants.length];
-      for (int i = 0; i < constants.length; i++) {
-         types[i] = constants[i].getType();
-      }
-      return types;
    }
 
    private void assertNodesEvaluateSameOutcome(SimplifyTest test, Node input, Node actualResult) {
@@ -152,48 +156,6 @@ public abstract class AbstractFunctionTest {
          return nodeReader.readNode();
       } catch (IOException e) {
          throw new UncheckedIOException(e);
-      }
-   }
-
-   protected static class EvaluateTestCases {
-      private List<EvaluateTest> tests = new ArrayList<>();
-
-      public void put(String input, Object expectedOutput) {
-         tests.add(new EvaluateTest(input, expectedOutput));
-      }
-
-      public EvaluateTest when(String input) {
-         EvaluateTest test = new EvaluateTest(input);
-         tests.add(test);
-         return test;
-      }
-
-      public List<EvaluateTest> getTests() {
-         return tests;
-      }
-   }
-
-   public static class EvaluateTest {
-      private final String input;
-      private Object expectedOutput;
-      private ConstantNode[] constants = new ConstantNode[0];
-
-      private EvaluateTest(String input, Object expectedOutput) {
-         this.input = input;
-         this.expectedOutput = expectedOutput;
-      }
-
-      private EvaluateTest(String input) {
-         this.input = input;
-      }
-
-      public EvaluateTest assigned(ConstantNode... constants) {
-         this.constants = constants;
-         return this;
-      }
-
-      public void expect(Object expectedOutput) {
-         this.expectedOutput = expectedOutput;
       }
    }
 

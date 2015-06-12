@@ -12,8 +12,8 @@ public class SubtractTest extends AbstractFunctionTest {
    }
 
    @Override
-   protected void getEvaluateTests(EvaluateTestCases testCases) {
-      testCases.put("(- 3 21)", -18);
+   public void testEvaluate() {
+      evaluate("(- 3 21)").to(-18);
    }
 
    @Override

@@ -12,11 +12,11 @@ public class DivideTest extends AbstractFunctionTest {
    }
 
    @Override
-   protected void getEvaluateTests(EvaluateTestCases testCases) {
-      testCases.put("(/ 12 1)", 12);
-      testCases.put("(/ 12 12)", 1);
-      testCases.put("(/ 12 0)", 1);
-      testCases.put("(/ 12 3)", 4);
+   public void testEvaluate() {
+      evaluate("(/ 12 1)").to(12);
+      evaluate("(/ 12 12)").to(1);
+      evaluate("(/ 12 0)").to(1);
+      evaluate("(/ 12 3)").to(4);
    }
 
    @Override
