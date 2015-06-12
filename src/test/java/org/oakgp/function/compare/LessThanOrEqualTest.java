@@ -21,11 +21,11 @@ public class LessThanOrEqualTest extends AbstractFunctionTest {
    }
 
    @Override
-   protected void getCanSimplifyTests(SimplifyTestCases t) {
-      t.put("(<= v1 v1)", "true");
-      t.put("(<= 8 7)", "false");
-      t.put("(<= 8 8)", "true");
-      t.put("(<= 8 9)", "true");
+   public void testCanSimplify() {
+      simplify("(<= v0 v0)").with(integerType()).to("true");
+      simplify("(<= 8 7)").to("false");
+      simplify("(<= 8 8)").to("true");
+      simplify("(<= 8 9)").to("true");
    }
 
    @Override

@@ -23,8 +23,8 @@ public class FilterTest extends AbstractFunctionTest {
    }
 
    @Override
-   protected void getCanSimplifyTests(SimplifyTestCases testCases) {
-      testCases.put("(filter pos? [2 -12 8])", "[2 8]");
+   public void testCanSimplify() {
+      simplify("(filter pos? [2 -12 8])").to("[2 8]");
    }
 
    @Override

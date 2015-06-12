@@ -20,8 +20,8 @@ public class ReduceTest extends AbstractFunctionTest {
    }
 
    @Override
-   protected void getCanSimplifyTests(SimplifyTestCases testCases) {
-      testCases.put("(reduce + 9 [2 12 8])", "31");
+   public void testCanSimplify() {
+      simplify("(reduce + 9 [2 12 8])").to("31");
    }
 
    @Override

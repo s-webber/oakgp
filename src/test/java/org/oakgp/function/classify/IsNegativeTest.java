@@ -19,8 +19,8 @@ public class IsNegativeTest extends AbstractFunctionTest {
    }
 
    @Override
-   protected void getCanSimplifyTests(SimplifyTestCases testCases) {
-      testCases.put("(neg? -1)", "true");
+   public void testCanSimplify() {
+      simplify("(neg? -1)").to("true");
    }
 
    @Override

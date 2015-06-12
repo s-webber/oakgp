@@ -19,8 +19,8 @@ public class IsPositiveTest extends AbstractFunctionTest {
    }
 
    @Override
-   protected void getCanSimplifyTests(SimplifyTestCases testCases) {
-      testCases.put("(pos? 1)", "true");
+   public void testCanSimplify() {
+      simplify("(pos? 1)").to("true");
    }
 
    @Override

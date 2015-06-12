@@ -24,8 +24,8 @@ public class MapTest extends AbstractFunctionTest {
    }
 
    @Override
-   protected void getCanSimplifyTests(SimplifyTestCases testCases) {
-      testCases.put("(map pos? [2 -12 8])", "[true false true]");
+   public void testCanSimplify() {
+      simplify("(map pos? [2 -12 8])").to("[true false true]");
    }
 
    @Override

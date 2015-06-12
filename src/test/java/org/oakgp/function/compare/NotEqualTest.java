@@ -21,13 +21,13 @@ public class NotEqualTest extends AbstractFunctionTest {
    }
 
    @Override
-   protected void getCanSimplifyTests(SimplifyTestCases t) {
-      t.put("(!= v1 v1)", "false");
-      t.put("(!= 8 7)", "true");
-      t.put("(!= 8 8)", "false");
-      t.put("(!= 8 9)", "true");
-      t.put("(!= v1 8)", "(!= 8 v1)");
-      t.put("(!= v1 v0)", "(!= v0 v1)");
+   public void testCanSimplify() {
+      simplify("(!= v0 v0)").with(integerType()).to("false");
+      simplify("(!= 8 7)").to("true");
+      simplify("(!= 8 8)").to("false");
+      simplify("(!= 8 9)").to("true");
+      simplify("(!= v0 8)").with(integerType()).to("(!= 8 v0)");
+      simplify("(!= v1 v0)").with(integerType(), integerType()).to("(!= v0 v1)");
    }
 
    @Override

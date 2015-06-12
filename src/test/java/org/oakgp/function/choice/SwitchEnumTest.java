@@ -1,6 +1,5 @@
 package org.oakgp.function.choice;
 
-import static org.oakgp.TestUtils.integerConstant;
 import static org.oakgp.Type.integerType;
 import static org.oakgp.Type.nullableType;
 import static org.oakgp.Type.type;
@@ -9,8 +8,6 @@ import org.oakgp.Type;
 import org.oakgp.function.AbstractFunctionTest;
 import org.oakgp.function.Function;
 import org.oakgp.node.ConstantNode;
-import org.oakgp.node.FunctionNode;
-import org.oakgp.node.VariableNode;
 
 public class SwitchEnumTest extends AbstractFunctionTest {
    private static final Type ENUM_TYPE = type("exampleEnum");
@@ -51,11 +48,8 @@ public class SwitchEnumTest extends AbstractFunctionTest {
    }
 
    @Override
-   protected void getCanSimplifyTests(SimplifyTestCases testCases) {
-      VariableNode var = new VariableNode(0, ENUM_TYPE);
-      FunctionNode arg = new FunctionNode(getFunction(), var, integerConstant(9), integerConstant(5), integerConstant(6));
-      FunctionNode f = new FunctionNode(getFunction(), var, integerConstant(9), arg, integerConstant(6));
-      testCases.put(f, arg);
+   public void testCanSimplify() {
+      simplify("(switchenum v0 9 (switchenum v0 9 5 6) 6)").with(ENUM_TYPE).to("(switchenum v0 9 5 6)");
    }
 
    @Override

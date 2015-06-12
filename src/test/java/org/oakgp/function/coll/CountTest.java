@@ -19,8 +19,8 @@ public class CountTest extends AbstractFunctionTest {
    }
 
    @Override
-   protected void getCanSimplifyTests(SimplifyTestCases testCases) {
-      testCases.put("(count [2 -12 8])", "3");
+   public void testCanSimplify() {
+      simplify("(count [2 -12 8])").to("3");
    }
 
    @Override

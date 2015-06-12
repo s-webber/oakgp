@@ -20,12 +20,12 @@ public class DivideTest extends AbstractFunctionTest {
    }
 
    @Override
-   protected void getCanSimplifyTests(SimplifyTestCases testCases) {
-      testCases.put("(/ 4 0)", "1");
-      testCases.put("(/ 4 1)", "4");
-      testCases.put("(/ 4 -1)", "-4");
-      testCases.put("(/ -4 -1)", "4");
-      testCases.put("(/ v0 -1)", "(- 0 v0)");
+   public void testCanSimplify() {
+      simplify("(/ 4 0)").to("1");
+      simplify("(/ 4 1)").to("4");
+      simplify("(/ 4 -1)").to("-4");
+      simplify("(/ -4 -1)").to("4");
+      simplify("(/ v0 -1)").with(integerType()).to("(- 0 v0)");
    }
 
    @Override

@@ -19,8 +19,8 @@ public class IsZeroTest extends AbstractFunctionTest {
    }
 
    @Override
-   protected void getCanSimplifyTests(SimplifyTestCases testCases) {
-      testCases.put("(zero? 0)", "true");
+   public void testCanSimplify() {
+      simplify("(zero? 0)").to("true");
    }
 
    @Override
