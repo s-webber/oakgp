@@ -5,7 +5,7 @@ import org.oakgp.Assignments;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
 
-/** Performs addition. */
+/** Performs division. */
 final class Divide extends ArithmeticOperator {
    private final NumberUtils numberUtils;
    private final ConstantNode minusOne;
