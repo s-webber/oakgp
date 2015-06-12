@@ -22,7 +22,7 @@ import org.oakgp.util.Utils;
 
 public class GridWarExample {
    private static final int NUM_VARIABLES = 5;
-   private static final int NUM_GENERATIONS = 100;
+   private static final int NUM_GENERATIONS = 10;
    private static final int INITIAL_GENERATION_SIZE = 50;
    private static final int INITIAL_GENERATION_MAX_DEPTH = 4;
 
