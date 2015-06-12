@@ -1,6 +1,6 @@
 package org.oakgp.function.math;
 
-import java.util.List;
+import static org.oakgp.Type.integerType;
 
 import org.oakgp.function.AbstractFunctionTest;
 import org.oakgp.function.Function;
@@ -29,7 +29,12 @@ public class DivideTest extends AbstractFunctionTest {
    }
 
    @Override
-   protected void getCannotSimplifyTests(List<String> testCases) {
-      testCases.add("(/ 1 v0)");
+   public void testCannotSimplify() {
+      cannotSimplify("(/ 1 v0)", integerType());
+   }
+
+   @Override
+   protected Function[] getFunctionSet() {
+      return new Function[] { getFunction(), IntegerUtils.INTEGER_UTILS.getSubtract() };
    }
 }

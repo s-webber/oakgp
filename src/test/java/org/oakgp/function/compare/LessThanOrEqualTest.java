@@ -4,8 +4,6 @@ import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static org.oakgp.Type.integerType;
 
-import java.util.List;
-
 import org.oakgp.function.AbstractFunctionTest;
 import org.oakgp.function.Function;
 
@@ -31,9 +29,9 @@ public class LessThanOrEqualTest extends AbstractFunctionTest {
    }
 
    @Override
-   protected void getCannotSimplifyTests(List<String> t) {
-      t.add("(<= v1 8)");
-      t.add("(<= 8 v1)");
-      t.add("(<= v0 v1)");
+   public void testCannotSimplify() {
+      cannotSimplify("(<= v0 8)", integerType());
+      cannotSimplify("(<= 8 v0)", integerType());
+      cannotSimplify("(<= v0 v1)", integerType(), integerType());
    }
 }

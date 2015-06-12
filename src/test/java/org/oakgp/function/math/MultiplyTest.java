@@ -1,6 +1,6 @@
 package org.oakgp.function.math;
 
-import java.util.List;
+import static org.oakgp.Type.integerType;
 
 import org.oakgp.function.AbstractFunctionTest;
 import org.oakgp.function.Function;
@@ -44,9 +44,14 @@ public class MultiplyTest extends AbstractFunctionTest {
    }
 
    @Override
-   protected void getCannotSimplifyTests(List<String> t) {
-      t.add("(* 2 v1)");
-      t.add("(* -1 v1)");
-      t.add("(* v1 v2)");
+   public void testCannotSimplify() {
+      cannotSimplify("(* 2 v0)", integerType());
+      cannotSimplify("(* -1 v0)", integerType());
+      cannotSimplify("(* v0 v1)", integerType(), integerType());
+   }
+
+   @Override
+   protected Function[] getFunctionSet() {
+      return new Function[] { getFunction(), IntegerUtils.INTEGER_UTILS.getAdd(), IntegerUtils.INTEGER_UTILS.getSubtract() };
    }
 }

@@ -3,8 +3,6 @@ package org.oakgp.function.hof;
 import static org.oakgp.TestUtils.createArguments;
 import static org.oakgp.Type.integerType;
 
-import java.util.List;
-
 import org.oakgp.function.AbstractFunctionTest;
 import org.oakgp.function.Function;
 import org.oakgp.function.classify.IsNegative;
@@ -30,7 +28,7 @@ public class FilterTest extends AbstractFunctionTest {
    }
 
    @Override
-   protected void getCannotSimplifyTests(List<String> testCases) {
+   public void testCannotSimplify() {
    }
 
    @Override

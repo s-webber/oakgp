@@ -2,8 +2,6 @@ package org.oakgp.function.coll;
 
 import static org.oakgp.Type.integerType;
 
-import java.util.List;
-
 import org.oakgp.function.AbstractFunctionTest;
 import org.oakgp.function.Function;
 
@@ -26,6 +24,6 @@ public class CountTest extends AbstractFunctionTest {
    }
 
    @Override
-   protected void getCannotSimplifyTests(List<String> testCases) {
+   public void testCannotSimplify() {
    }
 }

@@ -5,8 +5,6 @@ import static org.oakgp.Type.integerType;
 import static org.oakgp.Type.nullableType;
 import static org.oakgp.Type.type;
 
-import java.util.List;
-
 import org.oakgp.Type;
 import org.oakgp.function.AbstractFunctionTest;
 import org.oakgp.function.Function;
@@ -61,7 +59,7 @@ public class SwitchEnumTest extends AbstractFunctionTest {
    }
 
    @Override
-   protected void getCannotSimplifyTests(List<String> testCases) {
+   public void testCannotSimplify() {
    }
 
    @Override

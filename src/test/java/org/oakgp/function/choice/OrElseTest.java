@@ -3,8 +3,6 @@ package org.oakgp.function.choice;
 import static org.oakgp.Type.nullableType;
 import static org.oakgp.Type.stringType;
 
-import java.util.List;
-
 import org.oakgp.Type;
 import org.oakgp.function.AbstractFunctionTest;
 import org.oakgp.function.Function;
@@ -13,11 +11,11 @@ import org.oakgp.node.FunctionNode;
 import org.oakgp.node.VariableNode;
 
 public class OrElseTest extends AbstractFunctionTest {
-   private final OrElse example = new OrElse(stringType());
+   private static final OrElse EXAMPLE = new OrElse(stringType());
 
    @Override
    protected Function getFunction() {
-      return example;
+      return EXAMPLE;
    }
 
    @Override
@@ -49,10 +47,7 @@ public class OrElseTest extends AbstractFunctionTest {
    }
 
    @Override
-   protected void getCannotSimplifyTests(List<String> testCases) {
-      // TODO
-      // allow variable types to be provided e.g.
-      // testCases.add("(orelse v0 v1)", booleanType(), booleanType());
-      // testCases.add("(orelse v0 v1)");
+   public void testCannotSimplify() {
+      cannotSimplify("(orelse v0 v1)", nullableType(stringType()), stringType());
    }
 }

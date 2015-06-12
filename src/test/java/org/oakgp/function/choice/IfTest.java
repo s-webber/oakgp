@@ -5,8 +5,6 @@ import static org.junit.Assert.assertSame;
 import static org.oakgp.Type.booleanType;
 import static org.oakgp.Type.integerType;
 
-import java.util.List;
-
 import org.junit.Test;
 import org.oakgp.Signature;
 import org.oakgp.function.AbstractFunctionTest;
@@ -48,9 +46,9 @@ public class IfTest extends AbstractFunctionTest {
    }
 
    @Override
-   protected void getCannotSimplifyTests(List<String> testCases) {
-      testCases.add("(if (< v0 v1) 1 2)");
-      testCases.add("(if (< v0 v1) v2 v3)");
+   public void testCannotSimplify() {
+      cannotSimplify("(if (< v0 v1) 1 2)", integerType(), integerType());
+      cannotSimplify("(if (< v0 v1) v2 v3)", integerType(), integerType(), integerType(), integerType());
    }
 
    @Test
