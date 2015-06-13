@@ -8,7 +8,7 @@ import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 
 /**
- * Determines if two object are equal.
+ * Determines if two objects are equal.
  * <p>
  * <b>Note:</b> Equality is checked using {@code Comparable#compareTo(Object)} rather than {@code Object#equals(Object)}.
  */
