@@ -1,13 +1,18 @@
 package org.oakgp.node;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 import static org.oakgp.TestUtils.createVariable;
 import static org.oakgp.TestUtils.integerConstant;
 import static org.oakgp.TestUtils.stringConstant;
 import static org.oakgp.Type.integerType;
+import static org.oakgp.Type.nullableType;
+import static org.oakgp.Type.stringType;
 
 import java.util.function.Function;
 
@@ -91,5 +96,20 @@ public class ConstantNodeTest {
       assertNotEquals(n, createVariable(7));
       assertNotEquals(n, stringConstant("7"));
       assertNotEquals(n, Integer.valueOf(7));
+   }
+
+   @Test
+   public void testNull() {
+      final ConstantNode nullConstant = new ConstantNode(null, nullableType(stringType()));
+
+      assertEquals("null", nullConstant.toString());
+      assertNull(nullConstant.evaluate(null));
+      assertTrue(nullConstant.equals(nullConstant));
+      assertTrue(nullConstant.equals(new ConstantNode(null, nullableType(stringType()))));
+      assertFalse(nullConstant.equals(new ConstantNode(null, nullableType(integerType()))));
+
+      final ConstantNode nonNullConstant = integerConstant(7);
+      assertFalse(nullConstant.equals(nonNullConstant));
+      assertFalse(nonNullConstant.equals(nullConstant));
    }
 }

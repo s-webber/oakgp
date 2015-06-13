@@ -1,5 +1,7 @@
 package org.oakgp.node;
 
+import java.util.Objects;
+
 import org.oakgp.Assignments;
 import org.oakgp.Type;
 
@@ -54,7 +56,7 @@ public final class ConstantNode extends TerminalNode {
          return true;
       } else if (o instanceof ConstantNode) {
          ConstantNode c = (ConstantNode) o;
-         return this.type == c.type && this.value.equals(c.value);
+         return this.type == c.type && Objects.equals(this.value, c.value);
       } else {
          return false;
       }
@@ -62,6 +64,6 @@ public final class ConstantNode extends TerminalNode {
 
    @Override
    public String toString() {
-      return value.toString();
+      return Objects.toString(value);
    }
 }
