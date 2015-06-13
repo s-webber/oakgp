@@ -69,10 +69,6 @@ public abstract class AbstractFunctionTest {
       return functionNode;
    }
 
-   private Node readNode(String input, Type... variableTypes) {
-      return readNode(input, VariableSet.createVariableSet(variableTypes));
-   }
-
    private Node readNode(String input, VariableSet variableSet) {
       try (NodeReader nodeReader = new NodeReader(input, functionSet, variableSet)) {
          return nodeReader.readNode();
