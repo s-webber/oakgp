@@ -22,12 +22,12 @@ public class EqualTest extends AbstractFunctionTest {
 
    @Override
    public void testCanSimplify() {
-      simplify("(= v0 v0)").with(integerType()).to("true");
+      simplify("(= v0 v0)").to("true");
       simplify("(= 8 7)").to("false");
       simplify("(= 8 8)").to("true");
       simplify("(= 8 9)").to("false");
-      simplify("(= v0 8)").with(integerType()).to("(= 8 v0)");
-      simplify("(= v1 v0)").with(integerType(), integerType()).to("(= v0 v1)");
+      simplify("(= v0 8)").to("(= 8 v0)");
+      simplify("(= v1 v0)").to("(= v0 v1)");
    }
 
    @Override

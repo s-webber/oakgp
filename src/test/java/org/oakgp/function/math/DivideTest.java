@@ -25,7 +25,7 @@ public class DivideTest extends AbstractFunctionTest {
       simplify("(/ 4 1)").to("4");
       simplify("(/ 4 -1)").to("-4");
       simplify("(/ -4 -1)").to("4");
-      simplify("(/ v0 -1)").with(integerType()).to("(- 0 v0)");
+      simplify("(/ v0 -1)").to("(- 0 v0)");
    }
 
    @Override

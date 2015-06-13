@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.oakgp.Assignments;
 import org.oakgp.FunctionSet;
 import org.oakgp.NodeSimplifier;
+import org.oakgp.TestUtils;
 import org.oakgp.Type;
 import org.oakgp.VariableSet;
 import org.oakgp.node.ConstantNode;
@@ -20,6 +21,8 @@ import org.oakgp.node.Node;
 import org.oakgp.serialize.NodeReader;
 
 public abstract class AbstractFunctionTest {
+   private static final Type[] DEFAULT_VARIABLE_TYPES = TestUtils.createIntegerTypeArray(100);
+
    private final FunctionSet functionSet;
 
    protected AbstractFunctionTest() {
@@ -126,7 +129,7 @@ public abstract class AbstractFunctionTest {
 
    protected class SimplifyExpectation {
       private final String input;
-      private Type[] variableTypes = {};
+      private Type[] variableTypes = DEFAULT_VARIABLE_TYPES;
       private FunctionNode inputNode;
       private Node simplifiedNode;
 
@@ -152,7 +155,6 @@ public abstract class AbstractFunctionTest {
       }
 
       public SimplifyExpectation verify(Object... values) {
-         assertTrue(variableTypes.length <= values.length);
          Assignments assignments = Assignments.createAssignments(values);
          Object expectedOutcome = inputNode.evaluate(assignments);
          Object actualOutcome = simplifiedNode.evaluate(assignments);

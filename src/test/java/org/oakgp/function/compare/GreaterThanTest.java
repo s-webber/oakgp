@@ -28,13 +28,13 @@ public class GreaterThanTest extends AbstractFunctionTest {
 
    @Override
    public void testCanSimplify() {
-      simplify("(> v0 v0)").with(integerType()).to("false");
+      simplify("(> v0 v0)").to("false");
       simplify("(> 8 7)").to("true");
       simplify("(> 8 8)").to("false");
       simplify("(> 8 9)").to("false");
-      simplify("(> v0 8)").with(integerType()).to("(< 8 v0)");
-      simplify("(> 8 v0)").with(integerType()).to("(< v0 8)");
-      simplify("(> v0 v1)").with(integerType(), integerType()).to("(< v1 v0)");
+      simplify("(> v0 8)").to("(< 8 v0)");
+      simplify("(> 8 v0)").to("(< v0 8)");
+      simplify("(> v0 v1)").to("(< v1 v0)");
    }
 
    @Override

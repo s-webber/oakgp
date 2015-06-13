@@ -2,7 +2,6 @@ package org.oakgp.function.math;
 
 import static org.oakgp.Type.integerType;
 
-import org.oakgp.Type;
 import org.oakgp.function.AbstractFunctionTest;
 import org.oakgp.function.Function;
 
@@ -19,31 +18,29 @@ public class MultiplyTest extends AbstractFunctionTest {
 
    @Override
    public void testCanSimplify() {
-      Type[] integers = { integerType(), integerType() };
-
       // constants get simplified to the result of multiplying them
-      simplify("(* 8 3)").with(integers).to("24");
+      simplify("(* 8 3)").to("24");
 
       // arguments should be consistently ordered
-      simplify("(* 2 v0)").with(integers).to("(* 2 v0)");
-      simplify("(* v0 2)").with(integers).to("(* 2 v0)");
-      simplify("(* v0 v1)").with(integers).to("(* v0 v1)");
-      simplify("(* v1 v0)").with(integers).to("(* v0 v1)");
+      simplify("(* 2 v0)").to("(* 2 v0)");
+      simplify("(* v0 2)").to("(* 2 v0)");
+      simplify("(* v0 v1)").to("(* v0 v1)");
+      simplify("(* v1 v0)").to("(* v0 v1)");
 
       // anything multiplied by zero is zero
-      simplify("(* v1 0)").with(integers).to("0");
-      simplify("(* 0 v1)").with(integers).to("0");
+      simplify("(* v1 0)").to("0");
+      simplify("(* 0 v1)").to("0");
 
       // anything multiplied by one is itself
-      simplify("(* v1 1)").with(integers).to("v1");
-      simplify("(* 1 v1)").with(integers).to("v1");
+      simplify("(* v1 1)").to("v1");
+      simplify("(* 1 v1)").to("v1");
 
       // (* 3 (- 0 (+ 1 v2))) = 3*(0-(1+x)) = -3-3x
-      simplify("(* 3 (- 0 (+ 1 v0)))").with(integers).to("(- (* -3 v0) 3)");
+      simplify("(* 3 (- 0 (+ 1 v0)))").to("(- (* -3 v0) 3)");
 
-      simplify("(* 3 (+ 9 v0))").with(integers).to("(+ 27 (* 3 v0))");
-      simplify("(* 3 (* 9 v0))").with(integers).to("(* 27 v0)");
-      simplify("(* 3 (- 9 v0))").with(integers).to("(- 27 (* 3 v0))");
+      simplify("(* 3 (+ 9 v0))").to("(+ 27 (* 3 v0))");
+      simplify("(* 3 (* 9 v0))").to("(* 27 v0)");
+      simplify("(* 3 (- 9 v0))").to("(- 27 (* 3 v0))");
    }
 
    @Override

@@ -22,7 +22,7 @@ public class LessThanTest extends AbstractFunctionTest {
 
    @Override
    public void testCanSimplify() {
-      simplify("(< v0 v0)").with(integerType()).to("false");
+      simplify("(< v0 v0)").to("false");
       simplify("(< 8 7)").to("false");
       simplify("(< 8 8)").to("false");
       simplify("(< 8 9)").to("true");
