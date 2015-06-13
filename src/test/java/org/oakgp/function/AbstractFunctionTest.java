@@ -7,6 +7,8 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.util.Observable;
+import java.util.Observer;
 
 import org.junit.Test;
 import org.oakgp.Assignments;
@@ -24,6 +26,13 @@ public abstract class AbstractFunctionTest {
    private static final Type[] DEFAULT_VARIABLE_TYPES = TestUtils.createIntegerTypeArray(100);
 
    private final FunctionSet functionSet;
+   private final Observable observable = new Observable() {
+      @Override
+      public void notifyObservers(Object arg) {
+         super.setChanged();
+         super.notifyObservers(arg);
+      }
+   };
 
    protected AbstractFunctionTest() {
       functionSet = new FunctionSet(getFunctionSet());
@@ -60,6 +69,10 @@ public abstract class AbstractFunctionTest {
    protected void cannotSimplify(String input, Type... variableTypes) {
       FunctionNode node = readFunctionNode(input, variableTypes);
       assertSame(node, NodeSimplifier.simplify(node));
+   }
+
+   void addObserver(Observer o) {
+      observable.addObserver(o);
    }
 
    private FunctionNode readFunctionNode(String input, Type... variableTypes) {
@@ -104,6 +117,7 @@ public abstract class AbstractFunctionTest {
          // assert evaluate consistently returns the expected result
          assertEquals(expectedResult, functionNode.evaluate(assignments));
          assertEquals(expectedResult, functionNode.evaluate(assignments));
+         observable.notifyObservers(new Notification(functionNode, assignedValues, expectedResult));
       }
 
       private Assignments toAssignments(ConstantNode[] constants) {
@@ -120,6 +134,18 @@ public abstract class AbstractFunctionTest {
             types[i] = constants[i].getType();
          }
          return types;
+      }
+   }
+
+   static class Notification {
+      final FunctionNode input;
+      final ConstantNode[] assignedValues;
+      final Object output;
+
+      private Notification(FunctionNode input, ConstantNode[] assignedValues, Object output) {
+         this.input = input;
+         this.assignedValues = assignedValues;
+         this.output = output;
       }
    }
 
