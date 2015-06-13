@@ -36,7 +36,7 @@ import org.oakgp.serialize.NodeReader;
 import org.oakgp.serialize.NodeWriter;
 
 public class TestUtils {
-   public static final VariableSet VARIABLE_SET = VariableSet.createVariableSet(createTypeArray(100));
+   public static final VariableSet VARIABLE_SET = VariableSet.createVariableSet(createIntegerTypeArray(100));
    private static final FunctionSet FUNCTION_SET = createDefaultFunctionSet();
 
    public static void assertVariable(int expectedId, Node node) {
@@ -151,7 +151,7 @@ public class TestUtils {
       return VARIABLE_SET.getById(id);
    }
 
-   public static Type[] createTypeArray(int size) {
+   public static Type[] createIntegerTypeArray(int size) {
       Type[] a = new Type[size];
       for (int i = 0; i < size; i++) {
          a[i] = Type.integerType();

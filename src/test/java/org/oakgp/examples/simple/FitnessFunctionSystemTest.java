@@ -2,7 +2,7 @@ package org.oakgp.examples.simple;
 
 import static org.oakgp.Assignments.createAssignments;
 import static org.oakgp.TestUtils.createArguments;
-import static org.oakgp.TestUtils.createTypeArray;
+import static org.oakgp.TestUtils.createIntegerTypeArray;
 import static org.oakgp.Type.booleanType;
 import static org.oakgp.Type.integerArrayType;
 import static org.oakgp.Type.integerToBooleanFunctionType;
@@ -58,7 +58,7 @@ public class FitnessFunctionSystemTest {
    @Test
    public void testTwoVariableArithmeticExpression() {
       ConstantNode[] constants = createIntegerConstants(0, 11);
-      Type[] variableTypes = createTypeArray(2);
+      Type[] variableTypes = createIntegerTypeArray(2);
 
       FitnessFunction fitnessFunction = createIntegerTestDataFitnessFunction(createTests(variableTypes.length, a -> {
          int x = (int) a.get(0);
@@ -74,7 +74,7 @@ public class FitnessFunctionSystemTest {
    @Test
    public void testThreeVariableArithmeticExpression() {
       ConstantNode[] constants = createIntegerConstants(0, 11);
-      Type[] variableTypes = createTypeArray(3);
+      Type[] variableTypes = createIntegerTypeArray(3);
 
       FitnessFunction fitnessFunction = createIntegerTestDataFitnessFunction(createTests(variableTypes.length, a -> {
          int x = (int) a.get(0);
@@ -91,7 +91,7 @@ public class FitnessFunctionSystemTest {
    @Test
    public void testTwoVariableBooleanLogicExpression() {
       ConstantNode[] constants = createIntegerConstants(0, 5);
-      Type[] variableTypes = createTypeArray(2);
+      Type[] variableTypes = createIntegerTypeArray(2);
       Function[] functions = { IntegerUtils.INTEGER_UTILS.getAdd(), IntegerUtils.INTEGER_UTILS.getSubtract(), IntegerUtils.INTEGER_UTILS.getMultiply(),
             new LessThan(integerType()), new LessThanOrEqual(integerType()), new GreaterThan(integerType()), new GreaterThanOrEqual(integerType()),
             new Equal(integerType()), new NotEqual(integerType()), new If(integerType()) };

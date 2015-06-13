@@ -7,7 +7,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.oakgp.TestUtils.assertConstant;
 import static org.oakgp.TestUtils.assertVariable;
-import static org.oakgp.TestUtils.createTypeArray;
+import static org.oakgp.TestUtils.createIntegerTypeArray;
 import static org.oakgp.TestUtils.createVariable;
 import static org.oakgp.TestUtils.integerConstant;
 import static org.oakgp.Type.booleanType;
@@ -34,7 +34,7 @@ public class PrimitiveSetTest {
 
    private static final double VARIABLE_RATIO = .6;
    private static final ConstantNode[] CONSTANTS = { integerConstant(7), integerConstant(8), integerConstant(9) };
-   private static final Type[] VARIABLE_TYPES = createTypeArray(3);
+   private static final Type[] VARIABLE_TYPES = createIntegerTypeArray(3);
    private static final Function[] FUNCTIONS = new Function[] { IntegerUtils.INTEGER_UTILS.getAdd(), IntegerUtils.INTEGER_UTILS.getSubtract(),
       IntegerUtils.INTEGER_UTILS.getMultiply(), new If(integerType()), new LessThan(integerType()), new LessThanOrEqual(integerType()),
          new GreaterThan(integerType()), new GreaterThanOrEqual(integerType()), new Equal(integerType()), new NotEqual(integerType()) };

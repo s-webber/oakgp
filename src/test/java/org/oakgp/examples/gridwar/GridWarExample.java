@@ -1,6 +1,6 @@
 package org.oakgp.examples.gridwar;
 
-import static org.oakgp.TestUtils.createTypeArray;
+import static org.oakgp.TestUtils.createIntegerTypeArray;
 import static org.oakgp.Type.integerType;
 import static org.oakgp.examples.SystemTestConfig.RANDOM;
 
@@ -31,7 +31,7 @@ public class GridWarExample {
             new LessThan(integerType()), new LessThanOrEqual(integerType()), new GreaterThan(integerType()), new GreaterThanOrEqual(integerType()),
             new Equal(integerType()), new NotEqual(integerType()), new If(integerType()) };
       ConstantNode[] constants = Utils.createIntegerConstants(0, 4);
-      Type[] variables = createTypeArray(NUM_VARIABLES);
+      Type[] variables = createIntegerTypeArray(NUM_VARIABLES);
       TwoPlayerGame game = new FirstPlayerAdvantageGame(new GridWar(RANDOM));
 
       new RunBuilder().setReturnType(integerType()).useDefaultRandom().setFunctionSet(functions).setConstants(constants).setVariables(variables)
