@@ -66,9 +66,9 @@ public class FitnessFunctionSystemTest {
          return (x * x) + 2 * y + 3 * x + 5;
       }));
 
-      new RunBuilder().setReturnType(integerType()).useDefaultRandom().setFunctionSet(ARITHMETIC_FUNCTIONS).setConstants(constants).setVariables(variableTypes)
-            .setFitnessFunction(fitnessFunction).useDefaultGenerationEvolver().setMaxGenerations(NUM_GENERATIONS)
-            .setInitialGenerationSize(INITIAL_GENERATION_SIZE).setTreeDepth(INITIAL_GENERATION_MAX_DEPTH).process();
+      new RunBuilder().setReturnType(integerType()).setConstants(constants).setVariables(variableTypes).setFunctionSet(ARITHMETIC_FUNCTIONS)
+            .setFitnessFunction(fitnessFunction).setMaxGenerations(NUM_GENERATIONS).setInitialGenerationSize(INITIAL_GENERATION_SIZE)
+            .setTreeDepth(INITIAL_GENERATION_MAX_DEPTH).process();
    }
 
    @Test
@@ -83,9 +83,9 @@ public class FitnessFunctionSystemTest {
          return (x * -3) + (y * 5) - z;
       }));
 
-      new RunBuilder().setReturnType(integerType()).useDefaultRandom().setFunctionSet(ARITHMETIC_FUNCTIONS).setConstants(constants).setVariables(variableTypes)
-            .setFitnessFunction(fitnessFunction).useDefaultGenerationEvolver().setMaxGenerations(NUM_GENERATIONS)
-            .setInitialGenerationSize(INITIAL_GENERATION_SIZE).setTreeDepth(INITIAL_GENERATION_MAX_DEPTH).process();
+      new RunBuilder().setReturnType(integerType()).setConstants(constants).setVariables(variableTypes).setFunctionSet(ARITHMETIC_FUNCTIONS)
+            .setFitnessFunction(fitnessFunction).setMaxGenerations(NUM_GENERATIONS).setInitialGenerationSize(INITIAL_GENERATION_SIZE)
+            .setTreeDepth(INITIAL_GENERATION_MAX_DEPTH).process();
    }
 
    @Test
@@ -102,9 +102,9 @@ public class FitnessFunctionSystemTest {
          return x > 20 ? x : y;
       }));
 
-      new RunBuilder().setReturnType(integerType()).useDefaultRandom().setFunctionSet(functions).setConstants(constants).setVariables(variableTypes)
-            .setFitnessFunction(fitnessFunction).useDefaultGenerationEvolver().setMaxGenerations(NUM_GENERATIONS)
-            .setInitialGenerationSize(INITIAL_GENERATION_SIZE).setTreeDepth(INITIAL_GENERATION_MAX_DEPTH).process();
+      new RunBuilder().setReturnType(integerType()).setConstants(constants).setVariables(variableTypes).setFunctionSet(ARITHMETIC_FUNCTIONS)
+            .setFitnessFunction(fitnessFunction).setMaxGenerations(NUM_GENERATIONS).setInitialGenerationSize(INITIAL_GENERATION_SIZE)
+            .setTreeDepth(INITIAL_GENERATION_MAX_DEPTH).process();
    }
 
    @Test
@@ -130,9 +130,9 @@ public class FitnessFunctionSystemTest {
       testData.put(createAssignments(createArguments("0", "0", "0")), 3);
       FitnessFunction fitnessFunction = createIntegerTestDataFitnessFunction(testData);
 
-      new RunBuilder().setReturnType(integerType()).useDefaultRandom().setFunctionSet(functions).setConstants(constants).setVariables(variableTypes)
-            .setFitnessFunction(fitnessFunction).useDefaultGenerationEvolver().setMaxGenerations(NUM_GENERATIONS)
-            .setInitialGenerationSize(INITIAL_GENERATION_SIZE).setTreeDepth(INITIAL_GENERATION_MAX_DEPTH).process();
+      new RunBuilder().setReturnType(integerType()).setConstants(constants).setVariables(variableTypes).setFunctionSet(ARITHMETIC_FUNCTIONS)
+            .setFitnessFunction(fitnessFunction).setMaxGenerations(NUM_GENERATIONS).setInitialGenerationSize(INITIAL_GENERATION_SIZE)
+            .setTreeDepth(INITIAL_GENERATION_MAX_DEPTH).process();
    }
 
    private static Map<Assignments, Integer> createTests(int numVariables, java.util.function.Function<Assignments, Integer> f) {

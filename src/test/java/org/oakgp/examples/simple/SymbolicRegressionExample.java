@@ -18,7 +18,7 @@ public class SymbolicRegressionExample {
    private static final int INITIAL_GENERATION_SIZE = 50;
    private static final int INITIAL_GENERATION_MAX_DEPTH = 4;
    private static final Function[] ARITHMETIC_FUNCTIONS = { IntegerUtils.INTEGER_UTILS.getAdd(), IntegerUtils.INTEGER_UTILS.getSubtract(),
-         IntegerUtils.INTEGER_UTILS.getMultiply() };
+      IntegerUtils.INTEGER_UTILS.getMultiply() };
 
    // x2 + x + 1
    public static void main(String[] args) {
@@ -26,9 +26,9 @@ public class SymbolicRegressionExample {
       Type[] variableTypes = { Type.integerType() };
       FitnessFunction fitnessFunction = TestDataFitnessFunction.createIntegerTestDataFitnessFunction(createTests());
 
-      new RunBuilder().setReturnType(Type.integerType()).useDefaultRandom().setFunctionSet(ARITHMETIC_FUNCTIONS).setConstants(constants)
-            .setVariables(variableTypes).setFitnessFunction(fitnessFunction).useDefaultGenerationEvolver().setMaxGenerations(NUM_GENERATIONS)
-            .setInitialGenerationSize(INITIAL_GENERATION_SIZE).setTreeDepth(INITIAL_GENERATION_MAX_DEPTH).process();
+      new RunBuilder().setReturnType(Type.integerType()).setConstants(constants).setVariables(variableTypes).setFunctionSet(ARITHMETIC_FUNCTIONS)
+            .setFitnessFunction(fitnessFunction).setMaxGenerations(NUM_GENERATIONS).setInitialGenerationSize(INITIAL_GENERATION_SIZE)
+            .setTreeDepth(INITIAL_GENERATION_MAX_DEPTH).process();
    }
 
    private static Map<Assignments, Integer> createTests() {

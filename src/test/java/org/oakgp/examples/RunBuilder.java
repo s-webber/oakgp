@@ -50,7 +50,7 @@ public final class RunBuilder {
    private static final int DEFAULT_CACHE_SIZE = 10000;
 
    private Type _returnType;
-   private Random _random;
+   private Random _random = RANDOM;
    private PrimitiveSet _primitiveSet;
    private GenerationProcessor _generationProcessor;
    private GenerationEvolver _generationEvolver;
@@ -62,17 +62,13 @@ public final class RunBuilder {
       return new RandomSetter();
    }
 
-   public class RandomSetter {
+   public class RandomSetter extends PrimitiveSetSetter {
       private RandomSetter() {
       }
 
       public PrimitiveSetSetter setRandom(final Random random) {
          _random = requireNonNull(random);
          return new PrimitiveSetSetter();
-      }
-
-      public PrimitiveSetSetter useDefaultRandom() {
-         return setRandom(RANDOM);
       }
    }
 
@@ -85,42 +81,66 @@ public final class RunBuilder {
          return new GenerationProcessorSetter();
       }
 
-      public ConstantsSetter setFunctionSet(final FunctionSet functionSet) {
-         return new ConstantsSetter(requireNonNull(functionSet));
+      public VariablesSetter setConstants(final ConstantNode... constants) {
+         ConstantSet constantSet = new ConstantSet(constants);
+         return new VariablesSetter(constantSet);
+      }
+   }
+
+   public class VariablesSetter {
+      private final ConstantSet constantSet;
+
+      private VariablesSetter(final ConstantSet constantSet) {
+         this.constantSet = constantSet;
       }
 
-      public ConstantsSetter setFunctionSet(final Function... functions) {
-         return setFunctionSet(new FunctionSet(functions));
+      public VariablesRatioSetter setVariables(final Type... variableTypes) {
+         VariableSet variableSet = VariableSet.createVariableSet(variableTypes);
+         return new VariablesRatioSetter(constantSet, variableSet);
+      }
+   }
+
+   public class VariablesRatioSetter implements FunctionSetSetter {
+      private final ConstantSet constantSet;
+      private final VariableSet variableSet;
+
+      public VariablesRatioSetter(ConstantSet constantSet, VariableSet variableSet) {
+         this.constantSet = constantSet;
+         this.variableSet = variableSet;
       }
 
-      public class ConstantsSetter {
-         private final FunctionSet functionSet;
-
-         private ConstantsSetter(final FunctionSet functionSet) {
-            this.functionSet = functionSet;
-         }
-
-         public VariablesSetter setConstants(final ConstantNode... constants) {
-            ConstantSet constantSet = new ConstantSet(constants);
-            return new VariablesSetter(functionSet, constantSet);
-         }
+      public FunctionSetSetter setRatioVariables(final double ratioVariables) {
+         // TODO validate 0 <= n <= 1
+         return new FunctionSetSetterImpl(constantSet, variableSet, ratioVariables);
       }
 
-      public class VariablesSetter {
-         private final FunctionSet functionSet;
-         private final ConstantSet constantSet;
-
-         private VariablesSetter(final FunctionSet functionSet, final ConstantSet constantSet) {
-            this.functionSet = functionSet;
-            this.constantSet = constantSet;
-         }
-
-         public GenerationProcessorSetter setVariables(final Type... variableTypes) {
-            VariableSet variableSet = VariableSet.createVariableSet(variableTypes);
-            PrimitiveSet primitiveSet = new PrimitiveSetImpl(functionSet, constantSet, variableSet, _random, RATIO_VARIABLES);
-            return setPrimitiveSet(primitiveSet);
-         }
+      @Override
+      public GenerationProcessorSetter setFunctionSet(Function... functions) {
+         return setRatioVariables(RATIO_VARIABLES).setFunctionSet(functions);
       }
+   }
+
+   public class FunctionSetSetterImpl implements FunctionSetSetter {
+      private final ConstantSet constantSet;
+      private final VariableSet variableSet;
+      private final double ratioVariables;
+
+      private FunctionSetSetterImpl(ConstantSet constantSet, VariableSet variableSet, double ratioVariables) {
+         this.constantSet = constantSet;
+         this.variableSet = variableSet;
+         this.ratioVariables = ratioVariables;
+      }
+
+      @Override
+      public GenerationProcessorSetter setFunctionSet(final Function... functions) {
+         FunctionSet functionSet = new FunctionSet(functions);
+         _primitiveSet = new PrimitiveSetImpl(functionSet, constantSet, variableSet, _random, ratioVariables);
+         return new GenerationProcessorSetter();
+      }
+   }
+
+   public interface FunctionSetSetter {
+      GenerationProcessorSetter setFunctionSet(Function... functions);
    }
 
    public class GenerationProcessorSetter {
@@ -157,22 +177,18 @@ public final class RunBuilder {
       }
    }
 
-   public class GenerationEvolverSetter {
+   public class GenerationEvolverSetter extends TerminatorSetter {
       private GenerationEvolverSetter() {
+         useDefaultGenerationEvolver();
       }
 
-      public TerminatorSetter setGenerationEvolver(final GenerationEvolver generationEvolver) {
-         _generationEvolver = requireNonNull(generationEvolver);
-         return new TerminatorSetter();
-      }
-
-      public TerminatorSetter useDefaultGenerationEvolver() {
+      private void useDefaultGenerationEvolver() {
          NodeSelectorFactory nodeSelectorFactory = new WeightedNodeSelectorFactory(_random);
-         GenerationEvolver generationEvolver = new GenerationEvolver(ELITISM_SIZE, nodeSelectorFactory, createNodeEvolvers());
-         return setGenerationEvolver(generationEvolver);
+         GenerationEvolver generationEvolver = new GenerationEvolver(ELITISM_SIZE, nodeSelectorFactory, createDefaultNodeEvolvers());
+         setGenerationEvolver(generationEvolver);
       }
 
-      private Map<NodeEvolver, Long> createNodeEvolvers() {
+      private Map<NodeEvolver, Long> createDefaultNodeEvolvers() {
          Map<NodeEvolver, Long> nodeEvolvers = new HashMap<>();
          TreeGenerator treeGenerator = TreeGeneratorImpl.grow(_primitiveSet, _random);
          nodeEvolvers.put(t -> treeGenerator.generate(_returnType, 4), 4L);
@@ -181,6 +197,15 @@ public final class RunBuilder {
          nodeEvolvers.put(new SubTreeMutation(_random, treeGenerator), 2L);
          nodeEvolvers.put(new ConstantToFunctionMutation(_random, TreeGeneratorImpl.full(_primitiveSet)), 2L);
          return nodeEvolvers;
+      }
+
+      public TerminatorSetter setGenerationEvolver(final java.util.function.Function<Config, GenerationEvolver> generationEvolver) {
+         return setGenerationEvolver(generationEvolver.apply(new Config()));
+      }
+
+      private TerminatorSetter setGenerationEvolver(GenerationEvolver generationEvolver) {
+         _generationEvolver = requireNonNull(generationEvolver);
+         return new TerminatorSetter();
       }
    }
 
@@ -202,7 +227,11 @@ public final class RunBuilder {
       private InitialGenerationSetter() {
       }
 
-      public ProcessRunner setInitialGeneration(final Collection<Node> initialGeneration) {
+      public ProcessRunner setInitialGeneration(final java.util.function.Function<Config, Collection<Node>> initialGeneration) {
+         return setInitialGeneration(initialGeneration.apply(new Config()));
+      }
+
+      private ProcessRunner setInitialGeneration(Collection<Node> initialGeneration) {
          _initialGeneration = requireNonNull(initialGeneration);
          return new ProcessRunner();
       }
@@ -250,6 +279,20 @@ public final class RunBuilder {
          return i;
       } else {
          throw new IllegalArgumentException("Expected a positive integer but got: " + i);
+      }
+   }
+
+   public class Config {
+      public PrimitiveSet getPrimitiveSet() {
+         return _primitiveSet;
+      }
+
+      public Random getRandom() {
+         return _random;
+      }
+
+      public Type getReturnType() {
+         return _returnType;
       }
    }
 }

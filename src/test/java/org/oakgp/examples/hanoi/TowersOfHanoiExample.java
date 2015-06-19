@@ -48,9 +48,9 @@ public class TowersOfHanoiExample {
       Type[] variables = { STATE_TYPE, nullableType(MOVE_TYPE) };
       FitnessFunction fitnessFunction = new HanoiFitnessFunction(false);
 
-      Node best = new RunBuilder().setReturnType(MOVE_TYPE).useDefaultRandom().setFunctionSet(functions).setConstants(constants).setVariables(variables)
-            .setFitnessFunction(fitnessFunction).useDefaultGenerationEvolver().setMaxGenerations(NUM_GENERATIONS)
-            .setInitialGenerationSize(INITIAL_GENERATION_SIZE).setTreeDepth(INITIAL_GENERATION_MAX_DEPTH).process();
+      Node best = new RunBuilder().setReturnType(MOVE_TYPE).setConstants(constants).setVariables(variables).setFunctionSet(functions)
+            .setFitnessFunction(fitnessFunction).setMaxGenerations(NUM_GENERATIONS).setInitialGenerationSize(INITIAL_GENERATION_SIZE)
+            .setTreeDepth(INITIAL_GENERATION_MAX_DEPTH).process();
 
       new HanoiFitnessFunction(true).evaluate(best);
    }

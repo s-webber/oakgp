@@ -34,8 +34,7 @@ public class GridWarExample {
       Type[] variables = createIntegerTypeArray(NUM_VARIABLES);
       TwoPlayerGame game = new FirstPlayerAdvantageGame(new GridWar(RANDOM));
 
-      new RunBuilder().setReturnType(integerType()).useDefaultRandom().setFunctionSet(functions).setConstants(constants).setVariables(variables)
-            .setTwoPlayerGame(game).useDefaultGenerationEvolver().setMaxGenerations(NUM_GENERATIONS).setInitialGenerationSize(INITIAL_GENERATION_SIZE)
-            .setTreeDepth(INITIAL_GENERATION_MAX_DEPTH).process();
+      new RunBuilder().setReturnType(integerType()).setConstants(constants).setVariables(variables).setFunctionSet(functions).setTwoPlayerGame(game)
+            .setMaxGenerations(NUM_GENERATIONS).setInitialGenerationSize(INITIAL_GENERATION_SIZE).setTreeDepth(INITIAL_GENERATION_MAX_DEPTH).process();
    }
 }
