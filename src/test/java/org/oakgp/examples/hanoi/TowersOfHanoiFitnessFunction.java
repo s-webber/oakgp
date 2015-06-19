@@ -7,12 +7,12 @@ import org.oakgp.Assignments;
 import org.oakgp.fitness.FitnessFunction;
 import org.oakgp.node.Node;
 
-class HanoiFitnessFunction implements FitnessFunction {
+class TowersOfHanoiFitnessFunction implements FitnessFunction {
    private static final TowersOfHanoi START_STATE = new TowersOfHanoi(3);
 
    private final boolean doLog;
 
-   HanoiFitnessFunction(boolean doLog) {
+   TowersOfHanoiFitnessFunction(boolean doLog) {
       this.doLog = doLog;
    }
 

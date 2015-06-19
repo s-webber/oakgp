@@ -40,12 +40,12 @@ public class TowersOfHanoiExample {
       constants[constants.length - 2] = new ConstantNode(Pole.MIDDLE, POLE_TYPE);
       constants[constants.length - 1] = new ConstantNode(Pole.RIGHT, POLE_TYPE);
       Type[] variables = { STATE_TYPE, nullableType(MOVE_TYPE) };
-      FitnessFunction fitnessFunction = new HanoiFitnessFunction(false);
+      FitnessFunction fitnessFunction = new TowersOfHanoiFitnessFunction(false);
 
       Node best = new RunBuilder().setReturnType(MOVE_TYPE).setConstants(constants).setVariables(variables).setFunctionSet(functions)
             .setFitnessFunction(fitnessFunction).setMaxGenerations(NUM_GENERATIONS).setInitialGenerationSize(INITIAL_GENERATION_SIZE)
             .setTreeDepth(INITIAL_GENERATION_MAX_DEPTH).process();
 
-      new HanoiFitnessFunction(true).evaluate(best);
+      new TowersOfHanoiFitnessFunction(true).evaluate(best);
    }
 }
