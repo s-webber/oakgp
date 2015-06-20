@@ -69,6 +69,12 @@ public final class Utils {
       return random.nextInt(nodeCount - 1);
    }
 
+   public static <T> void addArray(List<T> list, T[] array) {
+      for (T e : array) {
+         list.add(e);
+      }
+   }
+
    public static ConstantNode[] createEnumConstants(Class<? extends Enum<?>> e, Type t) {
       Enum<?>[] enumConstants = e.getEnumConstants();
       ConstantNode[] constants = new ConstantNode[enumConstants.length];
