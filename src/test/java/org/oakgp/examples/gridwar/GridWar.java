@@ -8,10 +8,12 @@ import org.oakgp.util.Random;
 /** Game engine for Grid War. */
 class GridWar implements TwoPlayerGame {
    static final int GRID_WIDTH = 4;
+   /** Number of possible directions a player can move in - up, down, left or right. */
    private static final int NUMBER_OF_POSSIBLE_DIRECTIONS = 4;
+   /** The maximum number of moves without a winner before the game is considered a draw. */
    private static final int MAX_MOVES = 24;
    private static final int WIN = 1;
-   private static final int LOSE = -1;
+   private static final int LOSE = -WIN;
    private static final int NO_WINNER = 0;
    private final Random random;
 
@@ -20,10 +22,8 @@ class GridWar implements TwoPlayerGame {
    }
 
    @Override
-   public double evaluate(Node player1, Node player2) {
-      int x = random.nextInt(GRID_WIDTH);
-      int y = random.nextInt(GRID_WIDTH);
-      Player[] players = { new Player(x, y, -1, player1), new Player((x + 2) % 4, (y + 2) % 4, -1, player2) };
+   public double evaluate(Node playerLogic1, Node playerLogic2) {
+      Player[] players = createPlayers(playerLogic1, playerLogic2);
       int moveCtr = 0;
       int currentPlayerIdx = 0;
       while (moveCtr++ < MAX_MOVES) {
@@ -33,9 +33,23 @@ class GridWar implements TwoPlayerGame {
          if (moveOutcome != NO_WINNER) {
             return currentPlayerIdx == 0 ? moveOutcome : -moveOutcome;
          }
+         // each player takes it in turn to move
          currentPlayerIdx = 1 - currentPlayerIdx;
       }
+      // no winner within maximum number of moves - draw
       return NO_WINNER;
+   }
+
+   private Player[] createPlayers(Node playerLogic1, Node playerLogic2) {
+      // randomly position player 1
+      int x = random.nextInt(GRID_WIDTH);
+      int y = random.nextInt(GRID_WIDTH);
+      Player player1 = new Player(x, y, -1, playerLogic1);
+
+      // randomly position player 2, ensuring they do not occupy the same or an adjacent square to player 1
+      Player player2 = new Player((x + 2) % GRID_WIDTH, (y + 2) % GRID_WIDTH, -1, playerLogic2);
+
+      return new Player[] { player1, player2 };
    }
 
    private static int processNextMove(Player player, Player opponent) {
@@ -55,7 +69,7 @@ class GridWar implements TwoPlayerGame {
 
    private static int getNextMove(Player player, Assignments assignments) {
       int result = (int) player.getLogic().evaluate(assignments);
-      // ensure result is in the range 0 to 3
+      // normalise the result to ensure it is in the valid range of possible moves
       return Math.abs(result % NUMBER_OF_POSSIBLE_DIRECTIONS);
    }
 
