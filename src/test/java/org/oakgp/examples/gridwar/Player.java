@@ -66,10 +66,6 @@ class Player {
       return previousMove;
    }
 
-   void setPreviousMove(int previousMove) {
-      this.previousMove = previousMove;
-   }
-
    Node getLogic() {
       return logic;
    }
