@@ -2,7 +2,6 @@ package org.oakgp.examples.simple;
 
 import static org.oakgp.Assignments.createAssignments;
 import static org.oakgp.TestUtils.createArguments;
-import static org.oakgp.TestUtils.createIntegerTypeArray;
 import static org.oakgp.Type.booleanType;
 import static org.oakgp.Type.integerArrayType;
 import static org.oakgp.Type.integerToBooleanFunctionType;
@@ -10,6 +9,7 @@ import static org.oakgp.Type.integerType;
 import static org.oakgp.examples.SystemTestConfig.RANDOM;
 import static org.oakgp.fitness.TestDataFitnessFunction.createIntegerTestDataFitnessFunction;
 import static org.oakgp.util.Utils.createIntegerConstants;
+import static org.oakgp.util.Utils.createIntegerTypeArray;
 
 import java.util.HashMap;
 import java.util.Map;

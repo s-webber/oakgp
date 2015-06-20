@@ -92,6 +92,23 @@ public class UtilsTest {
    }
 
    @Test
+   public void testCreateIntegerTypeArray() {
+      assertIntegerTypeArray(0);
+      assertIntegerTypeArray(1);
+      assertIntegerTypeArray(2);
+      assertIntegerTypeArray(3);
+      assertIntegerTypeArray(100);
+   }
+
+   private void assertIntegerTypeArray(int size) {
+      Type[] t = Utils.createIntegerTypeArray(size);
+      assertEquals(size, t.length);
+      for (Type element : t) {
+         assertSame(integerType(), element);
+      }
+   }
+
+   @Test
    public void testCreateEnumConstants() {
       Type type = Type.type("testCreateEnumConstants");
       TestCreateEnumConstantsEnum[] input = TestCreateEnumConstantsEnum.values();

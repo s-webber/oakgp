@@ -1,8 +1,8 @@
 package org.oakgp.examples.gridwar;
 
-import static org.oakgp.TestUtils.createIntegerTypeArray;
 import static org.oakgp.Type.integerType;
 import static org.oakgp.examples.SystemTestConfig.RANDOM;
+import static org.oakgp.util.Utils.createIntegerTypeArray;
 
 import org.oakgp.Type;
 import org.oakgp.examples.RunBuilder;

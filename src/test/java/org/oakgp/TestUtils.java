@@ -7,6 +7,7 @@ import static org.junit.Assert.fail;
 import static org.oakgp.Type.booleanType;
 import static org.oakgp.Type.integerType;
 import static org.oakgp.Type.stringType;
+import static org.oakgp.util.Utils.createIntegerTypeArray;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -149,14 +150,6 @@ public class TestUtils {
 
    public static VariableNode createVariable(int id) {
       return VARIABLE_SET.getById(id);
-   }
-
-   public static Type[] createIntegerTypeArray(int size) {
-      Type[] a = new Type[size];
-      for (int i = 0; i < size; i++) {
-         a[i] = Type.integerType();
-      }
-      return a;
    }
 
    public static void assertRankedCandidate(RankedCandidate actual, Node expectedNode, double expectedFitness) {

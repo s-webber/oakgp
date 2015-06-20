@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+import static org.oakgp.util.Utils.createIntegerTypeArray;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -14,7 +15,6 @@ import org.junit.Test;
 import org.oakgp.Assignments;
 import org.oakgp.FunctionSet;
 import org.oakgp.NodeSimplifier;
-import org.oakgp.TestUtils;
 import org.oakgp.Type;
 import org.oakgp.VariableSet;
 import org.oakgp.node.ConstantNode;
@@ -23,7 +23,7 @@ import org.oakgp.node.Node;
 import org.oakgp.serialize.NodeReader;
 
 public abstract class AbstractFunctionTest {
-   private static final Type[] DEFAULT_VARIABLE_TYPES = TestUtils.createIntegerTypeArray(100);
+   private static final Type[] DEFAULT_VARIABLE_TYPES = createIntegerTypeArray(100);
 
    private final FunctionSet functionSet;
    private final Observable observable = new Observable() {

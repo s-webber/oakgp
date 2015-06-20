@@ -85,4 +85,12 @@ public final class Utils {
       }
       return constants;
    }
+
+   public static Type[] createIntegerTypeArray(int size) {
+      Type[] a = new Type[size];
+      for (int i = 0; i < size; i++) {
+         a[i] = Type.integerType();
+      }
+      return a;
+   }
 }
