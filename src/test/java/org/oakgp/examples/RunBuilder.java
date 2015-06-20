@@ -46,7 +46,7 @@ import org.oakgp.util.Random;
 public final class RunBuilder {
    private static final Random RANDOM = new JavaUtilRandomAdapter();
    private static final int ELITISM_SIZE = 3; // TODO
-   private static final double RATIO_VARIABLES = .6; // TODO
+   private static final double RATIO_VARIABLES = .6;
    private static final int DEFAULT_CACHE_SIZE = 10000;
 
    private Type _returnType;
@@ -84,6 +84,10 @@ public final class RunBuilder {
       public VariablesSetter setConstants(final ConstantNode... constants) {
          ConstantSet constantSet = new ConstantSet(constants);
          return new VariablesSetter(constantSet);
+      }
+
+      public VariablesSetter setConstants(final List<ConstantNode> constants) {
+         return setConstants(constants.toArray(new ConstantNode[constants.size()]));
       }
    }
 

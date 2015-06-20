@@ -3,8 +3,11 @@ package org.oakgp.examples.hanoi;
 import static org.oakgp.Type.integerType;
 import static org.oakgp.Type.nullableType;
 import static org.oakgp.Type.type;
+import static org.oakgp.util.Utils.addArray;
+import static org.oakgp.util.Utils.createEnumConstants;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.oakgp.Type;
 import org.oakgp.examples.RunBuilder;
@@ -32,13 +35,7 @@ public class TowersOfHanoiExample {
    public static void main(String[] args) {
       Function[] functions = { new If(MOVE_TYPE), new Equal(MOVE_TYPE), new IsValid(), new SwitchEnum(Move.class, nullableType(MOVE_TYPE), MOVE_TYPE),
             new GreaterThan(integerType()), new LessThan(integerType()), new Equal(integerType()), new Next() };
-      ConstantNode[] constants = Utils.createEnumConstants(Move.class, MOVE_TYPE);
-      constants = Arrays.copyOf(constants, constants.length + 5);
-      constants[constants.length - 5] = IntegerUtils.INTEGER_UTILS.zero();
-      constants[constants.length - 4] = Utils.TRUE_NODE;
-      constants[constants.length - 3] = new ConstantNode(Pole.LEFT, POLE_TYPE);
-      constants[constants.length - 2] = new ConstantNode(Pole.MIDDLE, POLE_TYPE);
-      constants[constants.length - 1] = new ConstantNode(Pole.RIGHT, POLE_TYPE);
+      List<ConstantNode> constants = createConstants();
       Type[] variables = { STATE_TYPE, nullableType(MOVE_TYPE) };
       FitnessFunction fitnessFunction = new TowersOfHanoiFitnessFunction(false);
 
@@ -47,5 +44,14 @@ public class TowersOfHanoiExample {
             .setTreeDepth(INITIAL_GENERATION_MAX_DEPTH).process();
 
       new TowersOfHanoiFitnessFunction(true).evaluate(best);
+   }
+
+   private static List<ConstantNode> createConstants() {
+      List<ConstantNode> constants = new ArrayList<>();
+      constants.add(IntegerUtils.INTEGER_UTILS.zero());
+      constants.add(Utils.TRUE_NODE);
+      addArray(constants, createEnumConstants(Move.class, MOVE_TYPE));
+      addArray(constants, createEnumConstants(Pole.class, POLE_TYPE));
+      return constants;
    }
 }
