@@ -1,7 +1,6 @@
 package org.oakgp.examples.gridwar;
 
 import static org.oakgp.Type.integerType;
-import static org.oakgp.examples.SystemTestConfig.RANDOM;
 import static org.oakgp.util.Utils.createIntegerTypeArray;
 
 import org.oakgp.Type;
@@ -18,6 +17,8 @@ import org.oakgp.function.math.IntegerUtils;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.tournament.FirstPlayerAdvantageGame;
 import org.oakgp.tournament.TwoPlayerGame;
+import org.oakgp.util.JavaUtilRandomAdapter;
+import org.oakgp.util.Random;
 import org.oakgp.util.Utils;
 
 public class GridWarExample {
@@ -32,7 +33,8 @@ public class GridWarExample {
             new Equal(integerType()), new NotEqual(integerType()), new If(integerType()) };
       ConstantNode[] constants = Utils.createIntegerConstants(0, 4);
       Type[] variables = createIntegerTypeArray(NUM_VARIABLES);
-      TwoPlayerGame game = new FirstPlayerAdvantageGame(new GridWar(RANDOM));
+      Random random = new JavaUtilRandomAdapter();
+      TwoPlayerGame game = new FirstPlayerAdvantageGame(new GridWar(random));
 
       new RunBuilder().setReturnType(integerType()).setConstants(constants).setVariables(variables).setFunctionSet(functions).setTwoPlayerGame(game)
             .setMaxGenerations(NUM_GENERATIONS).setInitialGenerationSize(INITIAL_GENERATION_SIZE).setTreeDepth(INITIAL_GENERATION_MAX_DEPTH).process();

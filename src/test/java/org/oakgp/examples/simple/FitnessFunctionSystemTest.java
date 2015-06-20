@@ -6,13 +6,13 @@ import static org.oakgp.Type.booleanType;
 import static org.oakgp.Type.integerArrayType;
 import static org.oakgp.Type.integerToBooleanFunctionType;
 import static org.oakgp.Type.integerType;
-import static org.oakgp.examples.SystemTestConfig.RANDOM;
 import static org.oakgp.fitness.TestDataFitnessFunction.createIntegerTestDataFitnessFunction;
 import static org.oakgp.util.Utils.createIntegerConstants;
 import static org.oakgp.util.Utils.createIntegerTypeArray;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import org.junit.Test;
 import org.oakgp.Arguments;
@@ -146,9 +146,10 @@ public class FitnessFunctionSystemTest {
    }
 
    private static Object[] createInputs(int numVariables) {
+      Random random = new Random();
       Object[] variables = new Object[numVariables];
       for (int i = 0; i < numVariables; i++) {
-         variables[i] = RANDOM.nextInt(40);
+         variables[i] = random.nextInt(40);
       }
       return variables;
    }
