@@ -70,6 +70,7 @@ public final class FunctionNode implements Node {
       return arguments;
    }
 
+   @SuppressWarnings("unchecked")
    @Override
    public Object evaluate(Assignments assignments) {
       return function.evaluate(arguments, assignments);
