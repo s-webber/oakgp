@@ -5,7 +5,7 @@ import org.oakgp.selector.NodeSelector;
 
 /** Creates new {@code Node} instances evolved from existing instances. */
 @FunctionalInterface
-public interface NodeEvolver {
+public interface NodeEvolver { // TODO rename as GeneticOperator
    /**
     * Returns a new {@code Node} evolved from existing instances.
     *
