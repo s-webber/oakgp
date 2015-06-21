@@ -84,6 +84,8 @@
             <version>2.10.1</version>
             <configuration>
                <additionalparam>-Xdoclint:none</additionalparam>
+               <bottom><![CDATA[<a href="http://www.oakgp.org/">OakGP</a> Genetic Programming Framework]]></bottom>
+               <doctitle>OakGP Genetic Programming Framework</doctitle>
             </configuration>
          </plugin>
          <plugin>
