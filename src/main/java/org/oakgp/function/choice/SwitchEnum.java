@@ -13,7 +13,7 @@ import org.oakgp.node.Node;
 
 public final class SwitchEnum implements Function {
    private final Signature signature;
-   final Enum<?>[] enumConstants;
+   private final Enum<?>[] enumConstants;
 
    public SwitchEnum(Class<? extends Enum<?>> enumClass, Type enumType, Type returnType) {
       this.enumConstants = enumClass.getEnumConstants();
