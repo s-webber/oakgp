@@ -137,9 +137,28 @@ public final class RunBuilder {
 
       @Override
       public GenerationProcessorSetter setFunctionSet(final Function... functions) {
+         logFunctionSet(functions);
+
          FunctionSet functionSet = new FunctionSet(functions);
          _primitiveSet = new PrimitiveSetImpl(functionSet, constantSet, variableSet, _random, ratioVariables);
          return new GenerationProcessorSetter();
+      }
+
+      private void logFunctionSet(final Function... functions) {
+         boolean first = true;
+         for (Function function : functions) {
+            if (first) {
+               first = false;
+            } else {
+               System.out.println("<br>");
+            }
+            System.out.println("|Class:|" + function.getClass().getName());
+            System.out.println("|Symbol:|" + function.getDisplayName());
+            System.out.println("|Return Type:|" + function.getSignature().getReturnType());
+            String argumentTypes = function.getSignature().getArgumentTypes().toString();
+            argumentTypes = argumentTypes.substring(1, argumentTypes.length() - 1);
+            System.out.println("|Arguments:|" + argumentTypes);
+         }
       }
    }
 
