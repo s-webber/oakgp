@@ -1,8 +1,7 @@
-package org.oakgp.examples;
+package org.oakgp.util;
 
 import static java.util.Objects.requireNonNull;
 import static org.oakgp.NodeSimplifier.simplify;
-import static org.oakgp.TestUtils.writeNode;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -36,12 +35,10 @@ import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
 import org.oakgp.selector.NodeSelectorFactory;
 import org.oakgp.selector.WeightedNodeSelectorFactory;
+import org.oakgp.terminate.MaxGenerationTerminator;
 import org.oakgp.tournament.RoundRobinTournament;
 import org.oakgp.tournament.TwoPlayerGame;
 import org.oakgp.tournament.TwoPlayerGameCache;
-import org.oakgp.util.JavaUtilRandomAdapter;
-import org.oakgp.util.NodeSet;
-import org.oakgp.util.Random;
 
 public final class RunBuilder {
    private static final Random RANDOM = new JavaUtilRandomAdapter();
@@ -292,7 +289,7 @@ public final class RunBuilder {
          RankedCandidate best = Runner.process(_generationProcessor, _generationEvolver, _terminator, _initialGeneration);
          System.out.println("Best: " + best);
          Node simplifiedBestNode = simplify(best.getNode());
-         System.out.println(writeNode(simplifiedBestNode));
+         System.out.println(simplifiedBestNode);
          return simplifiedBestNode;
       }
    }

@@ -4,7 +4,6 @@ import static org.oakgp.Type.integerType;
 import static org.oakgp.util.Utils.createIntegerTypeArray;
 
 import org.oakgp.Type;
-import org.oakgp.examples.RunBuilder;
 import org.oakgp.function.Function;
 import org.oakgp.function.choice.If;
 import org.oakgp.function.compare.Equal;
@@ -19,6 +18,7 @@ import org.oakgp.tournament.FirstPlayerAdvantageGame;
 import org.oakgp.tournament.TwoPlayerGame;
 import org.oakgp.util.JavaUtilRandomAdapter;
 import org.oakgp.util.Random;
+import org.oakgp.util.RunBuilder;
 import org.oakgp.util.Utils;
 
 public class GridWarExample {

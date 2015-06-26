@@ -5,12 +5,12 @@ import java.util.Map;
 
 import org.oakgp.Assignments;
 import org.oakgp.Type;
-import org.oakgp.examples.RunBuilder;
 import org.oakgp.fitness.FitnessFunction;
 import org.oakgp.fitness.TestDataFitnessFunction;
 import org.oakgp.function.Function;
 import org.oakgp.function.math.IntegerUtils;
 import org.oakgp.node.ConstantNode;
+import org.oakgp.util.RunBuilder;
 import org.oakgp.util.Utils;
 
 /** An example of using symbolic regression to evolve a program that best fits a given data set for the function {@code x2 + x + 1}. */

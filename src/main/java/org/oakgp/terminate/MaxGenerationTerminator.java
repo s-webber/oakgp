@@ -1,4 +1,4 @@
-package org.oakgp.examples;
+package org.oakgp.terminate;
 
 import java.util.List;
 import java.util.function.Predicate;

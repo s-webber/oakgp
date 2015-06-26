@@ -18,7 +18,6 @@ import org.junit.Test;
 import org.oakgp.Arguments;
 import org.oakgp.Assignments;
 import org.oakgp.Type;
-import org.oakgp.examples.RunBuilder;
 import org.oakgp.fitness.FitnessFunction;
 import org.oakgp.function.Function;
 import org.oakgp.function.choice.If;
@@ -35,6 +34,7 @@ import org.oakgp.function.compare.NotEqual;
 import org.oakgp.function.hof.Filter;
 import org.oakgp.function.math.IntegerUtils;
 import org.oakgp.node.ConstantNode;
+import org.oakgp.util.RunBuilder;
 
 /**
  * Performs full genetic programming runs without relying on any mock objects.

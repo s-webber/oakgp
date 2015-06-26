@@ -5,7 +5,6 @@ import static org.oakgp.Type.type;
 import org.junit.Test;
 import org.oakgp.Assignments;
 import org.oakgp.Type;
-import org.oakgp.examples.RunBuilder;
 import org.oakgp.fitness.FitnessFunction;
 import org.oakgp.function.Function;
 import org.oakgp.function.choice.If;
@@ -15,6 +14,7 @@ import org.oakgp.node.Node;
 import org.oakgp.tournament.FirstPlayerAdvantageGame;
 import org.oakgp.tournament.TwoPlayerGame;
 import org.oakgp.util.DummyNode;
+import org.oakgp.util.RunBuilder;
 import org.oakgp.util.Utils;
 
 public class TicTacToeSystemTest {
