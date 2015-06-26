@@ -2,49 +2,53 @@ package org.oakgp.examples.hanoi;
 
 import java.util.Arrays;
 
-/** A model of the Towers of Hanoi problem. */
+/** Represents an individual state of a Towers of Hanoi puzzle. */
 class TowersOfHanoi {
    private static final int NUM_POLES = Pole.values().length;
+   /**
+    * IDs of the discs, suitable for bitwise operations.
+    * <p>
+    * 1st element represents the smallest disc, 2nd element represents the medium size disc and the 3rd element represents the large size disc.
+    */
+   private static final int[] DISC_IDS = { 1, 2, 4 };
+   private static final int SUM_DISC_IDS = Arrays.stream(DISC_IDS).sum();
 
    private final int[] poles;
 
-   public TowersOfHanoi(int numberOfDiscs) {
+   TowersOfHanoi() {
       poles = new int[NUM_POLES];
-      poles[0] = calculateTotalBits(numberOfDiscs);
+      poles[0] = SUM_DISC_IDS;
    }
 
-   private static int calculateTotalBits(int numberOfDiscs) {
-      int totalBits = 0;
-      for (int i = 0, b = 1; i < numberOfDiscs; i++, b *= 2) {
-         totalBits += b;
-      }
-      return totalBits;
-   }
-
-   public TowersOfHanoi(int[] poles) {
+   private TowersOfHanoi(int[] poles) {
       this.poles = poles;
    }
 
-   public int upperDisc(Pole pole) {
+   /** @return the ID of the upper (i.e. top) disc of the specified pole, or {code 0} if there are no discs on the pole */
+   int upperDisc(Pole pole) {
       return Integer.lowestOneBit(poles[pole.ordinal()]);
    }
 
-   public int getFitness() {
-      int pole = poles[Pole.MIDDLE.ordinal()];
-      boolean isEmpty = pole == 0;
-      if ((pole & 4) == 0) {
-         return isEmpty ? 4 : 8;
-      }
-      if ((pole & 2) == 0) {
-         return 2;
-      }
-      if ((pole & 1) == 0) {
-         return 1;
+   /**
+    * Returns fitness value for the state represented by this object.
+    * <p>
+    * The more discs that are in their required position (i.e. correctly ordered on the middle pole) the lower the fitness value - so the lower the fitness
+    * value the better. A fitness value of {@code 0} means all discs are on the middle pole (i.e. the puzzle is complete).
+    *
+    * @return {@code 0} if the middle pole contains all the discs, or a positive number if the puzzle is not yet complete
+    */
+   int getFitness() {
+      int poleContents = poles[Pole.MIDDLE.ordinal()];
+      for (int i = DISC_IDS.length - 1; i > -1; i--) {
+         if ((poleContents & DISC_IDS[i]) == 0) {
+            return DISC_IDS[i];
+         }
       }
       return 0;
    }
 
-   public TowersOfHanoi move(Move move) {
+   /** @return the result of applying {@code move} to the current state, or {code null} if the move is not valid */
+   TowersOfHanoi move(Move move) {
       return move(move.from, move.to);
    }
 
@@ -57,12 +61,16 @@ class TowersOfHanoi {
       int fromUpperDisc = upperDisc(from);
       int toUpperDisc = upperDisc(to);
 
-      if (fromUpperDisc == 0 || (toUpperDisc != 0 && fromUpperDisc > toUpperDisc)) {
-         // invalid move
+      if (fromUpperDisc == 0) {
+         // invalid move - cannot move a disc from an empty pole
+         return null;
+      }
+      if (toUpperDisc != 0 && fromUpperDisc > toUpperDisc) {
+         // invalid move - no disc may be placed on top of a smaller one
          return null;
       }
 
-      // return updated copy
+      // copy current state
       int[] updatedPoles = Arrays.copyOf(poles, NUM_POLES);
       // remove disc from pole
       updatedPoles[from.ordinal()] -= fromUpperDisc;
