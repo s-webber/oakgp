@@ -31,12 +31,12 @@ public class SwitchEnumTest extends AbstractFunctionTest {
 
    @Override
    public void testEvaluate() {
-      String input = "(switchenum v0 9 5 6)";
+      String input = "(switch v0 9 5 6)";
       evaluate(input).assigned(A).to(9);
       evaluate(input).assigned(B).to(5);
       evaluate(input).assigned(C).to(6);
 
-      String nullableInput = "(switchenum v0 9 5 6 7)";
+      String nullableInput = "(switch v0 9 5 6 7)";
       evaluate(nullableInput).assigned(nullable(A)).to(9);
       evaluate(nullableInput).assigned(nullable(B)).to(5);
       evaluate(nullableInput).assigned(nullable(C)).to(6);
@@ -49,7 +49,7 @@ public class SwitchEnumTest extends AbstractFunctionTest {
 
    @Override
    public void testCanSimplify() {
-      simplify("(switchenum v0 9 (switchenum v0 9 5 6) 6)").with(ENUM_TYPE).to("(switchenum v0 9 5 6)");
+      simplify("(switch v0 9 (switch v0 9 5 6) 6)").with(ENUM_TYPE).to("(switch v0 9 5 6)");
    }
 
    @Override

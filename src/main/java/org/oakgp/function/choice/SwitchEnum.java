@@ -59,4 +59,9 @@ public final class SwitchEnum implements Function {
    public Signature getSignature() {
       return signature;
    }
+
+   @Override
+   public String getDisplayName() {
+      return "switch";
+   }
 }
