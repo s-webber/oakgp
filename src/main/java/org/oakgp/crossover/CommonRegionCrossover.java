@@ -1,12 +1,12 @@
 package org.oakgp.crossover;
 
-import org.oakgp.NodeEvolver;
+import org.oakgp.GeneticOperator;
 import org.oakgp.node.Node;
 import org.oakgp.selector.NodeSelector;
 import org.oakgp.util.Random;
 import org.oakgp.util.Utils;
 
-public final class CommonRegionCrossover implements NodeEvolver {
+public final class CommonRegionCrossover implements GeneticOperator {
    private final Random random;
 
    public CommonRegionCrossover(Random random) {

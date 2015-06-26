@@ -1,13 +1,13 @@
 package org.oakgp.mutate;
 
-import org.oakgp.NodeEvolver;
+import org.oakgp.GeneticOperator;
 import org.oakgp.TreeGenerator;
 import org.oakgp.node.Node;
 import org.oakgp.node.NodeType;
 import org.oakgp.selector.NodeSelector;
 import org.oakgp.util.Random;
 
-public final class ConstantToFunctionMutation implements NodeEvolver {
+public final class ConstantToFunctionMutation implements GeneticOperator {
    private final Random random;
    private final TreeGenerator treeGenerator;
 

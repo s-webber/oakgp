@@ -15,7 +15,7 @@ import org.oakgp.ConstantSet;
 import org.oakgp.FunctionSet;
 import org.oakgp.GenerationEvolver;
 import org.oakgp.GenerationProcessor;
-import org.oakgp.NodeEvolver;
+import org.oakgp.GeneticOperator;
 import org.oakgp.PrimitiveSet;
 import org.oakgp.PrimitiveSetImpl;
 import org.oakgp.RankedCandidate;
@@ -188,19 +188,19 @@ public final class RunBuilder {
 
       private void useDefaultGenerationEvolver() {
          NodeSelectorFactory nodeSelectorFactory = new WeightedNodeSelectorFactory(_random);
-         GenerationEvolver generationEvolver = new GenerationEvolver(ELITISM_SIZE, nodeSelectorFactory, createDefaultNodeEvolvers());
+         GenerationEvolver generationEvolver = new GenerationEvolver(ELITISM_SIZE, nodeSelectorFactory, createDefaultGeneticOperators());
          setGenerationEvolver(generationEvolver);
       }
 
-      private Map<NodeEvolver, Long> createDefaultNodeEvolvers() {
-         Map<NodeEvolver, Long> nodeEvolvers = new HashMap<>();
+      private Map<GeneticOperator, Long> createDefaultGeneticOperators() {
+         Map<GeneticOperator, Long> operators = new HashMap<>();
          TreeGenerator treeGenerator = TreeGeneratorImpl.grow(_primitiveSet, _random);
-         nodeEvolvers.put(t -> treeGenerator.generate(_returnType, 4), 4L);
-         nodeEvolvers.put(new SubtreeCrossover(_random), 19L);
-         nodeEvolvers.put(new PointMutation(_random, _primitiveSet), 19L);
-         nodeEvolvers.put(new SubTreeMutation(_random, treeGenerator), 2L);
-         nodeEvolvers.put(new ConstantToFunctionMutation(_random, TreeGeneratorImpl.full(_primitiveSet)), 2L);
-         return nodeEvolvers;
+         operators.put(t -> treeGenerator.generate(_returnType, 4), 4L);
+         operators.put(new SubtreeCrossover(_random), 19L);
+         operators.put(new PointMutation(_random, _primitiveSet), 19L);
+         operators.put(new SubTreeMutation(_random, treeGenerator), 2L);
+         operators.put(new ConstantToFunctionMutation(_random, TreeGeneratorImpl.full(_primitiveSet)), 2L);
+         return operators;
       }
 
       public TerminatorSetter setGenerationEvolver(final java.util.function.Function<Config, GenerationEvolver> generationEvolver) {

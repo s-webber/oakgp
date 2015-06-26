@@ -2,7 +2,7 @@ package org.oakgp.crossover;
 
 import java.util.function.Predicate;
 
-import org.oakgp.NodeEvolver;
+import org.oakgp.GeneticOperator;
 import org.oakgp.Type;
 import org.oakgp.node.Node;
 import org.oakgp.selector.NodeSelector;
@@ -18,7 +18,7 @@ import org.oakgp.util.Utils;
  * Also known as one-point crossover.
  * </p>
  */
-public final class SubtreeCrossover implements NodeEvolver {
+public final class SubtreeCrossover implements GeneticOperator {
    private final Random random;
 
    public SubtreeCrossover(Random random) {

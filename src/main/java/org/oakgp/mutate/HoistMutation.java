@@ -2,7 +2,7 @@ package org.oakgp.mutate;
 
 import java.util.function.Predicate;
 
-import org.oakgp.NodeEvolver;
+import org.oakgp.GeneticOperator;
 import org.oakgp.node.Node;
 import org.oakgp.selector.NodeSelector;
 import org.oakgp.util.Random;
@@ -13,7 +13,7 @@ import org.oakgp.util.Utils;
  * <p>
  * The resulting offspring will be smaller than the parent.
  */
-public final class HoistMutation implements NodeEvolver {
+public final class HoistMutation implements GeneticOperator {
    private final Random random;
 
    public HoistMutation(Random random) {

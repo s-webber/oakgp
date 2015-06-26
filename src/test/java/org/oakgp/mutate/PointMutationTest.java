@@ -6,7 +6,7 @@ import static org.oakgp.TestUtils.integerConstant;
 import static org.oakgp.util.DummyRandom.GetIntExpectation.nextInt;
 
 import org.junit.Test;
-import org.oakgp.NodeEvolver;
+import org.oakgp.GeneticOperator;
 import org.oakgp.PrimitiveSet;
 import org.oakgp.function.Function;
 import org.oakgp.function.classify.IsZero;
@@ -31,7 +31,7 @@ public class PointMutationTest {
             return alternativeTerminals.next(current);
          }
       };
-      NodeEvolver pointMutation = new PointMutation(DummyRandom.EMPTY, primitiveSet);
+      GeneticOperator pointMutation = new PointMutation(DummyRandom.EMPTY, primitiveSet);
 
       Node offspring = pointMutation.evolve(dummySelector);
 
@@ -65,7 +65,7 @@ public class PointMutationTest {
             return alternativeTerminals.next(current);
          }
       };
-      NodeEvolver pointMutation = new PointMutation(dummyRandom, primitiveSet);
+      GeneticOperator pointMutation = new PointMutation(dummyRandom, primitiveSet);
 
       assertEquals(new FunctionNode(rootFunction, new FunctionNode(inputFunction, inputArg1, outputArg2)), pointMutation.evolve(dummySelector));
       assertEquals(new FunctionNode(rootFunction, new FunctionNode(outputFunction, inputArg1, inputArg2)), pointMutation.evolve(dummySelector));

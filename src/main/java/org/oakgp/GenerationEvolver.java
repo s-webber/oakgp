@@ -16,12 +16,12 @@ import org.oakgp.util.NodeSet;
 public final class GenerationEvolver {
    private final int elitismSize;
    private final NodeSelectorFactory selectorFactory;
-   private final Map<NodeEvolver, Long> nodeEvolvers;
+   private final Map<GeneticOperator, Long> operators;
 
-   public GenerationEvolver(int elitismSize, NodeSelectorFactory selectorFactory, Map<NodeEvolver, Long> nodeEvolvers) {
+   public GenerationEvolver(int elitismSize, NodeSelectorFactory selectorFactory, Map<GeneticOperator, Long> operators) {
       this.elitismSize = elitismSize;
       this.selectorFactory = selectorFactory;
-      this.nodeEvolvers = nodeEvolvers;
+      this.operators = operators;
    }
 
    /**
@@ -40,11 +40,11 @@ public final class GenerationEvolver {
          newGeneration.add(oldGeneration.get(i).getNode());
       }
 
-      for (Map.Entry<NodeEvolver, Long> e : nodeEvolvers.entrySet()) {
-         NodeEvolver nodeEvolver = e.getKey();
+      for (Map.Entry<GeneticOperator, Long> e : operators.entrySet()) {
+         GeneticOperator operator = e.getKey();
          long count = e.getValue();
          for (int i = 0; i < count; i++) {
-            newGeneration.add(nodeEvolver.evolve(selector));
+            newGeneration.add(operator.evolve(selector));
          }
       }
 

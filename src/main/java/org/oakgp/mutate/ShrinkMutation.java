@@ -1,6 +1,6 @@
 package org.oakgp.mutate;
 
-import org.oakgp.NodeEvolver;
+import org.oakgp.GeneticOperator;
 import org.oakgp.PrimitiveSet;
 import org.oakgp.node.Node;
 import org.oakgp.node.NodeType;
@@ -13,7 +13,7 @@ import org.oakgp.util.Utils;
  * <p>
  * The resulting offspring will be smaller than the parent.
  */
-public final class ShrinkMutation implements NodeEvolver {
+public final class ShrinkMutation implements GeneticOperator {
    private final Random random;
    private final PrimitiveSet primitiveSet;
 

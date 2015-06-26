@@ -2,7 +2,7 @@ package org.oakgp.mutate;
 
 import static org.oakgp.node.NodeType.isFunction;
 
-import org.oakgp.NodeEvolver;
+import org.oakgp.GeneticOperator;
 import org.oakgp.PrimitiveSet;
 import org.oakgp.function.Function;
 import org.oakgp.node.FunctionNode;
@@ -20,7 +20,7 @@ import org.oakgp.util.Utils;
  * Also known as node replacement mutation.
  * </p>
  */
-public final class PointMutation implements NodeEvolver {
+public final class PointMutation implements GeneticOperator {
    private final Random random;
    private final PrimitiveSet primitiveSet;
 

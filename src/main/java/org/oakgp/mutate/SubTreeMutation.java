@@ -1,6 +1,6 @@
 package org.oakgp.mutate;
 
-import org.oakgp.NodeEvolver;
+import org.oakgp.GeneticOperator;
 import org.oakgp.TreeGenerator;
 import org.oakgp.node.Node;
 import org.oakgp.selector.NodeSelector;
@@ -8,7 +8,7 @@ import org.oakgp.util.Random;
 import org.oakgp.util.Utils;
 
 /** Randomly replaces a subtree of the parent with a newly generated subtree. */
-public final class SubTreeMutation implements NodeEvolver {
+public final class SubTreeMutation implements GeneticOperator {
    private final Random random;
    private final TreeGenerator treeGenerator;
 
