@@ -13,7 +13,7 @@ import org.oakgp.selector.NodeSelectorFactory;
 import org.oakgp.util.NodeSet;
 
 /** Creates a new generation of {@code Node} instances evolved from an existing generation. */
-public final class GenerationEvolver {
+public final class GenerationEvolver { // TODO convert to an interface
    private final int elitismSize;
    private final NodeSelectorFactory selectorFactory;
    private final Map<GeneticOperator, Long> operators;

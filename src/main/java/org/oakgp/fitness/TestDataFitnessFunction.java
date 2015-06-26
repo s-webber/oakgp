@@ -35,6 +35,7 @@ public final class TestDataFitnessFunction<T> implements FitnessFunction {
     */
    @Override
    public double evaluate(Node node) {
+      // TODO check for overflow
       double diff = 0;
       for (Map.Entry<Assignments, T> test : tests.entrySet()) {
          Assignments input = test.getKey();
