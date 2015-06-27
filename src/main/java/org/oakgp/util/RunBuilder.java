@@ -45,6 +45,7 @@ import org.oakgp.tournament.RoundRobinTournament;
 import org.oakgp.tournament.TwoPlayerGame;
 import org.oakgp.tournament.TwoPlayerGameCache;
 
+/** Provides a convenient way to configure and start a genetic programming run. */
 public final class RunBuilder {
    private static final Random RANDOM = new JavaUtilRandomAdapter();
    private static final int ELITISM_SIZE = 3; // TODO
@@ -172,6 +173,7 @@ public final class RunBuilder {
       private GenerationProcessorSetter() {
       }
 
+      // TODO use and an example and then add to how2 guide
       public GenerationEvolverSetter setGenerationProcessor(final GenerationProcessor generationProcessor) {
          _generationProcessor = requireNonNull(generationProcessor);
          return new GenerationEvolverSetter();
@@ -238,6 +240,7 @@ public final class RunBuilder {
       private InitialPopulationSetter() {
       }
 
+      // TODO use and document in how2 guide
       public FirstTerminatorSetter setInitialPopulation(final java.util.function.Function<Config, Collection<Node>> initialGeneration) {
          return setInitialPopulation(initialGeneration.apply(new Config()));
       }
