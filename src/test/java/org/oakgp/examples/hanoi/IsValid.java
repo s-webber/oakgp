@@ -11,23 +11,19 @@ import org.oakgp.function.Function;
 
 /** Determines if a move is a valid move for a particular game state. */
 class IsValid implements Function {
-   private final Signature signature;
-
-   IsValid() {
-      this.signature = Signature.createSignature(booleanType(), STATE_TYPE, MOVE_TYPE);
-   }
+   private static final Signature SIGNATURE = Signature.createSignature(booleanType(), STATE_TYPE, MOVE_TYPE);
 
    @Override
    public Signature getSignature() {
-      return signature;
+      return SIGNATURE;
    }
 
    /**
-    * Determines if a move is a valid move for a particular game state.
-    *
     * @param arguments
     *           the first argument is a {@code TowersOfHanoi} representing a game state and the second argument is a {@code Move}
-    * @return {@code true} if the specified move is a valid move for the specified game state, else false
+    * @param assignments
+    *           the values assigned to each of member of the variable set
+    * @return {@code true} if the specified move is a valid move for the specified game state, else {@code false}
     */
    @Override
    public Object evaluate(Arguments arguments, Assignments assignments) {

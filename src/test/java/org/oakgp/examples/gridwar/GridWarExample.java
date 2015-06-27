@@ -34,6 +34,7 @@ public class GridWarExample {
       ConstantNode[] constants = Utils.createIntegerConstants(0, 4);
       Type[] variables = createIntegerTypeArray(NUM_VARIABLES);
       Random random = new JavaUtilRandomAdapter();
+      // wrap a GridWar object in a FirstPlayerAdvantageGame to avoid bias
       TwoPlayerGame game = new FirstPlayerAdvantageGame(new GridWar(random));
 
       new RunBuilder().setReturnType(integerType()).setConstants(constants).setVariables(variables).setFunctionSet(functions).setTwoPlayerGame(game)

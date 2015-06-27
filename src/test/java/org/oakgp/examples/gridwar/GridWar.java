@@ -12,8 +12,11 @@ class GridWar implements TwoPlayerGame {
    private static final int NUMBER_OF_POSSIBLE_DIRECTIONS = 4;
    /** The maximum number of moves without a winner before the game is considered a draw. */
    private static final int MAX_MOVES = 24;
+   /** The reward assigned to a winning player. */
    private static final int WIN = 1;
+   /** The penalty assigned to a losing player. */
    private static final int LOSE = -WIN;
+   /** The reward assigned to both players of a drawn game. */
    private static final int NO_WINNER = 0;
    private final Random random;
 
