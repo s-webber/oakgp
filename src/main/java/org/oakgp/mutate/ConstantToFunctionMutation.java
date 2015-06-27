@@ -4,7 +4,7 @@ import org.oakgp.GeneticOperator;
 import org.oakgp.TreeGenerator;
 import org.oakgp.node.Node;
 import org.oakgp.node.NodeType;
-import org.oakgp.selector.NodeSelector;
+import org.oakgp.select.NodeSelector;
 import org.oakgp.util.Random;
 
 public final class ConstantToFunctionMutation implements GeneticOperator {

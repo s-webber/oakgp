@@ -1,7 +1,7 @@
 package org.oakgp;
 
 import org.oakgp.node.Node;
-import org.oakgp.selector.NodeSelector;
+import org.oakgp.select.NodeSelector;
 
 /** Creates new {@code Node} instances evolved from existing instances. */
 @FunctionalInterface

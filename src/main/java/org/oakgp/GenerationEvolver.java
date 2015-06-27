@@ -8,8 +8,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.oakgp.node.Node;
-import org.oakgp.selector.NodeSelector;
-import org.oakgp.selector.NodeSelectorFactory;
+import org.oakgp.select.NodeSelector;
+import org.oakgp.select.NodeSelectorFactory;
 import org.oakgp.util.NodeSet;
 
 /** Creates a new generation of {@code Node} instances evolved from an existing generation. */

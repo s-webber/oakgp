@@ -1,4 +1,4 @@
-package org.oakgp.selector;
+package org.oakgp.select;
 
 import static org.oakgp.TestUtils.readNode;
 

@@ -1,4 +1,4 @@
-package org.oakgp.selector;
+package org.oakgp.select;
 
 import java.util.List;
 

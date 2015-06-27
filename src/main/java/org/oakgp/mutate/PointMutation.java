@@ -7,7 +7,7 @@ import org.oakgp.PrimitiveSet;
 import org.oakgp.function.Function;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
-import org.oakgp.selector.NodeSelector;
+import org.oakgp.select.NodeSelector;
 import org.oakgp.util.Random;
 import org.oakgp.util.Utils;
 

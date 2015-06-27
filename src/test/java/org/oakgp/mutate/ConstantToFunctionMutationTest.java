@@ -13,7 +13,7 @@ import org.junit.Test;
 import org.oakgp.TreeGenerator;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
-import org.oakgp.selector.DummyNodeSelector;
+import org.oakgp.select.DummyNodeSelector;
 import org.oakgp.util.Random;
 
 public class ConstantToFunctionMutationTest {

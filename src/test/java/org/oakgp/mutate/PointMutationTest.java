@@ -13,7 +13,7 @@ import org.oakgp.function.classify.IsZero;
 import org.oakgp.function.math.IntegerUtils;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
-import org.oakgp.selector.DummyNodeSelector;
+import org.oakgp.select.DummyNodeSelector;
 import org.oakgp.util.DummyPrimitiveSet;
 import org.oakgp.util.DummyRandom;
 import org.oakgp.util.DummyValuesMap;

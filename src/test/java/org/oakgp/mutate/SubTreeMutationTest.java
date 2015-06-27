@@ -8,7 +8,7 @@ import static org.oakgp.util.DummyRandom.GetIntExpectation.nextInt;
 import org.junit.Test;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
-import org.oakgp.selector.DummyNodeSelector;
+import org.oakgp.select.DummyNodeSelector;
 
 public class SubTreeMutationTest {
    @Test

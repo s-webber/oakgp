@@ -3,7 +3,7 @@ package org.oakgp.mutate;
 import org.oakgp.GeneticOperator;
 import org.oakgp.TreeGenerator;
 import org.oakgp.node.Node;
-import org.oakgp.selector.NodeSelector;
+import org.oakgp.select.NodeSelector;
 import org.oakgp.util.Random;
 import org.oakgp.util.Utils;
 

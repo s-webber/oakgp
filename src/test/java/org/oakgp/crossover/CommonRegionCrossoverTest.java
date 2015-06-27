@@ -6,7 +6,7 @@ import static org.oakgp.util.DummyRandom.GetIntExpectation.nextInt;
 import org.junit.Test;
 import org.oakgp.GeneticOperator;
 import org.oakgp.node.Node;
-import org.oakgp.selector.DummyNodeSelector;
+import org.oakgp.select.DummyNodeSelector;
 import org.oakgp.util.DummyRandom;
 
 public class CommonRegionCrossoverTest {
