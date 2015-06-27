@@ -41,6 +41,8 @@ public class MultiplyTest extends AbstractFunctionTest {
       simplify("(* 3 (+ 9 v0))").to("(+ 27 (* 3 v0))");
       simplify("(* 3 (* 9 v0))").to("(* 27 v0)");
       simplify("(* 3 (- 9 v0))").to("(- 27 (* 3 v0))");
+
+      // TODO simplify (+ 3 (* v2 (* (* 81 v2) (* v2 (* 9 v2)))))
    }
 
    @Override
