@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
 import static org.oakgp.Type.booleanType;
 import static org.oakgp.Type.integerType;
 import static org.oakgp.Type.stringType;
@@ -11,6 +12,7 @@ import static org.oakgp.util.Utils.createIntegerTypeArray;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.oakgp.function.Function;
@@ -159,5 +161,9 @@ public class TestUtils {
 
    public static void assertNodeEquals(String expected, Node actual) {
       assertEquals(expected, writeNode(actual));
+   }
+
+   public static List<RankedCandidate> singletonRankedCandidateList(double fitness) {
+      return Collections.singletonList(new RankedCandidate(mock(Node.class), fitness));
    }
 }

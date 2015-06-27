@@ -2,14 +2,9 @@ package org.oakgp.terminate;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-
-import java.util.Collections;
-import java.util.List;
+import static org.oakgp.TestUtils.singletonRankedCandidateList;
 
 import org.junit.Test;
-import org.oakgp.RankedCandidate;
-import org.oakgp.node.Node;
 
 public class TargetFitnessTerminatorTest {
    @Test
@@ -25,7 +20,6 @@ public class TargetFitnessTerminatorTest {
    }
 
    private boolean shouldTerminate(TargetFitnessTerminator t, double fitness) {
-      List<RankedCandidate> candidates = Collections.singletonList(new RankedCandidate(mock(Node.class), fitness));
-      return t.test(candidates);
+      return t.test(singletonRankedCandidateList(fitness));
    }
 }
