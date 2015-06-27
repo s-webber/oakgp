@@ -3,6 +3,7 @@ package org.oakgp.util;
 import static java.util.Objects.requireNonNull;
 import static org.oakgp.NodeSimplifier.simplify;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -141,8 +142,9 @@ public final class RunBuilder {
          return new GenerationProcessorSetter();
       }
 
-      private void logFunctionSet(final Function... functions) {
+      private void logFunctionSet(final Function[] functions) {
          boolean first = true;
+         Arrays.sort(functions, (o1, o2) -> o1.getClass().getName().compareTo(o2.getClass().getName()));
          for (Function function : functions) {
             if (first) {
                first = false;
