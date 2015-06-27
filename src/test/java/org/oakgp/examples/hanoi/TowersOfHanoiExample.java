@@ -28,6 +28,7 @@ public class TowersOfHanoiExample {
    static final Type MOVE_TYPE = type("move");
    static final Type POLE_TYPE = type("pole");
 
+   private static final int TARGET_FITNESS = 0;
    private static final int NUM_GENERATIONS = 1000;
    private static final int INITIAL_GENERATION_SIZE = 100;
    private static final int INITIAL_GENERATION_MAX_DEPTH = 4;
@@ -40,8 +41,8 @@ public class TowersOfHanoiExample {
       FitnessFunction fitnessFunction = new TowersOfHanoiFitnessFunction(false);
 
       Node best = new RunBuilder().setReturnType(MOVE_TYPE).setConstants(constants).setVariables(variables).setFunctionSet(functions)
-            .setFitnessFunction(fitnessFunction).setMaxGenerations(NUM_GENERATIONS).setInitialGenerationSize(INITIAL_GENERATION_SIZE)
-            .setTreeDepth(INITIAL_GENERATION_MAX_DEPTH).process();
+            .setFitnessFunction(fitnessFunction).setInitialGenerationSize(INITIAL_GENERATION_SIZE).setTreeDepth(INITIAL_GENERATION_MAX_DEPTH)
+            .setTargetFitness(TARGET_FITNESS).setMaxGenerations(NUM_GENERATIONS).process();
 
       new TowersOfHanoiFitnessFunction(true).evaluate(best);
    }

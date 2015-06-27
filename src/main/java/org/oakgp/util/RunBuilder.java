@@ -3,6 +3,7 @@ package org.oakgp.util;
 import static java.util.Objects.requireNonNull;
 import static org.oakgp.NodeSimplifier.simplify;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -36,7 +37,10 @@ import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
 import org.oakgp.selector.NodeSelectorFactory;
 import org.oakgp.selector.WeightedNodeSelectorFactory;
+import org.oakgp.terminate.CompositeTerminator;
 import org.oakgp.terminate.MaxGenerationsTerminator;
+import org.oakgp.terminate.MaxGenerationsWithoutImprovementTerminator;
+import org.oakgp.terminate.TargetFitnessTerminator;
 import org.oakgp.tournament.RoundRobinTournament;
 import org.oakgp.tournament.TwoPlayerGame;
 import org.oakgp.tournament.TwoPlayerGameCache;
@@ -52,7 +56,6 @@ public final class RunBuilder {
    private PrimitiveSet _primitiveSet;
    private GenerationProcessor _generationProcessor;
    private GenerationEvolver _generationEvolver;
-   private Predicate<List<RankedCandidate>> _terminator;
    private Collection<Node> _initialGeneration;
 
    public RandomSetter setReturnType(final Type returnType) {
@@ -199,7 +202,7 @@ public final class RunBuilder {
       }
    }
 
-   public class GenerationEvolverSetter extends TerminatorSetter {
+   public class GenerationEvolverSetter extends InitialGenerationSetter {
       private GenerationEvolverSetter() {
          useDefaultGenerationEvolver();
       }
@@ -221,27 +224,13 @@ public final class RunBuilder {
          return operators;
       }
 
-      public TerminatorSetter setGenerationEvolver(final java.util.function.Function<Config, GenerationEvolver> generationEvolver) {
+      public InitialGenerationSetter setGenerationEvolver(final java.util.function.Function<Config, GenerationEvolver> generationEvolver) {
          return setGenerationEvolver(generationEvolver.apply(new Config()));
       }
 
-      private TerminatorSetter setGenerationEvolver(GenerationEvolver generationEvolver) {
+      private InitialGenerationSetter setGenerationEvolver(GenerationEvolver generationEvolver) {
          _generationEvolver = requireNonNull(generationEvolver);
-         return new TerminatorSetter();
-      }
-   }
-
-   public class TerminatorSetter {
-      private TerminatorSetter() {
-      }
-
-      public InitialGenerationSetter setTerminator(final Predicate<List<RankedCandidate>> terminator) {
-         _terminator = requireNonNull(terminator);
          return new InitialGenerationSetter();
-      }
-
-      public InitialGenerationSetter setMaxGenerations(final int maxGenerations) {
-         return setTerminator(new MaxGenerationsTerminator(maxGenerations));
       }
    }
 
@@ -249,13 +238,13 @@ public final class RunBuilder {
       private InitialGenerationSetter() {
       }
 
-      public ProcessRunner setInitialGeneration(final java.util.function.Function<Config, Collection<Node>> initialGeneration) {
+      public FirstTerminatorSetter setInitialGeneration(final java.util.function.Function<Config, Collection<Node>> initialGeneration) {
          return setInitialGeneration(initialGeneration.apply(new Config()));
       }
 
-      private ProcessRunner setInitialGeneration(Collection<Node> initialGeneration) {
+      private FirstTerminatorSetter setInitialGeneration(Collection<Node> initialGeneration) {
          _initialGeneration = requireNonNull(initialGeneration);
-         return new ProcessRunner();
+         return new FirstTerminatorSetter();
       }
 
       public TreeDepthSetter setInitialGenerationSize(final int generationSize) {
@@ -269,7 +258,7 @@ public final class RunBuilder {
             this.generationSize = requiresPositive(generationSize);
          }
 
-         public ProcessRunner setTreeDepth(final int treeDepth) {
+         public FirstTerminatorSetter setTreeDepth(final int treeDepth) {
             requiresPositive(treeDepth);
 
             Set<Node> initialGeneration = new NodeSet();
@@ -283,12 +272,96 @@ public final class RunBuilder {
       }
    }
 
+   public class FirstTerminatorSetter {
+      private final List<Predicate<List<RankedCandidate>>> terminators = new ArrayList<>();
+
+      private FirstTerminatorSetter() {
+      }
+
+      public SubsequentTerminatorSetter setTerminator(final Predicate<List<RankedCandidate>> terminator) {
+         terminators.add(terminator);
+         return new SubsequentTerminatorSetter(terminators);
+      }
+
+      public final MaxGenerationsTerminatorSetter setTargetFitness(double targetFitness) {
+         return new TargetFitnessTerminatorSetter(terminators).setTargetFitness(targetFitness);
+      }
+
+      public MaxGenerationsWithoutImprovementTerminatorSetter setMaxGenerations(final int maxGenerations) {
+         return new MaxGenerationsTerminatorSetter(terminators).setMaxGenerations(maxGenerations);
+      }
+
+      public ProcessRunner setMaxGenerationsWithoutImprovement(int maxGenerationsWithoutImprovement) {
+         return new MaxGenerationsWithoutImprovementTerminatorSetter(terminators).setMaxGenerationsWithoutImprovement(maxGenerationsWithoutImprovement);
+      }
+   }
+
+   public class SubsequentTerminatorSetter extends MaxGenerationsTerminatorSetter {
+      private SubsequentTerminatorSetter(List<Predicate<List<RankedCandidate>>> terminators) {
+         super(terminators);
+      }
+
+      public SubsequentTerminatorSetter setTerminator(final Predicate<List<RankedCandidate>> terminator) {
+         terminators.add(terminator);
+         return this;
+      }
+   }
+
+   public class TargetFitnessTerminatorSetter extends MaxGenerationsTerminatorSetter {
+      private TargetFitnessTerminatorSetter(List<Predicate<List<RankedCandidate>>> terminators) {
+         super(terminators);
+      }
+
+      public final MaxGenerationsTerminatorSetter setTargetFitness(double targetFitness) {
+         terminators.add(new TargetFitnessTerminator(c -> c.getFitness() == targetFitness));
+         return new MaxGenerationsTerminatorSetter(terminators);
+      }
+   }
+
+   public class MaxGenerationsTerminatorSetter extends MaxGenerationsWithoutImprovementTerminatorSetter {
+      private MaxGenerationsTerminatorSetter(List<Predicate<List<RankedCandidate>>> terminators) {
+         super(terminators);
+      }
+
+      public final MaxGenerationsWithoutImprovementTerminatorSetter setMaxGenerations(int maxGenerations) {
+         terminators.add(new MaxGenerationsTerminator(maxGenerations));
+         return new MaxGenerationsWithoutImprovementTerminatorSetter(terminators);
+      }
+   }
+
+   public class MaxGenerationsWithoutImprovementTerminatorSetter {
+      protected final List<Predicate<List<RankedCandidate>>> terminators;
+
+      private MaxGenerationsWithoutImprovementTerminatorSetter(List<Predicate<List<RankedCandidate>>> terminators) {
+         this.terminators = terminators;
+      }
+
+      public final ProcessRunner setMaxGenerationsWithoutImprovement(int maxGenerationsWithoutImprovement) {
+         terminators.add(new MaxGenerationsWithoutImprovementTerminator(maxGenerationsWithoutImprovement));
+         return new ProcessRunner(terminators);
+      }
+
+      public final Node process() {
+         return new ProcessRunner(terminators).process();
+      }
+   }
+
    public class ProcessRunner {
-      private ProcessRunner() {
+      private Predicate<List<RankedCandidate>> terminator;
+
+      @SuppressWarnings("unchecked")
+      private ProcessRunner(List<Predicate<List<RankedCandidate>>> terminators) {
+         if (terminators.isEmpty()) {
+            throw new IllegalStateException("No termination criteria set");
+         } else if (terminators.size() == 1) {
+            terminator = terminators.get(0);
+         } else {
+            terminator = new CompositeTerminator(terminators.toArray(new Predicate[terminators.size()]));
+         }
       }
 
       public Node process() {
-         RankedCandidate best = Runner.process(_generationProcessor, _generationEvolver, _terminator, _initialGeneration);
+         RankedCandidate best = Runner.process(_generationProcessor, _generationEvolver, terminator, _initialGeneration);
          System.out.println("Best: " + best);
          Node simplifiedBestNode = simplify(best.getNode());
          System.out.println(simplifiedBestNode);

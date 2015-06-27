@@ -37,6 +37,6 @@ public class GridWarExample {
       TwoPlayerGame game = new FirstPlayerAdvantageGame(new GridWar(random));
 
       new RunBuilder().setReturnType(integerType()).setConstants(constants).setVariables(variables).setFunctionSet(functions).setTwoPlayerGame(game)
-            .setMaxGenerations(NUM_GENERATIONS).setInitialGenerationSize(INITIAL_GENERATION_SIZE).setTreeDepth(INITIAL_GENERATION_MAX_DEPTH).process();
+            .setInitialGenerationSize(INITIAL_GENERATION_SIZE).setTreeDepth(INITIAL_GENERATION_MAX_DEPTH).setMaxGenerations(NUM_GENERATIONS).process();
    }
 }
