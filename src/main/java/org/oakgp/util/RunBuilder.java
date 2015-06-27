@@ -56,7 +56,7 @@ public final class RunBuilder {
    private PrimitiveSet _primitiveSet;
    private GenerationProcessor _generationProcessor;
    private GenerationEvolver _generationEvolver;
-   private Collection<Node> _initialGeneration;
+   private Collection<Node> _initialPopulation;
 
    public RandomSetter setReturnType(final Type returnType) {
       _returnType = requireNonNull(returnType);
@@ -202,7 +202,7 @@ public final class RunBuilder {
       }
    }
 
-   public class GenerationEvolverSetter extends InitialGenerationSetter {
+   public class GenerationEvolverSetter extends InitialPopulationSetter {
       private GenerationEvolverSetter() {
          useDefaultGenerationEvolver();
       }
@@ -224,30 +224,30 @@ public final class RunBuilder {
          return operators;
       }
 
-      public InitialGenerationSetter setGenerationEvolver(final java.util.function.Function<Config, GenerationEvolver> generationEvolver) {
+      public InitialPopulationSetter setGenerationEvolver(final java.util.function.Function<Config, GenerationEvolver> generationEvolver) {
          return setGenerationEvolver(generationEvolver.apply(new Config()));
       }
 
-      private InitialGenerationSetter setGenerationEvolver(GenerationEvolver generationEvolver) {
+      private InitialPopulationSetter setGenerationEvolver(GenerationEvolver generationEvolver) {
          _generationEvolver = requireNonNull(generationEvolver);
-         return new InitialGenerationSetter();
+         return new InitialPopulationSetter();
       }
    }
 
-   public class InitialGenerationSetter {
-      private InitialGenerationSetter() {
+   public class InitialPopulationSetter {
+      private InitialPopulationSetter() {
       }
 
-      public FirstTerminatorSetter setInitialGeneration(final java.util.function.Function<Config, Collection<Node>> initialGeneration) {
-         return setInitialGeneration(initialGeneration.apply(new Config()));
+      public FirstTerminatorSetter setInitialPopulation(final java.util.function.Function<Config, Collection<Node>> initialGeneration) {
+         return setInitialPopulation(initialGeneration.apply(new Config()));
       }
 
-      private FirstTerminatorSetter setInitialGeneration(Collection<Node> initialGeneration) {
-         _initialGeneration = requireNonNull(initialGeneration);
+      private FirstTerminatorSetter setInitialPopulation(Collection<Node> initialGeneration) {
+         _initialPopulation = requireNonNull(initialGeneration);
          return new FirstTerminatorSetter();
       }
 
-      public TreeDepthSetter setInitialGenerationSize(final int generationSize) {
+      public TreeDepthSetter setInitialPopulationSize(final int generationSize) {
          return new TreeDepthSetter(generationSize);
       }
 
@@ -261,13 +261,13 @@ public final class RunBuilder {
          public FirstTerminatorSetter setTreeDepth(final int treeDepth) {
             requiresPositive(treeDepth);
 
-            Set<Node> initialGeneration = new NodeSet();
+            Set<Node> initialPopulation = new NodeSet();
             TreeGenerator treeGenerator = TreeGeneratorImpl.grow(_primitiveSet, _random);
             for (int i = 0; i < generationSize; i++) {
                Node n = treeGenerator.generate(_returnType, treeDepth);
-               initialGeneration.add(n);
+               initialPopulation.add(n);
             }
-            return setInitialGeneration(initialGeneration);
+            return setInitialPopulation(initialPopulation);
          }
       }
    }
@@ -361,7 +361,7 @@ public final class RunBuilder {
       }
 
       public Node process() {
-         RankedCandidate best = Runner.process(_generationProcessor, _generationEvolver, terminator, _initialGeneration);
+         RankedCandidate best = Runner.process(_generationProcessor, _generationEvolver, terminator, _initialPopulation);
          System.out.println("Best: " + best);
          Node simplifiedBestNode = simplify(best.getNode());
          System.out.println(simplifiedBestNode);

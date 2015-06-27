@@ -22,13 +22,13 @@ public final class Runner {
     *           creates a new generation based on the previous generation
     * @param terminator
     *           a function that determines if the run should finish
-    * @param initialGeneration
-    *           the initial population
+    * @param initialPopulation
+    *           the initial population that will be used as a basis for generating future generations
     * @return the candidate with the best fitness that was found during this run
     */
    public static RankedCandidate process(GenerationProcessor generationProcessor, GenerationEvolver generationEvolver,
-         Predicate<List<RankedCandidate>> terminator, Collection<Node> initialGeneration) {
-      List<RankedCandidate> rankedCandidates = generationProcessor.process(initialGeneration);
+         Predicate<List<RankedCandidate>> terminator, Collection<Node> initialPopulation) {
+      List<RankedCandidate> rankedCandidates = generationProcessor.process(initialPopulation);
       while (!terminator.test(rankedCandidates)) {
          Collection<Node> newGeneration = generationEvolver.process(rankedCandidates);
          rankedCandidates = generationProcessor.process(newGeneration);

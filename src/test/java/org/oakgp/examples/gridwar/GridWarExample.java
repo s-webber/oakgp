@@ -24,7 +24,7 @@ import org.oakgp.util.Utils;
 public class GridWarExample {
    private static final int NUM_VARIABLES = 5;
    private static final int NUM_GENERATIONS = 10;
-   private static final int INITIAL_GENERATION_SIZE = 50;
+   private static final int INITIAL_POPULATION_SIZE = 50;
    private static final int INITIAL_GENERATION_MAX_DEPTH = 4;
 
    public static void main(String[] args) {
@@ -38,6 +38,6 @@ public class GridWarExample {
       TwoPlayerGame game = new FirstPlayerAdvantageGame(new GridWar(random));
 
       new RunBuilder().setReturnType(integerType()).setConstants(constants).setVariables(variables).setFunctionSet(functions).setTwoPlayerGame(game)
-            .setInitialGenerationSize(INITIAL_GENERATION_SIZE).setTreeDepth(INITIAL_GENERATION_MAX_DEPTH).setMaxGenerations(NUM_GENERATIONS).process();
+            .setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_GENERATION_MAX_DEPTH).setMaxGenerations(NUM_GENERATIONS).process();
    }
 }

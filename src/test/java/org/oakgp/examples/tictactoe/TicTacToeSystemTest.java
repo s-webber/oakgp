@@ -19,7 +19,7 @@ import org.oakgp.util.Utils;
 
 public class TicTacToeSystemTest {
    private static final int NUM_GENERATIONS = 10;
-   private static final int INITIAL_GENERATION_SIZE = 50;
+   private static final int INITIAL_POPULATION_SIZE = 50;
    private static final int INITIAL_GENERATION_MAX_DEPTH = 4;
    private static final Type BOARD_TYPE = type("board");
    private static final Type MOVE_TYPE = type("move");
@@ -34,7 +34,7 @@ public class TicTacToeSystemTest {
       TwoPlayerGame game = createTicTacToeGame();
 
       new RunBuilder().setReturnType(MOVE_TYPE).setConstants().setVariables(VARIABLE_TYPES).setFunctionSet(functions).setTwoPlayerGame(game)
-            .setInitialGenerationSize(INITIAL_GENERATION_SIZE).setTreeDepth(INITIAL_GENERATION_MAX_DEPTH).setMaxGenerations(NUM_GENERATIONS).process();
+            .setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_GENERATION_MAX_DEPTH).setMaxGenerations(NUM_GENERATIONS).process();
    }
 
    @Test
@@ -44,7 +44,7 @@ public class TicTacToeSystemTest {
       TwoPlayerGame game = createTicTacToeGame();
 
       new RunBuilder().setReturnType(MOVE_TYPE).setConstants(constants).setVariables(VARIABLE_TYPES).setFunctionSet(functions).setTwoPlayerGame(game)
-            .setInitialGenerationSize(INITIAL_GENERATION_SIZE).setTreeDepth(INITIAL_GENERATION_MAX_DEPTH).setMaxGenerations(NUM_GENERATIONS).process();
+            .setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_GENERATION_MAX_DEPTH).setMaxGenerations(NUM_GENERATIONS).process();
    }
 
    @Test
@@ -54,7 +54,7 @@ public class TicTacToeSystemTest {
       TicTacToeFitnessFunction fitnessFunction = new TicTacToeFitnessFunction();
 
       new RunBuilder().setReturnType(MOVE_TYPE).setConstants(constants).setVariables(VARIABLE_TYPES).setFunctionSet(functions)
-            .setFitnessFunction(fitnessFunction).setInitialGenerationSize(INITIAL_GENERATION_SIZE).setTreeDepth(INITIAL_GENERATION_MAX_DEPTH)
+            .setFitnessFunction(fitnessFunction).setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_GENERATION_MAX_DEPTH)
             .setMaxGenerations(NUM_GENERATIONS).process();
    }
 

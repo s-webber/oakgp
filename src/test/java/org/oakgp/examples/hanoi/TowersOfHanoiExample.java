@@ -30,7 +30,7 @@ public class TowersOfHanoiExample {
 
    private static final int TARGET_FITNESS = 0;
    private static final int NUM_GENERATIONS = 1000;
-   private static final int INITIAL_GENERATION_SIZE = 100;
+   private static final int INITIAL_POPULATION_SIZE = 100;
    private static final int INITIAL_GENERATION_MAX_DEPTH = 4;
 
    public static void main(String[] args) {
@@ -41,7 +41,7 @@ public class TowersOfHanoiExample {
       FitnessFunction fitnessFunction = new TowersOfHanoiFitnessFunction(false);
 
       Node best = new RunBuilder().setReturnType(MOVE_TYPE).setConstants(constants).setVariables(variables).setFunctionSet(functions)
-            .setFitnessFunction(fitnessFunction).setInitialGenerationSize(INITIAL_GENERATION_SIZE).setTreeDepth(INITIAL_GENERATION_MAX_DEPTH)
+            .setFitnessFunction(fitnessFunction).setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_GENERATION_MAX_DEPTH)
             .setTargetFitness(TARGET_FITNESS).setMaxGenerations(NUM_GENERATIONS).process();
 
       new TowersOfHanoiFitnessFunction(true).evaluate(best);

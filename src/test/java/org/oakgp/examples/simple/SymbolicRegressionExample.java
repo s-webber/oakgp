@@ -16,7 +16,7 @@ import org.oakgp.util.Utils;
 /** An example of using symbolic regression to evolve a program that best fits a given data set for the function {@code x2 + x + 1}. */
 public class SymbolicRegressionExample {
    private static final int TARGET_FITNESS = 0;
-   private static final int INITIAL_GENERATION_SIZE = 50;
+   private static final int INITIAL_POPULATION_SIZE = 50;
    private static final int INITIAL_GENERATION_MAX_DEPTH = 4;
 
    public static void main(String[] args) {
@@ -30,7 +30,7 @@ public class SymbolicRegressionExample {
       FitnessFunction fitnessFunction = TestDataFitnessFunction.createIntegerTestDataFitnessFunction(createDataSet());
 
       new RunBuilder().setReturnType(Type.integerType()).setConstants(constants).setVariables(variableTypes).setFunctionSet(functions)
-            .setFitnessFunction(fitnessFunction).setInitialGenerationSize(INITIAL_GENERATION_SIZE).setTreeDepth(INITIAL_GENERATION_MAX_DEPTH)
+            .setFitnessFunction(fitnessFunction).setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_GENERATION_MAX_DEPTH)
             .setTargetFitness(TARGET_FITNESS).process();
    }
 
