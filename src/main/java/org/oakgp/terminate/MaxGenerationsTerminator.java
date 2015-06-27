@@ -6,12 +6,12 @@ import java.util.logging.Logger;
 
 import org.oakgp.RankedCandidate;
 
-public class MaxGenerationTerminator implements Predicate<List<RankedCandidate>> {
+public final class MaxGenerationsTerminator implements Predicate<List<RankedCandidate>> {
    private final int maxGenerations;
    private int ctr = 0;
    private double previousBest = 0;
 
-   public MaxGenerationTerminator(int maxGenerations) {
+   public MaxGenerationsTerminator(int maxGenerations) {
       this.maxGenerations = maxGenerations;
    }
 

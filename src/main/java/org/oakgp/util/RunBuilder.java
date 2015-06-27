@@ -36,7 +36,7 @@ import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
 import org.oakgp.selector.NodeSelectorFactory;
 import org.oakgp.selector.WeightedNodeSelectorFactory;
-import org.oakgp.terminate.MaxGenerationTerminator;
+import org.oakgp.terminate.MaxGenerationsTerminator;
 import org.oakgp.tournament.RoundRobinTournament;
 import org.oakgp.tournament.TwoPlayerGame;
 import org.oakgp.tournament.TwoPlayerGameCache;
@@ -241,7 +241,7 @@ public final class RunBuilder {
       }
 
       public InitialGenerationSetter setMaxGenerations(final int maxGenerations) {
-         return setTerminator(new MaxGenerationTerminator(maxGenerations));
+         return setTerminator(new MaxGenerationsTerminator(maxGenerations));
       }
    }
 

@@ -11,10 +11,10 @@ import org.junit.Test;
 import org.oakgp.RankedCandidate;
 import org.oakgp.node.Node;
 
-public class MaxGenerationTerminatorTest {
+public class MaxGenerationsTerminatorTest {
    @Test
    public void test() {
-      MaxGenerationTerminator t = new MaxGenerationTerminator(3);
+      MaxGenerationsTerminator t = new MaxGenerationsTerminator(3);
       List<RankedCandidate> candidates = Collections.singletonList(new RankedCandidate(mock(Node.class), 1));
       assertFalse(t.test(candidates));
       assertFalse(t.test(candidates));
