@@ -17,7 +17,7 @@ import org.oakgp.util.Utils;
 public class SymbolicRegressionExample {
    private static final int TARGET_FITNESS = 0;
    private static final int INITIAL_POPULATION_SIZE = 50;
-   private static final int INITIAL_GENERATION_MAX_DEPTH = 4;
+   private static final int INITIAL_POPULATION_MAX_DEPTH = 4;
 
    public static void main(String[] args) {
       // the function set will be the addition, subtraction and multiplication arithmetic operators
@@ -30,7 +30,7 @@ public class SymbolicRegressionExample {
       FitnessFunction fitnessFunction = TestDataFitnessFunction.createIntegerTestDataFitnessFunction(createDataSet());
 
       new RunBuilder().setReturnType(Type.integerType()).setConstants(constants).setVariables(variableTypes).setFunctionSet(functions)
-            .setFitnessFunction(fitnessFunction).setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_GENERATION_MAX_DEPTH)
+            .setFitnessFunction(fitnessFunction).setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_POPULATION_MAX_DEPTH)
             .setTargetFitness(TARGET_FITNESS).process();
    }
 
