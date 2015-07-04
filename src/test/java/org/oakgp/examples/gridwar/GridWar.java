@@ -1,12 +1,12 @@
 /*
  * Copyright 2015 S. Webber
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -62,10 +62,10 @@ class GridWar implements TwoPlayerGame {
       // randomly position player 1
       int x = random.nextInt(GRID_WIDTH);
       int y = random.nextInt(GRID_WIDTH);
-      Player player1 = new Player(x, y, -1, playerLogic1);
+      Player player1 = new Player(x, y, playerLogic1);
 
       // randomly position player 2, ensuring they do not occupy the same or an adjacent square to player 1
-      Player player2 = new Player((x + 2) % GRID_WIDTH, (y + 2) % GRID_WIDTH, -1, playerLogic2);
+      Player player2 = new Player((x + 2) % GRID_WIDTH, (y + 2) % GRID_WIDTH, playerLogic2);
 
       return new Player[] { player1, player2 };
    }
