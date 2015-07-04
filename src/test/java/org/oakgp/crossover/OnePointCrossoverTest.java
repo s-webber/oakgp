@@ -24,7 +24,7 @@ import org.oakgp.node.Node;
 import org.oakgp.select.DummyNodeSelector;
 import org.oakgp.util.DummyRandom;
 
-public class CommonRegionCrossoverTest {
+public class OnePointCrossoverTest {
    // TODO test mixed types
 
    @Test
@@ -32,7 +32,7 @@ public class CommonRegionCrossoverTest {
       DummyRandom dummyRandom = nextInt(4).returns(1);
       DummyNodeSelector dummySelector = new DummyNodeSelector("(+ 5 (+ 1 2))", "(* 7 (- 8 v5))");
 
-      GeneticOperator c = new CommonRegionCrossover(dummyRandom);
+      GeneticOperator c = new OnePointCrossover(dummyRandom);
 
       Node result = c.evolve(dummySelector);
       assertNodeEquals("(+ 5 (+ 8 2))", result);
