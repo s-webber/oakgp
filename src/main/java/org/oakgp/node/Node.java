@@ -55,7 +55,7 @@ public interface Node {
    Node replaceAt(int index, Function<Node, Node> replacement);
 
    /**
-    * Returns a new {@code Node} resulting from replacing the {@code Node} idintified by {@code index} and {@code treeWalkerStrategy} with the result of
+    * Returns a new {@code Node} resulting from replacing the {@code Node} identified by {@code index} and {@code treeWalkerStrategy} with the result of
     * {@code replacement}.
     */
    Node replaceAt(int index, Function<Node, Node> replacement, Predicate<Node> treeWalkerStrategy);
