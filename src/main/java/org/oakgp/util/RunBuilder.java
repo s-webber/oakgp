@@ -27,10 +27,16 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
 
-import org.oakgp.GenerationProcessor;
-import org.oakgp.RankedCandidate;
 import org.oakgp.Runner;
 import org.oakgp.Type;
+import org.oakgp.evaluate.GenerationProcessor;
+import org.oakgp.evaluate.RankedCandidate;
+import org.oakgp.evaluate.fitness.FitnessFunction;
+import org.oakgp.evaluate.fitness.FitnessFunctionCache;
+import org.oakgp.evaluate.fitness.FitnessFunctionGenerationProcessor;
+import org.oakgp.evaluate.tournament.RoundRobinTournament;
+import org.oakgp.evaluate.tournament.TwoPlayerGame;
+import org.oakgp.evaluate.tournament.TwoPlayerGameCache;
 import org.oakgp.evolve.GenerationEvolver;
 import org.oakgp.evolve.GenerationEvolverImpl;
 import org.oakgp.evolve.GeneticOperator;
@@ -38,9 +44,6 @@ import org.oakgp.evolve.crossover.SubtreeCrossover;
 import org.oakgp.evolve.mutate.ConstantToFunctionMutation;
 import org.oakgp.evolve.mutate.PointMutation;
 import org.oakgp.evolve.mutate.SubTreeMutation;
-import org.oakgp.fitness.FitnessFunction;
-import org.oakgp.fitness.FitnessFunctionCache;
-import org.oakgp.fitness.FitnessFunctionGenerationProcessor;
 import org.oakgp.function.Function;
 import org.oakgp.generate.TreeGenerator;
 import org.oakgp.generate.TreeGeneratorImpl;
@@ -57,9 +60,6 @@ import org.oakgp.terminate.CompositeTerminator;
 import org.oakgp.terminate.MaxGenerationsTerminator;
 import org.oakgp.terminate.MaxGenerationsWithoutImprovementTerminator;
 import org.oakgp.terminate.TargetFitnessTerminator;
-import org.oakgp.tournament.RoundRobinTournament;
-import org.oakgp.tournament.TwoPlayerGame;
-import org.oakgp.tournament.TwoPlayerGameCache;
 
 /** Provides a convenient way to configure and start a genetic programming run. */
 public final class RunBuilder {

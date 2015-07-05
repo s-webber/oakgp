@@ -19,6 +19,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Predicate;
 
+import org.oakgp.evaluate.GenerationProcessor;
+import org.oakgp.evaluate.RankedCandidate;
 import org.oakgp.evolve.GenerationEvolver;
 import org.oakgp.node.Node;
 

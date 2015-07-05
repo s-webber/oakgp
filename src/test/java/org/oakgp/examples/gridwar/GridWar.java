@@ -16,8 +16,8 @@
 package org.oakgp.examples.gridwar;
 
 import org.oakgp.Assignments;
+import org.oakgp.evaluate.tournament.TwoPlayerGame;
 import org.oakgp.node.Node;
-import org.oakgp.tournament.TwoPlayerGame;
 import org.oakgp.util.Random;
 
 /** Game engine for Grid War. */

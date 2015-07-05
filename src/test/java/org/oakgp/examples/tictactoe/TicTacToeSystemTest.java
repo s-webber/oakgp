@@ -1,12 +1,12 @@
 /*
  * Copyright 2015 S. Webber
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,14 +20,14 @@ import static org.oakgp.Type.type;
 import org.junit.Test;
 import org.oakgp.Assignments;
 import org.oakgp.Type;
-import org.oakgp.fitness.FitnessFunction;
+import org.oakgp.evaluate.fitness.FitnessFunction;
+import org.oakgp.evaluate.tournament.FirstPlayerAdvantageGame;
+import org.oakgp.evaluate.tournament.TwoPlayerGame;
 import org.oakgp.function.Function;
 import org.oakgp.function.choice.If;
 import org.oakgp.function.choice.OrElse;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
-import org.oakgp.tournament.FirstPlayerAdvantageGame;
-import org.oakgp.tournament.TwoPlayerGame;
 import org.oakgp.util.DummyNode;
 import org.oakgp.util.RunBuilder;
 import org.oakgp.util.Utils;
@@ -49,7 +49,7 @@ public class TicTacToeSystemTest {
       TwoPlayerGame game = createTicTacToeGame();
 
       new RunBuilder().setReturnType(MOVE_TYPE).setConstants().setVariables(VARIABLE_TYPES).setFunctionSet(functions).setTwoPlayerGame(game)
-            .setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_POPULATION_MAX_DEPTH).setMaxGenerations(NUM_GENERATIONS).process();
+      .setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_POPULATION_MAX_DEPTH).setMaxGenerations(NUM_GENERATIONS).process();
    }
 
    @Test
@@ -59,7 +59,7 @@ public class TicTacToeSystemTest {
       TwoPlayerGame game = createTicTacToeGame();
 
       new RunBuilder().setReturnType(MOVE_TYPE).setConstants(constants).setVariables(VARIABLE_TYPES).setFunctionSet(functions).setTwoPlayerGame(game)
-            .setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_POPULATION_MAX_DEPTH).setMaxGenerations(NUM_GENERATIONS).process();
+      .setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_POPULATION_MAX_DEPTH).setMaxGenerations(NUM_GENERATIONS).process();
    }
 
    @Test
@@ -69,8 +69,8 @@ public class TicTacToeSystemTest {
       TicTacToeFitnessFunction fitnessFunction = new TicTacToeFitnessFunction();
 
       new RunBuilder().setReturnType(MOVE_TYPE).setConstants(constants).setVariables(VARIABLE_TYPES).setFunctionSet(functions)
-            .setFitnessFunction(fitnessFunction).setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_POPULATION_MAX_DEPTH)
-            .setMaxGenerations(NUM_GENERATIONS).process();
+      .setFitnessFunction(fitnessFunction).setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_POPULATION_MAX_DEPTH)
+      .setMaxGenerations(NUM_GENERATIONS).process();
    }
 
    private ConstantNode[] getMoveConstants() {
@@ -84,71 +84,71 @@ public class TicTacToeSystemTest {
    private class TicTacToeFitnessFunction implements FitnessFunction {
       private TicTacToe ticTacToe = new TicTacToe();
       private Node[] ais = new Node[] {//
-            new DummyNode() {
-               @Override
-               public Move evaluate(Assignments assignments) {
-                  Board board = (Board) assignments.get(0);
-                  return board.getFreeMove();
-               }
-            }, new DummyNode() {
-               @Override
-               public Move evaluate(Assignments assignments) {
-                  Board board = (Board) assignments.get(0);
-                  Move nextMove = board.getWinningMove(Symbol.X);
-                  if (nextMove == null) {
-                     nextMove = board.getFreeMove();
-                  }
-                  return nextMove;
-               }
-            }, new DummyNode() {
-               @Override
-               public Move evaluate(Assignments assignments) {
-                  Board board = (Board) assignments.get(0);
-                  Move nextMove = board.getWinningMove(Symbol.O);
-                  if (nextMove == null) {
-                     nextMove = board.getFreeMove();
-                  }
-                  return nextMove;
-               }
-            }, new DummyNode() {
-               @Override
-               public Move evaluate(Assignments assignments) {
-                  Board board = (Board) assignments.get(0);
-                  Move nextMove = board.getWinningMove(Symbol.X);
-                  if (nextMove == null) {
-                     nextMove = board.getWinningMove(Symbol.O);
-                  }
-                  if (nextMove == null) {
-                     nextMove = board.getFreeCorner();
-                  }
-                  if (nextMove == null) {
-                     nextMove = board.getFreeCentre();
-                  }
-                  if (nextMove == null) {
-                     nextMove = board.getFreeMove();
-                  }
-                  return nextMove;
-               }
-            }, new DummyNode() {
-               @Override
-               public Move evaluate(Assignments assignments) {
-                  Board board = (Board) assignments.get(0);
-                  Move nextMove = board.getWinningMove(Symbol.X);
-                  if (nextMove == null) {
-                     nextMove = board.getWinningMove(Symbol.O);
-                  }
-                  if (nextMove == null) {
-                     nextMove = board.getFreeCorner();
-                  }
-                  if (nextMove == null) {
-                     nextMove = board.getFreeCentre();
-                  }
-                  if (nextMove == null) {
-                     nextMove = board.getFreeMove();
-                  }
-                  return nextMove;
-               }
-            } };
+      new DummyNode() {
+         @Override
+         public Move evaluate(Assignments assignments) {
+            Board board = (Board) assignments.get(0);
+            return board.getFreeMove();
+         }
+      }, new DummyNode() {
+         @Override
+         public Move evaluate(Assignments assignments) {
+            Board board = (Board) assignments.get(0);
+            Move nextMove = board.getWinningMove(Symbol.X);
+            if (nextMove == null) {
+               nextMove = board.getFreeMove();
+            }
+            return nextMove;
+         }
+      }, new DummyNode() {
+         @Override
+         public Move evaluate(Assignments assignments) {
+            Board board = (Board) assignments.get(0);
+            Move nextMove = board.getWinningMove(Symbol.O);
+            if (nextMove == null) {
+               nextMove = board.getFreeMove();
+            }
+            return nextMove;
+         }
+      }, new DummyNode() {
+         @Override
+         public Move evaluate(Assignments assignments) {
+            Board board = (Board) assignments.get(0);
+            Move nextMove = board.getWinningMove(Symbol.X);
+            if (nextMove == null) {
+               nextMove = board.getWinningMove(Symbol.O);
+            }
+            if (nextMove == null) {
+               nextMove = board.getFreeCorner();
+            }
+            if (nextMove == null) {
+               nextMove = board.getFreeCentre();
+            }
+            if (nextMove == null) {
+               nextMove = board.getFreeMove();
+            }
+            return nextMove;
+         }
+      }, new DummyNode() {
+         @Override
+         public Move evaluate(Assignments assignments) {
+            Board board = (Board) assignments.get(0);
+            Move nextMove = board.getWinningMove(Symbol.X);
+            if (nextMove == null) {
+               nextMove = board.getWinningMove(Symbol.O);
+            }
+            if (nextMove == null) {
+               nextMove = board.getFreeCorner();
+            }
+            if (nextMove == null) {
+               nextMove = board.getFreeCentre();
+            }
+            if (nextMove == null) {
+               nextMove = board.getFreeMove();
+            }
+            return nextMove;
+         }
+      } };
 
       @Override
       public double evaluate(Node candidate) {

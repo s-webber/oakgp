@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
 
-import org.oakgp.RankedCandidate;
+import org.oakgp.evaluate.RankedCandidate;
 
 /**
  * A predicate that returns {@code true} when a specified number of generations has been run.
