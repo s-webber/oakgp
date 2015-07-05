@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.oakgp;
+package org.oakgp.primitive;
 
 import static org.oakgp.util.Utils.groupBy;
 
@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.oakgp.Type;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
 

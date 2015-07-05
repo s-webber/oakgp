@@ -15,10 +15,10 @@
  */
 package org.oakgp.evolve.mutate;
 
-import org.oakgp.PrimitiveSet;
 import org.oakgp.evolve.GeneticOperator;
 import org.oakgp.node.Node;
 import org.oakgp.node.NodeType;
+import org.oakgp.primitive.PrimitiveSet;
 import org.oakgp.select.NodeSelector;
 import org.oakgp.util.Random;
 import org.oakgp.util.Utils;

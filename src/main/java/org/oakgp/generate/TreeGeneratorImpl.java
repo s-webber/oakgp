@@ -18,12 +18,12 @@ package org.oakgp.generate;
 import java.util.Objects;
 import java.util.function.IntPredicate;
 
-import org.oakgp.PrimitiveSet;
 import org.oakgp.Type;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
+import org.oakgp.primitive.PrimitiveSet;
 import org.oakgp.util.Random;
 
 /**

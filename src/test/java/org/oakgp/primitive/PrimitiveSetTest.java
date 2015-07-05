@@ -1,19 +1,19 @@
 /*
  * Copyright 2015 S. Webber
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.oakgp;
+package org.oakgp.primitive;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
@@ -30,6 +30,7 @@ import static org.oakgp.Type.stringType;
 import static org.oakgp.util.Utils.createIntegerTypeArray;
 
 import org.junit.Test;
+import org.oakgp.Type;
 import org.oakgp.function.Function;
 import org.oakgp.function.choice.If;
 import org.oakgp.function.compare.Equal;
@@ -51,8 +52,8 @@ public class PrimitiveSetTest {
    private static final ConstantNode[] CONSTANTS = { integerConstant(7), integerConstant(8), integerConstant(9) };
    private static final Type[] VARIABLE_TYPES = createIntegerTypeArray(3);
    private static final Function[] FUNCTIONS = new Function[] { IntegerUtils.INTEGER_UTILS.getAdd(), IntegerUtils.INTEGER_UTILS.getSubtract(),
-         IntegerUtils.INTEGER_UTILS.getMultiply(), new If(integerType()), new LessThan(integerType()), new LessThanOrEqual(integerType()),
-         new GreaterThan(integerType()), new GreaterThanOrEqual(integerType()), new Equal(integerType()), new NotEqual(integerType()) };
+      IntegerUtils.INTEGER_UTILS.getMultiply(), new If(integerType()), new LessThan(integerType()), new LessThanOrEqual(integerType()),
+      new GreaterThan(integerType()), new GreaterThanOrEqual(integerType()), new Equal(integerType()), new NotEqual(integerType()) };
 
    @Test
    public void testHasFunctions() {

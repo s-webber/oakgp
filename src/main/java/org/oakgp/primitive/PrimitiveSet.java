@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.oakgp;
+package org.oakgp.primitive;
 
+import org.oakgp.Type;
 import org.oakgp.function.Function;
 import org.oakgp.node.Node;
 

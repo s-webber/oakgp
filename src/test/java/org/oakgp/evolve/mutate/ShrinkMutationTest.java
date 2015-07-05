@@ -22,11 +22,11 @@ import static org.oakgp.TestUtils.readNode;
 import static org.oakgp.util.DummyRandom.GetIntExpectation.nextInt;
 
 import org.junit.Test;
-import org.oakgp.PrimitiveSet;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
+import org.oakgp.primitive.DummyPrimitiveSet;
+import org.oakgp.primitive.PrimitiveSet;
 import org.oakgp.select.DummyNodeSelector;
-import org.oakgp.util.DummyPrimitiveSet;
 import org.oakgp.util.DummyRandom;
 import org.oakgp.util.Random;
 

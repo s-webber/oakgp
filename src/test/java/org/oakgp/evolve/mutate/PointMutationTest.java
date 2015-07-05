@@ -21,15 +21,15 @@ import static org.oakgp.TestUtils.integerConstant;
 import static org.oakgp.util.DummyRandom.GetIntExpectation.nextInt;
 
 import org.junit.Test;
-import org.oakgp.PrimitiveSet;
 import org.oakgp.evolve.GeneticOperator;
 import org.oakgp.function.Function;
 import org.oakgp.function.classify.IsZero;
 import org.oakgp.function.math.IntegerUtils;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
+import org.oakgp.primitive.DummyPrimitiveSet;
+import org.oakgp.primitive.PrimitiveSet;
 import org.oakgp.select.DummyNodeSelector;
-import org.oakgp.util.DummyPrimitiveSet;
 import org.oakgp.util.DummyRandom;
 import org.oakgp.util.DummyValuesMap;
 
