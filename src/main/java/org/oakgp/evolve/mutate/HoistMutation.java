@@ -13,30 +13,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.oakgp.mutate;
+package org.oakgp.evolve.mutate;
 
-import org.oakgp.GeneticOperator;
-import org.oakgp.TreeGenerator;
+import java.util.function.Predicate;
+
+import org.oakgp.evolve.GeneticOperator;
 import org.oakgp.node.Node;
-import org.oakgp.node.NodeType;
 import org.oakgp.select.NodeSelector;
 import org.oakgp.util.Random;
+import org.oakgp.util.Utils;
 
-/** Replaces a randomly selected terminal node of the parent with a subtree. */
-public final class ConstantToFunctionMutation implements GeneticOperator {
+/**
+ * Selects a subtree of the parent as a new offspring.
+ * <p>
+ * The resulting offspring will be smaller than the parent.
+ */
+public final class HoistMutation implements GeneticOperator {
    private final Random random;
-   private final TreeGenerator treeGenerator;
 
-   public ConstantToFunctionMutation(Random random, TreeGenerator treeGenerator) {
+   public HoistMutation(Random random) {
       this.random = random;
-      this.treeGenerator = treeGenerator;
    }
 
    @Override
    public Node evolve(NodeSelector selector) {
       Node root = selector.next();
-      int nodeCount = root.getNodeCount(NodeType::isTerminal);
-      int index = random.nextInt(nodeCount);
-      return root.replaceAt(index, n -> treeGenerator.generate(n.getType(), 2), NodeType::isTerminal);
+      Predicate<Node> treeWalkerStrategy = n -> n.getType() == root.getType();
+      int nodeCount = root.getNodeCount(treeWalkerStrategy);
+      if (nodeCount == 1) {
+         // if node count == 1 then that indicates that the only node with the same return type
+         // as the root node is the root node itself
+         return root;
+      } else {
+         int index = Utils.selectSubNodeIndex(random, nodeCount);
+         return root.getAt(index, treeWalkerStrategy);
+      }
    }
 }

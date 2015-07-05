@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.oakgp;
+package org.oakgp.evolve;
 
 import static java.lang.Math.min;
 
@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.oakgp.RankedCandidate;
 import org.oakgp.node.Node;
 import org.oakgp.select.NodeSelector;
 import org.oakgp.select.NodeSelectorFactory;
