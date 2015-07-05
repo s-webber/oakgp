@@ -80,7 +80,7 @@ public final class RunBuilder {
       return new RandomSetter();
    }
 
-   public class RandomSetter extends PrimitiveSetSetter {
+   public final class RandomSetter extends PrimitiveSetSetter {
       private RandomSetter() {
       }
 
@@ -109,7 +109,7 @@ public final class RunBuilder {
       }
    }
 
-   public class VariablesSetter {
+   public final class VariablesSetter {
       private final ConstantSet constantSet;
 
       private VariablesSetter(final ConstantSet constantSet) {
@@ -122,7 +122,7 @@ public final class RunBuilder {
       }
    }
 
-   public class VariablesRatioSetter implements FunctionSetSetter {
+   public final class VariablesRatioSetter implements FunctionSetSetter {
       private final ConstantSet constantSet;
       private final VariableSet variableSet;
 
@@ -142,7 +142,7 @@ public final class RunBuilder {
       }
    }
 
-   public class FunctionSetSetterImpl implements FunctionSetSetter {
+   public final class FunctionSetSetterImpl implements FunctionSetSetter {
       private final ConstantSet constantSet;
       private final VariableSet variableSet;
       private final double ratioVariables;
@@ -185,7 +185,7 @@ public final class RunBuilder {
       GenerationProcessorSetter setFunctionSet(Function... functions);
    }
 
-   public class GenerationProcessorSetter {
+   public final class GenerationProcessorSetter {
       private GenerationProcessorSetter() {
       }
 
@@ -220,7 +220,7 @@ public final class RunBuilder {
       }
    }
 
-   public class GenerationEvolverSetter extends InitialPopulationSetter {
+   public final class GenerationEvolverSetter extends InitialPopulationSetter {
       private GenerationEvolverSetter() {
          useDefaultGenerationEvolver();
       }
@@ -291,7 +291,7 @@ public final class RunBuilder {
       }
    }
 
-   public class FirstTerminatorSetter {
+   public final class FirstTerminatorSetter {
       private final List<Predicate<List<RankedCandidate>>> terminators = new ArrayList<>();
 
       private FirstTerminatorSetter() {
@@ -302,7 +302,7 @@ public final class RunBuilder {
          return new SubsequentTerminatorSetter(terminators);
       }
 
-      public final MaxGenerationsTerminatorSetter setTargetFitness(double targetFitness) {
+      public MaxGenerationsTerminatorSetter setTargetFitness(double targetFitness) {
          return new TargetFitnessTerminatorSetter(terminators).setTargetFitness(targetFitness);
       }
 
@@ -315,7 +315,7 @@ public final class RunBuilder {
       }
    }
 
-   public class SubsequentTerminatorSetter extends MaxGenerationsTerminatorSetter {
+   public final class SubsequentTerminatorSetter extends MaxGenerationsTerminatorSetter {
       private SubsequentTerminatorSetter(List<Predicate<List<RankedCandidate>>> terminators) {
          super(terminators);
       }
@@ -326,12 +326,12 @@ public final class RunBuilder {
       }
    }
 
-   public class TargetFitnessTerminatorSetter extends MaxGenerationsTerminatorSetter {
+   public final class TargetFitnessTerminatorSetter extends MaxGenerationsTerminatorSetter {
       private TargetFitnessTerminatorSetter(List<Predicate<List<RankedCandidate>>> terminators) {
          super(terminators);
       }
 
-      public final MaxGenerationsTerminatorSetter setTargetFitness(double targetFitness) {
+      public MaxGenerationsTerminatorSetter setTargetFitness(double targetFitness) {
          terminators.add(new TargetFitnessTerminator(c -> c.getFitness() == targetFitness));
          return new MaxGenerationsTerminatorSetter(terminators);
       }
@@ -365,7 +365,7 @@ public final class RunBuilder {
       }
    }
 
-   public class ProcessRunner {
+   public final class ProcessRunner {
       private Predicate<List<RankedCandidate>> terminator;
 
       @SuppressWarnings("unchecked")
@@ -396,7 +396,7 @@ public final class RunBuilder {
       }
    }
 
-   public class Config {
+   public final class Config {
       public PrimitiveSet getPrimitiveSet() {
          return _primitiveSet;
       }
