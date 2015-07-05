@@ -13,11 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.oakgp;
+package org.oakgp.generate;
 
 import java.util.Objects;
 import java.util.function.IntPredicate;
 
+import org.oakgp.PrimitiveSet;
+import org.oakgp.Type;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
 import org.oakgp.node.FunctionNode;

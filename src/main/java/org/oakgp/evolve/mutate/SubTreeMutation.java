@@ -15,8 +15,8 @@
  */
 package org.oakgp.evolve.mutate;
 
-import org.oakgp.TreeGenerator;
 import org.oakgp.evolve.GeneticOperator;
+import org.oakgp.generate.TreeGenerator;
 import org.oakgp.node.Node;
 import org.oakgp.select.NodeSelector;
 import org.oakgp.util.Random;

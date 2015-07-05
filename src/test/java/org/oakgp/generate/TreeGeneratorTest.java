@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.oakgp;
+package org.oakgp.generate;
 
 import static org.oakgp.TestUtils.assertNodeEquals;
 import static org.oakgp.TestUtils.integerConstant;
@@ -23,6 +23,14 @@ import static org.oakgp.function.math.IntegerUtils.INTEGER_UTILS;
 import static org.oakgp.util.DummyRandom.random;
 
 import org.junit.Test;
+import org.oakgp.Arguments;
+import org.oakgp.Assignments;
+import org.oakgp.ConstantSet;
+import org.oakgp.FunctionSet;
+import org.oakgp.PrimitiveSet;
+import org.oakgp.PrimitiveSetImpl;
+import org.oakgp.Type;
+import org.oakgp.VariableSet;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
 import org.oakgp.node.ConstantNode;

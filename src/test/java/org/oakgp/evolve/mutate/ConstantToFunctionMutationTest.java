@@ -25,7 +25,7 @@ import static org.oakgp.Type.integerType;
 import static org.oakgp.util.DummyRandom.GetIntExpectation.nextInt;
 
 import org.junit.Test;
-import org.oakgp.TreeGenerator;
+import org.oakgp.generate.TreeGenerator;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
 import org.oakgp.select.DummyNodeSelector;
