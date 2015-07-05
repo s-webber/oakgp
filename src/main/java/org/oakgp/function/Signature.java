@@ -1,30 +1,32 @@
 /*
  * Copyright 2015 S. Webber
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.oakgp;
+package org.oakgp.function;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import org.oakgp.Type;
 
 /**
  * Represents the type signature of a {@code Function}.
  * <p>
  * A signature includes the return type, the number of arguments and the type of each argument.
  */
-public final class Signature { // TODO move to org.oakgp.function?
+public final class Signature {
    private final Type returnType;
    private final Type[] argumentTypes;
    private final int hashCode;
