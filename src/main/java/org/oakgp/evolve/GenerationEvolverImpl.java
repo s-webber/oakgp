@@ -31,9 +31,9 @@ import org.oakgp.util.NodeSet;
 public final class GenerationEvolverImpl implements GenerationEvolver {
    private final int elitismSize;
    private final NodeSelectorFactory selectorFactory;
-   private final Map<GeneticOperator, Long> operators;
+   private final Map<GeneticOperator, Integer> operators;
 
-   public GenerationEvolverImpl(int elitismSize, NodeSelectorFactory selectorFactory, Map<GeneticOperator, Long> operators) {
+   public GenerationEvolverImpl(int elitismSize, NodeSelectorFactory selectorFactory, Map<GeneticOperator, Integer> operators) {
       this.elitismSize = elitismSize;
       this.selectorFactory = selectorFactory;
       this.operators = operators;
@@ -56,9 +56,9 @@ public final class GenerationEvolverImpl implements GenerationEvolver {
          newGeneration.add(oldGeneration.get(i).getNode());
       }
 
-      for (Map.Entry<GeneticOperator, Long> e : operators.entrySet()) {
+      for (Map.Entry<GeneticOperator, Integer> e : operators.entrySet()) {
          GeneticOperator operator = e.getKey();
-         long count = e.getValue();
+         int count = e.getValue();
          for (int i = 0; i < count; i++) {
             newGeneration.add(operator.evolve(selector));
          }

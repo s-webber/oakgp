@@ -24,8 +24,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Predicate;
+import java.util.logging.Logger;
 
 import org.oakgp.Runner;
 import org.oakgp.Type;
@@ -64,7 +64,6 @@ import org.oakgp.terminate.TargetFitnessTerminator;
 /** Provides a convenient way to configure and start a genetic programming run. */
 public final class RunBuilder {
    private static final Random RANDOM = new JavaUtilRandomAdapter();
-   private static final int ELITISM_SIZE = 3; // TODO
    private static final double RATIO_VARIABLES = .6;
    private static final int DEFAULT_CACHE_SIZE = 10000;
 
@@ -190,12 +189,12 @@ public final class RunBuilder {
       }
 
       // TODO use and an example and then add to how2 guide
-      public GenerationEvolverSetter setGenerationProcessor(final GenerationProcessor generationProcessor) {
+      public InitialPopulationSetter setGenerationProcessor(final GenerationProcessor generationProcessor) {
          _generationProcessor = requireNonNull(generationProcessor);
-         return new GenerationEvolverSetter();
+         return new InitialPopulationSetter();
       }
 
-      public GenerationEvolverSetter setFitnessFunction(final FitnessFunction fitnessFunction) {
+      public InitialPopulationSetter setFitnessFunction(final FitnessFunction fitnessFunction) {
          return setGenerationProcessor(new FitnessFunctionGenerationProcessor(ensureCached(fitnessFunction)));
       }
 
@@ -207,7 +206,7 @@ public final class RunBuilder {
          }
       }
 
-      public GenerationEvolverSetter setTwoPlayerGame(final TwoPlayerGame twoPlayerGame) {
+      public InitialPopulationSetter setTwoPlayerGame(final TwoPlayerGame twoPlayerGame) {
          return setGenerationProcessor(new RoundRobinTournament(ensureCached(twoPlayerGame)));
       }
 
@@ -220,38 +219,6 @@ public final class RunBuilder {
       }
    }
 
-   public final class GenerationEvolverSetter extends InitialPopulationSetter {
-      private GenerationEvolverSetter() {
-         useDefaultGenerationEvolver();
-      }
-
-      private void useDefaultGenerationEvolver() {
-         NodeSelectorFactory nodeSelectorFactory = new WeightedNodeSelectorFactory(_random);
-         GenerationEvolver generationEvolver = new GenerationEvolverImpl(ELITISM_SIZE, nodeSelectorFactory, createDefaultGeneticOperators());
-         setGenerationEvolver(generationEvolver);
-      }
-
-      private Map<GeneticOperator, Long> createDefaultGeneticOperators() {
-         Map<GeneticOperator, Long> operators = new HashMap<>();
-         TreeGenerator treeGenerator = TreeGeneratorImpl.grow(_primitiveSet, _random);
-         operators.put(t -> treeGenerator.generate(_returnType, 4), 4L);
-         operators.put(new SubtreeCrossover(_random), 19L);
-         operators.put(new PointMutation(_random, _primitiveSet), 19L);
-         operators.put(new SubTreeMutation(_random, treeGenerator), 2L);
-         operators.put(new ConstantToFunctionMutation(_random, TreeGeneratorImpl.full(_primitiveSet)), 2L);
-         return operators;
-      }
-
-      public InitialPopulationSetter setGenerationEvolver(final java.util.function.Function<Config, GenerationEvolver> generationEvolver) {
-         return setGenerationEvolver(generationEvolver.apply(new Config()));
-      }
-
-      private InitialPopulationSetter setGenerationEvolver(GenerationEvolver generationEvolver) {
-         _generationEvolver = requireNonNull(generationEvolver);
-         return new InitialPopulationSetter();
-      }
-   }
-
    public class InitialPopulationSetter {
       private InitialPopulationSetter() {
       }
@@ -261,9 +228,9 @@ public final class RunBuilder {
          return setInitialPopulation(initialGeneration.apply(new Config()));
       }
 
-      private FirstTerminatorSetter setInitialPopulation(Collection<Node> initialGeneration) {
+      private GenerationEvolverSetter setInitialPopulation(Collection<Node> initialGeneration) {
          _initialPopulation = requireNonNull(initialGeneration);
-         return new FirstTerminatorSetter();
+         return new GenerationEvolverSetter();
       }
 
       public TreeDepthSetter setInitialPopulationSize(final int generationSize) {
@@ -277,11 +244,15 @@ public final class RunBuilder {
             this.generationSize = requiresPositive(generationSize);
          }
 
-         public FirstTerminatorSetter setTreeDepth(final int treeDepth) {
+         public GenerationEvolverSetter setTreeDepth(final int treeDepth) {
             requiresPositive(treeDepth);
 
-            Set<Node> initialPopulation = new NodeSet();
+            // TODO use Set<Node> initialPopulation = new NodeSet();?
+            // TODO do 50:50 split of grow/full?
+            Collection<Node> initialPopulation = new ArrayList<>();
             TreeGenerator treeGenerator = TreeGeneratorImpl.grow(_primitiveSet, _random);
+            // use 'while' rather than 'for' as 'generate' may return duplicates,
+            // and we want 'generationSize' unique solutions
             for (int i = 0; i < generationSize; i++) {
                Node n = treeGenerator.generate(_returnType, treeDepth);
                initialPopulation.add(n);
@@ -291,7 +262,48 @@ public final class RunBuilder {
       }
    }
 
-   public final class FirstTerminatorSetter {
+   public final class GenerationEvolverSetter extends FirstTerminatorSetter {
+      private GenerationEvolverSetter() {
+         GenerationEvolver defaultGenerationEvolver = createDefaultGenerationEvolver();
+         setGenerationEvolver(defaultGenerationEvolver);
+      }
+
+      private GenerationEvolver createDefaultGenerationEvolver() {
+         int populationSize = _initialPopulation.size();
+         NodeSelectorFactory nodeSelectorFactory = new WeightedNodeSelectorFactory(_random);
+         Map<GeneticOperator, Integer> operators = createDefaultGeneticOperators(populationSize);
+         int operatorsSize = operators.values().stream().mapToInt(l -> l).sum();
+         int elitismSize = populationSize - operatorsSize;
+         Logger.getGlobal().info("total: " + populationSize + " elitism: " + elitismSize + " " + operators);
+         return new GenerationEvolverImpl(elitismSize, nodeSelectorFactory, operators);
+      }
+
+      private Map<GeneticOperator, Integer> createDefaultGeneticOperators(int populationSize) {
+         Map<GeneticOperator, Integer> operators = new HashMap<>();
+         TreeGenerator treeGenerator = TreeGeneratorImpl.grow(_primitiveSet, _random);
+         operators.put(t -> treeGenerator.generate(_returnType, 4), ratio(populationSize, .08));
+         operators.put(new SubtreeCrossover(_random, 5), ratio(populationSize, .4));
+         operators.put(new PointMutation(_random, _primitiveSet), ratio(populationSize, .4));
+         operators.put(new SubTreeMutation(_random, treeGenerator), ratio(populationSize, .04));
+         operators.put(new ConstantToFunctionMutation(_random, TreeGeneratorImpl.full(_primitiveSet)), ratio(populationSize, .04));
+         return operators;
+      }
+
+      private int ratio(int whole, double ratio) {
+         return (int) (whole * ratio);
+      }
+
+      public InitialPopulationSetter setGenerationEvolver(final java.util.function.Function<Config, GenerationEvolver> generationEvolver) {
+         return setGenerationEvolver(generationEvolver.apply(new Config()));
+      }
+
+      private InitialPopulationSetter setGenerationEvolver(GenerationEvolver generationEvolver) {
+         _generationEvolver = requireNonNull(generationEvolver);
+         return new InitialPopulationSetter();
+      }
+   }
+
+   public class FirstTerminatorSetter {
       private final List<Predicate<List<RankedCandidate>>> terminators = new ArrayList<>();
 
       private FirstTerminatorSetter() {
@@ -380,11 +392,19 @@ public final class RunBuilder {
       }
 
       public Node process() {
+         assertVariablesSet();
          RankedCandidate best = Runner.process(_generationProcessor, _generationEvolver, terminator, _initialPopulation);
          System.out.println("Best: " + best);
          Node simplifiedBestNode = simplify(best.getNode());
          System.out.println(simplifiedBestNode);
          return simplifiedBestNode;
+      }
+
+      private void assertVariablesSet() {
+         requireNonNull(_generationProcessor);
+         requireNonNull(_generationEvolver);
+         requireNonNull(terminator);
+         requireNonNull(_initialPopulation);
       }
    }
 
