@@ -86,7 +86,7 @@ public final class NodeReader implements Closeable {
       if (firstToken == FUNCTION_START_STRING) {
          return nextFunctionNode();
       } else if (firstToken == STRING_STRING) {
-         return nextConstantNode();
+         return nextStringConstantNode();
       } else if (firstToken == ARRAY_START_STRING) {
          return nextArrayConstantNode();
       } else if (firstToken.charAt(0) == 'v') {
@@ -110,7 +110,7 @@ public final class NodeReader implements Closeable {
       return new FunctionNode(function, createArguments(arguments));
    }
 
-   private Node nextConstantNode() throws IOException {
+   private Node nextStringConstantNode() throws IOException {
       StringBuilder sb = new StringBuilder();
       int next;
       while ((next = cr.next()) != STRING_CHAR) {
