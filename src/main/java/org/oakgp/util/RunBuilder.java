@@ -55,7 +55,7 @@ import org.oakgp.primitive.PrimitiveSet;
 import org.oakgp.primitive.PrimitiveSetImpl;
 import org.oakgp.primitive.VariableSet;
 import org.oakgp.select.NodeSelectorFactory;
-import org.oakgp.select.WeightedNodeSelectorFactory;
+import org.oakgp.select.RankSelectionFactory;
 import org.oakgp.terminate.CompositeTerminator;
 import org.oakgp.terminate.MaxGenerationsTerminator;
 import org.oakgp.terminate.MaxGenerationsWithoutImprovementTerminator;
@@ -251,8 +251,6 @@ public final class RunBuilder {
             // TODO do 50:50 split of grow/full?
             Collection<Node> initialPopulation = new ArrayList<>();
             TreeGenerator treeGenerator = TreeGeneratorImpl.grow(_primitiveSet, _random);
-            // use 'while' rather than 'for' as 'generate' may return duplicates,
-            // and we want 'generationSize' unique solutions
             for (int i = 0; i < generationSize; i++) {
                Node n = treeGenerator.generate(_returnType, treeDepth);
                initialPopulation.add(n);
@@ -270,7 +268,7 @@ public final class RunBuilder {
 
       private GenerationEvolver createDefaultGenerationEvolver() {
          int populationSize = _initialPopulation.size();
-         NodeSelectorFactory nodeSelectorFactory = new WeightedNodeSelectorFactory(_random);
+         NodeSelectorFactory nodeSelectorFactory = new RankSelectionFactory(_random);
          Map<GeneticOperator, Integer> operators = createDefaultGeneticOperators(populationSize);
          int operatorsSize = operators.values().stream().mapToInt(l -> l).sum();
          int elitismSize = populationSize - operatorsSize;
