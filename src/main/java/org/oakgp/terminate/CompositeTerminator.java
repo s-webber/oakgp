@@ -18,7 +18,7 @@ package org.oakgp.terminate;
 import java.util.List;
 import java.util.function.Predicate;
 
-import org.oakgp.evaluate.RankedCandidate;
+import org.oakgp.rank.RankedCandidate;
 
 /**
  * A predicate that will return {@code true} when any of it component predicates return {@code true}.

@@ -17,8 +17,8 @@ package org.oakgp.select;
 
 import java.util.List;
 
-import org.oakgp.evaluate.RankedCandidate;
 import org.oakgp.node.Node;
+import org.oakgp.rank.RankedCandidate;
 import org.oakgp.util.Random;
 
 /** The <i>relative</i> fitness of candidates is used to determine the probability that they will be selected. */

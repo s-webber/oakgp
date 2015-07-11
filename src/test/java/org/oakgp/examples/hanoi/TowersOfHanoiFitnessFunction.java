@@ -19,8 +19,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.oakgp.Assignments;
-import org.oakgp.evaluate.fitness.FitnessFunction;
 import org.oakgp.node.Node;
+import org.oakgp.rank.fitness.FitnessFunction;
 
 /** Determines the fitness of potential solutions to the Towers of Hanoi puzzle. */
 class TowersOfHanoiFitnessFunction implements FitnessFunction {

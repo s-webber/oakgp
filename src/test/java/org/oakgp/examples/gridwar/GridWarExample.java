@@ -19,8 +19,6 @@ import static org.oakgp.Type.integerType;
 import static org.oakgp.util.Utils.createIntegerTypeArray;
 
 import org.oakgp.Type;
-import org.oakgp.evaluate.tournament.FirstPlayerAdvantageGame;
-import org.oakgp.evaluate.tournament.TwoPlayerGame;
 import org.oakgp.function.Function;
 import org.oakgp.function.choice.If;
 import org.oakgp.function.compare.Equal;
@@ -31,6 +29,8 @@ import org.oakgp.function.compare.LessThanOrEqual;
 import org.oakgp.function.compare.NotEqual;
 import org.oakgp.function.math.IntegerUtils;
 import org.oakgp.node.ConstantNode;
+import org.oakgp.rank.tournament.FirstPlayerAdvantageGame;
+import org.oakgp.rank.tournament.TwoPlayerGame;
 import org.oakgp.util.JavaUtilRandomAdapter;
 import org.oakgp.util.Random;
 import org.oakgp.util.RunBuilder;
@@ -53,6 +53,6 @@ public class GridWarExample {
       TwoPlayerGame game = new FirstPlayerAdvantageGame(new GridWar(random));
 
       new RunBuilder().setReturnType(integerType()).setConstants(constants).setVariables(variables).setFunctionSet(functions).setTwoPlayerGame(game)
-      .setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_POPULATION_MAX_DEPTH).setMaxGenerations(NUM_GENERATIONS).process();
+            .setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_POPULATION_MAX_DEPTH).setMaxGenerations(NUM_GENERATIONS).process();
    }
 }

@@ -17,8 +17,8 @@ package org.oakgp.select;
 
 import java.util.List;
 
-import org.oakgp.evaluate.RankedCandidate;
 import org.oakgp.node.Node;
+import org.oakgp.rank.RankedCandidate;
 import org.oakgp.util.Random;
 
 /** Randomly selects nodes - with a bias to selecting nodes that have the best fitness. */

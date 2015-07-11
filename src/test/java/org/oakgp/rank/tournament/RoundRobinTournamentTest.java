@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.oakgp.evaluate.fitness;
+package org.oakgp.rank.tournament;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
@@ -24,35 +24,32 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Test;
-import org.oakgp.evaluate.GenerationProcessor;
-import org.oakgp.evaluate.RankedCandidate;
 import org.oakgp.node.Node;
+import org.oakgp.rank.GenerationProcessor;
+import org.oakgp.rank.RankedCandidate;
 
-public class FitnessFunctionGenerationProcessorTest {
+public class RoundRobinTournamentTest {
    @Test
    public void test() {
       // test data
       Node a = integerConstant(1);
-      double aFitness = 9;
       Node b = integerConstant(2);
-      double bFitness = 12;
       Node c = integerConstant(3);
-      double cFitness = 8;
       List<Node> input = Arrays.asList(a, b, c);
 
       // mock
-      FitnessFunction mockFitnessFunction = mock(FitnessFunction.class);
-      given(mockFitnessFunction.evaluate(a)).willReturn(aFitness);
-      given(mockFitnessFunction.evaluate(b)).willReturn(bFitness);
-      given(mockFitnessFunction.evaluate(c)).willReturn(cFitness);
+      TwoPlayerGame mockGame = mock(TwoPlayerGame.class);
+      given(mockGame.evaluate(a, b)).willReturn(5d);
+      given(mockGame.evaluate(a, c)).willReturn(-3d);
+      given(mockGame.evaluate(b, c)).willReturn(2d);
 
       // invoke process method
-      GenerationProcessor generationProcessor = new FitnessFunctionGenerationProcessor(mockFitnessFunction);
-      List<RankedCandidate> output = generationProcessor.process(input);
+      GenerationProcessor tournament = new RoundRobinTournament(mockGame);
+      List<RankedCandidate> output = tournament.process(input);
 
       // assert output
-      assertRankedCandidate(output.get(0), c, cFitness);
-      assertRankedCandidate(output.get(1), a, aFitness);
-      assertRankedCandidate(output.get(2), b, bFitness);
+      assertRankedCandidate(output.get(0), a, 2);
+      assertRankedCandidate(output.get(1), c, 1);
+      assertRankedCandidate(output.get(2), b, -3);
    }
 }

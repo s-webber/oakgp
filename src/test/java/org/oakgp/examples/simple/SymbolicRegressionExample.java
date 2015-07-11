@@ -20,11 +20,11 @@ import java.util.Map;
 
 import org.oakgp.Assignments;
 import org.oakgp.Type;
-import org.oakgp.evaluate.fitness.FitnessFunction;
-import org.oakgp.evaluate.fitness.TestDataFitnessFunction;
 import org.oakgp.function.Function;
 import org.oakgp.function.math.IntegerUtils;
 import org.oakgp.node.ConstantNode;
+import org.oakgp.rank.fitness.FitnessFunction;
+import org.oakgp.rank.fitness.TestDataFitnessFunction;
 import org.oakgp.util.RunBuilder;
 import org.oakgp.util.Utils;
 

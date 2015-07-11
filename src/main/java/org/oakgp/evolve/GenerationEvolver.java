@@ -18,8 +18,8 @@ package org.oakgp.evolve;
 import java.util.Collection;
 import java.util.List;
 
-import org.oakgp.evaluate.RankedCandidate;
 import org.oakgp.node.Node;
+import org.oakgp.rank.RankedCandidate;
 
 /** Creates a new generation of {@code Node} instances evolved from an existing generation. */
 @FunctionalInterface

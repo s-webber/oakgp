@@ -18,8 +18,8 @@ package org.oakgp.examples.tictactoe;
 import static org.oakgp.examples.tictactoe.Symbol.X;
 
 import org.oakgp.Assignments;
-import org.oakgp.evaluate.tournament.TwoPlayerGame;
 import org.oakgp.node.Node;
+import org.oakgp.rank.tournament.TwoPlayerGame;
 
 class TicTacToe implements TwoPlayerGame {
    @Override

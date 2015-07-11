@@ -28,8 +28,8 @@ import java.util.function.Predicate;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.oakgp.evaluate.RankedCandidate;
 import org.oakgp.node.Node;
+import org.oakgp.rank.RankedCandidate;
 
 public class CompositeTerminatorTest {
    private final List<RankedCandidate> candidates = Collections.singletonList(new RankedCandidate(mock(Node.class), 1));

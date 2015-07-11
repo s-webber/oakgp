@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.oakgp.evaluate.fitness;
+package org.oakgp.rank.fitness;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;

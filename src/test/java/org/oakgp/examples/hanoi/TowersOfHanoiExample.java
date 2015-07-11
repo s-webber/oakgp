@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.oakgp.Type;
-import org.oakgp.evaluate.fitness.FitnessFunction;
 import org.oakgp.function.Function;
 import org.oakgp.function.choice.If;
 import org.oakgp.function.choice.SwitchEnum;
@@ -35,6 +34,7 @@ import org.oakgp.function.compare.LessThan;
 import org.oakgp.function.math.IntegerUtils;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
+import org.oakgp.rank.fitness.FitnessFunction;
 import org.oakgp.util.RunBuilder;
 import org.oakgp.util.Utils;
 

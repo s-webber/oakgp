@@ -19,10 +19,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Predicate;
 
-import org.oakgp.evaluate.GenerationProcessor;
-import org.oakgp.evaluate.RankedCandidate;
 import org.oakgp.evolve.GenerationEvolver;
 import org.oakgp.node.Node;
+import org.oakgp.rank.GenerationProcessor;
+import org.oakgp.rank.RankedCandidate;
 
 /** Performs a Genetic Programming run. */
 public final class Runner {

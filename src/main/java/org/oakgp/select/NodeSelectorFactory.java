@@ -17,7 +17,7 @@ package org.oakgp.select;
 
 import java.util.List;
 
-import org.oakgp.evaluate.RankedCandidate;
+import org.oakgp.rank.RankedCandidate;
 
 /** Returns instances of {@code NodeSelector}. */
 @FunctionalInterface

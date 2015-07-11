@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.oakgp.evaluate.fitness;
+package org.oakgp.rank.fitness;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import org.oakgp.evaluate.GenerationProcessor;
-import org.oakgp.evaluate.RankedCandidate;
 import org.oakgp.node.Node;
+import org.oakgp.rank.GenerationProcessor;
+import org.oakgp.rank.RankedCandidate;
 
 /** Ranks and sorts the fitness of {@code Node} instances using a {@code FitnessFunction}. */
 public final class FitnessFunctionGenerationProcessor implements GenerationProcessor {

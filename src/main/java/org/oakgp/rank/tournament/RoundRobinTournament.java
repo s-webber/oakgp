@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.oakgp.evaluate.tournament;
+package org.oakgp.rank.tournament;
 
 import static java.util.Collections.reverseOrder;
 import static java.util.Collections.sort;
@@ -22,9 +22,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.oakgp.evaluate.GenerationProcessor;
-import org.oakgp.evaluate.RankedCandidate;
 import org.oakgp.node.Node;
+import org.oakgp.rank.GenerationProcessor;
+import org.oakgp.rank.RankedCandidate;
 
 /** Ranks and sorts the fitness of {@code Node} instances using a {@code TwoPlayerGame} in a round-robin tournament. */
 public final class RoundRobinTournament implements GenerationProcessor {

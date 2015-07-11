@@ -18,7 +18,7 @@ package org.oakgp.terminate;
 import java.util.List;
 import java.util.function.Predicate;
 
-import org.oakgp.evaluate.RankedCandidate;
+import org.oakgp.rank.RankedCandidate;
 
 /**
  * A predicate that returns {@code true} when a candidate has been found that fulfils the specified criteria.

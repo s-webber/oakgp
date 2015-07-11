@@ -22,8 +22,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.oakgp.evaluate.RankedCandidate;
 import org.oakgp.node.Node;
+import org.oakgp.rank.RankedCandidate;
 import org.oakgp.select.NodeSelector;
 import org.oakgp.select.NodeSelectorFactory;
 import org.oakgp.util.NodeSet;

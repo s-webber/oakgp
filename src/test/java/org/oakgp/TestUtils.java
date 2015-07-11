@@ -30,7 +30,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.oakgp.evaluate.RankedCandidate;
 import org.oakgp.function.Function;
 import org.oakgp.function.choice.If;
 import org.oakgp.function.choice.OrElse;
@@ -53,6 +52,7 @@ import org.oakgp.node.Node;
 import org.oakgp.node.VariableNode;
 import org.oakgp.primitive.FunctionSet;
 import org.oakgp.primitive.VariableSet;
+import org.oakgp.rank.RankedCandidate;
 import org.oakgp.serialize.NodeReader;
 import org.oakgp.serialize.NodeWriter;
 

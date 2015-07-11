@@ -23,8 +23,8 @@ import java.util.Collections;
 import java.util.List;
 
 import org.junit.Test;
-import org.oakgp.evaluate.RankedCandidate;
 import org.oakgp.node.Node;
+import org.oakgp.rank.RankedCandidate;
 
 public class MaxGenerationsTerminatorTest {
    @Test

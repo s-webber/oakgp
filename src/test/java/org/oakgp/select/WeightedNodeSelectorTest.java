@@ -22,8 +22,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Test;
-import org.oakgp.evaluate.RankedCandidate;
 import org.oakgp.node.Node;
+import org.oakgp.rank.RankedCandidate;
 import org.oakgp.util.DummyRandom;
 
 public class WeightedNodeSelectorTest {
