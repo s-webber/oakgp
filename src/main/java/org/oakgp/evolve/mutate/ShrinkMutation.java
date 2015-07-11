@@ -18,6 +18,7 @@ package org.oakgp.evolve.mutate;
 import org.oakgp.evolve.GeneticOperator;
 import org.oakgp.node.Node;
 import org.oakgp.node.NodeType;
+import org.oakgp.node.walk.StrategyWalk;
 import org.oakgp.primitive.PrimitiveSet;
 import org.oakgp.select.NodeSelector;
 import org.oakgp.util.Random;
@@ -40,7 +41,7 @@ public final class ShrinkMutation implements GeneticOperator {
    @Override
    public Node evolve(NodeSelector selector) {
       Node root = selector.next();
-      int nodeCount = root.getNodeCount(NodeType::isFunction);
+      int nodeCount = StrategyWalk.getNodeCount(root, NodeType::isFunction);
       if (nodeCount == 0) {
          // if nodeCount == 0 then that indicates that 'root' is a terminal node
          // (so can't be shrunk any further)
@@ -51,7 +52,7 @@ public final class ShrinkMutation implements GeneticOperator {
          return primitiveSet.nextAlternativeTerminal(root);
       } else {
          int index = Utils.selectSubNodeIndex(random, nodeCount);
-         return root.replaceAt(index, (n) -> primitiveSet.nextAlternativeTerminal(n), NodeType::isFunction);
+         return StrategyWalk.replaceAt(root, index, (n) -> primitiveSet.nextAlternativeTerminal(n), NodeType::isFunction);
       }
    }
 }

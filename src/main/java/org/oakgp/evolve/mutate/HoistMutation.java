@@ -19,6 +19,7 @@ import java.util.function.Predicate;
 
 import org.oakgp.evolve.GeneticOperator;
 import org.oakgp.node.Node;
+import org.oakgp.node.walk.StrategyWalk;
 import org.oakgp.select.NodeSelector;
 import org.oakgp.util.Random;
 import org.oakgp.util.Utils;
@@ -39,14 +40,14 @@ public final class HoistMutation implements GeneticOperator {
    public Node evolve(NodeSelector selector) {
       Node root = selector.next();
       Predicate<Node> treeWalkerStrategy = n -> n.getType() == root.getType();
-      int nodeCount = root.getNodeCount(treeWalkerStrategy);
+      int nodeCount = StrategyWalk.getNodeCount(root, treeWalkerStrategy);
       if (nodeCount == 1) {
          // if node count == 1 then that indicates that the only node with the same return type
          // as the root node is the root node itself
          return root;
       } else {
          int index = Utils.selectSubNodeIndex(random, nodeCount);
-         return root.getAt(index, treeWalkerStrategy);
+         return StrategyWalk.getAt(root, index, treeWalkerStrategy);
       }
    }
 }

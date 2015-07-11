@@ -1,12 +1,12 @@
 /*
  * Copyright 2015 S. Webber
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,7 +32,6 @@ import static org.oakgp.function.math.IntegerUtils.INTEGER_UTILS;
 import static org.oakgp.node.NodeType.isConstant;
 import static org.oakgp.node.NodeType.isFunction;
 import static org.oakgp.node.NodeType.isVariable;
-import static org.oakgp.util.Utils.TRUE_NODE;
 
 import java.util.function.Predicate;
 
@@ -132,58 +131,6 @@ public class FunctionNodeTest {
       Node n = readNode(expression);
       assertEquals(nodeCount, n.getNodeCount());
       assertEquals(height, n.getHeight());
-   }
-
-   @Test
-   public void testCountStrategy() {
-      Node tree = readNode("(+ (+ 1 v0) (+ (+ v0 v1) 2))");
-      assertEquals(3, tree.getNodeCount(NodeType::isVariable));
-      assertEquals(2, tree.getNodeCount(NodeType::isConstant));
-      assertEquals(4, tree.getNodeCount(NodeType::isFunction));
-   }
-
-   @Test
-   public void testGetStrategy() {
-      VariableNode v0 = createVariable(0);
-      VariableNode v1 = createVariable(1);
-      VariableNode v2 = createVariable(2);
-      ConstantNode c1 = integerConstant(0);
-      Function f = INTEGER_UTILS.getAdd();
-      FunctionNode branch1 = new FunctionNode(f, v0, c1);
-      FunctionNode branch2 = new FunctionNode(f, v2, v1);
-      FunctionNode tree = new FunctionNode(f, branch1, branch2);
-
-      assertSame(v0, tree.getAt(0, NodeType::isVariable));
-      assertSame(v2, tree.getAt(1, NodeType::isVariable));
-      assertSame(v1, tree.getAt(2, NodeType::isVariable));
-
-      assertSame(c1, tree.getAt(0, NodeType::isConstant));
-
-      assertSame(branch1, tree.getAt(0, NodeType::isFunction));
-      assertSame(branch2, tree.getAt(1, NodeType::isFunction));
-      assertSame(tree, tree.getAt(2, NodeType::isFunction));
-   }
-
-   @Test
-   public void testReplaceStrategy() {
-      String input = "(+ (+ 1 v0) (+ (+ v0 v1) 2))";
-
-      assertReplaceStrategy(input, 0, NodeType::isVariable, "(+ (+ 1 true) (+ (+ v0 v1) 2))");
-      assertReplaceStrategy(input, 1, NodeType::isVariable, "(+ (+ 1 v0) (+ (+ true v1) 2))");
-      assertReplaceStrategy(input, 2, NodeType::isVariable, "(+ (+ 1 v0) (+ (+ v0 true) 2))");
-
-      assertReplaceStrategy(input, 0, NodeType::isConstant, "(+ (+ true v0) (+ (+ v0 v1) 2))");
-      assertReplaceStrategy(input, 1, NodeType::isConstant, "(+ (+ 1 v0) (+ (+ v0 v1) true))");
-
-      assertReplaceStrategy(input, 0, NodeType::isFunction, "(+ true (+ (+ v0 v1) 2))");
-      assertReplaceStrategy(input, 1, NodeType::isFunction, "(+ (+ 1 v0) (+ true 2))");
-      assertReplaceStrategy(input, 2, NodeType::isFunction, "(+ (+ 1 v0) true)");
-      assertReplaceStrategy(input, 3, NodeType::isFunction, "true");
-   }
-
-   private void assertReplaceStrategy(String input, int index, Predicate<Node> treeWalkerStrategy, String expected) {
-      Node actual = readNode(input).replaceAt(index, n -> TRUE_NODE, treeWalkerStrategy);
-      assertNodeEquals(expected, actual);
    }
 
    @Test

@@ -92,36 +92,6 @@ public final class FunctionNode implements Node {
    }
 
    @Override
-   public Node replaceAt(int index, java.util.function.Function<Node, Node> replacement) {
-      int total = 0;
-      for (int i = 0; i < arguments.getArgCount(); i++) {
-         Node node = arguments.getArg(i);
-         int c = node.getNodeCount();
-         if (total + c > index) {
-            return new FunctionNode(function, arguments.replaceAt(i, node.replaceAt(index - total, replacement)));
-         } else {
-            total += c;
-         }
-      }
-      return replacement.apply(this);
-   }
-
-   @Override
-   public Node replaceAt(int index, java.util.function.Function<Node, Node> replacement, Predicate<Node> treeWalkerStrategy) {
-      int total = 0;
-      for (int i = 0; i < arguments.getArgCount(); i++) {
-         Node node = arguments.getArg(i);
-         int c = node.getNodeCount(treeWalkerStrategy);
-         if (total + c > index) {
-            return new FunctionNode(function, arguments.replaceAt(i, node.replaceAt(index - total, replacement, treeWalkerStrategy)));
-         } else {
-            total += c;
-         }
-      }
-      return replacement.apply(this);
-   }
-
-   @Override
    public Node replaceAll(Predicate<Node> criteria, java.util.function.Function<Node, Node> replacement) {
       if (criteria.test(this)) {
          return replacement.apply(this).replaceAll(criteria, replacement);
@@ -160,35 +130,23 @@ public final class FunctionNode implements Node {
    }
 
    @Override
-   public Node getAt(int index, Predicate<Node> treeWalkerStrategy) {
+   public Node replaceAt(int index, java.util.function.Function<Node, Node> replacement) {
       int total = 0;
       for (int i = 0; i < arguments.getArgCount(); i++) {
          Node node = arguments.getArg(i);
-         int c = node.getNodeCount(treeWalkerStrategy);
+         int c = node.getNodeCount();
          if (total + c > index) {
-            return node.getAt(index - total, treeWalkerStrategy);
+            return new FunctionNode(function, arguments.replaceAt(i, node.replaceAt(index - total, replacement)));
          } else {
             total += c;
          }
       }
-      if (!treeWalkerStrategy.test(this)) {
-         throw new IllegalStateException();
-      }
-      return this;
+      return replacement.apply(this);
    }
 
    @Override
    public int getNodeCount() {
       return nodeCount;
-   }
-
-   @Override
-   public int getNodeCount(Predicate<Node> treeWalkerStrategy) {
-      int total = treeWalkerStrategy.test(this) ? 1 : 0;
-      for (int i = 0; i < arguments.getArgCount(); i++) {
-         total += arguments.getArg(i).getNodeCount(treeWalkerStrategy);
-      }
-      return total;
    }
 
    @Override

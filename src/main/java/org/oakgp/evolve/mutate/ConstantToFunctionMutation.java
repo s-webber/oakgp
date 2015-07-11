@@ -19,6 +19,7 @@ import org.oakgp.evolve.GeneticOperator;
 import org.oakgp.generate.TreeGenerator;
 import org.oakgp.node.Node;
 import org.oakgp.node.NodeType;
+import org.oakgp.node.walk.StrategyWalk;
 import org.oakgp.select.NodeSelector;
 import org.oakgp.util.Random;
 
@@ -35,8 +36,8 @@ public final class ConstantToFunctionMutation implements GeneticOperator {
    @Override
    public Node evolve(NodeSelector selector) {
       Node root = selector.next();
-      int nodeCount = root.getNodeCount(NodeType::isTerminal);
+      int nodeCount = StrategyWalk.getNodeCount(root, NodeType::isTerminal);
       int index = random.nextInt(nodeCount);
-      return root.replaceAt(index, n -> treeGenerator.generate(n.getType(), 2), NodeType::isTerminal);
+      return StrategyWalk.replaceAt(root, index, n -> treeGenerator.generate(n.getType(), 2), NodeType::isTerminal);
    }
 }

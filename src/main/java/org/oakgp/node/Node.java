@@ -36,14 +36,6 @@ public interface Node {
    int getNodeCount();
 
    /**
-    * Returns the total number of nodes represented by this {@code Node} - including any child-nodes - that match the specified predicate.
-    *
-    * @param treeWalkerStrategy
-    *           the predicate used to determine if a {@code Node} should be included in the count
-    */
-   int getNodeCount(Predicate<Node> treeWalkerStrategy);
-
-   /**
     * Returns a new {@code Node} resulting from replacing the {@code Node} at position {@code index} with the result of {@code replacement}.
     *
     * @param index
@@ -53,12 +45,6 @@ public interface Node {
     * @return a new {@code Node} derived from replacing the {@code Node} at {@code index} with the result of {@code replacement}
     */
    Node replaceAt(int index, Function<Node, Node> replacement);
-
-   /**
-    * Returns a new {@code Node} resulting from replacing the {@code Node} identified by {@code index} and {@code treeWalkerStrategy} with the result of
-    * {@code replacement}.
-    */
-   Node replaceAt(int index, Function<Node, Node> replacement, Predicate<Node> treeWalkerStrategy);
 
    /**
     * Returns a new {@code Node} resulting from replacing any components that match the specified predicate with the result of applying the specified function.
@@ -78,11 +64,6 @@ public interface Node {
     * @return the {@code Node} at {@code index} of the tree structure represented by this object
     */
    Node getAt(int index);
-
-   /**
-    * Returns a {@code Node} from the tree structure represented by this object that matches the specified predicate.
-    */
-   Node getAt(int index, Predicate<Node> treeWalkerStrategy);
 
    /**
     * Returns the height of this {@code Node}.

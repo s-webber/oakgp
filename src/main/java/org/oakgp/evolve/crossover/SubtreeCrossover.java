@@ -21,6 +21,7 @@ import org.oakgp.Type;
 import org.oakgp.evolve.GeneticOperator;
 import org.oakgp.node.Node;
 import org.oakgp.node.walk.DepthWalk;
+import org.oakgp.node.walk.StrategyWalk;
 import org.oakgp.select.NodeSelector;
 import org.oakgp.util.Random;
 import org.oakgp.util.Utils;
@@ -50,12 +51,12 @@ public final class SubtreeCrossover implements GeneticOperator {
          int maxHeightParent2 = maxDepth - d;
          Type toType = t.getType();
          Predicate<Node> treeWalkerStrategy = n -> n.getType() == toType && n.getHeight() <= maxHeightParent2 + 1;
-         int nodeCount = parent2.getNodeCount(treeWalkerStrategy);
+         int nodeCount = StrategyWalk.getNodeCount(parent2, treeWalkerStrategy);
          if (nodeCount == 0) {
             return t;
          } else {
             int from = random.nextInt(nodeCount);
-            return parent2.getAt(from, treeWalkerStrategy);
+            return StrategyWalk.getAt(parent2, from, treeWalkerStrategy);
          }
       });
    }
