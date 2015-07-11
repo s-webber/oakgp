@@ -21,7 +21,7 @@ import java.util.function.Predicate;
 
 import org.oakgp.evolve.GenerationEvolver;
 import org.oakgp.node.Node;
-import org.oakgp.rank.GenerationProcessor;
+import org.oakgp.rank.GenerationRanker;
 import org.oakgp.rank.RankedCandidate;
 
 /** Performs a Genetic Programming run. */
@@ -34,8 +34,8 @@ public final class Runner {
    /**
     * Performs a Genetic Programming run.
     *
-    * @param generationProcessor
-    *           sorts a generation by their fitness
+    * @param generationRanker
+    *           ranks a generation by their fitness
     * @param generationEvolver
     *           creates a new generation based on the previous generation
     * @param terminator
@@ -44,12 +44,12 @@ public final class Runner {
     *           the initial population that will be used as a basis for generating future generations
     * @return the candidate with the best fitness that was found during this run
     */
-   public static RankedCandidate process(GenerationProcessor generationProcessor, GenerationEvolver generationEvolver,
-         Predicate<List<RankedCandidate>> terminator, Collection<Node> initialPopulation) {
-      List<RankedCandidate> rankedCandidates = generationProcessor.process(initialPopulation);
+   public static RankedCandidate process(GenerationRanker generationRanker, GenerationEvolver generationEvolver, Predicate<List<RankedCandidate>> terminator,
+         Collection<Node> initialPopulation) {
+      List<RankedCandidate> rankedCandidates = generationRanker.rank(initialPopulation);
       while (!terminator.test(rankedCandidates)) {
          Collection<Node> newGeneration = generationEvolver.process(rankedCandidates);
-         rankedCandidates = generationProcessor.process(newGeneration);
+         rankedCandidates = generationRanker.rank(newGeneration);
       }
       return getBest(rankedCandidates);
    }

@@ -21,20 +21,20 @@ import java.util.Collections;
 import java.util.List;
 
 import org.oakgp.node.Node;
-import org.oakgp.rank.GenerationProcessor;
+import org.oakgp.rank.GenerationRanker;
 import org.oakgp.rank.RankedCandidate;
 
 /** Ranks and sorts the fitness of {@code Node} instances using a {@code FitnessFunction}. */
-public final class FitnessFunctionGenerationProcessor implements GenerationProcessor {
+public final class FitnessFunctionGenerationRanker implements GenerationRanker {
    private final FitnessFunction fitnessFunction;
 
    /**
-    * Constructs a {@code GenerationProcessor} with the specified {@code FitnessFunction}.
+    * Constructs a {@code GenerationRanker} with the specified {@code FitnessFunction}.
     *
     * @param fitnessFunction
     *           the {@code FitnessFunction} to use when determining the fitness of candidates
     */
-   public FitnessFunctionGenerationProcessor(FitnessFunction fitnessFunction) {
+   public FitnessFunctionGenerationRanker(FitnessFunction fitnessFunction) {
       this.fitnessFunction = fitnessFunction;
    }
 
@@ -46,7 +46,7 @@ public final class FitnessFunctionGenerationProcessor implements GenerationProce
     * @return a {@code List} of {@code RankedCandidate} - one for each {@code Node} specified in {@code input} - sorted by fitness
     */
    @Override
-   public List<RankedCandidate> process(Collection<Node> input) {
+   public List<RankedCandidate> rank(Collection<Node> input) {
       List<RankedCandidate> output = new ArrayList<>(input.size());
       for (Node n : input) {
          RankedCandidate rankedCandidate = rankCandidate(n);

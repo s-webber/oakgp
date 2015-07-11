@@ -46,11 +46,11 @@ import org.oakgp.primitive.FunctionSet;
 import org.oakgp.primitive.PrimitiveSet;
 import org.oakgp.primitive.PrimitiveSetImpl;
 import org.oakgp.primitive.VariableSet;
-import org.oakgp.rank.GenerationProcessor;
+import org.oakgp.rank.GenerationRanker;
 import org.oakgp.rank.RankedCandidate;
 import org.oakgp.rank.fitness.FitnessFunction;
 import org.oakgp.rank.fitness.FitnessFunctionCache;
-import org.oakgp.rank.fitness.FitnessFunctionGenerationProcessor;
+import org.oakgp.rank.fitness.FitnessFunctionGenerationRanker;
 import org.oakgp.rank.tournament.RoundRobinTournament;
 import org.oakgp.rank.tournament.TwoPlayerGame;
 import org.oakgp.rank.tournament.TwoPlayerGameCache;
@@ -70,7 +70,7 @@ public final class RunBuilder {
    private Type _returnType;
    private Random _random = RANDOM;
    private PrimitiveSet _primitiveSet;
-   private GenerationProcessor _generationProcessor;
+   private GenerationRanker _generationRanker;
    private GenerationEvolver _generationEvolver;
    private Collection<Node> _initialPopulation;
 
@@ -93,9 +93,9 @@ public final class RunBuilder {
       private PrimitiveSetSetter() {
       }
 
-      public GenerationProcessorSetter setPrimitiveSet(final PrimitiveSet primitiveSet) {
+      public GenerationRankerSetter setPrimitiveSet(final PrimitiveSet primitiveSet) {
          _primitiveSet = requireNonNull(primitiveSet);
-         return new GenerationProcessorSetter();
+         return new GenerationRankerSetter();
       }
 
       public VariablesSetter setConstants(final ConstantNode... constants) {
@@ -136,7 +136,7 @@ public final class RunBuilder {
       }
 
       @Override
-      public GenerationProcessorSetter setFunctionSet(Function... functions) {
+      public GenerationRankerSetter setFunctionSet(Function... functions) {
          return setRatioVariables(RATIO_VARIABLES).setFunctionSet(functions);
       }
    }
@@ -153,12 +153,12 @@ public final class RunBuilder {
       }
 
       @Override
-      public GenerationProcessorSetter setFunctionSet(final Function... functions) {
+      public GenerationRankerSetter setFunctionSet(final Function... functions) {
          logFunctionSet(functions);
 
          FunctionSet functionSet = new FunctionSet(functions);
          _primitiveSet = new PrimitiveSetImpl(functionSet, constantSet, variableSet, _random, ratioVariables);
-         return new GenerationProcessorSetter();
+         return new GenerationRankerSetter();
       }
 
       private void logFunctionSet(final Function[] functions) {
@@ -181,21 +181,21 @@ public final class RunBuilder {
    }
 
    public interface FunctionSetSetter {
-      GenerationProcessorSetter setFunctionSet(Function... functions);
+      GenerationRankerSetter setFunctionSet(Function... functions);
    }
 
-   public final class GenerationProcessorSetter {
-      private GenerationProcessorSetter() {
+   public final class GenerationRankerSetter {
+      private GenerationRankerSetter() {
       }
 
       // TODO use and an example and then add to how2 guide
-      public InitialPopulationSetter setGenerationProcessor(final GenerationProcessor generationProcessor) {
-         _generationProcessor = requireNonNull(generationProcessor);
+      public InitialPopulationSetter setGenerationRanker(final GenerationRanker generationRanker) {
+         _generationRanker = requireNonNull(generationRanker);
          return new InitialPopulationSetter();
       }
 
       public InitialPopulationSetter setFitnessFunction(final FitnessFunction fitnessFunction) {
-         return setGenerationProcessor(new FitnessFunctionGenerationProcessor(ensureCached(fitnessFunction)));
+         return setGenerationRanker(new FitnessFunctionGenerationRanker(ensureCached(fitnessFunction)));
       }
 
       private FitnessFunction ensureCached(final FitnessFunction fitnessFunction) {
@@ -207,7 +207,7 @@ public final class RunBuilder {
       }
 
       public InitialPopulationSetter setTwoPlayerGame(final TwoPlayerGame twoPlayerGame) {
-         return setGenerationProcessor(new RoundRobinTournament(ensureCached(twoPlayerGame)));
+         return setGenerationRanker(new RoundRobinTournament(ensureCached(twoPlayerGame)));
       }
 
       private TwoPlayerGame ensureCached(final TwoPlayerGame twoPlayerGame) {
@@ -391,7 +391,7 @@ public final class RunBuilder {
 
       public Node process() {
          assertVariablesSet();
-         RankedCandidate best = Runner.process(_generationProcessor, _generationEvolver, terminator, _initialPopulation);
+         RankedCandidate best = Runner.process(_generationRanker, _generationEvolver, terminator, _initialPopulation);
          System.out.println("Best: " + best);
          Node simplifiedBestNode = simplify(best.getNode());
          System.out.println(simplifiedBestNode);
@@ -399,7 +399,7 @@ public final class RunBuilder {
       }
 
       private void assertVariablesSet() {
-         requireNonNull(_generationProcessor);
+         requireNonNull(_generationRanker);
          requireNonNull(_generationEvolver);
          requireNonNull(terminator);
          requireNonNull(_initialPopulation);

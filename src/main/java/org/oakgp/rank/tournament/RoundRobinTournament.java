@@ -23,11 +23,11 @@ import java.util.Collection;
 import java.util.List;
 
 import org.oakgp.node.Node;
-import org.oakgp.rank.GenerationProcessor;
+import org.oakgp.rank.GenerationRanker;
 import org.oakgp.rank.RankedCandidate;
 
 /** Ranks and sorts the fitness of {@code Node} instances using a {@code TwoPlayerGame} in a round-robin tournament. */
-public final class RoundRobinTournament implements GenerationProcessor {
+public final class RoundRobinTournament implements GenerationRanker {
    private final TwoPlayerGame game;
 
    public RoundRobinTournament(TwoPlayerGame game) {
@@ -35,7 +35,7 @@ public final class RoundRobinTournament implements GenerationProcessor {
    }
 
    @Override
-   public List<RankedCandidate> process(Collection<Node> input) {
+   public List<RankedCandidate> rank(Collection<Node> input) {
       Node[] inputAsArray = input.toArray(new Node[input.size()]);
       double[] fitness = evaluateFitness(inputAsArray);
       return toRankedCandidates(inputAsArray, fitness);

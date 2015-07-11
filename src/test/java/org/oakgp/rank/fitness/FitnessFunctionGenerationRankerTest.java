@@ -25,10 +25,10 @@ import java.util.List;
 
 import org.junit.Test;
 import org.oakgp.node.Node;
-import org.oakgp.rank.GenerationProcessor;
+import org.oakgp.rank.GenerationRanker;
 import org.oakgp.rank.RankedCandidate;
 
-public class FitnessFunctionGenerationProcessorTest {
+public class FitnessFunctionGenerationRankerTest {
    @Test
    public void test() {
       // test data
@@ -46,9 +46,9 @@ public class FitnessFunctionGenerationProcessorTest {
       given(mockFitnessFunction.evaluate(b)).willReturn(bFitness);
       given(mockFitnessFunction.evaluate(c)).willReturn(cFitness);
 
-      // invoke process method
-      GenerationProcessor generationProcessor = new FitnessFunctionGenerationProcessor(mockFitnessFunction);
-      List<RankedCandidate> output = generationProcessor.process(input);
+      // invoke rank method
+      GenerationRanker generationRanker = new FitnessFunctionGenerationRanker(mockFitnessFunction);
+      List<RankedCandidate> output = generationRanker.rank(input);
 
       // assert output
       assertRankedCandidate(output.get(0), c, cFitness);
