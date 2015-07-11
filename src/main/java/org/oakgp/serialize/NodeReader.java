@@ -18,17 +18,25 @@ package org.oakgp.serialize;
 import static org.oakgp.Arguments.createArguments;
 import static org.oakgp.Type.arrayType;
 import static org.oakgp.Type.bigDecimalType;
+import static org.oakgp.Type.bigIntegerType;
+import static org.oakgp.Type.doubleType;
 import static org.oakgp.Type.integerType;
 import static org.oakgp.Type.longType;
 import static org.oakgp.Type.stringType;
+import static org.oakgp.util.Utils.FALSE_NODE;
+import static org.oakgp.util.Utils.TRUE_NODE;
 
 import java.io.BufferedReader;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.StringReader;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Predicate;
 
 import org.oakgp.Type;
 import org.oakgp.function.Function;
@@ -36,9 +44,9 @@ import org.oakgp.function.Signature;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
+import org.oakgp.node.VariableNode;
 import org.oakgp.primitive.FunctionSet;
 import org.oakgp.primitive.VariableSet;
-import org.oakgp.util.Utils;
 
 /**
  * Creates {@code Node} instances from {@code String} representations.
@@ -66,6 +74,17 @@ public final class NodeReader implements Closeable {
    private static final String ARRAY_START_STRING = Character.toString(ARRAY_START_CHAR);
    private static final char ARRAY_END_CHAR = ']';
    private static final String ARRAY_END_STRING = Character.toString(ARRAY_END_CHAR);
+   private final Map<Predicate<String>, java.util.function.Function<String, ConstantNode>> readers = new LinkedHashMap<>();
+   {
+      readers.put(s -> "true".equals(s), s -> TRUE_NODE);
+      readers.put(s -> "false".equals(s), s -> FALSE_NODE);
+      readers.put(s -> s.endsWith("L"), this::createLongConstant);
+      readers.put(s -> s.endsWith("d"), this::createDoubleConstant);
+      readers.put(s -> s.endsWith("I"), this::createBigIntegerConstant);
+      readers.put(s -> s.endsWith("D"), this::createBigDecimalConstant);
+      readers.put(s -> isNumber(s), this::createIntegerConstant);
+      readers.put(s -> true, this::createFunctionConstant);
+   }
 
    private final CharReader cr;
    private final FunctionSet functionSet;
@@ -80,125 +99,6 @@ public final class NodeReader implements Closeable {
 
    public Node readNode() throws IOException {
       return nextNode(nextToken());
-   }
-
-   private Node nextNode(String firstToken) throws IOException {
-      if (firstToken == FUNCTION_START_STRING) {
-         return nextFunctionNode();
-      } else if (firstToken == STRING_STRING) {
-         return nextStringConstantNode();
-      } else if (firstToken == ARRAY_START_STRING) {
-         return nextArrayConstantNode();
-      } else if (firstToken.charAt(0) == 'v') {
-         return nextVariable(firstToken);
-      } else {
-         return nextLiteral(firstToken);
-      }
-   }
-
-   private Node nextFunctionNode() throws IOException {
-      String functionName = nextToken();
-      List<Node> arguments = new ArrayList<>();
-      List<Type> types = new ArrayList<>();
-      String nextToken;
-      while ((nextToken = nextToken()) != FUNCTION_END_STRING) {
-         Node n = nextNode(nextToken);
-         arguments.add(n);
-         types.add(n.getType());
-      }
-      Function function = functionSet.getFunction(functionName, types);
-      return new FunctionNode(function, createArguments(arguments));
-   }
-
-   private Node nextStringConstantNode() throws IOException {
-      StringBuilder sb = new StringBuilder();
-      int next;
-      while ((next = cr.next()) != STRING_CHAR) {
-         assertNotEndOfStream(next);
-         sb.append((char) next);
-      }
-      return new ConstantNode(sb.toString(), stringType());
-   }
-
-   private Node nextArrayConstantNode() throws IOException {
-      List<Node> arguments = new ArrayList<>();
-      String nextToken;
-      Type t = null;
-      while ((nextToken = nextToken()) != ARRAY_END_STRING) {
-         Node n = nextNode(nextToken);
-         if (t == null) {
-            t = n.getType();
-         } else if (t != n.getType()) {
-            throw new IllegalStateException("Mixed type array elements: " + t + " and " + n.getType());
-         }
-         arguments.add(n);
-      }
-      return new ConstantNode(createArguments(arguments), arrayType(t));
-   }
-
-   private Node nextVariable(String firstToken) {
-      int id = Integer.parseInt(firstToken.substring(1));
-      return variableSet.getById(id);
-   }
-
-   private ConstantNode nextLiteral(String token) {
-      switch (token) {
-         case "true":
-            return Utils.TRUE_NODE;
-         case "false":
-            return Utils.FALSE_NODE;
-         default:
-            if (isNumber(token)) {
-               char suffix = token.charAt(token.length() - 1);
-               switch (suffix) {
-                  case 'D':
-                     return new ConstantNode(toBigDecimal(token.substring(0, token.length() - 1)), bigDecimalType());
-                  case 'L':
-                     return new ConstantNode(Long.valueOf(token.substring(0, token.length() - 1)), longType());
-                  default:
-                     return new ConstantNode(Integer.parseInt(token), integerType());
-               }
-            } else {
-               Function function = functionSet.getFunction(token);
-               return new ConstantNode(function, getFunctionType(function));
-            }
-      }
-   }
-
-   private BigDecimal toBigDecimal(String number) {
-      switch (number) {
-         case "0":
-            return BigDecimal.ZERO;
-         case "1":
-            return BigDecimal.ONE;
-         case "10":
-            return BigDecimal.TEN;
-         default:
-            return new BigDecimal(number);
-      }
-   }
-
-   private Type getFunctionType(Function function) {
-      Signature signature = function.getSignature();
-      Type[] types = new Type[signature.getArgumentTypesLength() + 1];
-      types[0] = signature.getReturnType();
-      for (int i = 1; i < types.length; i++) {
-         types[i] = signature.getArgumentType(i - 1);
-      }
-      return Type.functionType(types);
-   }
-
-   private static boolean isNumber(String token) {
-      char firstChar = token.charAt(0);
-      if (firstChar == '-') {
-         return token.length() > 1 && isNumber(token.charAt(1));
-      } else {
-         return isNumber(firstChar);
-      }
-   }
-
-   private static boolean isNumber(char c) {
-      return c >= '0' && c <= '9';
    }
 
    private String nextToken() throws IOException {
@@ -225,6 +125,118 @@ public final class NodeReader implements Closeable {
       }
    }
 
+   private Node nextNode(String firstToken) throws IOException {
+      if (firstToken == FUNCTION_START_STRING) {
+         return nextFunctionNode();
+      } else if (firstToken == STRING_STRING) {
+         return createStringConstantNode();
+      } else if (firstToken == ARRAY_START_STRING) {
+         return createArrayConstantNode();
+      } else if (firstToken.charAt(0) == 'v') {
+         return getVariableNode(firstToken);
+      } else {
+         return nextLiteral(firstToken);
+      }
+   }
+
+   private Node nextFunctionNode() throws IOException {
+      String functionName = nextToken();
+      List<Node> arguments = new ArrayList<>();
+      List<Type> types = new ArrayList<>();
+      String nextToken;
+      while ((nextToken = nextToken()) != FUNCTION_END_STRING) {
+         Node n = nextNode(nextToken);
+         arguments.add(n);
+         types.add(n.getType());
+      }
+      Function function = functionSet.getFunction(functionName, types);
+      return new FunctionNode(function, createArguments(arguments));
+   }
+
+   private Node createStringConstantNode() throws IOException {
+      StringBuilder sb = new StringBuilder();
+      int next;
+      while ((next = cr.next()) != STRING_CHAR) {
+         assertNotEndOfStream(next);
+         sb.append((char) next);
+      }
+      return new ConstantNode(sb.toString(), stringType());
+   }
+
+   private Node createArrayConstantNode() throws IOException {
+      List<Node> arguments = new ArrayList<>();
+      String nextToken;
+      Type t = null;
+      while ((nextToken = nextToken()) != ARRAY_END_STRING) {
+         Node n = nextNode(nextToken);
+         if (t == null) {
+            t = n.getType();
+         } else if (t != n.getType()) {
+            throw new IllegalStateException("Mixed type array elements: " + t + " and " + n.getType());
+         }
+         arguments.add(n);
+      }
+      return new ConstantNode(createArguments(arguments), arrayType(t));
+   }
+
+   private VariableNode getVariableNode(String firstToken) {
+      int id = Integer.parseInt(firstToken.substring(1));
+      return variableSet.getById(id);
+   }
+
+   private ConstantNode nextLiteral(String token) {
+      return readers.entrySet().stream().filter(e -> e.getKey().test(token)).map(Map.Entry::getValue).findFirst()
+            .orElseThrow(() -> new IllegalArgumentException(token)).apply(token);
+   }
+
+   private ConstantNode createIntegerConstant(String token) {
+      return new ConstantNode(Integer.parseInt(token), integerType());
+   }
+
+   private ConstantNode createLongConstant(String token) {
+      return new ConstantNode(Long.valueOf(token.substring(0, token.length() - 1)), longType());
+   }
+
+   private ConstantNode createDoubleConstant(String token) {
+      return new ConstantNode(Double.valueOf(token.substring(0, token.length() - 1)), doubleType());
+   }
+
+   private ConstantNode createBigIntegerConstant(String token) {
+      return new ConstantNode(toBigInteger(token.substring(0, token.length() - 1)), bigIntegerType());
+   }
+
+   private ConstantNode createBigDecimalConstant(String token) {
+      return new ConstantNode(toBigDecimal(token.substring(0, token.length() - 1)), bigDecimalType());
+   }
+
+   private ConstantNode createFunctionConstant(String token) {
+      Function function = functionSet.getFunction(token);
+      return new ConstantNode(function, getFunctionType(function));
+   }
+
+   private static Type getFunctionType(Function function) {
+      Signature signature = function.getSignature();
+      Type[] types = new Type[signature.getArgumentTypesLength() + 1];
+      types[0] = signature.getReturnType();
+      for (int i = 1; i < types.length; i++) {
+         types[i] = signature.getArgumentType(i - 1);
+      }
+      return Type.functionType(types);
+   }
+
+   private static boolean isNumber(String token) {
+      char firstChar = token.charAt(0);
+      if (firstChar == '-') {
+         return token.length() > 1 && isNumber(token.charAt(1));
+      } else {
+         return isNumber(firstChar);
+      }
+   }
+
+   private static boolean isNumber(char c) {
+      return c >= '0' && c <= '9';
+   }
+
    public static boolean isValidDisplayName(String displayName) {
       if (displayName == null || displayName.length() == 0 || isNumber(displayName)) {
          return false;
@@ -242,6 +254,32 @@ public final class NodeReader implements Closeable {
    private static boolean isFunctionIdentifierPart(int c) {
       return c != FUNCTION_END_CHAR && c != FUNCTION_START_CHAR && c != ARRAY_START_CHAR && c != ARRAY_END_CHAR && c != STRING_CHAR
             && !Character.isWhitespace(c);
+   }
+
+   private static BigInteger toBigInteger(String number) {
+      switch (number) {
+         case "0":
+            return BigInteger.ZERO;
+         case "1":
+            return BigInteger.ONE;
+         case "10":
+            return BigInteger.TEN;
+         default:
+            return new BigInteger(number);
+      }
+   }
+
+   private static BigDecimal toBigDecimal(String number) {
+      switch (number) {
+         case "0":
+            return BigDecimal.ZERO;
+         case "1":
+            return BigDecimal.ONE;
+         case "10":
+            return BigDecimal.TEN;
+         default:
+            return new BigDecimal(number);
+      }
    }
 
    private static void assertNotEndOfStream(int c) {
