@@ -15,9 +15,6 @@
  */
 package org.oakgp.node;
 
-import java.util.function.Function;
-import java.util.function.Predicate;
-
 /** Represents a node that has no children. */
 abstract class TerminalNode implements Node {
    @Override
@@ -28,24 +25,5 @@ abstract class TerminalNode implements Node {
    @Override
    public final int getNodeCount() {
       return 1;
-   }
-
-   @Override
-   public final Node replaceAt(int index, Function<Node, Node> replacement) {
-      return replacement.apply(this);
-   }
-
-   @Override
-   public Node replaceAll(Predicate<Node> criteria, Function<Node, Node> replacement) {
-      if (criteria.test(this)) {
-         return replacement.apply(this);
-      } else {
-         return this;
-      }
-   }
-
-   @Override
-   public final Node getAt(int index) {
-      return this;
    }
 }

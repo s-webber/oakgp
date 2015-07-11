@@ -28,6 +28,7 @@ import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
+import org.oakgp.node.walk.NodeWalk;
 import org.oakgp.util.Utils;
 
 /**
@@ -76,8 +77,8 @@ public final class If implements Function {
       }
 
       Predicate<Node> criteria = n -> n.equals(condition);
-      Node simplifiedTrueBranch = trueBranch.replaceAll(criteria, n -> Utils.TRUE_NODE);
-      Node simplifiedFalseBranch = falseBranch.replaceAll(criteria, n -> Utils.FALSE_NODE);
+      Node simplifiedTrueBranch = NodeWalk.replaceAll(trueBranch, criteria, n -> Utils.TRUE_NODE);
+      Node simplifiedFalseBranch = NodeWalk.replaceAll(falseBranch, criteria, n -> Utils.FALSE_NODE);
       if (trueBranch != simplifiedTrueBranch || falseBranch != simplifiedFalseBranch) {
          return new FunctionNode(this, condition, simplifiedTrueBranch, simplifiedFalseBranch);
       } else {

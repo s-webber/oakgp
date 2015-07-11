@@ -15,8 +15,6 @@
  */
 package org.oakgp.node;
 
-import java.util.function.Predicate;
-
 import org.oakgp.Arguments;
 import org.oakgp.Assignments;
 import org.oakgp.Type;
@@ -89,59 +87,6 @@ public final class FunctionNode implements Node {
    @Override
    public Object evaluate(Assignments assignments) {
       return function.evaluate(arguments, assignments);
-   }
-
-   @Override
-   public Node replaceAll(Predicate<Node> criteria, java.util.function.Function<Node, Node> replacement) {
-      if (criteria.test(this)) {
-         return replacement.apply(this).replaceAll(criteria, replacement);
-      } else {
-         boolean updated = false;
-         Node[] replacementArgs = new Node[arguments.getArgCount()];
-         for (int i = 0; i < arguments.getArgCount(); i++) {
-            Node arg = arguments.getArg(i);
-            Node replacedArg = arg.replaceAll(criteria, replacement);
-            if (arg != replacedArg) {
-               updated = true;
-            }
-            replacementArgs[i] = replacedArg;
-         }
-         if (updated) {
-            return new FunctionNode(function, Arguments.createArguments(replacementArgs));
-         } else {
-            return this;
-         }
-      }
-   }
-
-   @Override
-   public Node getAt(int index) {
-      int total = 0;
-      for (int i = 0; i < arguments.getArgCount(); i++) {
-         Node node = arguments.getArg(i);
-         int c = node.getNodeCount();
-         if (total + c > index) {
-            return node.getAt(index - total);
-         } else {
-            total += c;
-         }
-      }
-      return this;
-   }
-
-   @Override
-   public Node replaceAt(int index, java.util.function.Function<Node, Node> replacement) {
-      int total = 0;
-      for (int i = 0; i < arguments.getArgCount(); i++) {
-         Node node = arguments.getArg(i);
-         int c = node.getNodeCount();
-         if (total + c > index) {
-            return new FunctionNode(function, arguments.replaceAt(i, node.replaceAt(index - total, replacement)));
-         } else {
-            total += c;
-         }
-      }
-      return replacement.apply(this);
    }
 
    @Override

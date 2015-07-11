@@ -29,8 +29,6 @@ import static org.oakgp.Type.integerType;
 import static org.oakgp.Type.nullableType;
 import static org.oakgp.Type.stringType;
 
-import java.util.function.Function;
-
 import org.junit.Test;
 
 public class ConstantNodeTest {
@@ -53,23 +51,6 @@ public class ConstantNodeTest {
       ConstantNode n = integerConstant(expected);
       Object actual = n.evaluate(null);
       assertSame(expected, actual);
-   }
-
-   @Test
-   public void testReplaceAt() {
-      ConstantNode n1 = integerConstant(9);
-      ConstantNode n2 = integerConstant(5);
-      assertEquals(n1, n1.replaceAt(0, t -> t));
-      assertEquals(n2, n1.replaceAt(0, t -> n2));
-   }
-
-   @Test
-   public void testReplaceAll() {
-      ConstantNode n1 = integerConstant(9);
-      ConstantNode n2 = integerConstant(5);
-      Function<Node, Node> replacement = n -> n2;
-      assertSame(n2, n1.replaceAll(n -> n == n1, replacement));
-      assertSame(n1, n1.replaceAll(n -> n == n2, replacement));
    }
 
    @Test

@@ -21,6 +21,7 @@ import org.oakgp.evolve.GeneticOperator;
 import org.oakgp.function.Function;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
+import org.oakgp.node.walk.NodeWalk;
 import org.oakgp.primitive.PrimitiveSet;
 import org.oakgp.select.NodeSelector;
 import org.oakgp.util.Random;
@@ -48,7 +49,7 @@ public final class PointMutation implements GeneticOperator {
    public Node evolve(NodeSelector selector) {
       Node root = selector.next();
       int mutationPoint = Utils.selectSubNodeIndex(random, root);
-      return root.replaceAt(mutationPoint, node -> {
+      return NodeWalk.replaceAt(root, mutationPoint, node -> {
          if (isFunction(node)) {
             FunctionNode functionNode = (FunctionNode) node;
             Function function = primitiveSet.nextAlternativeFunction(functionNode.getFunction());

@@ -15,9 +15,6 @@
  */
 package org.oakgp.node;
 
-import java.util.function.Function;
-import java.util.function.Predicate;
-
 import org.oakgp.Assignments;
 import org.oakgp.Type;
 
@@ -34,36 +31,6 @@ public interface Node {
 
    /** Returns the total number of nodes represented by this {@code Node} - including any child-nodes. */
    int getNodeCount();
-
-   /**
-    * Returns a new {@code Node} resulting from replacing the {@code Node} at position {@code index} with the result of {@code replacement}.
-    *
-    * @param index
-    *           the index of the {@code Node}, in the tree structure represented by this object, that needs to be replaced
-    * @param replacement
-    *           the function to apply to the {@code Node} at {@code index} to determine the {@code Node} that should replace it
-    * @return a new {@code Node} derived from replacing the {@code Node} at {@code index} with the result of {@code replacement}
-    */
-   Node replaceAt(int index, Function<Node, Node> replacement);
-
-   /**
-    * Returns a new {@code Node} resulting from replacing any components that match the specified predicate with the result of applying the specified function.
-    *
-    * @param criteria
-    *           the predicate used to determine if a node should be replaced
-    * @param replacement
-    *           the function used to determine what a node should be replaced with
-    */
-   Node replaceAll(Predicate<Node> criteria, Function<Node, Node> replacement);
-
-   /**
-    * Returns a {@code Node} from the tree structure represented by this object.
-    *
-    * @param index
-    *           the index of the {@code Node}, in the tree structure represented by this object, that needs to be returned
-    * @return the {@code Node} at {@code index} of the tree structure represented by this object
-    */
-   Node getAt(int index);
 
    /**
     * Returns the height of this {@code Node}.

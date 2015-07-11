@@ -25,6 +25,7 @@ import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
+import org.oakgp.node.walk.NodeWalk;
 
 /**
  * A selection operator that uses the value of an enum to determine which code to evaluate.
@@ -62,7 +63,8 @@ public final class SwitchEnum implements Function {
       for (int i = 1; i < arguments.getArgCount(); i++) {
          Node arg = arguments.getArg(i);
          final int idx = i;
-         Node replacedArg = arg.replaceAll(n -> isFunction(n) && ((FunctionNode) n).getFunction() == this, n -> ((FunctionNode) n).getArguments().getArg(idx));
+         Node replacedArg = NodeWalk.replaceAll(arg, n -> isFunction(n) && ((FunctionNode) n).getFunction() == this, n -> ((FunctionNode) n).getArguments()
+               .getArg(idx));
          if (arg != replacedArg) {
             updated = true;
          }

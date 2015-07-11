@@ -18,6 +18,7 @@ package org.oakgp.evolve.mutate;
 import org.oakgp.evolve.GeneticOperator;
 import org.oakgp.generate.TreeGenerator;
 import org.oakgp.node.Node;
+import org.oakgp.node.walk.NodeWalk;
 import org.oakgp.select.NodeSelector;
 import org.oakgp.util.Random;
 import org.oakgp.util.Utils;
@@ -36,7 +37,7 @@ public final class SubTreeMutation implements GeneticOperator {
    public Node evolve(NodeSelector selector) {
       Node root = selector.next();
       int mutationPoint = Utils.selectSubNodeIndex(random, root);
-      return root.replaceAt(mutationPoint, node -> {
+      return NodeWalk.replaceAt(root, mutationPoint, node -> {
          return treeGenerator.generate(node.getType(), node.getHeight());
       });
    }

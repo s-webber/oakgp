@@ -23,17 +23,11 @@ import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.mock;
 import static org.oakgp.Arguments.createArguments;
 import static org.oakgp.Assignments.createAssignments;
-import static org.oakgp.TestUtils.assertNodeEquals;
 import static org.oakgp.TestUtils.createVariable;
 import static org.oakgp.TestUtils.integerConstant;
 import static org.oakgp.TestUtils.readNode;
 import static org.oakgp.Type.integerType;
 import static org.oakgp.function.math.IntegerUtils.INTEGER_UTILS;
-import static org.oakgp.node.NodeType.isConstant;
-import static org.oakgp.node.NodeType.isFunction;
-import static org.oakgp.node.NodeType.isVariable;
-
-import java.util.function.Predicate;
 
 import org.junit.Test;
 import org.oakgp.Arguments;
@@ -69,50 +63,6 @@ public class FunctionNodeTest {
 
       Assignments assignments = createAssignments(3);
       assertEquals(126, functionNode.evaluate(assignments));
-   }
-
-   @Test
-   public void testReplaceAt() {
-      FunctionNode n = createFunctionNode();
-      java.util.function.Function<Node, Node> replacement = t -> integerConstant(9);
-
-      assertEquals("(+ (* 9 v1) (+ v2 1))", n.replaceAt(0, replacement).toString());
-      assertEquals("(+ (* v0 9) (+ v2 1))", n.replaceAt(1, replacement).toString());
-      assertEquals("(+ 9 (+ v2 1))", n.replaceAt(2, replacement).toString());
-      assertEquals("(+ (* v0 v1) (+ 9 1))", n.replaceAt(3, replacement).toString());
-      assertEquals("(+ (* v0 v1) (+ v2 9))", n.replaceAt(4, replacement).toString());
-      assertEquals("(+ (* v0 v1) 9)", n.replaceAt(5, replacement).toString());
-      assertEquals("9", n.replaceAt(6, replacement).toString());
-   }
-
-   @Test
-   public void testReplaceAll() {
-      Node input = readNode("(- (- (* -1 v3) 0) (- 13 v1))");
-      ConstantNode integerConstant = integerConstant(42);
-      java.util.function.Function<Node, Node> replacement = n -> integerConstant;
-
-      assertSame(input, input.replaceAll(n -> false, replacement));
-      assertSame(integerConstant, input.replaceAll(n -> true, replacement));
-
-      assertNodeEquals("(- (- (* -1 42) 0) (- 13 42))", input.replaceAll(n -> isVariable(n), replacement));
-      assertNodeEquals("(- (- (* 42 v3) 42) (- 42 v1))", input.replaceAll(n -> isConstant(n), replacement));
-
-      Predicate<Node> criteria = n -> isFunction(n) && ((FunctionNode) n).getFunction() == INTEGER_UTILS.getSubtract();
-      assertNodeEquals("(+ (+ (* -1 v3) 0) (+ 13 v1))",
-            input.replaceAll(criteria, n -> new FunctionNode(INTEGER_UTILS.getAdd(), ((FunctionNode) n).getArguments())));
-   }
-
-   @Test
-   public void testGetAt() {
-      FunctionNode n = createFunctionNode();
-
-      assertEquals("v0", n.getAt(0).toString());
-      assertEquals("v1", n.getAt(1).toString());
-      assertEquals("(* v0 v1)", n.getAt(2).toString());
-      assertEquals("v2", n.getAt(3).toString());
-      assertEquals("1", n.getAt(4).toString());
-      assertEquals("(+ v2 1)", n.getAt(5).toString());
-      assertEquals("(+ (* v0 v1) (+ v2 1))", n.getAt(6).toString());
    }
 
    @Test
