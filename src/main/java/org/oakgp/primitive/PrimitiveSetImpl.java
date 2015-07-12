@@ -138,9 +138,6 @@ public final class PrimitiveSetImpl implements PrimitiveSet {
       }
 
       int possibilitiesSize = possibilities.size();
-      if (possibilitiesSize < 1) {
-         throw new IllegalStateException(currentVersion.toString()); // TODO
-      }
       int randomIndex = nextInt(possibilitiesSize);
       C next = possibilities.get(randomIndex);
       if (next == currentVersion) {

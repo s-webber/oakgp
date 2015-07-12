@@ -26,7 +26,7 @@ import org.oakgp.util.Random;
  * <p>
  * Also known as roulette wheel selection.
  */
-public class FitnessProportionateSelection implements NodeSelector {
+public final class FitnessProportionateSelection implements NodeSelector {
    private final Random random;
    private final List<RankedCandidate> candidates;
    private final int size;

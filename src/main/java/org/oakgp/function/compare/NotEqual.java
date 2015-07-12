@@ -1,12 +1,12 @@
 /*
  * Copyright 2015 S. Webber
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -41,7 +41,7 @@ public final class NotEqual extends ComparisonOperator {
    public Node simplify(Arguments arguments) {
       Node simplifiedVersion = super.simplify(arguments);
       if (simplifiedVersion == null && NODE_COMPARATOR.compare(arguments.firstArg(), arguments.secondArg()) > 0) {
-         // TODO instead of this have argument orderer method used here, Equal and arithmetic operators
+         // TODO this is similar to the logic in Equal and the arithmetic operators - is it possible to reuse?
          return new FunctionNode(this, arguments.secondArg(), arguments.firstArg());
       } else {
          return simplifiedVersion;

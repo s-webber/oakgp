@@ -42,8 +42,6 @@ public class IfTest extends AbstractFunctionTest {
 
    @Override
    public void testCanSimplify() {
-      // TODO use TestUtils.createTypeArray(Type, int)
-
       simplify("(if (< 1 2) 4 7)").to("4");
       simplify("(if (> 1 2) 4 7)").to("7");
       simplify("(if (> v0 v1) v2 v2)").to("v2");

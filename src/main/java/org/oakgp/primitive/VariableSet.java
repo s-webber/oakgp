@@ -41,6 +41,7 @@ public final class VariableSet {
    }
 
    public List<VariableNode> getByType(Type type) {
+      // TODO should this return an empty list, rather than null, if no match found?
       return variablesByType.get(type);
    }
 

@@ -96,7 +96,7 @@ public final class FunctionNode implements Node {
 
    @Override
    public int getHeight() {
-      // TODO cache on first call
+      // TODO it may be beneficial to cache this result on its first call
       int height = 0;
       for (int i = 0; i < arguments.getArgCount(); i++) {
          height = Math.max(height, arguments.getArg(i).getHeight());
@@ -127,7 +127,7 @@ public final class FunctionNode implements Node {
          return false;
       } else if (o instanceof FunctionNode) {
          FunctionNode fn = (FunctionNode) o;
-         // TODO see how often we return false when we get here - as that indicates hashCode() could be improved
+         // NOTE if we often return false here then that indicates hashCode() could be improved
          return this.function.getClass().equals(fn.function.getClass()) && this.arguments.equals(fn.arguments);
       } else {
          return false;

@@ -43,7 +43,11 @@ public final class OnePointCrossover implements GeneticOperator {
       Node parent1 = selector.next();
       Node parent2 = selector.next();
       int commonRegionSize = CommonRegion.getNodeCount(parent1, parent2);
-      int crossOverPoint = Utils.selectSubNodeIndex(random, commonRegionSize);
-      return CommonRegion.crossoverAt(parent1, parent2, crossOverPoint);
+      if (commonRegionSize < 2) {
+         return parent2;
+      } else {
+         int crossOverPoint = Utils.selectSubNodeIndex(random, commonRegionSize);
+         return CommonRegion.crossoverAt(parent1, parent2, crossOverPoint);
+      }
    }
 }

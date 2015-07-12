@@ -22,7 +22,7 @@ import org.oakgp.rank.RankedCandidate;
 import org.oakgp.util.Random;
 
 /** The <i>relative</i> fitness of candidates is used to determine the probability that they will be selected. */
-public class RankSelection implements NodeSelector {
+public final class RankSelection implements NodeSelector {
    private final Random random;
    private final List<RankedCandidate> candidates;
    private final int size;

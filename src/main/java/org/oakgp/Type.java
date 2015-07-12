@@ -106,8 +106,7 @@ public final class Type implements Comparable<Type> {
    /**
     * Returns {@code true} if the two arrays contain the same number of elements, and all corresponding pairs of elements in the two arrays are the same.
     * <p>
-    * Assumes no {@code null} values. Compares elements using {@code ==} rather than {@code equals(Object)}. TODO provide details of performance test results
-    * that caused this to be introduced.
+    * Assumes no {@code null} values. Compares elements using {@code ==} rather than {@code equals(Object)}.
     */
    public static boolean sameTypes(Type[] a, Type[] b) {
       int length = a.length;

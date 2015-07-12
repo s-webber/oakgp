@@ -46,12 +46,12 @@ import org.oakgp.node.NodeType;
  * </pre>
  */
 public final class NodeWriter {
-   private final Map<Predicate<Node>, java.util.function.Function<Node, String>> writers = new LinkedHashMap<>();
-   {
-      writers.put(n -> NodeType.isVariable(n), n -> n.toString());
-      writers.put(n -> n.getType() == longType(), n -> n.toString() + "L");
-      writers.put(n -> n.getType() == bigIntegerType(), n -> n.toString() + "I");
-      writers.put(n -> n.getType() == bigDecimalType(), n -> n.toString() + "D");
+   private static final Map<Predicate<Node>, java.util.function.Function<Node, String>> WRITERS = new LinkedHashMap<>();
+   static {
+      WRITERS.put(n -> NodeType.isVariable(n), n -> n.toString());
+      WRITERS.put(n -> n.getType() == longType(), n -> n.toString() + "L");
+      WRITERS.put(n -> n.getType() == bigIntegerType(), n -> n.toString() + "I");
+      WRITERS.put(n -> n.getType() == bigDecimalType(), n -> n.toString() + "D");
    }
 
    public String writeNode(Node node) {
@@ -76,6 +76,6 @@ public final class NodeWriter {
    }
 
    private String toString(Node node) {
-      return writers.entrySet().stream().filter(e -> e.getKey().test(node)).map(Map.Entry::getValue).findFirst().orElse(n -> node.toString()).apply(node);
+      return WRITERS.entrySet().stream().filter(e -> e.getKey().test(node)).map(Map.Entry::getValue).findFirst().orElse(n -> node.toString()).apply(node);
    }
 }

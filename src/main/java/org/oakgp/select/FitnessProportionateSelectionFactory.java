@@ -21,7 +21,7 @@ import org.oakgp.rank.RankedCandidate;
 import org.oakgp.util.Random;
 
 /** Returns instances of {@code FitnessProportionateSelection}. */
-public class FitnessProportionateSelectionFactory implements NodeSelectorFactory {
+public final class FitnessProportionateSelectionFactory implements NodeSelectorFactory {
    private final Random random;
 
    public FitnessProportionateSelectionFactory(Random random) {

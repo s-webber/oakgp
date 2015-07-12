@@ -21,6 +21,11 @@ import org.oakgp.node.Node;
 import org.oakgp.node.NodeType;
 
 public final class DepthWalk {
+   /** Private constructor as all methods are static. */
+   private DepthWalk() {
+      // do nothing
+   }
+
    public static int getNodeCount(Node tree, DepthWalkStrategy treeWalkerStrategy) {
       return getNodeCount(tree, treeWalkerStrategy, 1);
    }
@@ -28,11 +33,10 @@ public final class DepthWalk {
    private static int getNodeCount(Node node, DepthWalkStrategy treeWalkerStrategy, int currentDepth) {
       if (NodeType.isFunction(node)) {
          int total = treeWalkerStrategy.test(node, currentDepth) ? 1 : 0;
-         currentDepth++;
          FunctionNode functionNode = (FunctionNode) node;
          Arguments arguments = functionNode.getArguments();
          for (int i = 0; i < arguments.getArgCount(); i++) {
-            total += getNodeCount(arguments.getArg(i), treeWalkerStrategy, currentDepth);
+            total += getNodeCount(arguments.getArg(i), treeWalkerStrategy, currentDepth + 1);
          }
          return total;
       } else {
@@ -47,14 +51,13 @@ public final class DepthWalk {
    private static Node getAt(Node current, int index, DepthWalkStrategy treeWalkerStrategy, int currentDepth) {
       if (NodeType.isFunction(current)) {
          int total = 0;
-         currentDepth++;
          FunctionNode functionNode = (FunctionNode) current;
          Arguments arguments = functionNode.getArguments();
          for (int i = 0; i < arguments.getArgCount(); i++) {
             Node child = arguments.getArg(i);
-            int c = getNodeCount(child, treeWalkerStrategy, currentDepth);
+            int c = getNodeCount(child, treeWalkerStrategy, currentDepth + 1);
             if (total + c > index) {
-               return getAt(child, index - total, treeWalkerStrategy, currentDepth);
+               return getAt(child, index - total, treeWalkerStrategy, currentDepth + 1);
             } else {
                total += c;
             }
@@ -89,12 +92,12 @@ public final class DepthWalk {
    }
 
    @FunctionalInterface
-   public static interface DepthWalkStrategy {
+   public interface DepthWalkStrategy {
       boolean test(Node node, int depth);
    }
 
    @FunctionalInterface
-   public static interface DepthWalkReplacement {
+   public interface DepthWalkReplacement {
       Node apply(Node node, int depth);
    }
 }

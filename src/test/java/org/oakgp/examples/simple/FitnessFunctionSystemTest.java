@@ -55,7 +55,7 @@ import org.oakgp.util.RunBuilder;
  * Performs full genetic programming runs without relying on any mock objects.
  * <p>
  * Would be better to have in a separate "system-test" directory under the "src" directory - or in a completely separate Git project (that has this project as a
- * dependency). Leaving here for the moment as it provides a convenient mechanism to perform a full test of the process. TODO decide long-term solution for this
+ * dependency). Leaving here for the moment as it provides a convenient mechanism to perform a full test of the process.
  * </p>
  */
 public class FitnessFunctionSystemTest {

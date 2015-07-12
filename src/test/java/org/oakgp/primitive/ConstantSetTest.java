@@ -49,7 +49,7 @@ public class ConstantSetTest {
       assertEquals(1, booleans.size());
       assertSame(c1, booleans.get(0));
 
-      assertNull(s.getByType(stringType())); // TODO expect empty list?
+      assertNull(s.getByType(stringType()));
    }
 
    @Test

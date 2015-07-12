@@ -25,19 +25,31 @@ import org.oakgp.select.DummyNodeSelector;
 import org.oakgp.util.DummyRandom;
 
 public class OnePointCrossoverTest {
-   // TODO test mixed types
-
    @Test
    public void testFunctionNodes() {
-      DummyRandom dummyRandom = nextInt(4).returns(1);
-      DummyNodeSelector dummySelector = new DummyNodeSelector("(+ 5 (+ 1 2))", "(* 7 (- 8 v5))");
+      DummyRandom dummyRandom = nextInt(4).returns(0, 1, 2, 3);
+      DummyNodeSelector dummySelector = DummyNodeSelector.repeat(4, "(if true 5 (+ 1 (- 2 3)))", "(if false 7 (- 8 v5))");
 
       GeneticOperator c = new OnePointCrossover(dummyRandom);
 
-      Node result = c.evolve(dummySelector);
-      assertNodeEquals("(+ 5 (+ 8 2))", result);
+      assertNodeEquals("(if false 5 (+ 1 (- 2 3)))", c.evolve(dummySelector));
+      assertNodeEquals("(if true 7 (+ 1 (- 2 3)))", c.evolve(dummySelector));
+      assertNodeEquals("(if true 5 (+ 8 (- 2 3)))", c.evolve(dummySelector));
+      assertNodeEquals("(if true 5 (- 8 v5))", c.evolve(dummySelector));
 
       dummyRandom.assertEmpty();
+      dummySelector.assertEmpty();
+   }
+
+   @Test
+   public void testConstantNode() {
+      DummyNodeSelector dummySelector = new DummyNodeSelector("7", "(* 7 (- 8 v5))");
+
+      GeneticOperator c = new OnePointCrossover(DummyRandom.EMPTY);
+
+      Node result = c.evolve(dummySelector);
+      assertNodeEquals("(* 7 (- 8 v5))", result);
+
       dummySelector.assertEmpty();
    }
 }

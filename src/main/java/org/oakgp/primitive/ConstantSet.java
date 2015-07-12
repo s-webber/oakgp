@@ -31,6 +31,7 @@ public final class ConstantSet {
    }
 
    public List<ConstantNode> getByType(Type type) {
+      // TODO should this return an empty list, rather than null, if no match found?
       return constantsByType.get(type);
    }
 }

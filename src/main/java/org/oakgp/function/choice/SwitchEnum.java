@@ -55,7 +55,7 @@ public final class SwitchEnum implements Function {
 
    @Override
    public Node simplify(Arguments arguments) {
-      // TODO share with function node replaceAll
+      // TODO this is similar to the logic in NodeWalk.replaceAll - is it possible to reuse?
       boolean updated = false;
       Node[] replacementArgs = new Node[arguments.getArgCount()];
       Node input = arguments.firstArg();

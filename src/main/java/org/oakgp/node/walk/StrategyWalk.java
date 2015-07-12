@@ -23,6 +23,11 @@ import org.oakgp.node.Node;
 import org.oakgp.node.NodeType;
 
 public final class StrategyWalk {
+   /** Private constructor as all methods are static. */
+   private StrategyWalk() {
+      // do nothing
+   }
+
    /**
     * Returns the total number of nodes represented by this {@code Node} - including any child-nodes - that match the specified predicate.
     *

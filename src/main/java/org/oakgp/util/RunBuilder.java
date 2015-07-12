@@ -131,7 +131,9 @@ public final class RunBuilder {
       }
 
       public FunctionSetSetter setRatioVariables(final double ratioVariables) {
-         // TODO validate 0 <= n <= 1
+         if (ratioVariables < 0 || ratioVariables > 1) {
+            throw new IllegalArgumentException("Ratio of variables must be in range 0 to 1, not: " + ratioVariables);
+         }
          return new FunctionSetSetterImpl(constantSet, variableSet, ratioVariables);
       }
 
@@ -188,7 +190,6 @@ public final class RunBuilder {
       private GenerationRankerSetter() {
       }
 
-      // TODO use and an example and then add to how2 guide
       public InitialPopulationSetter setGenerationRanker(final GenerationRanker generationRanker) {
          _generationRanker = requireNonNull(generationRanker);
          return new InitialPopulationSetter();
@@ -223,7 +224,6 @@ public final class RunBuilder {
       private InitialPopulationSetter() {
       }
 
-      // TODO use and document in how2 guide
       public FirstTerminatorSetter setInitialPopulation(final java.util.function.Function<Config, Collection<Node>> initialGeneration) {
          return setInitialPopulation(initialGeneration.apply(new Config()));
       }
@@ -247,8 +247,8 @@ public final class RunBuilder {
          public GenerationEvolverSetter setTreeDepth(final int treeDepth) {
             requiresPositive(treeDepth);
 
-            // TODO use Set<Node> initialPopulation = new NodeSet();?
-            // TODO do 50:50 split of grow/full?
+            // NOTE could use a NodeSet rather than an ArrayList - but then the resulting population may be < generationSize (due to duplicates)
+            // NOTE could generate using a 50:50 split of TreeGeneratorImpl.grow and TreeGeneratorImpl.full
             Collection<Node> initialPopulation = new ArrayList<>();
             TreeGenerator treeGenerator = TreeGeneratorImpl.grow(_primitiveSet, _random);
             for (int i = 0; i < generationSize; i++) {
@@ -392,9 +392,8 @@ public final class RunBuilder {
       public Node process() {
          assertVariablesSet();
          RankedCandidate best = Runner.process(_generationRanker, _generationEvolver, terminator, _initialPopulation);
-         System.out.println("Best: " + best);
          Node simplifiedBestNode = simplify(best.getNode());
-         System.out.println(simplifiedBestNode);
+         Logger.getGlobal().info("Best candidate: " + simplifiedBestNode);
          return simplifiedBestNode;
       }
 

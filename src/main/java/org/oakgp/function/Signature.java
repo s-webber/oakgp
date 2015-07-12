@@ -51,7 +51,7 @@ public final class Signature {
       return argumentTypes[index];
    }
 
-   public int getArgumentTypesLength() { // TODO rename?
+   public int getArgumentTypesLength() {
       return argumentTypes.length;
    }
 

@@ -69,7 +69,7 @@ public class VariableSetTest {
       assertEquals(1, booleans.size());
       assertSame(v1, booleans.get(0));
 
-      assertNull(s.getByType(stringType())); // TODO expect empty list?
+      assertNull(s.getByType(stringType()));
    }
 
    @Test

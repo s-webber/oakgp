@@ -1,12 +1,12 @@
 /*
  * Copyright 2015 S. Webber
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,6 +18,7 @@ package org.oakgp.function.compare;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static org.oakgp.Type.integerType;
+import static org.oakgp.Type.stringType;
 
 import org.oakgp.function.AbstractFunctionTest;
 import org.oakgp.function.Function;
@@ -33,6 +34,10 @@ public class EqualTest extends AbstractFunctionTest {
       evaluate("(= 7 8)").to(FALSE);
       evaluate("(= 8 8)").to(TRUE);
       evaluate("(= 9 8)").to(FALSE);
+
+      evaluate("(= \"dog\" \"zebra\")").to(FALSE);
+      evaluate("(= \"dog\" \"dog\")").to(TRUE);
+      evaluate("(= \"dog\" \"apple\")").to(FALSE);
    }
 
    @Override
@@ -49,5 +54,10 @@ public class EqualTest extends AbstractFunctionTest {
    public void testCannotSimplify() {
       cannotSimplify("(= 8 v0)", integerType());
       cannotSimplify("(= v0 v1)", integerType(), integerType());
+   }
+
+   @Override
+   protected Function[] getFunctionSet() {
+      return new Function[] { getFunction(), new Equal(stringType()) };
    }
 }

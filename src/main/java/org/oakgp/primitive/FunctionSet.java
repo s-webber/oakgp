@@ -85,10 +85,12 @@ public final class FunctionSet {
    }
 
    public List<Function> getByType(Type type) {
+      // TODO should this return an empty list, rather than null, if no match found?
       return functionsByType.get(type);
    }
 
    public List<Function> getBySignature(Signature signature) {
+      // TODO should this return an empty list, rather than null, if no match found?
       return functionsBySignature.get(signature);
    }
 }

@@ -75,18 +75,7 @@ public final class NodeReader implements Closeable {
    private static final char ARRAY_END_CHAR = ']';
    private static final String ARRAY_END_STRING = Character.toString(ARRAY_END_CHAR);
 
-   private final Map<Predicate<String>, java.util.function.Function<String, Node>> readers = new LinkedHashMap<>();
-   {
-      readers.put(s -> s.startsWith("v"), this::getVariableNode);
-      readers.put(s -> "true".equals(s), s -> TRUE_NODE);
-      readers.put(s -> "false".equals(s), s -> FALSE_NODE);
-      readers.put(s -> isNumber(s) && s.endsWith("L"), this::createLongConstant);
-      readers.put(s -> isNumber(s) && s.endsWith("I"), this::createBigIntegerConstant);
-      readers.put(s -> isNumber(s) && s.endsWith("D"), this::createBigDecimalConstant);
-      readers.put(s -> isDecimalNumber(s), this::createDoubleConstant);
-      readers.put(s -> isNumber(s), this::createIntegerConstant);
-      readers.put(s -> true, this::createFunctionConstant);
-   }
+   private final Map<Predicate<String>, java.util.function.Function<String, Node>> readers;
    private final CharReader cr;
    private final FunctionSet functionSet;
    private final VariableSet variableSet;
@@ -96,6 +85,21 @@ public final class NodeReader implements Closeable {
       this.cr = new CharReader(new BufferedReader(sr));
       this.functionSet = functionSet;
       this.variableSet = variableSet;
+      this.readers = createReaders();
+   }
+
+   private Map<Predicate<String>, java.util.function.Function<String, Node>> createReaders() {
+      Map<Predicate<String>, java.util.function.Function<String, Node>> m = new LinkedHashMap<>();
+      m.put(s -> s.startsWith("v"), this::getVariableNode);
+      m.put(s -> "true".equals(s), s -> TRUE_NODE);
+      m.put(s -> "false".equals(s), s -> FALSE_NODE);
+      m.put(s -> isNumber(s) && s.endsWith("L"), this::createLongConstant);
+      m.put(s -> isNumber(s) && s.endsWith("I"), this::createBigIntegerConstant);
+      m.put(s -> isNumber(s) && s.endsWith("D"), this::createBigDecimalConstant);
+      m.put(s -> isDecimalNumber(s), this::createDoubleConstant);
+      m.put(s -> isNumber(s), this::createIntegerConstant);
+      m.put(s -> true, this::createFunctionConstant);
+      return m;
    }
 
    public Node readNode() throws IOException {

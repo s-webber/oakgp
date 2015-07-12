@@ -1,12 +1,12 @@
 /*
  * Copyright 2015 S. Webber
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -59,11 +59,14 @@ public final class NodeSimplifier {
       do {
          previous = output;
          output = simplifyOnce(output);
-         if (!output.equals(previous) && !s.add(output)) { // TODO
-            // throw new IllegalArgumentException(new NodeWriter().writeNode(output) + " " + new NodeWriter().writeNode(previous));
+
+         // To avoid getting stuck in an infinite loop:
+         // 1. exit if the result of an attempt to simplify equals the result of an earlier simplify
+         if (!output.equals(previous) && !s.add(output)) {
             return output;
          }
-         if (ctr++ > MAX_RETRIES) { // TODO
+         // 2. if the number of simplifies exceeds a defined limit then throw an exception
+         if (ctr++ > MAX_RETRIES) {
             throw new IllegalArgumentException(input.toString());
          }
       } while (isFunction(output) && !output.equals(previous));
@@ -79,7 +82,8 @@ public final class NodeSimplifier {
    }
 
    private static Node simplifyFunctionNode(final FunctionNode input) {
-      // TODO have a isSimplified method on FunctionNode to indicate that if it has already been simplified? (so no need to try again here)
+      // TODO it may be beneficial to add a "isSimplified" flag to FunctionNode to indicate that if it has already been simplified (to avoid trying again here)
+
       // try to simplify each of the arguments
       Arguments inputArgs = input.getArguments();
       Node[] simplifiedArgs = new Node[inputArgs.getArgCount()];

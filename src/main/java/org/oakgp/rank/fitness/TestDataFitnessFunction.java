@@ -55,7 +55,7 @@ public final class TestDataFitnessFunction<T> implements FitnessFunction {
     */
    @Override
    public double evaluate(Node node) {
-      // TODO check for overflow
+      // TODO there is a possibility that the returned result may be 'Infinity' or '-Infinity' - is that OK or is BigDecimal required?
       double diff = 0;
       for (Map.Entry<Assignments, T> test : tests.entrySet()) {
          Assignments input = test.getKey();

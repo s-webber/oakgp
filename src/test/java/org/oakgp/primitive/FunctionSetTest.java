@@ -126,7 +126,7 @@ public class FunctionSetTest {
       assertEquals(1, booleans.size());
       assertSame(isZero, booleans.get(0));
 
-      assertNull(functionSet.getByType(stringType())); // TODO expect empty list?
+      assertNull(functionSet.getByType(stringType()));
    }
 
    @Test
@@ -158,7 +158,7 @@ public class FunctionSetTest {
       assertEquals(1, booleanArrays.size());
       assertSame(countBooleanArray, booleanArrays.get(0));
 
-      assertNull(functionSet.getBySignature(createSignature(stringType(), integerType(), integerType()))); // TODO expect empty list?
+      assertNull(functionSet.getBySignature(createSignature(stringType(), integerType(), integerType())));
    }
 
    @Test
@@ -194,19 +194,19 @@ public class FunctionSetTest {
 
    private static FunctionSet createFunctionSet() {
       return new FunctionSet(
-      // arithmetic
+            // arithmetic
             ADD, SUBTRACT, MULTIPLY,
             // comparison
             new LessThan(integerType()), new LessThanOrEqual(integerType()), new GreaterThan(integerType()), new GreaterThanOrEqual(integerType()), new Equal(
                   integerType()), new NotEqual(integerType()),
-                  // selection
-                  new If(integerType()),
-                  // higher-order functions
-                  new Reduce(integerType()), new Filter(integerType()), new org.oakgp.function.hof.Map(integerType(), booleanType()),
-                  // classify
-                  new IsPositive(), new IsNegative(), new IsZero(),
-                  // collections
-                  new Count(integerType()), new Count(booleanType()));
+            // selection
+            new If(integerType()),
+            // higher-order functions
+            new Reduce(integerType()), new Filter(integerType()), new org.oakgp.function.hof.Map(integerType(), booleanType()),
+            // classify
+            new IsPositive(), new IsNegative(), new IsZero(),
+            // collections
+            new Count(integerType()), new Count(booleanType()));
    }
 
    private void assertStartsWith(String expectedPrefix, String input) {

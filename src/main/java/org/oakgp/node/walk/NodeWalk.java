@@ -24,6 +24,11 @@ import org.oakgp.node.Node;
 import org.oakgp.node.NodeType;
 
 public final class NodeWalk {
+   /** Private constructor as all methods are static. */
+   private NodeWalk() {
+      // do nothing
+   }
+
    /**
     * Returns a {@code Node} from the tree structure represented by this object.
     *
