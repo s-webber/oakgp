@@ -64,28 +64,29 @@ import org.oakgp.primitive.VariableSet;
  * </pre>
  */
 public final class NodeReader implements Closeable {
+   private static final String FUNCTION_START_STRING = "(";
    private static final char FUNCTION_START_CHAR = '(';
-   private static final String FUNCTION_START_STRING = Character.toString(FUNCTION_START_CHAR);
+   private static final String FUNCTION_END_STRING = ")";
    private static final char FUNCTION_END_CHAR = ')';
-   private static final String FUNCTION_END_STRING = Character.toString(FUNCTION_END_CHAR);
+   private static final String STRING_STRING = "\"";
    private static final char STRING_CHAR = '\"';
-   private static final String STRING_STRING = Character.toString(STRING_CHAR);
+   private static final String ARRAY_START_STRING = "[";
    private static final char ARRAY_START_CHAR = '[';
-   private static final String ARRAY_START_STRING = Character.toString(ARRAY_START_CHAR);
    private static final char ARRAY_END_CHAR = ']';
    private static final String ARRAY_END_STRING = Character.toString(ARRAY_END_CHAR);
-   private final Map<Predicate<String>, java.util.function.Function<String, ConstantNode>> readers = new LinkedHashMap<>();
+
+   private final Map<Predicate<String>, java.util.function.Function<String, Node>> readers = new LinkedHashMap<>();
    {
+      readers.put(s -> s.startsWith("v"), this::getVariableNode);
       readers.put(s -> "true".equals(s), s -> TRUE_NODE);
       readers.put(s -> "false".equals(s), s -> FALSE_NODE);
-      readers.put(s -> s.endsWith("L"), this::createLongConstant);
-      readers.put(s -> s.endsWith("d"), this::createDoubleConstant);
-      readers.put(s -> s.endsWith("I"), this::createBigIntegerConstant);
-      readers.put(s -> s.endsWith("D"), this::createBigDecimalConstant);
+      readers.put(s -> isNumber(s) && s.endsWith("L"), this::createLongConstant);
+      readers.put(s -> isNumber(s) && s.endsWith("I"), this::createBigIntegerConstant);
+      readers.put(s -> isNumber(s) && s.endsWith("D"), this::createBigDecimalConstant);
+      readers.put(s -> isDecimalNumber(s), this::createDoubleConstant);
       readers.put(s -> isNumber(s), this::createIntegerConstant);
       readers.put(s -> true, this::createFunctionConstant);
    }
-
    private final CharReader cr;
    private final FunctionSet functionSet;
    private final VariableSet variableSet;
@@ -104,42 +105,42 @@ public final class NodeReader implements Closeable {
    private String nextToken() throws IOException {
       cr.skipWhitespace();
       int c = cr.next();
-      if (c == FUNCTION_START_CHAR) {
-         return FUNCTION_START_STRING;
-      } else if (c == FUNCTION_END_CHAR) {
-         return FUNCTION_END_STRING;
-      } else if (c == STRING_CHAR) {
-         return STRING_STRING;
-      } else if (c == ARRAY_START_CHAR) {
-         return ARRAY_START_STRING;
-      } else if (c == ARRAY_END_CHAR) {
-         return ARRAY_END_STRING;
-      } else {
-         assertNotEndOfStream(c);
-         StringBuilder sb = new StringBuilder();
-         do {
-            sb.append((char) c);
-         } while ((c = cr.next()) != -1 && isFunctionIdentifierPart(c));
-         cr.rewind(c);
-         return sb.toString();
+      switch (c) {
+         case FUNCTION_START_CHAR:
+            return FUNCTION_START_STRING;
+         case FUNCTION_END_CHAR:
+            return FUNCTION_END_STRING;
+         case STRING_CHAR:
+            return STRING_STRING;
+         case ARRAY_START_CHAR:
+            return ARRAY_START_STRING;
+         case ARRAY_END_CHAR:
+            return ARRAY_END_STRING;
+         default:
+            assertNotEndOfStream(c);
+            StringBuilder sb = new StringBuilder();
+            do {
+               sb.append((char) c);
+            } while ((c = cr.next()) != -1 && isFunctionIdentifierPart(c));
+            cr.rewind(c);
+            return sb.toString();
       }
    }
 
    private Node nextNode(String firstToken) throws IOException {
-      if (firstToken == FUNCTION_START_STRING) {
-         return nextFunctionNode();
-      } else if (firstToken == STRING_STRING) {
-         return createStringConstantNode();
-      } else if (firstToken == ARRAY_START_STRING) {
-         return createArrayConstantNode();
-      } else if (firstToken.charAt(0) == 'v') {
-         return getVariableNode(firstToken);
-      } else {
-         return nextLiteral(firstToken);
+      switch (firstToken) {
+         case FUNCTION_START_STRING:
+            return createFunctionNode();
+         case STRING_STRING:
+            return createStringConstantNode();
+         case ARRAY_START_STRING:
+            return createArrayConstantNode();
+         default:
+            return createNode(firstToken);
       }
    }
 
-   private Node nextFunctionNode() throws IOException {
+   private Node createFunctionNode() throws IOException {
       String functionName = nextToken();
       List<Node> arguments = new ArrayList<>();
       List<Type> types = new ArrayList<>();
@@ -184,13 +185,13 @@ public final class NodeReader implements Closeable {
       return variableSet.getById(id);
    }
 
-   private ConstantNode nextLiteral(String token) {
+   private Node createNode(String token) {
       return readers.entrySet().stream().filter(e -> e.getKey().test(token)).map(Map.Entry::getValue).findFirst()
             .orElseThrow(() -> new IllegalArgumentException(token)).apply(token);
    }
 
    private ConstantNode createIntegerConstant(String token) {
-      return new ConstantNode(Integer.parseInt(token), integerType());
+      return new ConstantNode(Integer.valueOf(token), integerType());
    }
 
    private ConstantNode createLongConstant(String token) {
@@ -198,7 +199,7 @@ public final class NodeReader implements Closeable {
    }
 
    private ConstantNode createDoubleConstant(String token) {
-      return new ConstantNode(Double.valueOf(token.substring(0, token.length() - 1)), doubleType());
+      return new ConstantNode(Double.valueOf(token.substring(0, token.length())), doubleType());
    }
 
    private ConstantNode createBigIntegerConstant(String token) {
@@ -222,6 +223,10 @@ public final class NodeReader implements Closeable {
          types[i] = signature.getArgumentType(i - 1);
       }
       return Type.functionType(types);
+   }
+
+   private static boolean isDecimalNumber(String token) {
+      return isNumber(token) && token.contains(".");
    }
 
    private static boolean isNumber(String token) {

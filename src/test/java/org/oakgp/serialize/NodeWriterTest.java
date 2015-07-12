@@ -1,12 +1,12 @@
 /*
  * Copyright 2015 S. Webber
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,8 +16,12 @@
 package org.oakgp.serialize;
 
 import static org.junit.Assert.assertEquals;
+import static org.oakgp.TestUtils.bigDecimalConstant;
+import static org.oakgp.TestUtils.bigIntegerConstant;
 import static org.oakgp.TestUtils.createVariable;
+import static org.oakgp.TestUtils.doubleConstant;
 import static org.oakgp.TestUtils.integerConstant;
+import static org.oakgp.TestUtils.longConstant;
 
 import org.junit.Test;
 import org.oakgp.function.math.IntegerUtils;
@@ -25,10 +29,38 @@ import org.oakgp.node.FunctionNode;
 
 public class NodeWriterTest {
    @Test
-   public void testConstantNode() {
+   public void testIntegerConstantNode() {
       NodeWriter writer = new NodeWriter();
       String output = writer.writeNode(integerConstant(768));
       assertEquals("768", output);
+   }
+
+   @Test
+   public void testLongConstantNode() {
+      NodeWriter writer = new NodeWriter();
+      String output = writer.writeNode(longConstant(768));
+      assertEquals("768L", output);
+   }
+
+   @Test
+   public void testDoubleConstantNode() {
+      NodeWriter writer = new NodeWriter();
+      String output = writer.writeNode(doubleConstant(768));
+      assertEquals("768.0", output);
+   }
+
+   @Test
+   public void testBigDecimalConstantNode() {
+      NodeWriter writer = new NodeWriter();
+      String output = writer.writeNode(bigDecimalConstant("768"));
+      assertEquals("768D", output);
+   }
+
+   @Test
+   public void testBigIntegerConstantNode() {
+      NodeWriter writer = new NodeWriter();
+      String output = writer.writeNode(bigIntegerConstant("768"));
+      assertEquals("768I", output);
    }
 
    @Test

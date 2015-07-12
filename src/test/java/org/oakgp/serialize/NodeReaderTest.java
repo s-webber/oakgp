@@ -1,12 +1,12 @@
 /*
  * Copyright 2015 S. Webber
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,6 +26,7 @@ import static org.oakgp.Type.integerToBooleanFunctionType;
 import static org.oakgp.Type.integerType;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.List;
 
 import org.junit.Test;
@@ -57,19 +58,44 @@ public class NodeReaderTest {
 
    @Test
    public void testMulipleCharacterConstantNode() {
-      assertParseLiteral(147);
+      assertParseLiteral(42);
+   }
+
+   @Test
+   public void testInteger() {
+      assertParseLiteral("42", 42);
+      assertParseLiteral("2147483647", Integer.MAX_VALUE);
+      assertParseLiteral("-2147483648", Integer.MIN_VALUE);
    }
 
    @Test
    public void testLong() {
-      assertParseLiteral("147L", 147L);
+      assertParseLiteral("42L", 42L);
       assertParseLiteral("9223372036854775807L", Long.MAX_VALUE);
+      assertParseLiteral("-9223372036854775808L", Long.MIN_VALUE);
+   }
+
+   @Test
+   public void testDouble() {
+      assertParseLiteral("42.0", 42d);
+      assertParseLiteral("42.5", 42.5d);
+      assertParseLiteral("1.7976931348623157E308", Double.MAX_VALUE);
+      assertParseLiteral("4.9E-324", Double.MIN_VALUE);
+   }
+
+   @Test
+   public void testBigInteger() {
+      assertParseLiteral("42I", new BigInteger("42"));
+      assertParseLiteral("9223372036854775807I", BigInteger.valueOf(Long.MAX_VALUE));
+      assertParseLiteral("-9223372036854775808I", BigInteger.valueOf(Long.MIN_VALUE));
    }
 
    @Test
    public void testBigDecimal() {
+      assertParseLiteral("42D", new BigDecimal("42"));
       assertParseLiteral("42.5D", new BigDecimal("42.5"));
       assertParseLiteral("1.7976931348623157E308D", BigDecimal.valueOf(Double.MAX_VALUE));
+      assertParseLiteral("4.9E-324D", BigDecimal.valueOf(Double.MIN_VALUE));
    }
 
    /** Tests that, when available, parser uses constants defined in BigDecimal. */
@@ -78,6 +104,14 @@ public class NodeReaderTest {
       assertSame(BigDecimal.ZERO, readConstant("0D").evaluate(null));
       assertSame(BigDecimal.ONE, readConstant("1D").evaluate(null));
       assertSame(BigDecimal.TEN, readConstant("10D").evaluate(null));
+   }
+
+   /** Tests that, when available, parser uses constants defined in BigInteger. */
+   @Test
+   public void testBigIntegerReuse() {
+      assertSame(BigInteger.ZERO, readConstant("0I").evaluate(null));
+      assertSame(BigInteger.ONE, readConstant("1I").evaluate(null));
+      assertSame(BigInteger.TEN, readConstant("10I").evaluate(null));
    }
 
    @Test
@@ -225,8 +259,8 @@ public class NodeReaderTest {
 
    private void assertParseLiteral(String input, Object expected) {
       Node output = readConstant(input);
-      assertEquals(expected.toString(), output.toString());
       assertSame(expected.getClass(), output.evaluate(null).getClass());
+      assertEquals(expected.toString(), output.toString());
       assertEquals(expected, output.evaluate(null));
    }
 

@@ -20,12 +20,18 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
+import static org.oakgp.Type.bigDecimalType;
+import static org.oakgp.Type.bigIntegerType;
 import static org.oakgp.Type.booleanType;
+import static org.oakgp.Type.doubleType;
 import static org.oakgp.Type.integerType;
+import static org.oakgp.Type.longType;
 import static org.oakgp.Type.stringType;
 import static org.oakgp.util.Utils.createIntegerTypeArray;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -157,7 +163,23 @@ public class TestUtils {
    }
 
    public static ConstantNode integerConstant(int value) {
-      return new ConstantNode(value, Type.integerType());
+      return new ConstantNode(value, integerType());
+   }
+
+   public static ConstantNode longConstant(long value) {
+      return new ConstantNode(value, longType());
+   }
+
+   public static ConstantNode doubleConstant(double value) {
+      return new ConstantNode(value, doubleType());
+   }
+
+   public static ConstantNode bigIntegerConstant(String value) {
+      return new ConstantNode(new BigInteger(value), bigIntegerType());
+   }
+
+   public static ConstantNode bigDecimalConstant(String value) {
+      return new ConstantNode(new BigDecimal(value), bigDecimalType());
    }
 
    public static ConstantNode booleanConstant(Boolean value) {
