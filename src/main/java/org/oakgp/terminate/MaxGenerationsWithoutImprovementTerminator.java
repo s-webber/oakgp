@@ -15,13 +15,12 @@
  */
 package org.oakgp.terminate;
 
-import java.util.List;
 import java.util.function.Predicate;
 
-import org.oakgp.rank.RankedCandidate;
+import org.oakgp.rank.RankedCandidates;
 
 /** A predicate that returns {@code true} when a specified number of generations has since the last change in the fitness of candidates. */
-public final class MaxGenerationsWithoutImprovementTerminator implements Predicate<List<RankedCandidate>> {
+public final class MaxGenerationsWithoutImprovementTerminator implements Predicate<RankedCandidates> {
    private final int maxGenerationsWithoutImprovement;
    private int currentGenerationsWithoutImprovement;
    private double currentBest;
@@ -31,8 +30,8 @@ public final class MaxGenerationsWithoutImprovementTerminator implements Predica
    }
 
    @Override
-   public boolean test(List<RankedCandidate> t) {
-      double best = t.get(0).getFitness();
+   public boolean test(RankedCandidates t) {
+      double best = t.best().getFitness();
       if (best != currentBest) {
          currentGenerationsWithoutImprovement = 0;
          currentBest = best;

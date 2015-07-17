@@ -15,9 +15,7 @@
  */
 package org.oakgp.select;
 
-import java.util.List;
-
-import org.oakgp.rank.RankedCandidate;
+import org.oakgp.rank.RankedCandidates;
 
 /** Returns instances of {@code NodeSelector}. */
 @FunctionalInterface
@@ -29,5 +27,5 @@ public interface NodeSelectorFactory {
     *           a list of {@code RankedCandidate} instances the returned selector should select from
     * @return a {@code NodeSelector} that selects from {@code candidates}
     */
-   NodeSelector getSelector(List<RankedCandidate> candidates);
+   NodeSelector getSelector(RankedCandidates candidates);
 }

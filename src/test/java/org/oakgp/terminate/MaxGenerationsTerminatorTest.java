@@ -17,20 +17,16 @@ package org.oakgp.terminate;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-
-import java.util.Collections;
-import java.util.List;
+import static org.oakgp.TestUtils.singletonRankedCandidates;
 
 import org.junit.Test;
-import org.oakgp.node.Node;
-import org.oakgp.rank.RankedCandidate;
+import org.oakgp.rank.RankedCandidates;
 
 public class MaxGenerationsTerminatorTest {
    @Test
    public void test() {
       MaxGenerationsTerminator t = new MaxGenerationsTerminator(3);
-      List<RankedCandidate> candidates = Collections.singletonList(new RankedCandidate(mock(Node.class), 1));
+      RankedCandidates candidates = singletonRankedCandidates(1);
       assertFalse(t.test(candidates));
       assertFalse(t.test(candidates));
       assertFalse(t.test(candidates));

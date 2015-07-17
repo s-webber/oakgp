@@ -16,13 +16,13 @@
 package org.oakgp;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.function.Predicate;
 
 import org.oakgp.evolve.GenerationEvolver;
 import org.oakgp.node.Node;
 import org.oakgp.rank.GenerationRanker;
 import org.oakgp.rank.RankedCandidate;
+import org.oakgp.rank.RankedCandidates;
 
 /** Performs a Genetic Programming run. */
 public final class Runner {
@@ -44,17 +44,13 @@ public final class Runner {
     *           the initial population that will be used as a basis for generating future generations
     * @return the candidate with the best fitness that was found during this run
     */
-   public static RankedCandidate process(GenerationRanker generationRanker, GenerationEvolver generationEvolver, Predicate<List<RankedCandidate>> terminator,
+   public static RankedCandidate process(GenerationRanker generationRanker, GenerationEvolver generationEvolver, Predicate<RankedCandidates> terminator,
          Collection<Node> initialPopulation) {
-      List<RankedCandidate> rankedCandidates = generationRanker.rank(initialPopulation);
+      RankedCandidates rankedCandidates = generationRanker.rank(initialPopulation);
       while (!terminator.test(rankedCandidates)) {
          Collection<Node> newGeneration = generationEvolver.process(rankedCandidates);
          rankedCandidates = generationRanker.rank(newGeneration);
       }
-      return getBest(rankedCandidates);
-   }
-
-   private static RankedCandidate getBest(List<RankedCandidate> rankedCandidates) {
-      return rankedCandidates.get(0);
+      return rankedCandidates.best();
    }
 }

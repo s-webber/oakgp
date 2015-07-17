@@ -18,12 +18,11 @@ package org.oakgp.evolve;
 import static java.lang.Math.min;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.oakgp.node.Node;
-import org.oakgp.rank.RankedCandidate;
+import org.oakgp.rank.RankedCandidates;
 import org.oakgp.select.NodeSelector;
 import org.oakgp.select.NodeSelectorFactory;
 import org.oakgp.util.NodeSet;
@@ -47,7 +46,7 @@ public final class GenerationEvolverImpl implements GenerationEvolver {
     * @return a new generation of {@code Node} instances evolved from the existing generation specified by {@code oldGeneration}
     */
    @Override
-   public Collection<Node> process(List<RankedCandidate> oldGeneration) {
+   public Collection<Node> process(RankedCandidates oldGeneration) {
       NodeSelector selector = selectorFactory.getSelector(oldGeneration);
       Set<Node> newGeneration = new NodeSet();
 

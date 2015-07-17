@@ -15,17 +15,17 @@
  */
 package org.oakgp.terminate;
 
-import java.util.List;
 import java.util.function.Predicate;
 
 import org.oakgp.rank.RankedCandidate;
+import org.oakgp.rank.RankedCandidates;
 
 /**
  * A predicate that returns {@code true} when a candidate has been found that fulfils the specified criteria.
  * <p>
  * Also known as the <i>success predicate</i>.
  */
-public final class TargetFitnessTerminator implements Predicate<List<RankedCandidate>> {
+public final class TargetFitnessTerminator implements Predicate<RankedCandidates> {
    private final Predicate<RankedCandidate> targetCriteira;
 
    public TargetFitnessTerminator(Predicate<RankedCandidate> targetCriteira) {
@@ -33,8 +33,7 @@ public final class TargetFitnessTerminator implements Predicate<List<RankedCandi
    }
 
    @Override
-   public boolean test(List<RankedCandidate> t) {
-      RankedCandidate bestCandidate = t.get(0);
-      return targetCriteira.test(bestCandidate);
+   public boolean test(RankedCandidates t) {
+      return targetCriteira.test(t.best());
    }
 }

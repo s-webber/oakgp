@@ -26,7 +26,7 @@ import java.util.List;
 import org.junit.Test;
 import org.oakgp.node.Node;
 import org.oakgp.rank.GenerationRanker;
-import org.oakgp.rank.RankedCandidate;
+import org.oakgp.rank.RankedCandidates;
 
 public class FitnessFunctionGenerationRankerTest {
    @Test
@@ -48,7 +48,7 @@ public class FitnessFunctionGenerationRankerTest {
 
       // invoke rank method
       GenerationRanker generationRanker = new FitnessFunctionGenerationRanker(mockFitnessFunction);
-      List<RankedCandidate> output = generationRanker.rank(input);
+      RankedCandidates output = generationRanker.rank(input);
 
       // assert output
       assertRankedCandidate(output.get(0), c, cFitness);

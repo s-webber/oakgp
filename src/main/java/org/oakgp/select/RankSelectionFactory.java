@@ -15,9 +15,7 @@
  */
 package org.oakgp.select;
 
-import java.util.List;
-
-import org.oakgp.rank.RankedCandidate;
+import org.oakgp.rank.RankedCandidates;
 import org.oakgp.util.Random;
 
 /** Returns instances of {@code RankSelection}. */
@@ -29,7 +27,7 @@ public final class RankSelectionFactory implements NodeSelectorFactory {
    }
 
    @Override
-   public RankSelection getSelector(List<RankedCandidate> candidates) {
+   public RankSelection getSelector(RankedCandidates candidates) {
       return new RankSelection(random, candidates);
    }
 }

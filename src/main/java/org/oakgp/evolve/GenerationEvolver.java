@@ -16,10 +16,9 @@
 package org.oakgp.evolve;
 
 import java.util.Collection;
-import java.util.List;
 
 import org.oakgp.node.Node;
-import org.oakgp.rank.RankedCandidate;
+import org.oakgp.rank.RankedCandidates;
 
 /** Creates a new generation of {@code Node} instances evolved from an existing generation. */
 @FunctionalInterface
@@ -31,5 +30,5 @@ public interface GenerationEvolver {
     *           the existing generation to use as a basis for evolving a new generation
     * @return a new generation of {@code Node} instances evolved from the existing generation specified by {@code oldGeneration}
     */
-   Collection<Node> process(List<RankedCandidate> oldGeneration);
+   Collection<Node> process(RankedCandidates oldGeneration);
 }

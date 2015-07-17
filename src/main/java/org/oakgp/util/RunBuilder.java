@@ -48,6 +48,7 @@ import org.oakgp.primitive.PrimitiveSetImpl;
 import org.oakgp.primitive.VariableSet;
 import org.oakgp.rank.GenerationRanker;
 import org.oakgp.rank.RankedCandidate;
+import org.oakgp.rank.RankedCandidates;
 import org.oakgp.rank.fitness.FitnessFunction;
 import org.oakgp.rank.fitness.FitnessFunctionCache;
 import org.oakgp.rank.fitness.FitnessFunctionGenerationRanker;
@@ -302,12 +303,12 @@ public final class RunBuilder {
    }
 
    public class FirstTerminatorSetter {
-      private final List<Predicate<List<RankedCandidate>>> terminators = new ArrayList<>();
+      private final List<Predicate<RankedCandidates>> terminators = new ArrayList<>();
 
       private FirstTerminatorSetter() {
       }
 
-      public SubsequentTerminatorSetter setTerminator(final Predicate<List<RankedCandidate>> terminator) {
+      public SubsequentTerminatorSetter setTerminator(final Predicate<RankedCandidates> terminator) {
          terminators.add(terminator);
          return new SubsequentTerminatorSetter(terminators);
       }
@@ -326,18 +327,18 @@ public final class RunBuilder {
    }
 
    public final class SubsequentTerminatorSetter extends MaxGenerationsTerminatorSetter {
-      private SubsequentTerminatorSetter(List<Predicate<List<RankedCandidate>>> terminators) {
+      private SubsequentTerminatorSetter(List<Predicate<RankedCandidates>> terminators) {
          super(terminators);
       }
 
-      public SubsequentTerminatorSetter setTerminator(final Predicate<List<RankedCandidate>> terminator) {
+      public SubsequentTerminatorSetter setTerminator(final Predicate<RankedCandidates> terminator) {
          terminators.add(terminator);
          return this;
       }
    }
 
    public final class TargetFitnessTerminatorSetter extends MaxGenerationsTerminatorSetter {
-      private TargetFitnessTerminatorSetter(List<Predicate<List<RankedCandidate>>> terminators) {
+      private TargetFitnessTerminatorSetter(List<Predicate<RankedCandidates>> terminators) {
          super(terminators);
       }
 
@@ -348,7 +349,7 @@ public final class RunBuilder {
    }
 
    public class MaxGenerationsTerminatorSetter extends MaxGenerationsWithoutImprovementTerminatorSetter {
-      private MaxGenerationsTerminatorSetter(List<Predicate<List<RankedCandidate>>> terminators) {
+      private MaxGenerationsTerminatorSetter(List<Predicate<RankedCandidates>> terminators) {
          super(terminators);
       }
 
@@ -359,9 +360,9 @@ public final class RunBuilder {
    }
 
    public class MaxGenerationsWithoutImprovementTerminatorSetter {
-      protected final List<Predicate<List<RankedCandidate>>> terminators;
+      protected final List<Predicate<RankedCandidates>> terminators;
 
-      private MaxGenerationsWithoutImprovementTerminatorSetter(List<Predicate<List<RankedCandidate>>> terminators) {
+      private MaxGenerationsWithoutImprovementTerminatorSetter(List<Predicate<RankedCandidates>> terminators) {
          this.terminators = terminators;
       }
 
@@ -376,10 +377,10 @@ public final class RunBuilder {
    }
 
    public final class ProcessRunner {
-      private Predicate<List<RankedCandidate>> terminator;
+      private Predicate<RankedCandidates> terminator;
 
       @SuppressWarnings("unchecked")
-      private ProcessRunner(List<Predicate<List<RankedCandidate>>> terminators) {
+      private ProcessRunner(List<Predicate<RankedCandidates>> terminators) {
          if (terminators.isEmpty()) {
             throw new IllegalStateException("No termination criteria set");
          } else if (terminators.size() == 1) {

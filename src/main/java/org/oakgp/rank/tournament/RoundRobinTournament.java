@@ -15,16 +15,13 @@
  */
 package org.oakgp.rank.tournament;
 
-import static java.util.Collections.reverseOrder;
-import static java.util.Collections.sort;
-
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.Collections;
 
 import org.oakgp.node.Node;
 import org.oakgp.rank.GenerationRanker;
 import org.oakgp.rank.RankedCandidate;
+import org.oakgp.rank.RankedCandidates;
 
 /** Ranks and sorts the fitness of {@code Node} instances using a {@code TwoPlayerGame} in a round-robin tournament. */
 public final class RoundRobinTournament implements GenerationRanker {
@@ -35,7 +32,7 @@ public final class RoundRobinTournament implements GenerationRanker {
    }
 
    @Override
-   public List<RankedCandidate> rank(Collection<Node> input) {
+   public RankedCandidates rank(Collection<Node> input) {
       Node[] inputAsArray = input.toArray(new Node[input.size()]);
       double[] fitness = evaluateFitness(inputAsArray);
       return toRankedCandidates(inputAsArray, fitness);
@@ -56,13 +53,12 @@ public final class RoundRobinTournament implements GenerationRanker {
       return fitness;
    }
 
-   private List<RankedCandidate> toRankedCandidates(Node[] input, double[] fitness) {
+   private RankedCandidates toRankedCandidates(Node[] input, double[] fitness) {
       int size = fitness.length;
-      List<RankedCandidate> output = new ArrayList<>(size);
+      RankedCandidate[] output = new RankedCandidate[size];
       for (int i = 0; i < size; i++) {
-         output.add(new RankedCandidate(input[i], fitness[i]));
+         output[i] = new RankedCandidate(input[i], fitness[i]);
       }
-      sort(output, reverseOrder());
-      return output;
+      return new RankedCandidates(output, Collections.reverseOrder());
    }
 }

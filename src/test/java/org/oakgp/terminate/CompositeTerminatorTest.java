@@ -21,21 +21,20 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.oakgp.TestUtils.singletonRankedCandidates;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.function.Predicate;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.oakgp.node.Node;
-import org.oakgp.rank.RankedCandidate;
+import org.oakgp.rank.RankedCandidates;
 
 public class CompositeTerminatorTest {
-   private final List<RankedCandidate> candidates = Collections.singletonList(new RankedCandidate(mock(Node.class), 1));
-   private Predicate<List<RankedCandidate>> t1;
-   private Predicate<List<RankedCandidate>> t2;
-   private Predicate<List<RankedCandidate>> t3;
+   private final RankedCandidates candidates = singletonRankedCandidates(1);
+
+   private Predicate<RankedCandidates> t1;
+   private Predicate<RankedCandidates> t2;
+   private Predicate<RankedCandidates> t3;
 
    @SuppressWarnings("unchecked")
    @Before
@@ -87,7 +86,7 @@ public class CompositeTerminatorTest {
       verifyExecuted(t3);
    }
 
-   private void returnTrue(Predicate<List<RankedCandidate>> t) {
+   private void returnTrue(Predicate<RankedCandidates> t) {
       when(t.test(candidates)).thenReturn(true);
    }
 
@@ -104,15 +103,15 @@ public class CompositeTerminatorTest {
       return composite.test(candidates);
    }
 
-   private void verifyExecuted(Predicate<List<RankedCandidate>> t) {
+   private void verifyExecuted(Predicate<RankedCandidates> t) {
       verifyExecuted(t, 1);
    }
 
-   private void verifyNotExecuted(Predicate<List<RankedCandidate>> t) {
+   private void verifyNotExecuted(Predicate<RankedCandidates> t) {
       verifyExecuted(t, 0);
    }
 
-   private void verifyExecuted(Predicate<List<RankedCandidate>> t, int times) {
+   private void verifyExecuted(Predicate<RankedCandidates> t, int times) {
       verify(t, times(times)).test(candidates);
    }
 

@@ -16,7 +16,6 @@
 package org.oakgp.rank;
 
 import java.util.Collection;
-import java.util.List;
 
 import org.oakgp.node.Node;
 
@@ -28,7 +27,7 @@ public interface GenerationRanker {
     *
     * @param input
     *           the {@code Node} instances to evaluate the fitness of
-    * @return a {@code List} of {@code RankedCandidate} - one for each {@code Node} specified in {@code input} - sorted by fitness
+    * @return a collection of {@code RankedCandidate} - one for each {@code Node} specified in {@code input} - sorted by fitness
     */
-   List<RankedCandidate> rank(Collection<Node> input);
+   RankedCandidates rank(Collection<Node> input);
 }

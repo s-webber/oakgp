@@ -18,11 +18,11 @@ package org.oakgp.select;
 import static org.junit.Assert.assertEquals;
 import static org.oakgp.TestUtils.integerConstant;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.Collections;
 
 import org.junit.Test;
 import org.oakgp.rank.RankedCandidate;
+import org.oakgp.rank.RankedCandidates;
 import org.oakgp.util.DummyRandom;
 import org.oakgp.util.Random;
 
@@ -32,7 +32,7 @@ public class FitnessProportionateSelectionTest {
       RankedCandidate c1 = new RankedCandidate(integerConstant(1), 4);
       RankedCandidate c2 = new RankedCandidate(integerConstant(2), 2);
       RankedCandidate c3 = new RankedCandidate(integerConstant(3), 1);
-      List<RankedCandidate> candidates = Arrays.asList(c1, c2, c3);
+      RankedCandidates candidates = new RankedCandidates(new RankedCandidate[] { c1, c2, c3 }, Collections.reverseOrder());
 
       DummyRandom r = new DummyRandom(.0, .57, .58, .85, .86, .999, .25, .65, .93);
       NodeSelector s = createFitnessProportionateSelection(r, candidates);
@@ -50,7 +50,7 @@ public class FitnessProportionateSelectionTest {
       r.assertEmpty();
    }
 
-   private FitnessProportionateSelection createFitnessProportionateSelection(Random random, List<RankedCandidate> candidates) {
+   private FitnessProportionateSelection createFitnessProportionateSelection(Random random, RankedCandidates candidates) {
       FitnessProportionateSelectionFactory f = new FitnessProportionateSelectionFactory(random);
       return f.getSelector(candidates);
    }

@@ -26,7 +26,7 @@ import java.util.List;
 import org.junit.Test;
 import org.oakgp.node.Node;
 import org.oakgp.rank.GenerationRanker;
-import org.oakgp.rank.RankedCandidate;
+import org.oakgp.rank.RankedCandidates;
 
 public class RoundRobinTournamentTest {
    @Test
@@ -45,7 +45,7 @@ public class RoundRobinTournamentTest {
 
       // invoke rank method
       GenerationRanker tournament = new RoundRobinTournament(mockGame);
-      List<RankedCandidate> output = tournament.rank(input);
+      RankedCandidates output = tournament.rank(input);
 
       // assert output
       assertRankedCandidate(output.get(0), a, 2);

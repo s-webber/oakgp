@@ -33,7 +33,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.oakgp.function.Function;
@@ -59,6 +58,7 @@ import org.oakgp.node.VariableNode;
 import org.oakgp.primitive.FunctionSet;
 import org.oakgp.primitive.VariableSet;
 import org.oakgp.rank.RankedCandidate;
+import org.oakgp.rank.RankedCandidates;
 import org.oakgp.serialize.NodeReader;
 import org.oakgp.serialize.NodeWriter;
 
@@ -203,7 +203,7 @@ public class TestUtils {
       assertEquals(expected, writeNode(actual));
    }
 
-   public static List<RankedCandidate> singletonRankedCandidateList(double fitness) {
-      return Collections.singletonList(new RankedCandidate(mock(Node.class), fitness));
+   public static RankedCandidates singletonRankedCandidates(double fitness) {
+      return new RankedCandidates(new RankedCandidate[] { new RankedCandidate(mock(Node.class), fitness) });
    }
 }

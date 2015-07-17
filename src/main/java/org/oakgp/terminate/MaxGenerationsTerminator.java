@@ -15,18 +15,17 @@
  */
 package org.oakgp.terminate;
 
-import java.util.List;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
 
-import org.oakgp.rank.RankedCandidate;
+import org.oakgp.rank.RankedCandidates;
 
 /**
  * A predicate that returns {@code true} when a specified number of generations has been run.
  * <p>
  * Also known as the <i>generational predicate</i>.
  */
-public final class MaxGenerationsTerminator implements Predicate<List<RankedCandidate>> {
+public final class MaxGenerationsTerminator implements Predicate<RankedCandidates> {
    private final int maxGenerations;
    private int ctr = 0;
 
@@ -35,9 +34,9 @@ public final class MaxGenerationsTerminator implements Predicate<List<RankedCand
    }
 
    @Override
-   public boolean test(List<RankedCandidate> t) {
+   public boolean test(RankedCandidates t) {
       if (ctr % 100 == 0) {
-         Logger.getGlobal().info("Generation: " + ctr + " Best: " + t.get(0));
+         Logger.getGlobal().info("Generation: " + ctr + " Best: " + t.best());
       }
       ctr++;
       boolean finished = ctr > maxGenerations;

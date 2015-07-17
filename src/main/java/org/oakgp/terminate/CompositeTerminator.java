@@ -15,27 +15,26 @@
  */
 package org.oakgp.terminate;
 
-import java.util.List;
 import java.util.function.Predicate;
 
-import org.oakgp.rank.RankedCandidate;
+import org.oakgp.rank.RankedCandidates;
 
 /**
  * A predicate that will return {@code true} when any of it component predicates return {@code true}.
  * <p>
  * A composite of multiple termination criteria.
  */
-public final class CompositeTerminator implements Predicate<List<RankedCandidate>> {
-   private final Predicate<List<RankedCandidate>>[] terminators;
+public final class CompositeTerminator implements Predicate<RankedCandidates> {
+   private final Predicate<RankedCandidates>[] terminators;
 
    @SafeVarargs
-   public CompositeTerminator(Predicate<List<RankedCandidate>>... terminators) {
+   public CompositeTerminator(Predicate<RankedCandidates>... terminators) {
       this.terminators = terminators;
    }
 
    @Override
-   public boolean test(List<RankedCandidate> candidates) {
-      for (Predicate<List<RankedCandidate>> t : terminators) {
+   public boolean test(RankedCandidates candidates) {
+      for (Predicate<RankedCandidates> t : terminators) {
          if (t.test(candidates)) {
             return true;
          }

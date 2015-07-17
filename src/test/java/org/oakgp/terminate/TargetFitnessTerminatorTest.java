@@ -17,7 +17,7 @@ package org.oakgp.terminate;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.oakgp.TestUtils.singletonRankedCandidateList;
+import static org.oakgp.TestUtils.singletonRankedCandidates;
 
 import org.junit.Test;
 
@@ -35,6 +35,6 @@ public class TargetFitnessTerminatorTest {
    }
 
    private boolean shouldTerminate(TargetFitnessTerminator t, double fitness) {
-      return t.test(singletonRankedCandidateList(fitness));
+      return t.test(singletonRankedCandidates(fitness));
    }
 }

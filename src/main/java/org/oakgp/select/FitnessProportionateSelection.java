@@ -15,10 +15,9 @@
  */
 package org.oakgp.select;
 
-import java.util.List;
-
 import org.oakgp.node.Node;
 import org.oakgp.rank.RankedCandidate;
+import org.oakgp.rank.RankedCandidates;
 import org.oakgp.util.Random;
 
 /**
@@ -28,19 +27,24 @@ import org.oakgp.util.Random;
  */
 public final class FitnessProportionateSelection implements NodeSelector {
    private final Random random;
-   private final List<RankedCandidate> candidates;
+   private final RankedCandidates candidates;
    private final int size;
    private final double sumFitness;
 
-   public FitnessProportionateSelection(Random random, List<RankedCandidate> candidates) {
+   public FitnessProportionateSelection(Random random, RankedCandidates candidates) {
       this.random = random;
       this.candidates = candidates;
       this.size = candidates.size();
       this.sumFitness = sumFitness(candidates);
    }
 
-   private static double sumFitness(List<RankedCandidate> candidates) {
-      return candidates.stream().mapToDouble(c -> c.getFitness()).sum();
+   private static double sumFitness(RankedCandidates candidates) {
+      // return candidates.stream().mapToDouble(c -> c.getFitness()).sum();
+      double s = 0;
+      for (RankedCandidate c : candidates) {
+         s += c.getFitness();
+      }
+      return s;
    }
 
    @Override
@@ -55,6 +59,6 @@ public final class FitnessProportionateSelection implements NodeSelector {
          }
       }
       // should only get here if rounding error - default to selecting the best candidate
-      return candidates.get(0).getNode();
+      return candidates.best().getNode();
    }
 }

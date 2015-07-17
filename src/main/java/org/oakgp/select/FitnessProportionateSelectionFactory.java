@@ -15,9 +15,7 @@
  */
 package org.oakgp.select;
 
-import java.util.List;
-
-import org.oakgp.rank.RankedCandidate;
+import org.oakgp.rank.RankedCandidates;
 import org.oakgp.util.Random;
 
 /** Returns instances of {@code FitnessProportionateSelection}. */
@@ -29,7 +27,7 @@ public final class FitnessProportionateSelectionFactory implements NodeSelectorF
    }
 
    @Override
-   public FitnessProportionateSelection getSelector(List<RankedCandidate> candidates) {
+   public FitnessProportionateSelection getSelector(RankedCandidates candidates) {
       return new FitnessProportionateSelection(random, candidates);
    }
 }

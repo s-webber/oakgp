@@ -15,14 +15,12 @@
  */
 package org.oakgp.rank.fitness;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 
 import org.oakgp.node.Node;
 import org.oakgp.rank.GenerationRanker;
 import org.oakgp.rank.RankedCandidate;
+import org.oakgp.rank.RankedCandidates;
 
 /** Ranks and sorts the fitness of {@code Node} instances using a {@code FitnessFunction}. */
 public final class FitnessFunctionGenerationRanker implements GenerationRanker {
@@ -46,14 +44,14 @@ public final class FitnessFunctionGenerationRanker implements GenerationRanker {
     * @return a {@code List} of {@code RankedCandidate} - one for each {@code Node} specified in {@code input} - sorted by fitness
     */
    @Override
-   public List<RankedCandidate> rank(Collection<Node> input) {
-      List<RankedCandidate> output = new ArrayList<>(input.size());
+   public RankedCandidates rank(Collection<Node> input) {
+      RankedCandidate output[] = new RankedCandidate[input.size()];
+      int ctr = 0;
       for (Node n : input) {
          RankedCandidate rankedCandidate = rankCandidate(n);
-         output.add(rankedCandidate);
+         output[ctr++] = rankedCandidate;
       }
-      Collections.sort(output);
-      return output;
+      return new RankedCandidates(output);
    }
 
    private RankedCandidate rankCandidate(Node n) {

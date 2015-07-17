@@ -17,7 +17,7 @@ package org.oakgp.terminate;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.oakgp.TestUtils.singletonRankedCandidateList;
+import static org.oakgp.TestUtils.singletonRankedCandidates;
 
 import org.junit.Test;
 
@@ -33,8 +33,8 @@ public class MaxGenerationsWithoutImprovementTerminatorTest {
    private void assertTerminator(int maxGenerationsWithoutImprovement, double... fitnesses) {
       MaxGenerationsWithoutImprovementTerminator t = new MaxGenerationsWithoutImprovementTerminator(maxGenerationsWithoutImprovement);
       for (int i = 0; i < fitnesses.length - 1; i++) {
-         assertFalse(t.test(singletonRankedCandidateList(fitnesses[i])));
+         assertFalse(t.test(singletonRankedCandidates(fitnesses[i])));
       }
-      assertTrue(t.test(singletonRankedCandidateList(fitnesses[fitnesses.length - 1])));
+      assertTrue(t.test(singletonRankedCandidates(fitnesses[fitnesses.length - 1])));
    }
 }

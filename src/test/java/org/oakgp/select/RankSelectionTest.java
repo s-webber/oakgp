@@ -18,11 +18,9 @@ package org.oakgp.select;
 import static org.junit.Assert.assertEquals;
 import static org.oakgp.TestUtils.integerConstant;
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.junit.Test;
 import org.oakgp.rank.RankedCandidate;
+import org.oakgp.rank.RankedCandidates;
 import org.oakgp.util.DummyRandom;
 import org.oakgp.util.Random;
 
@@ -32,7 +30,7 @@ public class RankSelectionTest {
       RankedCandidate c1 = new RankedCandidate(integerConstant(1), 1);
       RankedCandidate c2 = new RankedCandidate(integerConstant(2), 2);
       RankedCandidate c3 = new RankedCandidate(integerConstant(3), 3);
-      List<RankedCandidate> candidates = Arrays.asList(c1, c2, c3);
+      RankedCandidates candidates = new RankedCandidates(new RankedCandidate[] { c1, c2, c3 });
 
       DummyRandom r = new DummyRandom(.0, .49, .5, .83, .84, .999, .25, .65, .93);
       NodeSelector s = createRankSelection(r, candidates);
@@ -50,7 +48,7 @@ public class RankSelectionTest {
       r.assertEmpty();
    }
 
-   private RankSelection createRankSelection(Random random, List<RankedCandidate> candidates) {
+   private RankSelection createRankSelection(Random random, RankedCandidates candidates) {
       RankSelectionFactory f = new RankSelectionFactory(random);
       return f.getSelector(candidates);
    }

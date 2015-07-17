@@ -15,20 +15,19 @@
  */
 package org.oakgp.select;
 
-import java.util.List;
-
 import org.oakgp.node.Node;
 import org.oakgp.rank.RankedCandidate;
+import org.oakgp.rank.RankedCandidates;
 import org.oakgp.util.Random;
 
 /** The <i>relative</i> fitness of candidates is used to determine the probability that they will be selected. */
 public final class RankSelection implements NodeSelector {
    private final Random random;
-   private final List<RankedCandidate> candidates;
+   private final RankedCandidates candidates;
    private final int size;
    private final double sum;
 
-   public RankSelection(Random random, List<RankedCandidate> candidates) {
+   public RankSelection(Random random, RankedCandidates candidates) {
       this.random = random;
       this.candidates = candidates;
       this.size = candidates.size();
@@ -51,6 +50,6 @@ public final class RankSelection implements NodeSelector {
          }
       }
       // should only get here if rounding error - default to selecting the best candidate
-      return candidates.get(0).getNode();
+      return candidates.best().getNode();
    }
 }
