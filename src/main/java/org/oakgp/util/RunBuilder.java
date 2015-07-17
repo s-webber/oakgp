@@ -393,7 +393,7 @@ public final class RunBuilder {
          assertVariablesSet();
          RankedCandidate best = Runner.process(_generationRanker, _generationEvolver, terminator, _initialPopulation);
          Node simplifiedBestNode = simplify(best.getNode());
-         Logger.getGlobal().info("Best candidate: " + simplifiedBestNode);
+         Logger.getGlobal().info("Best candidate: Fitness: " + best.getFitness() + " Structure: " + simplifiedBestNode);
          return simplifiedBestNode;
       }
 

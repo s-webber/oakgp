@@ -36,11 +36,11 @@ public final class MaxGenerationsTerminator implements Predicate<List<RankedCand
 
    @Override
    public boolean test(List<RankedCandidate> t) {
+      if (ctr % 100 == 0) {
+         Logger.getGlobal().info("Generation: " + ctr + " Best: " + t.get(0));
+      }
       ctr++;
       boolean finished = ctr > maxGenerations;
-      if (finished || ctr % 100 == 0) {
-         Logger.getGlobal().info(ctr + " " + t.get(0).getFitness() + " " + t.get(0));
-      }
       return finished;
    }
 }
