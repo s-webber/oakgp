@@ -1,12 +1,12 @@
 /*
  * Copyright 2015 S. Webber
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,6 +18,7 @@ package org.oakgp.function.math;
 import static org.oakgp.Type.integerType;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 import org.oakgp.function.AbstractFunctionTest;
 import org.oakgp.function.Function;
@@ -39,11 +40,25 @@ public class AddTest extends AbstractFunctionTest {
       evaluate("(+ 2147483647L 1L)").to(2147483648L);
       evaluate("(+ 9223372036854775807L 1L)").to(-9223372036854775808L);
 
+      // BigInteger
+      evaluate("(+ 3I 21I)").to(new BigInteger("24"));
+      evaluate("(+ 2147483647I 1I)").to(new BigInteger("2147483648"));
+      evaluate("(+ 9223372036854775807I 1I)").to(new BigInteger("9223372036854775808"));
+
+      // double
+      evaluate("(+ 3.0 21.0)").to(24.0);
+      evaluate("(+ 7.5 -0.025)").to(7.475);
+      evaluate("(+ 5.6 5.8)").to(11.399999999999999);
+      evaluate("(+ 2147483647.0 1.0)").to(2147483648.0);
+      evaluate("(+ 9223372036854775807.0 1.0)").to(9223372036854775808.0);
+      evaluate("(+ 1.7976931348623157E308 1.0)").to(1.7976931348623157E308);
+
       // BigDecimal
       evaluate("(+ 3D 21D)").to(new BigDecimal("24"));
+      evaluate("(+ 7.5D -0.025D)").to(new BigDecimal("7.475"));
+      evaluate("(+ 5.6D 5.8D)").to(new BigDecimal("11.4"));
       evaluate("(+ 2147483647D 1D)").to(new BigDecimal("2147483648"));
       evaluate("(+ 9223372036854775807D 1D)").to(new BigDecimal("9223372036854775808"));
-      evaluate("(+ 7.5D -0.025D)").to(new BigDecimal("7.475"));
       evaluate("(+ 1.7976931348623157E308D 1D)").to(BigDecimal.valueOf(Double.MAX_VALUE).add(BigDecimal.ONE));
    }
 
@@ -118,8 +133,7 @@ public class AddTest extends AbstractFunctionTest {
 
    @Override
    protected Function[] getFunctionSet() {
-      return new Function[] { getFunction(), IntegerUtils.INTEGER_UTILS.getSubtract(), IntegerUtils.INTEGER_UTILS.getMultiply(),
-            BigDecimalUtils.BIG_DECIMAL_UTILS.getAdd(), BigDecimalUtils.BIG_DECIMAL_UTILS.getMultiply(), LongUtils.LONG_UTILS.getAdd(),
-            LongUtils.LONG_UTILS.getMultiply() };
+      return new Function[] { getFunction(), IntegerUtils.INTEGER_UTILS.getSubtract(), IntegerUtils.INTEGER_UTILS.getMultiply(), LongUtils.LONG_UTILS.getAdd(),
+            DoubleUtils.DOUBLE_UTILS.getAdd(), BigIntegerUtils.BIG_INTEGER_UTILS.getAdd(), BigDecimalUtils.BIG_DECIMAL_UTILS.getAdd() };
    }
 }

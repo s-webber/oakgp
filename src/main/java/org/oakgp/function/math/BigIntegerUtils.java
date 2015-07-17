@@ -15,36 +15,36 @@
  */
 package org.oakgp.function.math;
 
-import static org.oakgp.Type.bigDecimalType;
+import static org.oakgp.Type.bigIntegerType;
 
-import java.math.BigDecimal;
+import java.math.BigInteger;
 
-/** Provides support for working with instances of {@code java.math.BigDecimal}. */
-public final class BigDecimalUtils extends NumberUtils<BigDecimal> {
-   public static final BigDecimalUtils BIG_DECIMAL_UTILS = new BigDecimalUtils();
+/** Provides support for working with instances of {@code java.math.BigInteger}. */
+public class BigIntegerUtils extends NumberUtils<BigInteger> {
+   public static final BigIntegerUtils BIG_INTEGER_UTILS = new BigIntegerUtils();
 
-   /** @see #BIG_DECIMAL_UTILS */
-   private BigDecimalUtils() {
-      super(bigDecimalType(), BigDecimal.ZERO, BigDecimal.ONE, BigDecimal.valueOf(2));
+   /** @see #BIG_INTEGER_UTILS */
+   private BigIntegerUtils() {
+      super(bigIntegerType(), BigInteger.ZERO, BigInteger.ONE, BigInteger.valueOf(2));
    }
 
    @Override
-   protected BigDecimal add(BigDecimal i1, BigDecimal i2) {
+   protected BigInteger add(BigInteger i1, BigInteger i2) {
       return i1.add(i2);
    }
 
    @Override
-   protected BigDecimal subtract(BigDecimal i1, BigDecimal i2) {
+   protected BigInteger subtract(BigInteger i1, BigInteger i2) {
       return i1.subtract(i2);
    }
 
    @Override
-   protected BigDecimal multiply(BigDecimal i1, BigDecimal i2) {
+   protected BigInteger multiply(BigInteger i1, BigInteger i2) {
       return i1.multiply(i2);
    }
 
    @Override
-   protected BigDecimal divide(BigDecimal i1, BigDecimal i2) {
+   protected BigInteger divide(BigInteger i1, BigInteger i2) {
       return i1.divide(i2);
    }
 }

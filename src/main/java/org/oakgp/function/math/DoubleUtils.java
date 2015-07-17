@@ -15,34 +15,34 @@
  */
 package org.oakgp.function.math;
 
-import static org.oakgp.Type.integerType;
+import static org.oakgp.Type.doubleType;
 
-/** Provides support for working with instances of {@code java.lang.Integer}. */
-public final class IntegerUtils extends NumberUtils<Integer> {
-   public static final IntegerUtils INTEGER_UTILS = new IntegerUtils();
+/** Provides support for working with instances of {@code java.lang.Double}. */
+public class DoubleUtils extends NumberUtils<Double> {
+   public static final DoubleUtils DOUBLE_UTILS = new DoubleUtils();
 
-   /** @see #INTEGER_UTILS */
-   private IntegerUtils() {
-      super(integerType(), 0, 1, 2);
+   /** @see #DOUBLE_UTILS */
+   private DoubleUtils() {
+      super(doubleType(), 0d, 1d, 2d);
    }
 
    @Override
-   protected Integer add(Integer i1, Integer i2) {
+   protected Double add(Double i1, Double i2) {
       return i1 + i2;
    }
 
    @Override
-   protected Integer subtract(Integer i1, Integer i2) {
+   protected Double subtract(Double i1, Double i2) {
       return i1 - i2;
    }
 
    @Override
-   protected Integer multiply(Integer i1, Integer i2) {
+   protected Double multiply(Double i1, Double i2) {
       return i1 * i2;
    }
 
    @Override
-   protected Integer divide(Integer i1, Integer i2) {
+   protected Double divide(Double i1, Double i2) {
       return i1 / i2;
    }
 }

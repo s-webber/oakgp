@@ -1,12 +1,12 @@
 /*
  * Copyright 2015 S. Webber
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,6 +18,7 @@ package org.oakgp.function.math;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.oakgp.TestUtils.integerConstant;
 import static org.oakgp.TestUtils.readNode;
 import static org.oakgp.Type.integerType;
 
@@ -52,6 +53,23 @@ public class NumberUtilsTest {
       Node input = readNode(before);
       Node output = readNode(after);
       assertEquals(output, NUMBER_UTILS.multiplyByTwo(input));
+   }
+
+   @Test
+   public void testIsNegative() {
+      assertTrue(isNegative(Integer.MIN_VALUE));
+      assertTrue(isNegative(-42));
+      assertTrue(isNegative(-2));
+      assertTrue(isNegative(-1));
+      assertFalse(isNegative(0));
+      assertFalse(isNegative(1));
+      assertFalse(isNegative(2));
+      assertFalse(isNegative(42));
+      assertFalse(isNegative(Integer.MAX_VALUE));
+   }
+
+   private boolean isNegative(int i) {
+      return NUMBER_UTILS.isNegative(integerConstant(i));
    }
 
    @Test

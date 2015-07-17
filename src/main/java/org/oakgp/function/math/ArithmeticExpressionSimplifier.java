@@ -31,9 +31,9 @@ import org.oakgp.node.Node;
 final class ArithmeticExpressionSimplifier {
    private static final boolean SANITY_CHECK = true;
 
-   private final NumberUtils numberUtils;
+   private final NumberUtils<?> numberUtils;
 
-   ArithmeticExpressionSimplifier(NumberUtils numberUtils) {
+   ArithmeticExpressionSimplifier(NumberUtils<?> numberUtils) {
       this.numberUtils = numberUtils;
    }
 

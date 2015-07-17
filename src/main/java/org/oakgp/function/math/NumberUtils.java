@@ -26,98 +26,174 @@ import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 
 /** Provides support for working with instances of {@code java.lang.Number}. */
-interface NumberUtils {
-   Type getType();
+abstract class NumberUtils<T extends Comparable<T>> {
+   private final Type type;
+   private final T rawZero;
+   private final T rawOne;
+   private final ConstantNode zero;
+   private final ConstantNode one;
+   private final ConstantNode two;
+   private final ArithmeticExpressionSimplifier simplifier;
+   private final Add add;
+   private final Subtract subtract;
+   private final Multiply multiply;
+   private final Divide divide;
 
-   ArithmeticExpressionSimplifier getSimplifier();
-
-   Add getAdd();
-
-   Subtract getSubtract();
-
-   Multiply getMultiply();
-
-   Divide getDivide();
-
-   default boolean isZero(Node n) {
-      return zero().equals(n);
+   protected NumberUtils(Type type, T zero, T one, T two) {
+      this.type = type;
+      this.rawZero = zero;
+      this.rawOne = one;
+      this.zero = createConstant(zero);
+      this.one = createConstant(one);
+      this.two = createConstant(two);
+      this.simplifier = new ArithmeticExpressionSimplifier(this);
+      this.add = new Add(this);
+      this.subtract = new Subtract(this);
+      this.multiply = new Multiply(this);
+      this.divide = new Divide(this);
    }
 
-   default boolean isOne(Node n) {
-      return one().equals(n);
+   public final Type getType() {
+      return type;
    }
 
-   ConstantNode zero();
+   public final ArithmeticExpressionSimplifier getSimplifier() {
+      return simplifier;
+   }
 
-   ConstantNode one();
+   public final Add getAdd() {
+      return add;
+   }
 
-   ConstantNode two();
+   public final Subtract getSubtract() {
+      return subtract;
+   }
 
-   boolean isNegative(Node n);
+   public final Multiply getMultiply() {
+      return multiply;
+   }
 
-   ConstantNode add(Node n1, Node n2, Assignments assignments);
+   public final Divide getDivide() {
+      return divide;
+   }
 
-   default ConstantNode add(Node n1, Node n2) {
+   public final boolean isZero(Node n) {
+      return zero.equals(n);
+   }
+
+   public final boolean isOne(Node n) {
+      return one.equals(n);
+   }
+
+   public final ConstantNode zero() {
+      return zero;
+   }
+
+   public final ConstantNode one() {
+      return one;
+   }
+
+   public final ConstantNode add(Node n1, Node n2, Assignments assignments) {
+      return createConstant(add(evaluate(n1, assignments), evaluate(n2, assignments)));
+   }
+
+   public final ConstantNode add(Node n1, Node n2) {
       return add(n1, n2, null);
    }
 
-   ConstantNode increment(Node n);
+   public final ConstantNode increment(Node n) {
+      return createConstant(add(evaluate(n), rawOne));
+   }
 
-   ConstantNode decrement(Node n);
+   public final ConstantNode decrement(Node n) {
+      return createConstant(subtract(evaluate(n), rawOne));
+   }
 
-   ConstantNode subtract(Node n1, Node n2, Assignments assignments);
+   public final ConstantNode subtract(Node n1, Node n2, Assignments assignments) {
+      return createConstant(subtract(evaluate(n1, assignments), evaluate(n2, assignments)));
+   }
 
-   default ConstantNode subtract(Node n1, Node n2) {
+   public final ConstantNode subtract(Node n1, Node n2) {
       return subtract(n1, n2, null);
    }
 
-   ConstantNode multiply(Node n1, Node n2, Assignments assignments);
-
-   default ConstantNode multiply(Node n1, Node n2) {
-      return multiply(n1, n2, null);
+   public final ConstantNode negateConstant(Node n) {
+      return subtract(zero, n);
    }
 
-   ConstantNode divide(Node n1, Node n2, Assignments assignments);
-
-   ConstantNode negateConstant(Node n);
-
-   default Node negate(Node arg) {
+   public final Node negate(Node arg) {
       if (isConstant(arg)) {
          return negateConstant(arg);
       } else {
-         return new FunctionNode(getSubtract(), zero(), arg);
+         return new FunctionNode(subtract, zero, arg);
       }
    }
 
-   default FunctionNode multiplyByTwo(Node arg) {
-      return new FunctionNode(getMultiply(), two(), arg);
+   public final ConstantNode multiply(Node n1, Node n2, Assignments assignments) {
+      return createConstant(multiply(evaluate(n1, assignments), evaluate(n2, assignments)));
    }
 
-   default boolean isAddOrSubtract(Function f) {
+   public final ConstantNode multiply(Node n1, Node n2) {
+      return multiply(n1, n2, null);
+   }
+
+   public final FunctionNode multiplyByTwo(Node arg) {
+      return new FunctionNode(multiply, two, arg);
+   }
+
+   public final ConstantNode divide(Node n1, Node n2, Assignments assignments) {
+      return createConstant(divide(evaluate(n1, assignments), evaluate(n2, assignments)));
+   }
+
+   public final boolean isNegative(Node n) {
+      return evaluate(n).compareTo(rawZero) < 0;
+   }
+
+   public final boolean isAddOrSubtract(Function f) {
       return isAdd(f) || isSubtract(f);
    }
 
-   default boolean isAdd(Function f) {
-      return f == getAdd();
+   public final boolean isAdd(Function f) {
+      return f == add;
    }
 
-   default boolean isSubtract(Node n) {
+   public final boolean isSubtract(Node n) {
       return isFunction(n) && isSubtract((FunctionNode) n);
    }
 
-   default boolean isSubtract(FunctionNode n) {
+   public final boolean isSubtract(FunctionNode n) {
       return isSubtract(n.getFunction());
    }
 
-   default boolean isSubtract(Function f) {
-      return f == getSubtract();
+   public final boolean isSubtract(Function f) {
+      return f == subtract;
    }
 
-   default boolean isMultiply(FunctionNode n) {
+   public final boolean isMultiply(FunctionNode n) {
       return isMultiply(n.getFunction());
    }
 
-   default boolean isMultiply(Function f) {
-      return f == getMultiply();
+   public final boolean isMultiply(Function f) {
+      return f == multiply;
+   }
+
+   protected abstract T add(T i1, T i2);
+
+   protected abstract T subtract(T i1, T i2);
+
+   protected abstract T multiply(T i1, T i2);
+
+   protected abstract T divide(T i1, T i2);
+
+   private final ConstantNode createConstant(T o) {
+      return new ConstantNode(o, type);
+   }
+
+   private final T evaluate(Node n) {
+      return evaluate(n, null);
+   }
+
+   private final T evaluate(Node n, Assignments a) {
+      return n.evaluate(a);
    }
 }
