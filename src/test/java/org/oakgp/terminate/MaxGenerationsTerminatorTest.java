@@ -26,7 +26,7 @@ public class MaxGenerationsTerminatorTest {
    @Test
    public void test() {
       MaxGenerationsTerminator t = new MaxGenerationsTerminator(3);
-      RankedCandidates candidates = singletonRankedCandidates(1);
+      RankedCandidates candidates = singletonRankedCandidates();
       assertFalse(t.test(candidates));
       assertFalse(t.test(candidates));
       assertFalse(t.test(candidates));

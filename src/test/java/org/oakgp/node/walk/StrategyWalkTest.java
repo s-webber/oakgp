@@ -18,10 +18,10 @@ package org.oakgp.node.walk;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
 import static org.oakgp.TestUtils.assertNodeEquals;
 import static org.oakgp.TestUtils.createVariable;
 import static org.oakgp.TestUtils.integerConstant;
+import static org.oakgp.TestUtils.mockNode;
 import static org.oakgp.TestUtils.readNode;
 import static org.oakgp.function.math.IntegerUtils.INTEGER_UTILS;
 import static org.oakgp.util.Utils.TRUE_NODE;
@@ -137,7 +137,7 @@ public class StrategyWalkTest {
 
    private void assertTerminalNodeReplaceAt(Node terminalNode) {
       assertTrue(NodeType.isTerminal(terminalNode));
-      final Node r = mock(Node.class);
+      final Node r = mockNode();
       assertSame(r, StrategyWalk.replaceAt(terminalNode, 0, n -> r, n -> true));
       assertSame(r, StrategyWalk.replaceAt(terminalNode, 0, n -> r, n -> false));
       assertSame(r, StrategyWalk.replaceAt(terminalNode, 0, n -> r, n -> true));

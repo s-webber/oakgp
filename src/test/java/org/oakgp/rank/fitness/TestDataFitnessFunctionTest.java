@@ -17,8 +17,8 @@ package org.oakgp.rank.fitness;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
 import static org.oakgp.Assignments.createAssignments;
+import static org.oakgp.TestUtils.mockNode;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -40,7 +40,7 @@ public class TestDataFitnessFunctionTest {
       testData.put(assignments3, 7);
 
       // mock
-      Node mockNode = mock(Node.class);
+      Node mockNode = mockNode();
       given(mockNode.evaluate(assignments1)).willReturn(12);
       given(mockNode.evaluate(assignments2)).willReturn(-1);
       given(mockNode.evaluate(assignments3)).willReturn(5);
@@ -65,7 +65,7 @@ public class TestDataFitnessFunctionTest {
       testData.put(assignments3, "qwerty");
 
       // mock
-      Node mockNode = mock(Node.class);
+      Node mockNode = mockNode();
       given(mockNode.evaluate(assignments1)).willReturn("abcdex");
       given(mockNode.evaluate(assignments2)).willReturn("asdxxx");
       given(mockNode.evaluate(assignments3)).willReturn("qwerty");

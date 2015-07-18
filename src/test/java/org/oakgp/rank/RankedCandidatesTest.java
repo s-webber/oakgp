@@ -20,20 +20,19 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import static org.mockito.Mockito.mock;
+import static org.oakgp.TestUtils.mockNode;
 
 import java.util.Collections;
 import java.util.Iterator;
 
 import org.junit.Test;
-import org.oakgp.node.Node;
 
 public class RankedCandidatesTest {
-   private final RankedCandidate element1 = new RankedCandidate(mock(Node.class), -7);
-   private final RankedCandidate element2 = new RankedCandidate(mock(Node.class), -2.25);
-   private final RankedCandidate element3 = new RankedCandidate(mock(Node.class), 0);
-   private final RankedCandidate element4 = new RankedCandidate(mock(Node.class), 1);
-   private final RankedCandidate element5 = new RankedCandidate(mock(Node.class), 785.5);
+   private final RankedCandidate element1 = new RankedCandidate(mockNode(), -7);
+   private final RankedCandidate element2 = new RankedCandidate(mockNode(), -2.25);
+   private final RankedCandidate element3 = new RankedCandidate(mockNode(), 0);
+   private final RankedCandidate element4 = new RankedCandidate(mockNode(), 1);
+   private final RankedCandidate element5 = new RankedCandidate(mockNode(), 785.5);
    private final RankedCandidate[] input = { element5, element3, element1, element2, element4 };
    private final RankedCandidates rankedCandidates = new RankedCandidates(input);
 
@@ -102,5 +101,13 @@ public class RankedCandidatesTest {
       assertSame(defaultOrderedCandidates.get(2), reverseOrderedCandidates.get(2));
       assertSame(defaultOrderedCandidates.get(3), reverseOrderedCandidates.get(1));
       assertSame(defaultOrderedCandidates.get(4), reverseOrderedCandidates.get(0));
+   }
+
+   @Test
+   public void testBest() {
+      RankedCandidates defaultOrderedCandidates = new RankedCandidates(input);
+      RankedCandidates reverseOrderedCandidates = new RankedCandidates(input, Collections.reverseOrder());
+      assertSame(element1, defaultOrderedCandidates.best());
+      assertSame(element5, reverseOrderedCandidates.best());
    }
 }

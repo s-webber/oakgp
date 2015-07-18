@@ -19,6 +19,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.oakgp.Type.bigDecimalType;
 import static org.oakgp.Type.bigIntegerType;
@@ -198,7 +199,21 @@ public class TestUtils {
       assertEquals(expected, writeNode(actual));
    }
 
+   public static RankedCandidates singletonRankedCandidates() {
+      return singletonRankedCandidates(1);
+   }
+
    public static RankedCandidates singletonRankedCandidates(double fitness) {
-      return new RankedCandidates(new RankedCandidate[] { new RankedCandidate(mock(Node.class), fitness) });
+      return new RankedCandidates(new RankedCandidate[] { new RankedCandidate(mockNode(), fitness) });
+   }
+
+   public static Node mockNode() {
+      return mockNode(integerType());
+   }
+
+   public static Node mockNode(Type type) {
+      Node mockNode = mock(Node.class);
+      given(mockNode.getType()).willReturn(type);
+      return mockNode;
    }
 }

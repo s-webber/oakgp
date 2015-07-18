@@ -30,7 +30,7 @@ import org.junit.Test;
 import org.oakgp.rank.RankedCandidates;
 
 public class CompositeTerminatorTest {
-   private final RankedCandidates candidates = singletonRankedCandidates(1);
+   private final RankedCandidates candidates = singletonRankedCandidates();
 
    private Predicate<RankedCandidates> t1;
    private Predicate<RankedCandidates> t2;
