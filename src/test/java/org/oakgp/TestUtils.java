@@ -55,7 +55,6 @@ import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.node.VariableNode;
-import org.oakgp.primitive.FunctionSet;
 import org.oakgp.primitive.VariableSet;
 import org.oakgp.rank.RankedCandidate;
 import org.oakgp.rank.RankedCandidates;
@@ -64,7 +63,7 @@ import org.oakgp.serialize.NodeWriter;
 
 public class TestUtils {
    public static final VariableSet VARIABLE_SET = VariableSet.createVariableSet(createIntegerTypeArray(100));
-   private static final FunctionSet FUNCTION_SET = createDefaultFunctionSet();
+   private static final Function[] FUNCTIONS = createDefaultFunctions();
 
    public static void assertVariable(int expectedId, Node node) {
       assertTrue(node instanceof VariableNode);
@@ -96,22 +95,18 @@ public class TestUtils {
    }
 
    public static Node readNode(String input) {
-      return readNode(input, FUNCTION_SET, VARIABLE_SET);
-   }
-
-   public static Node readNode(String input, FunctionSet functionSet, VariableSet variableSet) {
-      List<Node> outputs = readNodes(input, functionSet, variableSet);
+      List<Node> outputs = readNodes(input);
       assertEquals(1, outputs.size());
       return outputs.get(0);
    }
 
    public static List<Node> readNodes(String input) {
-      return readNodes(input, FUNCTION_SET, VARIABLE_SET);
+      return readNodes(input, FUNCTIONS, VARIABLE_SET);
    }
 
-   public static List<Node> readNodes(String input, FunctionSet functionSet, VariableSet variableSet) {
+   private static List<Node> readNodes(String input, Function[] functions, VariableSet variableSet) {
       List<Node> outputs = new ArrayList<>();
-      try (NodeReader nr = new NodeReader(input, functionSet, variableSet)) {
+      try (NodeReader nr = new NodeReader(input, functions, new ConstantNode[0], variableSet)) {
          while (!nr.isEndOfStream()) {
             outputs.add(nr.readNode());
          }
@@ -121,7 +116,7 @@ public class TestUtils {
       return outputs;
    }
 
-   private static FunctionSet createDefaultFunctionSet() {
+   private static Function[] createDefaultFunctions() {
       List<Function> functions = new ArrayList<>();
 
       functions.add(IntegerUtils.INTEGER_UTILS.getAdd());
@@ -151,7 +146,7 @@ public class TestUtils {
       functions.add(new Count(integerType()));
       functions.add(new Count(booleanType()));
 
-      return new FunctionSet(functions.toArray(new Function[functions.size()]));
+      return functions.toArray(new Function[functions.size()]);
    }
 
    public static Arguments createArguments(String... expressions) {

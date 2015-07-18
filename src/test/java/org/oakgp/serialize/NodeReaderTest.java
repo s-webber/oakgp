@@ -24,7 +24,9 @@ import static org.oakgp.TestUtils.readNode;
 import static org.oakgp.TestUtils.readNodes;
 import static org.oakgp.Type.integerToBooleanFunctionType;
 import static org.oakgp.Type.integerType;
+import static org.oakgp.Type.type;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
@@ -37,6 +39,7 @@ import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.node.VariableNode;
+import org.oakgp.primitive.VariableSet;
 
 public class NodeReaderTest {
    // TODO test error conditions using assetReadException
@@ -195,6 +198,28 @@ public class NodeReaderTest {
    public void testPadded() {
       String input = " \r\n42\t\t  ";
       assertParseLiteral(input, 42);
+   }
+
+   @Test
+   public void testConstantNode() throws IOException {
+      String input = "TEST";
+      ConstantNode expected = new ConstantNode(input, type("testConstantNode"));
+      try (NodeReader r = new NodeReader(input, new Function[0], new ConstantNode[] { expected }, VariableSet.createVariableSet())) {
+         Node actual = r.readNode();
+         assertSame(expected, actual);
+      }
+   }
+
+   @Test
+   public void testUnknown() throws IOException {
+      String input = "TEST";
+      try (NodeReader r = new NodeReader(input, new Function[0], new ConstantNode[0], VariableSet.createVariableSet())) {
+         r.readNode();
+         fail();
+      } catch (IllegalArgumentException e) {
+         // expected
+         assertEquals("Could not find version of function: TEST in: []", e.getMessage());
+      }
    }
 
    @Test

@@ -33,14 +33,13 @@ import org.oakgp.Type;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
-import org.oakgp.primitive.FunctionSet;
 import org.oakgp.primitive.VariableSet;
 import org.oakgp.serialize.NodeReader;
 
 public abstract class AbstractFunctionTest {
    private static final Type[] DEFAULT_VARIABLE_TYPES = createIntegerTypeArray(100);
 
-   private final FunctionSet functionSet;
+   private final Function[] functions;
    private final Observable observable = new Observable() {
       @Override
       public void notifyObservers(Object arg) {
@@ -50,7 +49,7 @@ public abstract class AbstractFunctionTest {
    };
 
    protected AbstractFunctionTest() {
-      functionSet = new FunctionSet(getFunctionSet());
+      functions = getFunctionSet();
    }
 
    protected abstract Function getFunction();
@@ -101,7 +100,7 @@ public abstract class AbstractFunctionTest {
    }
 
    private Node readNode(String input, VariableSet variableSet) {
-      try (NodeReader nodeReader = new NodeReader(input, functionSet, variableSet)) {
+      try (NodeReader nodeReader = new NodeReader(input, functions, new ConstantNode[0], variableSet)) {
          return nodeReader.readNode();
       } catch (IOException e) {
          throw new UncheckedIOException(e);

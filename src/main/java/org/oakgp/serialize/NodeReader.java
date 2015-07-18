@@ -33,6 +33,7 @@ import java.io.StringReader;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,7 +46,6 @@ import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.node.VariableNode;
-import org.oakgp.primitive.FunctionSet;
 import org.oakgp.primitive.VariableSet;
 
 /**
@@ -64,40 +64,43 @@ import org.oakgp.primitive.VariableSet;
  * </pre>
  */
 public final class NodeReader implements Closeable {
-   private static final String FUNCTION_START_STRING = "(";
    private static final char FUNCTION_START_CHAR = '(';
-   private static final String FUNCTION_END_STRING = ")";
+   private static final String FUNCTION_START_STRING = "" + FUNCTION_START_CHAR;
    private static final char FUNCTION_END_CHAR = ')';
-   private static final String STRING_STRING = "\"";
+   private static final String FUNCTION_END_STRING = "" + FUNCTION_END_CHAR;
    private static final char STRING_CHAR = '\"';
-   private static final String ARRAY_START_STRING = "[";
+   private static final String STRING_STRING = "" + STRING_CHAR;
    private static final char ARRAY_START_CHAR = '[';
+   private static final String ARRAY_START_STRING = "" + ARRAY_START_CHAR;
    private static final char ARRAY_END_CHAR = ']';
-   private static final String ARRAY_END_STRING = Character.toString(ARRAY_END_CHAR);
+   private static final String ARRAY_END_STRING = "" + ARRAY_END_CHAR;
 
    private final Map<Predicate<String>, java.util.function.Function<String, Node>> readers;
    private final CharReader cr;
-   private final FunctionSet functionSet;
+   private final Function[] functions;
+   private final ConstantNode[] constants;
    private final VariableSet variableSet;
 
-   public NodeReader(String input, FunctionSet functionSet, VariableSet variableSet) {
+   public NodeReader(String input, Function[] functions, ConstantNode[] constants, VariableSet variableSet) {
       StringReader sr = new StringReader(input);
       this.cr = new CharReader(new BufferedReader(sr));
-      this.functionSet = functionSet;
+      this.functions = Arrays.copyOf(functions, functions.length);
+      this.constants = Arrays.copyOf(constants, constants.length);
       this.variableSet = variableSet;
       this.readers = createReaders();
    }
 
    private Map<Predicate<String>, java.util.function.Function<String, Node>> createReaders() {
       Map<Predicate<String>, java.util.function.Function<String, Node>> m = new LinkedHashMap<>();
-      m.put(s -> s.startsWith("v"), this::getVariableNode);
+      m.put(NodeReader::isVariable, this::getVariable);
       m.put(s -> "true".equals(s), s -> TRUE_NODE);
       m.put(s -> "false".equals(s), s -> FALSE_NODE);
-      m.put(s -> isNumber(s) && s.endsWith("L"), this::createLongConstant);
-      m.put(s -> isNumber(s) && s.endsWith("I"), this::createBigIntegerConstant);
-      m.put(s -> isNumber(s) && s.endsWith("D"), this::createBigDecimalConstant);
-      m.put(s -> isDecimalNumber(s), this::createDoubleConstant);
-      m.put(s -> isNumber(s), this::createIntegerConstant);
+      m.put(NodeReader::isLong, this::createLongConstant);
+      m.put(NodeReader::isBigInteger, this::createBigIntegerConstant);
+      m.put(NodeReader::isBigDecimal, this::createBigDecimalConstant);
+      m.put(NodeReader::isDecimalNumber, this::createDoubleConstant);
+      m.put(NodeReader::isNumber, this::createIntegerConstant);
+      m.put(this::isConstant, this::getConstant);
       m.put(s -> true, this::createFunctionConstant);
       return m;
    }
@@ -154,8 +157,21 @@ public final class NodeReader implements Closeable {
          arguments.add(n);
          types.add(n.getType());
       }
-      Function function = functionSet.getFunction(functionName, types);
+      Function function = getFunction(functionName, types);
       return new FunctionNode(function, createArguments(arguments));
+   }
+
+   private Function getFunction(String functionName, List<Type> types) {
+      for (Function f : functions) {
+         if (isMatch(functionName, types, f)) {
+            return f;
+         }
+      }
+      throw new IllegalArgumentException("Could not find version of function: " + functionName + " for: " + types + " in: " + Arrays.toString(functions));
+   }
+
+   private boolean isMatch(String functionName, List<Type> types, Function f) {
+      return functionName.equals(f.getDisplayName()) && types.equals(f.getSignature().getArgumentTypes());
    }
 
    private Node createStringConstantNode() throws IOException {
@@ -184,14 +200,27 @@ public final class NodeReader implements Closeable {
       return new ConstantNode(createArguments(arguments), arrayType(t));
    }
 
-   private VariableNode getVariableNode(String firstToken) {
-      int id = Integer.parseInt(firstToken.substring(1));
-      return variableSet.getById(id);
-   }
-
    private Node createNode(String token) {
       return readers.entrySet().stream().filter(e -> e.getKey().test(token)).map(Map.Entry::getValue).findFirst()
             .orElseThrow(() -> new IllegalArgumentException(token)).apply(token);
+   }
+
+   private boolean isConstant(String token) {
+      return getConstant(token) != null;
+   }
+
+   private ConstantNode getConstant(String token) {
+      for (ConstantNode n : constants) {
+         if (token.equals(n.toString())) {
+            return n;
+         }
+      }
+      return null;
+   }
+
+   private VariableNode getVariable(String firstToken) {
+      int id = Integer.parseInt(firstToken.substring(1));
+      return variableSet.getById(id);
    }
 
    private ConstantNode createIntegerConstant(String token) {
@@ -215,8 +244,17 @@ public final class NodeReader implements Closeable {
    }
 
    private ConstantNode createFunctionConstant(String token) {
-      Function function = functionSet.getFunction(token);
+      Function function = getFunction(token);
       return new ConstantNode(function, getFunctionType(function));
+   }
+
+   private Function getFunction(String token) {
+      for (Function f : functions) {
+         if (token.equals(f.getDisplayName())) {
+            return f;
+         }
+      }
+      throw new IllegalArgumentException("Could not find version of function: " + token + " in: " + Arrays.toString(functions));
    }
 
    private static Type getFunctionType(Function function) {
@@ -227,6 +265,22 @@ public final class NodeReader implements Closeable {
          types[i] = signature.getArgumentType(i - 1);
       }
       return Type.functionType(types);
+   }
+
+   private static boolean isVariable(String token) {
+      return token.startsWith("v") && isNumber(token.substring(1));
+   }
+
+   private static boolean isLong(String token) {
+      return isNumber(token) && token.endsWith("L");
+   }
+
+   private static boolean isBigInteger(String token) {
+      return isNumber(token) && token.endsWith("I");
+   }
+
+   private static boolean isBigDecimal(String token) {
+      return isNumber(token) && token.endsWith("D");
    }
 
    private static boolean isDecimalNumber(String token) {

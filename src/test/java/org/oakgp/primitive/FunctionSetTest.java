@@ -19,7 +19,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import static org.oakgp.TestUtils.assertUnmodifiable;
 import static org.oakgp.Type.booleanArrayType;
 import static org.oakgp.Type.booleanType;
@@ -28,12 +27,9 @@ import static org.oakgp.Type.integerType;
 import static org.oakgp.Type.stringType;
 import static org.oakgp.function.Signature.createSignature;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import org.junit.Test;
-import org.oakgp.Type;
 import org.oakgp.function.Function;
 import org.oakgp.function.choice.If;
 import org.oakgp.function.classify.IsNegative;
@@ -51,65 +47,9 @@ import org.oakgp.function.hof.Reduce;
 import org.oakgp.function.math.IntegerUtils;
 
 public class FunctionSetTest {
-   private static final List<Type> TWO_INTEGERS = Collections.unmodifiableList(Arrays.asList(integerType(), integerType()));
    private static final Function ADD = IntegerUtils.INTEGER_UTILS.getAdd();
    private static final Function SUBTRACT = IntegerUtils.INTEGER_UTILS.getSubtract();
    private static final Function MULTIPLY = IntegerUtils.INTEGER_UTILS.getMultiply();
-
-   @Test
-   public void testGetFunctionBySymbol() {
-      FunctionSet functionSet = createFunctionSet();
-      assertSame(ADD, functionSet.getFunction("+", TWO_INTEGERS));
-      assertSame(SUBTRACT, functionSet.getFunction("-", TWO_INTEGERS));
-      assertSame(MULTIPLY, functionSet.getFunction("*", TWO_INTEGERS));
-   }
-
-   @Test
-   public void testGetFunctionByClassName() {
-      FunctionSet functionSet = createFunctionSet();
-      try {
-         functionSet.getFunction(ADD.getClass().getName(), TWO_INTEGERS);
-         fail();
-      } catch (IllegalArgumentException e) {
-         assertStartsWith("Could not find function: org.oakgp.function.math.Add", e.getMessage());
-      }
-   }
-
-   @Test
-   public void testGetFunctionSymbolDoesNotExist() {
-      FunctionSet functionSet = createFunctionSet();
-      try {
-         functionSet.getFunction("^", TWO_INTEGERS);
-         fail();
-      } catch (IllegalArgumentException e) {
-         assertStartsWith("Could not find function: ^", e.getMessage());
-      }
-   }
-
-   @Test
-   public void testGetFunctionTooFewTypes() {
-      assertCannotFindByTypes(Arrays.asList(integerType()));
-   }
-
-   @Test
-   public void testGetFunctionTooManyTypes() {
-      assertCannotFindByTypes(Arrays.asList(integerType(), integerType(), integerType()));
-   }
-
-   @Test
-   public void testGetFunctionWrongTypes() {
-      assertCannotFindByTypes(Arrays.asList(integerType(), booleanType()));
-   }
-
-   private void assertCannotFindByTypes(List<Type> types) {
-      FunctionSet functionSet = createFunctionSet();
-      try {
-         functionSet.getFunction("+", types);
-         fail();
-      } catch (IllegalArgumentException e) {
-         assertEquals(e.getMessage(), "Could not find version of function: + for: " + types + " in: {[integer, integer]=" + ADD + "}");
-      }
-   }
 
    @Test
    public void testGetByType() {
@@ -168,45 +108,21 @@ public class FunctionSetTest {
       assertUnmodifiable(integers);
    }
 
-   @Test
-   public void testGetSymbol() {
-      assertSame(ADD, createFunctionSet().getFunction("+"));
-   }
-
-   @Test
-   public void testGetSymbolNotFound() {
-      assertEquals("Could not find function: ^", getGetSymbolExceptionMessage("^"));
-   }
-
-   @Test
-   public void testGetSymbolDuplicates() {
-      assertStartsWith("Found more than one function: count", getGetSymbolExceptionMessage("count"));
-   }
-
-   private String getGetSymbolExceptionMessage(String symbol) {
-      try {
-         createFunctionSet().getFunction(symbol);
-      } catch (IllegalArgumentException e) {
-         return e.getMessage();
-      }
-      throw new IllegalStateException("No exception was thrown");
-   }
-
    private static FunctionSet createFunctionSet() {
       return new FunctionSet(
-            // arithmetic
+      // arithmetic
             ADD, SUBTRACT, MULTIPLY,
             // comparison
             new LessThan(integerType()), new LessThanOrEqual(integerType()), new GreaterThan(integerType()), new GreaterThanOrEqual(integerType()), new Equal(
                   integerType()), new NotEqual(integerType()),
-            // selection
-            new If(integerType()),
-            // higher-order functions
-            new Reduce(integerType()), new Filter(integerType()), new org.oakgp.function.hof.Map(integerType(), booleanType()),
-            // classify
-            new IsPositive(), new IsNegative(), new IsZero(),
-            // collections
-            new Count(integerType()), new Count(booleanType()));
+                  // selection
+                  new If(integerType()),
+                  // higher-order functions
+                  new Reduce(integerType()), new Filter(integerType()), new org.oakgp.function.hof.Map(integerType(), booleanType()),
+                  // classify
+                  new IsPositive(), new IsNegative(), new IsZero(),
+                  // collections
+                  new Count(integerType()), new Count(booleanType()));
    }
 
    private void assertStartsWith(String expectedPrefix, String input) {

@@ -18,17 +18,15 @@ package org.oakgp.serialize;
 import static org.oakgp.Type.bigDecimalType;
 import static org.oakgp.Type.bigIntegerType;
 import static org.oakgp.Type.longType;
-import static org.oakgp.node.NodeType.isFunction;
 
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Predicate;
 
 import org.oakgp.Arguments;
+import org.oakgp.Type;
 import org.oakgp.function.Function;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
-import org.oakgp.node.NodeType;
 
 /**
  * Creates {@code String} representations of {@code Node} instances.
@@ -36,7 +34,7 @@ import org.oakgp.node.NodeType;
  * e.g. The {@code Node}:
  *
  * <pre>
- * new FunctionNode(new Add(), createArguments(new ConstantNode(9), new ConstantNode(5))
+ * new FunctionNode(new Add(), new ConstantNode(9), new ConstantNode(5))
  * </pre>
  *
  * will produce the {@code String}:
@@ -46,12 +44,11 @@ import org.oakgp.node.NodeType;
  * </pre>
  */
 public final class NodeWriter {
-   private static final Map<Predicate<Node>, java.util.function.Function<Node, String>> WRITERS = new LinkedHashMap<>();
+   private static final Map<Type, String> SUFFIXES = new HashMap<>();
    static {
-      WRITERS.put(n -> NodeType.isVariable(n), n -> n.toString());
-      WRITERS.put(n -> n.getType() == longType(), n -> n.toString() + "L");
-      WRITERS.put(n -> n.getType() == bigIntegerType(), n -> n.toString() + "I");
-      WRITERS.put(n -> n.getType() == bigDecimalType(), n -> n.toString() + "D");
+      SUFFIXES.put(longType(), "L");
+      SUFFIXES.put(bigIntegerType(), "I");
+      SUFFIXES.put(bigDecimalType(), "D");
    }
 
    public String writeNode(Node node) {
@@ -61,21 +58,41 @@ public final class NodeWriter {
    }
 
    private void writeNode(Node node, StringBuilder sb) {
-      if (isFunction(node)) {
-         FunctionNode functionNode = (FunctionNode) node;
-         Function function = functionNode.getFunction();
-         Arguments arguments = functionNode.getArguments();
-         sb.append('(').append(function.getDisplayName());
-         for (int i = 0; i < arguments.getArgCount(); i++) {
-            sb.append(' ').append(writeNode(arguments.getArg(i)));
-         }
-         sb.append(')');
-      } else {
-         sb.append(toString(node));
+      switch (node.getNodeType()) {
+         case FUNCTION:
+            writeFunctionNode(node, sb);
+            break;
+         case VARIABLE:
+            writeVariableNode(node, sb);
+            break;
+         case CONSTANT:
+            writeConstantNode(node, sb);
+            break;
+         default:
+            throw new IllegalArgumentException("Unknown NodeType: " + node.getType());
       }
    }
 
-   private String toString(Node node) {
-      return WRITERS.entrySet().stream().filter(e -> e.getKey().test(node)).map(Map.Entry::getValue).findFirst().orElse(n -> node.toString()).apply(node);
+   private void writeFunctionNode(Node node, StringBuilder sb) {
+      FunctionNode functionNode = (FunctionNode) node;
+      Function function = functionNode.getFunction();
+      Arguments arguments = functionNode.getArguments();
+      sb.append('(').append(function.getDisplayName());
+      for (int i = 0; i < arguments.getArgCount(); i++) {
+         sb.append(' ').append(writeNode(arguments.getArg(i)));
+      }
+      sb.append(')');
+   }
+
+   private void writeVariableNode(Node node, StringBuilder sb) {
+      sb.append(node.toString());
+   }
+
+   private void writeConstantNode(Node node, StringBuilder sb) {
+      sb.append(node.toString());
+      String suffix = SUFFIXES.get(node.getType());
+      if (suffix != null) {
+         sb.append(suffix);
+      }
    }
 }

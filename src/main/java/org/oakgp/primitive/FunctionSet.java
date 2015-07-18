@@ -61,29 +61,6 @@ public final class FunctionSet {
       m.put(key, f);
    }
 
-   public Function getFunction(String symbol) {
-      Map<List<Type>, Function> m = symbolToInstanceMappings.get(symbol);
-      if (m == null) {
-         throw new IllegalArgumentException("Could not find function: " + symbol);
-      }
-      if (m.size() > 1) {
-         throw new IllegalArgumentException("Found more than one function: " + symbol + " " + m);
-      }
-      return m.values().iterator().next();
-   }
-
-   public Function getFunction(String symbol, List<Type> types) {
-      Map<List<Type>, Function> m = symbolToInstanceMappings.get(symbol);
-      if (m == null) {
-         throw new IllegalArgumentException("Could not find function: " + symbol + " in: " + symbolToInstanceMappings);
-      }
-      Function f = m.get(types);
-      if (f == null) {
-         throw new IllegalArgumentException("Could not find version of function: " + symbol + " for: " + types + " in: " + m);
-      }
-      return f;
-   }
-
    public List<Function> getByType(Type type) {
       // TODO should this return an empty list, rather than null, if no match found?
       return functionsByType.get(type);
