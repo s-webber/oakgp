@@ -31,6 +31,20 @@ public final class PrimitiveSetImpl implements PrimitiveSet {
    private final Random random;
    private final double ratioVariables;
 
+   /**
+    * Constructs a new primitive set consisting of the specified components.
+    *
+    * @param functionSet
+    *           the set of possible functions to use in the construction of programs
+    * @param constantSet
+    *           the set of possible constants to use in the construction of programs
+    * @param variableSet
+    *           the set of possible variables to use in the construction of programs
+    * @param random
+    *           used to randomly select components to use in the construction of programs
+    * @param ratioVariables
+    *           the ratio of terminal nodes that should be variable nodes, rather than constant nodes
+    */
    public PrimitiveSetImpl(FunctionSet functionSet, ConstantSet constantSet, VariableSet variableSet, Random random, double ratioVariables) {
       this.functionSet = functionSet;
       this.constantSet = constantSet;

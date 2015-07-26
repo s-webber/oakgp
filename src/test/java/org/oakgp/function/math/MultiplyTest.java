@@ -1,12 +1,12 @@
 /*
  * Copyright 2015 S. Webber
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,6 +16,9 @@
 package org.oakgp.function.math;
 
 import static org.oakgp.Type.integerType;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
 
 import org.oakgp.function.AbstractFunctionTest;
 import org.oakgp.function.Function;
@@ -28,7 +31,20 @@ public class MultiplyTest extends AbstractFunctionTest {
 
    @Override
    public void testEvaluate() {
+      // integer
       evaluate("(* 3 21)").to(63);
+
+      // long
+      evaluate("(* 3L 21L)").to(63L);
+
+      // big integer
+      evaluate("(* 3I 21I)").to(BigInteger.valueOf(63));
+
+      // double
+      evaluate("(* 3.0 21.0)").to(63d);
+
+      // big decimal
+      evaluate("(* 3D 21D)").to(BigDecimal.valueOf(63));
    }
 
    @Override
@@ -69,6 +85,7 @@ public class MultiplyTest extends AbstractFunctionTest {
 
    @Override
    protected Function[] getFunctionSet() {
-      return new Function[] { getFunction(), IntegerUtils.INTEGER_UTILS.getAdd(), IntegerUtils.INTEGER_UTILS.getSubtract() };
+      return new Function[] { getFunction(), IntegerUtils.INTEGER_UTILS.getAdd(), IntegerUtils.INTEGER_UTILS.getSubtract(), LongUtils.LONG_UTILS.getMultiply(),
+            DoubleUtils.DOUBLE_UTILS.getMultiply(), BigIntegerUtils.BIG_INTEGER_UTILS.getMultiply(), BigDecimalUtils.BIG_DECIMAL_UTILS.getMultiply() };
    }
 }

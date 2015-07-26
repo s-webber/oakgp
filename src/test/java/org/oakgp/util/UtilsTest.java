@@ -17,6 +17,7 @@ package org.oakgp.util;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.oakgp.TestUtils.integerConstant;
@@ -28,6 +29,7 @@ import static org.oakgp.Type.stringType;
 import static org.oakgp.util.DummyRandom.GetIntExpectation.nextInt;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -146,6 +148,14 @@ public class UtilsTest {
       assertSame(element4, list.get(3));
       assertSame(element2, list.get(4));
       assertSame(element5, list.get(5));
+   }
+
+   @Test
+   public void testCopyOf() {
+      String[] original = { "abc", "def", "ghi" };
+      String[] copy = Utils.copyOf(original);
+      assertNotSame(original, copy);
+      assertTrue(Arrays.equals(original, copy));
    }
 
    @Test

@@ -27,9 +27,9 @@ import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 
 /**
- * Simplifies tree structures by replacing expressions with their values.
+ * Attempts to reduce the size of tree structures without altering their functionality.
  * <p>
- * e.g. The expression:
+ * This can be done by replacing expressions constant values or removing redundant branches. e.g. The expression:
  *
  * <pre>
  * (+ 7 (* 3 6))
@@ -51,6 +51,17 @@ public final class NodeSimplifier {
       // do nothing
    }
 
+   /**
+    * Attempts to reduce the size of the specified tree structures without altering its functionality.
+    * <p>
+    * Simplification can occur by replacing expressions with constant values (e.g. replacing {@code (+ 1 1)} with {@code 2}) or removing redundant branches
+    * (e.g. replacing {@code (if (< 2 3) (+ v0 v1) (* v0 v1)) with {@code (+ v0 v1)}.
+    *
+    * @param input
+    *           the node to attempt to simplify.
+    * @return the result of attempting to simplify {@code input}.
+    * @see org.oakgp.function.Function#simplify(Arguments)
+    */
    public static Node simplify(Node input) {
       int ctr = 0;
       Set<Node> s = new HashSet<>();

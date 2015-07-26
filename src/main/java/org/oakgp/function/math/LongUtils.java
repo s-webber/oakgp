@@ -17,8 +17,9 @@ package org.oakgp.function.math;
 
 import static org.oakgp.Type.longType;
 
-/** Provides support for working with instances of {@code java.lang.BigDecimal}. */
+/** Provides support for working with instances of {@code java.lang.Long}. */
 public final class LongUtils extends NumberUtils<Long> {
+   /** Singleton instance. */
    public static final LongUtils LONG_UTILS = new LongUtils();
 
    /** @see #INTEGER_UTILS */

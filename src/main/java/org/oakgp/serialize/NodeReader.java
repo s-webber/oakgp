@@ -25,6 +25,7 @@ import static org.oakgp.Type.longType;
 import static org.oakgp.Type.stringType;
 import static org.oakgp.util.Utils.FALSE_NODE;
 import static org.oakgp.util.Utils.TRUE_NODE;
+import static org.oakgp.util.Utils.copyOf;
 
 import java.io.BufferedReader;
 import java.io.Closeable;
@@ -81,11 +82,23 @@ public final class NodeReader implements Closeable {
    private final ConstantNode[] constants;
    private final VariableSet variableSet;
 
+   /**
+    * Creates a {@code NodeReader} that reads from the given {@code java.lang.String}.
+    *
+    * @param input
+    *           contains the s-expressions, representing programs as tree structures, that will be read to construct new {@code Node} instances
+    * @param functions
+    *           a collection of {@code Function}s to use to represent functions read from {@code input}
+    * @param constants
+    *           a collection of {@code ConstantNode}s to use to represent constants read from {@code input}
+    * @param variableSet
+    *           the variable set to use to represent variables read from {@code input}
+    */
    public NodeReader(String input, Function[] functions, ConstantNode[] constants, VariableSet variableSet) {
       StringReader sr = new StringReader(input);
       this.cr = new CharReader(new BufferedReader(sr));
-      this.functions = Arrays.copyOf(functions, functions.length);
-      this.constants = Arrays.copyOf(constants, constants.length);
+      this.functions = copyOf(functions);
+      this.constants = copyOf(constants);
       this.variableSet = variableSet;
       this.readers = createReaders();
    }
@@ -105,6 +118,7 @@ public final class NodeReader implements Closeable {
       return m;
    }
 
+   /** Creates and returns a {@code Node} which represents the next s-expression read from the input. */
    public Node readNode() throws IOException {
       return nextNode(nextToken());
    }
@@ -152,13 +166,17 @@ public final class NodeReader implements Closeable {
       List<Node> arguments = new ArrayList<>();
       List<Type> types = new ArrayList<>();
       String nextToken;
-      while ((nextToken = nextToken()) != FUNCTION_END_STRING) {
+      while (notFunctionEnd(nextToken = nextToken())) {
          Node n = nextNode(nextToken);
          arguments.add(n);
          types.add(n.getType());
       }
       Function function = getFunction(functionName, types);
       return new FunctionNode(function, createArguments(arguments));
+   }
+
+   private boolean notFunctionEnd(String token) {
+      return !FUNCTION_END_STRING.equals(token);
    }
 
    private Function getFunction(String functionName, List<Type> types) {
@@ -188,7 +206,7 @@ public final class NodeReader implements Closeable {
       List<Node> arguments = new ArrayList<>();
       String nextToken;
       Type t = null;
-      while ((nextToken = nextToken()) != ARRAY_END_STRING) {
+      while (notArrayEnd(nextToken = nextToken())) {
          Node n = nextNode(nextToken);
          if (t == null) {
             t = n.getType();
@@ -198,6 +216,10 @@ public final class NodeReader implements Closeable {
          arguments.add(n);
       }
       return new ConstantNode(createArguments(arguments), arrayType(t));
+   }
+
+   private boolean notArrayEnd(String token) {
+      return !ARRAY_END_STRING.equals(token);
    }
 
    private Node createNode(String token) {
@@ -257,6 +279,22 @@ public final class NodeReader implements Closeable {
       throw new IllegalArgumentException("Could not find version of function: " + token + " in: " + Arrays.toString(functions));
    }
 
+   private static void assertNotEndOfStream(int c) {
+      if (c == -1) {
+         throw new IllegalStateException();
+      }
+   }
+
+   @Override
+   public void close() throws IOException {
+      cr.close();
+   }
+
+   /** Returns {@code true} if there is no more data to read from the underlying stream, else {@code false}. */
+   public boolean isEndOfStream() throws IOException {
+      return cr.isEndOfStream();
+   }
+
    private static Type getFunctionType(Function function) {
       Signature signature = function.getSignature();
       Type[] types = new Type[signature.getArgumentTypesLength() + 1];
@@ -300,6 +338,13 @@ public final class NodeReader implements Closeable {
       return c >= '0' && c <= '9';
    }
 
+   /**
+    * Returns {@code true} if the given {@code String} is suitable for use as the display name of a {@code Function}, else {code false}.
+    * <p>
+    * A {@code String} is considered suitable as a display name for a {@code Function} - as returned from {@link Function#getDisplayName()} - if it can be
+    * successfully parsed by a {@code NodeReader}. Suitable function names do not start with a number or contain any of the special characters used to represent
+    * the start or end of functions (i.e. {@code (} and {@code )}), arrays (i.e. {@code [} and {@code ]}) or strings (i.e. {@code "}).
+    */
    public static boolean isValidDisplayName(String displayName) {
       if (displayName == null || displayName.length() == 0 || isNumber(displayName)) {
          return false;
@@ -345,21 +390,6 @@ public final class NodeReader implements Closeable {
       }
    }
 
-   private static void assertNotEndOfStream(int c) {
-      if (c == -1) {
-         throw new IllegalStateException();
-      }
-   }
-
-   @Override
-   public void close() throws IOException {
-      cr.close();
-   }
-
-   public boolean isEndOfStream() throws IOException {
-      return cr.isEndOfStream();
-   }
-
    private static final class CharReader implements Closeable {
       private final BufferedReader br;
       private int previous = -1;
@@ -382,12 +412,12 @@ public final class NodeReader implements Closeable {
       }
 
       int next() throws IOException {
-         if (previous != -1) {
+         if (previous == -1) {
+            return br.read();
+         } else {
             int result = previous;
             previous = -1;
             return result;
-         } else {
-            return br.read();
          }
       }
 

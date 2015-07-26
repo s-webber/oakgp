@@ -18,7 +18,8 @@ package org.oakgp.function.math;
 import static org.oakgp.Type.doubleType;
 
 /** Provides support for working with instances of {@code java.lang.Double}. */
-public class DoubleUtils extends NumberUtils<Double> {
+public final class DoubleUtils extends NumberUtils<Double> {
+   /** Singleton instance. */
    public static final DoubleUtils DOUBLE_UTILS = new DoubleUtils();
 
    /** @see #DOUBLE_UTILS */

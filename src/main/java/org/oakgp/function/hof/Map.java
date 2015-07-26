@@ -40,6 +40,14 @@ import org.oakgp.node.Node;
 public final class Map implements Function {
    private final Signature signature;
 
+   /**
+    * Creates a higher order functions that applies a function to each element of a collection.
+    *
+    * @param from
+    *           the type of the elements contained in the collection provided as an argument to the function
+    * @param to
+    *           the type of the elements contained in the collection returned by the function
+    */
    public Map(Type from, Type to) {
       signature = Signature.createSignature(arrayType(to), functionType(to, from), arrayType(from));
    }

@@ -40,6 +40,11 @@ public abstract class AbstractFunctionTest {
    private static final Type[] DEFAULT_VARIABLE_TYPES = createIntegerTypeArray(100);
 
    private final Function[] functions;
+   /**
+    * Observable allows other objects to be notified of the tests that are run.
+    * <p>
+    * This is used to support the automatic creation of http://www.oakgp.org/functions
+    */
    private final Observable observable = new Observable() {
       @Override
       public void notifyObservers(Object arg) {

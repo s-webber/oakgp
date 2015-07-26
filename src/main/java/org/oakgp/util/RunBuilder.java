@@ -139,8 +139,13 @@ public final class RunBuilder {
       }
 
       @Override
-      public GenerationRankerSetter setFunctionSet(Function... functions) {
-         return setRatioVariables(RATIO_VARIABLES).setFunctionSet(functions);
+      public GenerationRankerSetter setFunctions(Function... functions) {
+         return setRatioVariables(RATIO_VARIABLES).setFunctions(functions);
+      }
+
+      @Override
+      public GenerationRankerSetter setFunctions(final List<Function> functions) {
+         return setRatioVariables(RATIO_VARIABLES).setFunctions(functions);
       }
    }
 
@@ -156,12 +161,17 @@ public final class RunBuilder {
       }
 
       @Override
-      public GenerationRankerSetter setFunctionSet(final Function... functions) {
+      public GenerationRankerSetter setFunctions(final Function... functions) {
          logFunctionSet(functions);
 
          FunctionSet functionSet = new FunctionSet(functions);
          _primitiveSet = new PrimitiveSetImpl(functionSet, constantSet, variableSet, _random, ratioVariables);
          return new GenerationRankerSetter();
+      }
+
+      @Override
+      public GenerationRankerSetter setFunctions(final List<Function> functions) {
+         return setFunctions(functions.toArray(new Function[functions.size()]));
       }
 
       private void logFunctionSet(final Function[] functions) {
@@ -184,7 +194,9 @@ public final class RunBuilder {
    }
 
    public interface FunctionSetSetter {
-      GenerationRankerSetter setFunctionSet(Function... functions);
+      GenerationRankerSetter setFunctions(Function... functions);
+
+      GenerationRankerSetter setFunctions(List<Function> functions);
    }
 
    public final class GenerationRankerSetter {
@@ -197,6 +209,7 @@ public final class RunBuilder {
       }
 
       public InitialPopulationSetter setFitnessFunction(final FitnessFunction fitnessFunction) {
+         requireNonNull(fitnessFunction);
          return setGenerationRanker(new FitnessFunctionGenerationRanker(ensureCached(fitnessFunction)));
       }
 
@@ -209,6 +222,7 @@ public final class RunBuilder {
       }
 
       public InitialPopulationSetter setTwoPlayerGame(final TwoPlayerGame twoPlayerGame) {
+         requireNonNull(twoPlayerGame);
          return setGenerationRanker(new RoundRobinTournament(ensureCached(twoPlayerGame)));
       }
 
@@ -225,12 +239,12 @@ public final class RunBuilder {
       private InitialPopulationSetter() {
       }
 
-      public FirstTerminatorSetter setInitialPopulation(final java.util.function.Function<Config, Collection<Node>> initialGeneration) {
-         return setInitialPopulation(initialGeneration.apply(new Config()));
+      public GenerationEvolverSetter setInitialPopulation(final java.util.function.Function<Config, Collection<Node>> initialPopulation) {
+         return setInitialPopulation(initialPopulation.apply(new Config()));
       }
 
-      private GenerationEvolverSetter setInitialPopulation(Collection<Node> initialGeneration) {
-         _initialPopulation = requireNonNull(initialGeneration);
+      private GenerationEvolverSetter setInitialPopulation(Collection<Node> initialPopulation) {
+         _initialPopulation = requireNonNull(initialPopulation);
          return new GenerationEvolverSetter();
       }
 
@@ -258,47 +272,28 @@ public final class RunBuilder {
             }
             return setInitialPopulation(initialPopulation);
          }
+
+         private int requiresPositive(final int i) {
+            if (i > 0) {
+               return i;
+            } else {
+               throw new IllegalArgumentException("Expected a positive integer but got: " + i);
+            }
+         }
       }
    }
 
    public final class GenerationEvolverSetter extends FirstTerminatorSetter {
       private GenerationEvolverSetter() {
-         GenerationEvolver defaultGenerationEvolver = createDefaultGenerationEvolver();
-         setGenerationEvolver(defaultGenerationEvolver);
       }
 
-      private GenerationEvolver createDefaultGenerationEvolver() {
-         int populationSize = _initialPopulation.size();
-         NodeSelectorFactory nodeSelectorFactory = new RankSelectionFactory(_random);
-         Map<GeneticOperator, Integer> operators = createDefaultGeneticOperators(populationSize);
-         int operatorsSize = operators.values().stream().mapToInt(l -> l).sum();
-         int elitismSize = populationSize - operatorsSize;
-         Logger.getGlobal().info("total: " + populationSize + " elitism: " + elitismSize + " " + operators);
-         return new GenerationEvolverImpl(elitismSize, nodeSelectorFactory, operators);
-      }
-
-      private Map<GeneticOperator, Integer> createDefaultGeneticOperators(int populationSize) {
-         Map<GeneticOperator, Integer> operators = new HashMap<>();
-         TreeGenerator treeGenerator = TreeGeneratorImpl.grow(_primitiveSet, _random);
-         operators.put(t -> treeGenerator.generate(_returnType, 4), ratio(populationSize, .08));
-         operators.put(new SubtreeCrossover(_random, 5), ratio(populationSize, .4));
-         operators.put(new PointMutation(_random, _primitiveSet), ratio(populationSize, .4));
-         operators.put(new SubTreeMutation(_random, treeGenerator), ratio(populationSize, .04));
-         operators.put(new ConstantToFunctionMutation(_random, TreeGeneratorImpl.full(_primitiveSet)), ratio(populationSize, .04));
-         return operators;
-      }
-
-      private int ratio(int whole, double ratio) {
-         return (int) (whole * ratio);
-      }
-
-      public InitialPopulationSetter setGenerationEvolver(final java.util.function.Function<Config, GenerationEvolver> generationEvolver) {
+      public FirstTerminatorSetter setGenerationEvolver(final java.util.function.Function<Config, GenerationEvolver> generationEvolver) {
          return setGenerationEvolver(generationEvolver.apply(new Config()));
       }
 
-      private InitialPopulationSetter setGenerationEvolver(GenerationEvolver generationEvolver) {
+      private FirstTerminatorSetter setGenerationEvolver(GenerationEvolver generationEvolver) {
          _generationEvolver = requireNonNull(generationEvolver);
-         return new InitialPopulationSetter();
+         return new FirstTerminatorSetter();
       }
    }
 
@@ -309,7 +304,7 @@ public final class RunBuilder {
       }
 
       public SubsequentTerminatorSetter setTerminator(final Predicate<RankedCandidates> terminator) {
-         terminators.add(terminator);
+         terminators.add(requireNonNull(terminator));
          return new SubsequentTerminatorSetter(terminators);
       }
 
@@ -343,7 +338,7 @@ public final class RunBuilder {
       }
 
       public MaxGenerationsTerminatorSetter setTargetFitness(double targetFitness) {
-         terminators.add(new TargetFitnessTerminator(c -> c.getFitness() == targetFitness));
+         terminators.add(new TargetFitnessTerminator(c -> Math.abs(c.getFitness() - targetFitness) < .0000001));
          return new MaxGenerationsTerminatorSetter(terminators);
       }
    }
@@ -391,26 +386,39 @@ public final class RunBuilder {
       }
 
       public Node process() {
-         assertVariablesSet();
+         if (_generationEvolver == null) {
+            _generationEvolver = createDefaultGenerationEvolver();
+         }
+
          RankedCandidate best = Runner.process(_generationRanker, _generationEvolver, terminator, _initialPopulation);
          Node simplifiedBestNode = simplify(best.getNode());
          Logger.getGlobal().info("Best candidate: Fitness: " + best.getFitness() + " Structure: " + simplifiedBestNode);
          return simplifiedBestNode;
       }
 
-      private void assertVariablesSet() {
-         requireNonNull(_generationRanker);
-         requireNonNull(_generationEvolver);
-         requireNonNull(terminator);
-         requireNonNull(_initialPopulation);
+      private GenerationEvolver createDefaultGenerationEvolver() {
+         int populationSize = _initialPopulation.size();
+         NodeSelectorFactory nodeSelectorFactory = new RankSelectionFactory(_random);
+         Map<GeneticOperator, Integer> operators = createDefaultGeneticOperators(populationSize);
+         int operatorsSize = operators.values().stream().mapToInt(l -> l).sum();
+         int elitismSize = populationSize - operatorsSize;
+         Logger.getGlobal().info("total: " + populationSize + " elitism: " + elitismSize + " " + operators);
+         return new GenerationEvolverImpl(elitismSize, nodeSelectorFactory, operators);
       }
-   }
 
-   private static int requiresPositive(final int i) { // TODO move to Utils
-      if (i > 0) {
-         return i;
-      } else {
-         throw new IllegalArgumentException("Expected a positive integer but got: " + i);
+      private Map<GeneticOperator, Integer> createDefaultGeneticOperators(int populationSize) {
+         Map<GeneticOperator, Integer> operators = new HashMap<>();
+         TreeGenerator treeGenerator = TreeGeneratorImpl.grow(_primitiveSet, _random);
+         operators.put(t -> treeGenerator.generate(_returnType, 4), ratio(populationSize, .08));
+         operators.put(new SubtreeCrossover(_random, 5), ratio(populationSize, .4));
+         operators.put(new PointMutation(_random, _primitiveSet), ratio(populationSize, .4));
+         operators.put(new SubTreeMutation(_random, treeGenerator), ratio(populationSize, .04));
+         operators.put(new ConstantToFunctionMutation(_random, TreeGeneratorImpl.full(_primitiveSet)), ratio(populationSize, .04));
+         return operators;
+      }
+
+      private int ratio(int whole, double ratio) {
+         return (int) (whole * ratio);
       }
    }
 

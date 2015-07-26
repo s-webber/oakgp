@@ -28,6 +28,7 @@ import org.oakgp.node.Node;
  * <b>Note:</b> Equality is checked using {@code Comparable#compareTo(Object)} rather than {@code Object#equals(Object)}.
  */
 public final class NotEqual extends ComparisonOperator {
+   /** Constructs a function that compares two arguments of the specified type. */
    public NotEqual(Type type) {
       super(type, false);
    }

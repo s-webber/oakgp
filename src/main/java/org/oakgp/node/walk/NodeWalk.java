@@ -23,6 +23,7 @@ import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.node.NodeType;
 
+/** Provides a mechanism for recursively visiting <i>all</i> nodes in a tree structure. */
 public final class NodeWalk {
    /** Private constructor as all methods are static. */
    private NodeWalk() {
@@ -30,11 +31,11 @@ public final class NodeWalk {
    }
 
    /**
-    * Returns a {@code Node} from the tree structure represented by this object.
+    * Returns a {@code Node} from the tree structure represented by the given {@code Node}.
     *
     * @param index
-    *           the index of the {@code Node}, in the tree structure represented by this object, that needs to be returned
-    * @return the {@code Node} at {@code index} of the tree structure represented by this object
+    *           the index of the {@code Node}, in the tree structure represented by {@code node}, that needs to be returned
+    * @return the {@code Node} at {@code index} of the tree structure represented by {@code node}
     */
    public static Node getAt(Node node, int index) {
       if (NodeType.isFunction(node)) {
@@ -55,10 +56,11 @@ public final class NodeWalk {
    }
 
    /**
-    * Returns a new {@code Node} resulting from replacing the {@code Node} at position {@code index} with the result of {@code replacement}.
+    * Returns a new {@code Node} resulting from replacing the {@code Node} at position {@code index} of the given {@code Node} with the result of
+    * {@code replacement}.
     *
     * @param index
-    *           the index of the {@code Node}, in the tree structure represented by this object, that needs to be replaced
+    *           the index of the {@code Node}, in the tree structure represented by {@code node}, that needs to be replaced
     * @param replacement
     *           the function to apply to the {@code Node} at {@code index} to determine the {@code Node} that should replace it
     * @return a new {@code Node} derived from replacing the {@code Node} at {@code index} with the result of {@code replacement}

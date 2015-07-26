@@ -27,24 +27,32 @@ public final class VariableSet {
    private final Map<Type, List<VariableNode>> variablesByType;
    private final VariableNode[] variables;
 
+   /** Constructs a variable set containing variables of the specified types. */
    public static VariableSet createVariableSet(Type... variableTypes) {
-      VariableNode[] variables = new VariableNode[variableTypes.length];
+      return new VariableSet(variableTypes);
+   }
+
+   private VariableSet(Type[] variableTypes) {
+      this.variables = new VariableNode[variableTypes.length];
       for (int i = 0; i < variableTypes.length; i++) {
-         variables[i] = new VariableNode(i, variableTypes[i]);
+         this.variables[i] = new VariableNode(i, variableTypes[i]);
       }
-      return new VariableSet(variables);
+      this.variablesByType = Utils.groupByType(this.variables);
    }
 
-   private VariableSet(VariableNode[] variables) {
-      variablesByType = Utils.groupByType(variables);
-      this.variables = variables;
-   }
-
+   /**
+    * Returns a list of all variables in this set that are of the specified type.
+    *
+    * @param type
+    *           the type to find matching variables of
+    * @return a list of all variables in this set that are the specified type, or {@code null} if there are no variables of the required type in this set
+    */
    public List<VariableNode> getByType(Type type) {
       // TODO should this return an empty list, rather than null, if no match found?
       return variablesByType.get(type);
    }
 
+   /** Returns the {@code VariableNode} from this set that is associated with the specified ID. */
    public VariableNode getById(int id) {
       return variables[id];
    }

@@ -45,7 +45,7 @@ public final class FitnessFunctionGenerationRanker implements GenerationRanker {
     */
    @Override
    public RankedCandidates rank(Collection<Node> input) {
-      RankedCandidate output[] = new RankedCandidate[input.size()];
+      RankedCandidate[] output = new RankedCandidate[input.size()];
       int ctr = 0;
       for (Node n : input) {
          RankedCandidate rankedCandidate = rankCandidate(n);

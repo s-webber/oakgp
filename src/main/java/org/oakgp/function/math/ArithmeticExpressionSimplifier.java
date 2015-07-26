@@ -18,7 +18,6 @@ package org.oakgp.function.math;
 import static org.oakgp.node.NodeType.areFunctions;
 import static org.oakgp.node.NodeType.isConstant;
 import static org.oakgp.node.NodeType.isFunction;
-import static org.oakgp.node.NodeType.isTerminal;
 import static org.oakgp.util.NodeComparator.NODE_COMPARATOR;
 
 import org.oakgp.Arguments;
@@ -44,9 +43,7 @@ final class ArithmeticExpressionSimplifier {
          assertArgumentsOrdered(function, firstArg, secondArg);
       });
 
-      Node simplifiedVersion = getSimplifiedVersion(function, firstArg, secondArg);
-      sanityCheck(() -> assertEvaluateToSameResult(simplifiedVersion, function, firstArg, secondArg));
-      return simplifiedVersion;
+      return getSimplifiedVersion(function, firstArg, secondArg);
    }
 
    private Node getSimplifiedVersion(Function function, Node firstArg, Node secondArg) {
@@ -89,7 +86,7 @@ final class ArithmeticExpressionSimplifier {
     * @return {@code null} if it was not possible to remove (@code nodeToRemove} from {@code nodeToWalk}
     */
    private NodePair removeFromChildNodes(final Node nodeToWalk, final Node nodeToRemove, final boolean isPos) {
-      if (isFunction(nodeToWalk)) {
+      if (numberUtils.isArithmeticExpression(nodeToWalk)) {
          FunctionNode fn = (FunctionNode) nodeToWalk;
          Function f = fn.getFunction();
          Node firstArg = fn.getArguments().firstArg();
@@ -155,7 +152,7 @@ final class ArithmeticExpressionSimplifier {
       if (isSuitableForCombining(nodeToWalk, nodeToAdd)) {
          return combine(nodeToWalk, nodeToAdd, isPos);
       }
-      if (isTerminal(nodeToWalk)) {
+      if (!numberUtils.isArithmeticExpression(nodeToWalk)) {
          return null;
       }
 
@@ -300,13 +297,6 @@ final class ArithmeticExpressionSimplifier {
    private static void assertSameClass(Node currentNode, Node nodeToReplace) {
       if (nodeToReplace.getClass() != currentNode.getClass()) {
          throw new IllegalArgumentException(nodeToReplace.getClass().getName() + " " + currentNode.getClass().getName());
-      }
-   }
-
-   private static void assertEvaluateToSameResult(Node simplifiedVersion, Function function, Node firstArg, Node secondArg) {
-      if (simplifiedVersion != null) {
-         FunctionNode in = new FunctionNode(function, firstArg, secondArg);
-         assertEvaluateToSameResult(in, simplifiedVersion);
       }
    }
 

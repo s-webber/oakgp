@@ -29,6 +29,7 @@ public final class MaxGenerationsTerminator implements Predicate<RankedCandidate
    private final int maxGenerations;
    private int ctr = 0;
 
+   /** Constructs a new {@code Predicate} that will return {@code true} once the specified number of generations have been run. */
    public MaxGenerationsTerminator(int maxGenerations) {
       this.maxGenerations = maxGenerations;
    }
@@ -38,8 +39,6 @@ public final class MaxGenerationsTerminator implements Predicate<RankedCandidate
       if (ctr % 100 == 0) {
          Logger.getGlobal().info("Generation: " + ctr + " Best: " + t.best());
       }
-      ctr++;
-      boolean finished = ctr > maxGenerations;
-      return finished;
+      return ++ctr > maxGenerations;
    }
 }

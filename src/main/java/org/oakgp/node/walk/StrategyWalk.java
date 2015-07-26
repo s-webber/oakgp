@@ -22,6 +22,7 @@ import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.node.NodeType;
 
+/** Provides a mechanism for recursively visiting nodes in a tree structure, controlled by a user-defined strategy. */
 public final class StrategyWalk {
    /** Private constructor as all methods are static. */
    private StrategyWalk() {
@@ -29,7 +30,7 @@ public final class StrategyWalk {
    }
 
    /**
-    * Returns the total number of nodes represented by this {@code Node} - including any child-nodes - that match the specified predicate.
+    * Returns the total number of nodes contained in the tree-structure represented by the given {@code Node} that match the specified predicate.
     *
     * @param treeWalkerStrategy
     *           the predicate used to determine if a {@code Node} should be included in the count
@@ -46,9 +47,7 @@ public final class StrategyWalk {
       return total;
    }
 
-   /**
-    * Returns a {@code Node} from the tree structure represented by this object that matches the specified predicate.
-    */
+   /** Returns a {@code Node} from the tree structure represented by the given {@code Node} that matches the specified predicate. */
    public static Node getAt(Node node, int index, Predicate<Node> treeWalkerStrategy) {
       if (NodeType.isFunction(node)) {
          FunctionNode functionNode = (FunctionNode) node;
@@ -71,7 +70,8 @@ public final class StrategyWalk {
    }
 
    /**
-    * Returns a new {@code Node} resulting from replacing the {@code Node} at position {@code index} with the result of {@code replacement}.
+    * Returns a new {@code Node} resulting from replacing the {@code Node} at position {@code index} of the given {@code Node} with the result of
+    * {@code replacement}.
     *
     * @param index
     *           the index of the {@code Node}, in the tree structure represented by this object, that needs to be replaced

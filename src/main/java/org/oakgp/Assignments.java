@@ -1,12 +1,12 @@
 /*
  * Copyright 2015 S. Webber
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,6 +16,8 @@
 package org.oakgp;
 
 import java.util.Arrays;
+
+import org.oakgp.util.Utils;
 
 /**
  * Represents values assigned to variables.
@@ -36,14 +38,12 @@ public final class Assignments {
     * @return a new {@code Assignments} which contains the values specified by {@code values}
     */
    public static Assignments createAssignments(Object... values) {
-      Object[] copy = new Object[values.length];
-      System.arraycopy(values, 0, copy, 0, values.length);
-      return new Assignments(copy);
+      return new Assignments(values);
    }
 
    /** @see #createAssignments(Node...) */
    private Assignments(Object[] assignments) {
-      this.assignments = assignments;
+      this.assignments = Utils.copyOf(assignments);
       this.hashCode = Arrays.hashCode(assignments);
    }
 

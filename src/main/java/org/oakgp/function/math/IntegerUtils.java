@@ -19,6 +19,7 @@ import static org.oakgp.Type.integerType;
 
 /** Provides support for working with instances of {@code java.lang.Integer}. */
 public final class IntegerUtils extends NumberUtils<Integer> {
+   /** Singleton instance. */
    public static final IntegerUtils INTEGER_UTILS = new IntegerUtils();
 
    /** @see #INTEGER_UTILS */

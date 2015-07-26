@@ -18,12 +18,15 @@ package org.oakgp.rank.tournament;
 import org.oakgp.node.Node;
 
 /**
+ * Removes "first-mover advantage" bias from the evaluation of players in two player games.
+ * <p>
  * Some games have a "first-mover advantage" - meaning the player that moves first has a greater chance of winning than the player that moves second. To avoid
  * "first-mover advantage" causing players to be unfairly ranked, each pair plays each other twice - with each having the opportunity to move first.
  */
 public final class FirstPlayerAdvantageGame implements TwoPlayerGame {
    private final TwoPlayerGame twoPlayerGame;
 
+   /** Creates a {@code FirstPlayerAdvantageGame} that uses the given {@code TwoPlayerGame}. */
    public FirstPlayerAdvantageGame(TwoPlayerGame twoPlayerGame) {
       this.twoPlayerGame = twoPlayerGame;
    }

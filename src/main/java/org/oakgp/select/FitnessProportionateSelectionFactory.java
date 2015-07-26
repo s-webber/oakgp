@@ -22,6 +22,7 @@ import org.oakgp.util.Random;
 public final class FitnessProportionateSelectionFactory implements NodeSelectorFactory {
    private final Random random;
 
+   /** Creates a {@code FitnessProportionateSelectionFactory} that creates {@code FitnessProportionateSelection} instances that use the given {@code Random}. */
    public FitnessProportionateSelectionFactory(Random random) {
       this.random = random;
    }

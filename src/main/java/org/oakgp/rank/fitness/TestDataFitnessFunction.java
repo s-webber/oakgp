@@ -32,7 +32,7 @@ public final class TestDataFitnessFunction<T> implements FitnessFunction {
    private final ToDoubleBiFunction<T, T> rankingFunction;
 
    /**
-    * Constructs a new {@code FitnessFunction} which uses the specified test data to assess the fitness of potential solutions.
+    * Returns a new {@code FitnessFunction} which uses the specified test data to assess the fitness of potential solutions.
     *
     * @param tests
     *           test data which associates a collection of inputs with their expected outcomes
@@ -41,6 +41,16 @@ public final class TestDataFitnessFunction<T> implements FitnessFunction {
       return new TestDataFitnessFunction<>(tests, (e, a) -> Math.abs(e - a));
    }
 
+   /**
+    * Creates a {@code TestDataFitnessFunction} which uses the given test cases and ranking function to determine the suitability of candidates.
+    *
+    * @param tests
+    *           a collection of test cases which associate an {@code Assignments} (used as input to {@link Node#evaluate(Assignments)}) with the corresponding
+    *           expected outcome
+    * @param rankingFunction
+    *           accepts the expected value (as the first argument) and the actual value (as the second argument) of applying a test case (as represented as an
+    *           entry in {@code tests} and returns a fitness value
+    */
    public TestDataFitnessFunction(Map<Assignments, T> tests, ToDoubleBiFunction<T, T> rankingFunction) {
       this.tests = tests;
       this.rankingFunction = rankingFunction;

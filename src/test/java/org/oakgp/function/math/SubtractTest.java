@@ -1,12 +1,12 @@
 /*
  * Copyright 2015 S. Webber
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,6 +16,9 @@
 package org.oakgp.function.math;
 
 import static org.oakgp.Type.integerType;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
 
 import org.oakgp.function.AbstractFunctionTest;
 import org.oakgp.function.Function;
@@ -28,7 +31,20 @@ public class SubtractTest extends AbstractFunctionTest {
 
    @Override
    public void testEvaluate() {
+      // integer
       evaluate("(- 3 21)").to(-18);
+
+      // long
+      evaluate("(- 3L 21L)").to(-18L);
+
+      // big integer
+      evaluate("(- 3I 21I)").to(BigInteger.valueOf(-18));
+
+      // double
+      evaluate("(- 3.0 21.0)").to(-18d);
+
+      // big decimal
+      evaluate("(- 3D 21D)").to(BigDecimal.valueOf(-18));
    }
 
    @Override
@@ -50,10 +66,19 @@ public class SubtractTest extends AbstractFunctionTest {
       // convert double negatives to addition
       simplify("(- v0 -7)").to("(+ 7 v0)").verifyAll(assignedValues);
 
+      // test when second argument is an addition expression
       simplify("(- 1 (+ 1 v0))").to("(- 0 v0)").verifyAll(assignedValues);
-      simplify("(- 1 (- 1 v0))").to("v0").verifyAll(assignedValues);
       simplify("(- 6 (+ 4 v0))").to("(- 2 v0)").verifyAll(assignedValues);
+
+      // test when second argument is a subtraction expression
+      simplify("(- 1 (- 7 v0))").to("(- v0 6)").verifyAll(assignedValues);
+      simplify("(- 1 (- 1 v0))").to("v0").verifyAll(assignedValues);
       simplify("(- 6 (- 4 v0))").to("(+ 2 v0)").verifyAll(assignedValues);
+      simplify("(- 1 (- 0 v0))").to("(+ 1 v0)").verifyAll(assignedValues);
+
+      // test when second argument is a multiplication expression
+      simplify("(- 0 (* -3 v0))").to("(* 3 v0)").verifyAll(assignedValues);
+      simplify("(- 7 (* -3 v0))").to("(+ 7 (* 3 v0))").verifyAll(assignedValues);
 
       // (1 + x) - (2 + y) evaluates to -1+x-y
       simplify("(- (+ 1 v0) (+ 2 v1))").to("(- v0 (+ 1 v1))").verifyAll(assignedValues);
@@ -111,6 +136,7 @@ public class SubtractTest extends AbstractFunctionTest {
 
    @Override
    protected Function[] getFunctionSet() {
-      return new Function[] { getFunction(), IntegerUtils.INTEGER_UTILS.getAdd(), IntegerUtils.INTEGER_UTILS.getMultiply() };
+      return new Function[] { getFunction(), IntegerUtils.INTEGER_UTILS.getAdd(), IntegerUtils.INTEGER_UTILS.getMultiply(), LongUtils.LONG_UTILS.getSubtract(),
+            DoubleUtils.DOUBLE_UTILS.getSubtract(), BigIntegerUtils.BIG_INTEGER_UTILS.getSubtract(), BigDecimalUtils.BIG_DECIMAL_UTILS.getSubtract() };
    }
 }

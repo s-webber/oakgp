@@ -37,6 +37,14 @@ public final class SubtreeCrossover implements GeneticOperator {
    private final Random random;
    private final int maxDepth;
 
+   /**
+    * Creates a {@code SubtreeCrossover} that uses the given {@code Random} to select subtrees from parents.
+    *
+    * @param random
+    *           used to randomly select subtrees to replace and the subtrees to replace them with
+    * @param maxDepth
+    *           used to enforce a maximum depth of any offspring
+    */
    public SubtreeCrossover(Random random, int maxDepth) {
       this.random = random;
       this.maxDepth = maxDepth;

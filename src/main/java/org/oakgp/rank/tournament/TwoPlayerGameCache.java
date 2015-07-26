@@ -15,20 +15,20 @@
  */
 package org.oakgp.rank.tournament;
 
-import static org.oakgp.util.CacheMap.createCache;
-
 import java.util.Map;
 
 import org.oakgp.node.Node;
+import org.oakgp.util.CacheMap;
 
 /** Wraps a {@code TwoPlayerGame} to provide caching of results. */
 public final class TwoPlayerGameCache implements TwoPlayerGame {
    private final TwoPlayerGame twoPlayerGame;
    private final Map<NodePair, Double> cache;
 
+   /** Creates a cache of the given maximum size which will contain the results of evaluating the given {@code TwoPlayerGame}. */
    public TwoPlayerGameCache(int maxSize, TwoPlayerGame twoPlayerGame) {
       this.twoPlayerGame = twoPlayerGame;
-      this.cache = createCache(maxSize);
+      this.cache = CacheMap.createCache(maxSize);
    }
 
    @Override

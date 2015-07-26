@@ -42,6 +42,12 @@ import org.oakgp.node.Node;
 public final class Reduce implements Function {
    private final Signature signature;
 
+   /**
+    * Creates a higher order functions that recursively applies a function to the elements of a collection.
+    *
+    * @param type
+    *           the type of the elements contained in the collection - this will also be the type associated with the value produced by evaluating this function
+    */
    public Reduce(Type type) {
       signature = Signature.createSignature(type, functionType(type, type, type), type, arrayType(type));
    }

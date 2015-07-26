@@ -34,6 +34,7 @@ import org.oakgp.util.Utils;
 public final class OnePointCrossover implements GeneticOperator {
    private final Random random;
 
+   /** Creates a {@code OnePointCrossover} that uses the given {@code Random} to select crossover points. */
    public OnePointCrossover(Random random) {
       this.random = random;
    }
@@ -46,8 +47,8 @@ public final class OnePointCrossover implements GeneticOperator {
       if (commonRegionSize < 2) {
          return parent2;
       } else {
-         int crossOverPoint = Utils.selectSubNodeIndex(random, commonRegionSize);
-         return CommonRegion.crossoverAt(parent1, parent2, crossOverPoint);
+         int crossoverPoint = Utils.selectSubNodeIndex(random, commonRegionSize);
+         return CommonRegion.crossoverAt(parent1, parent2, crossoverPoint);
       }
    }
 }

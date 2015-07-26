@@ -28,6 +28,7 @@ import org.oakgp.function.Signature;
 public final class Count implements Function {
    private final Signature signature;
 
+   /** Constructs a function to return the number of items in collections of the specified type. */
    public Count(Type t) {
       signature = Signature.createSignature(integerType(), arrayType(t));
    }

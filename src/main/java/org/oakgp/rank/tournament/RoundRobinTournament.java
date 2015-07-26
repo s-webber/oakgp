@@ -27,6 +27,7 @@ import org.oakgp.rank.RankedCandidates;
 public final class RoundRobinTournament implements GenerationRanker {
    private final TwoPlayerGame game;
 
+   /** Creates a {@code RoundRobinTournament} for the given {@code TwoPlayerGame}. */
    public RoundRobinTournament(TwoPlayerGame game) {
       this.game = game;
    }

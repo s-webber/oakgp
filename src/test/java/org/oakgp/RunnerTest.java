@@ -17,8 +17,6 @@ package org.oakgp;
 
 import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.oakgp.TestUtils.singletonRankedCandidates;
 
 import java.util.Collection;
 import java.util.function.Predicate;
@@ -29,6 +27,7 @@ import org.oakgp.node.Node;
 import org.oakgp.rank.GenerationRanker;
 import org.oakgp.rank.RankedCandidate;
 import org.oakgp.rank.RankedCandidates;
+import org.oakgp.util.RunBuilderTest;
 
 public class RunnerTest {
    @SuppressWarnings("unchecked")
@@ -40,35 +39,12 @@ public class RunnerTest {
       Predicate<RankedCandidates> terminator = mock(Predicate.class);
       Collection<Node> initialPopulation = mock(Collection.class);
 
-      // create mock objects used in processing
-      RankedCandidates rankedInitialPopulation = singletonRankedCandidates();
-      Collection<Node> secondGeneration = mock(Collection.class);
-      RankedCandidates rankedSecondGeneration = singletonRankedCandidates();
-      Collection<Node> thirdGeneration = mock(Collection.class);
-      RankedCandidates rankedThirdGeneration = singletonRankedCandidates();
-      Collection<Node> fourthGeneration = mock(Collection.class);
-      RankedCandidates rankedFourthGeneration = singletonRankedCandidates();
-
-      // expectations for initial population
-      when(ranker.rank(initialPopulation)).thenReturn(rankedInitialPopulation);
-      when(evolver.process(rankedInitialPopulation)).thenReturn(secondGeneration);
-
-      // expectations for second generation
-      when(ranker.rank(secondGeneration)).thenReturn(rankedSecondGeneration);
-      when(evolver.process(rankedSecondGeneration)).thenReturn(thirdGeneration);
-
-      // expectations for third generation
-      when(ranker.rank(thirdGeneration)).thenReturn(rankedThirdGeneration);
-      when(evolver.process(rankedThirdGeneration)).thenReturn(fourthGeneration);
-
-      // expectations for fourth generation
-      when(ranker.rank(fourthGeneration)).thenReturn(rankedFourthGeneration);
-      when(terminator.test(rankedFourthGeneration)).thenReturn(true);
+      RankedCandidate expected = RunBuilderTest.createRunExpectations(ranker, evolver, terminator, initialPopulation);
 
       // run test
       RankedCandidate actual = Runner.process(ranker, evolver, terminator, initialPopulation);
 
       // confirm output matches expected behaviour
-      assertSame(rankedFourthGeneration.best(), actual);
+      assertSame(expected, actual);
    }
 }

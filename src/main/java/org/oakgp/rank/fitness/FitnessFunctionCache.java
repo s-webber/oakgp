@@ -15,20 +15,20 @@
  */
 package org.oakgp.rank.fitness;
 
-import static org.oakgp.util.CacheMap.createCache;
-
 import java.util.Map;
 
 import org.oakgp.node.Node;
+import org.oakgp.util.CacheMap;
 
 /** Wraps a {@code FitnessFunction} to provide caching of results. */
 public final class FitnessFunctionCache implements FitnessFunction {
    private final FitnessFunction fitnessFunction;
    private final Map<Node, Double> cache;
 
+   /** Creates a cache of the given maximum size which will contain the results of evaluating the given {@code FitnessFunction}. */
    public FitnessFunctionCache(int maxSize, FitnessFunction fitnessFunction) {
       this.fitnessFunction = fitnessFunction;
-      this.cache = createCache(maxSize);
+      this.cache = CacheMap.createCache(maxSize);
    }
 
    @Override

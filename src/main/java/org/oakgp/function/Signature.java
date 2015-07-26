@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.oakgp.Type;
+import org.oakgp.util.Utils;
 
 /**
  * Represents the type signature of a {@code Function}.
@@ -31,30 +32,41 @@ public final class Signature {
    private final Type[] argumentTypes;
    private final int hashCode;
 
+   /** Returns a new {@code Signature} with the specified return type and argument types. */
    public static Signature createSignature(Type returnType, Type... argumentTypes) {
-      Type[] copy = new Type[argumentTypes.length];
-      System.arraycopy(argumentTypes, 0, copy, 0, argumentTypes.length);
-      return new Signature(returnType, copy);
+      return new Signature(returnType, argumentTypes);
    }
 
-   private Signature(Type returnType, Type[] argumentTypes) {
+   private Signature(Type returnType, Type[] userSuppliedArgumentTypes) {
       this.returnType = returnType;
-      this.argumentTypes = argumentTypes;
+      this.argumentTypes = Utils.copyOf(userSuppliedArgumentTypes);
       this.hashCode = (returnType.hashCode() * 31) * Arrays.hashCode(argumentTypes);
    }
 
+   /** Returns the type associated with values returned by the evaluation of functions that have this signature. */
    public Type getReturnType() {
       return returnType;
    }
 
+   /**
+    * Returns the {@code Type} at the specified position in the arguments of this signature.
+    *
+    * @param index
+    *           index of the argument to return
+    * @return the {@code Type} at the specified position in the arguments of this signature.
+    * @throws ArrayIndexOutOfBoundsException
+    *            if the index is out of range (<tt>index &lt; 0 || index &gt;= getArgumentTypesLength()</tt>)
+    */
    public Type getArgumentType(int index) {
       return argumentTypes[index];
    }
 
+   /** Returns the number of arguments in this signature. */
    public int getArgumentTypesLength() {
       return argumentTypes.length;
    }
 
+   /** Returns an unmodifiable list containing the type of each argument associated with this signature. */
    public List<Type> getArgumentTypes() {
       return Collections.unmodifiableList(Arrays.asList(argumentTypes));
    }

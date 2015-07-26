@@ -48,7 +48,7 @@ public class TicTacToeSystemTest {
             new GetPossibleMove("side", Board::getFreeSide), new GetWinningMove(), new GetAnyMove(), new OrElse(MOVE_TYPE) };
       TwoPlayerGame game = createTicTacToeGame();
 
-      new RunBuilder().setReturnType(MOVE_TYPE).setConstants().setVariables(VARIABLE_TYPES).setFunctionSet(functions).setTwoPlayerGame(game)
+      new RunBuilder().setReturnType(MOVE_TYPE).setConstants().setVariables(VARIABLE_TYPES).setFunctions(functions).setTwoPlayerGame(game)
             .setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_POPULATION_MAX_DEPTH).setMaxGenerations(NUM_GENERATIONS).process();
    }
 
@@ -58,7 +58,7 @@ public class TicTacToeSystemTest {
       ConstantNode[] constants = getMoveConstants();
       TwoPlayerGame game = createTicTacToeGame();
 
-      new RunBuilder().setReturnType(MOVE_TYPE).setConstants(constants).setVariables(VARIABLE_TYPES).setFunctionSet(functions).setTwoPlayerGame(game)
+      new RunBuilder().setReturnType(MOVE_TYPE).setConstants(constants).setVariables(VARIABLE_TYPES).setFunctions(functions).setTwoPlayerGame(game)
             .setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_POPULATION_MAX_DEPTH).setMaxGenerations(NUM_GENERATIONS).process();
    }
 
@@ -68,7 +68,7 @@ public class TicTacToeSystemTest {
       ConstantNode[] constants = getMoveConstants();
       TicTacToeFitnessFunction fitnessFunction = new TicTacToeFitnessFunction();
 
-      new RunBuilder().setReturnType(MOVE_TYPE).setConstants(constants).setVariables(VARIABLE_TYPES).setFunctionSet(functions)
+      new RunBuilder().setReturnType(MOVE_TYPE).setConstants(constants).setVariables(VARIABLE_TYPES).setFunctions(functions)
             .setFitnessFunction(fitnessFunction).setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_POPULATION_MAX_DEPTH)
             .setMaxGenerations(NUM_GENERATIONS).process();
    }

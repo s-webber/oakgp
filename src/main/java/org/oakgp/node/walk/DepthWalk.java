@@ -20,12 +20,19 @@ import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.node.NodeType;
 
+/** Provides a mechanism for recursively visiting nodes in a tree structure while keeping track of the depth of each node. */
 public final class DepthWalk {
    /** Private constructor as all methods are static. */
    private DepthWalk() {
       // do nothing
    }
 
+   /**
+    * Returns the total number of nodes contained in the tree-structure represented by the given {@code Node} that match the specified predicate.
+    *
+    * @param treeWalkerStrategy
+    *           the predicate used to determine if a {@code Node} should be included in the count
+    */
    public static int getNodeCount(Node tree, DepthWalkStrategy treeWalkerStrategy) {
       return getNodeCount(tree, treeWalkerStrategy, 1);
    }
@@ -44,6 +51,7 @@ public final class DepthWalk {
       }
    }
 
+   /** Returns a {@code Node} from the tree structure represented by the given {@code Node} that matches the specified predicate. */
    public static Node getAt(Node current, int index, DepthWalkStrategy treeWalkerStrategy) {
       return getAt(current, index, treeWalkerStrategy, 1);
    }
@@ -69,6 +77,16 @@ public final class DepthWalk {
       return current;
    }
 
+   /**
+    * Returns a new {@code Node} resulting from replacing the {@code Node} at position {@code index} of the given {@code Node} with the result of
+    * {@code replacement}.
+    *
+    * @param index
+    *           the index of the {@code Node}, in the tree structure represented by this object, that needs to be replaced
+    * @param replacement
+    *           the function to apply to the {@code Node} at {@code index} to determine the {@code Node} that should replace it
+    * @return a new {@code Node} derived from replacing the {@code Node} at {@code index} with the result of {@code replacement}
+    */
    public static Node replaceAt(Node current, int index, DepthWalkReplacement replacement) {
       return replaceAt(current, index, replacement, 1);
    }
@@ -91,13 +109,29 @@ public final class DepthWalk {
       return replacement.apply(current, currentDepth);
    }
 
+   /** Defines a strategy for determining which nodes should be considered when walking a tree structure. */
    @FunctionalInterface
    public interface DepthWalkStrategy {
+      /**
+       * @param node
+       *           a node that has been encountered while walking a tree structure
+       * @param depth
+       *           the depth (distance from the root) of the specified {@code node} within the tree structure being walked
+       * @return {@code true} if this node should be considered, else {@code false}
+       */
       boolean test(Node node, int depth);
    }
 
+   /** Defines a strategy for determining a replacement for a node encountered when walking a tree structure. */
    @FunctionalInterface
    public interface DepthWalkReplacement {
+      /**
+       * @param node
+       *           a node that has been encountered while walking a tree structure
+       * @param depth
+       *           the depth (distance from the root) of the specified {@code node} within the tree structure being walked
+       * @return a node that should replace the specified {@code node} within the tree structure being walked
+       */
       Node apply(Node node, int depth);
    }
 }

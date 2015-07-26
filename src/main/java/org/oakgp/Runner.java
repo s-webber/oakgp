@@ -48,7 +48,7 @@ public final class Runner {
          Collection<Node> initialPopulation) {
       RankedCandidates rankedCandidates = generationRanker.rank(initialPopulation);
       while (!terminator.test(rankedCandidates)) {
-         Collection<Node> newGeneration = generationEvolver.process(rankedCandidates);
+         Collection<Node> newGeneration = generationEvolver.evolve(rankedCandidates);
          rankedCandidates = generationRanker.rank(newGeneration);
       }
       return rankedCandidates.best();

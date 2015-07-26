@@ -27,6 +27,7 @@ public final class RankSelection implements NodeSelector {
    private final int size;
    private final double sum;
 
+   /** Creates a {@code RankSelection} that uses the given {@code Random} to select from the given {@code RankedCandidates}. */
    public RankSelection(Random random, RankedCandidates candidates) {
       this.random = random;
       this.candidates = candidates;

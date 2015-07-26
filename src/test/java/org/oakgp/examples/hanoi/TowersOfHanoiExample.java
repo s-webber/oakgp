@@ -55,7 +55,7 @@ public class TowersOfHanoiExample {
       Type[] variables = { STATE_TYPE, nullableType(MOVE_TYPE) };
       FitnessFunction fitnessFunction = new TowersOfHanoiFitnessFunction(false);
 
-      Node best = new RunBuilder().setReturnType(MOVE_TYPE).setConstants(constants).setVariables(variables).setFunctionSet(functions)
+      Node best = new RunBuilder().setReturnType(MOVE_TYPE).setConstants(constants).setVariables(variables).setFunctions(functions)
             .setFitnessFunction(fitnessFunction).setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_POPULATION_MAX_DEPTH)
             .setTargetFitness(TARGET_FITNESS).setMaxGenerations(NUM_GENERATIONS).process();
 

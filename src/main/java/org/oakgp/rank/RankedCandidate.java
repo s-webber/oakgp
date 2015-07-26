@@ -22,6 +22,7 @@ public final class RankedCandidate implements Comparable<RankedCandidate> {
    private final double fitness;
    private final Node node;
 
+   /** Creates a {@code RankedCandidate} which associates the given {@code Node} with the given fitness value. */
    public RankedCandidate(Node node, double fitness) {
       this.node = node;
       this.fitness = fitness;

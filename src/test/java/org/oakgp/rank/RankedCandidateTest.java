@@ -62,6 +62,8 @@ public class RankedCandidateTest {
       assertFalse(a.equals(c));
 
       assertFalse(a.equals(d));
+
+      assertFalse(a.equals("string"));
    }
 
    @Test

@@ -33,6 +33,14 @@ public final class ShrinkMutation implements GeneticOperator {
    private final Random random;
    private final PrimitiveSet primitiveSet;
 
+   /**
+    * Creates a {@code ShrinkMutation} that uses a {@code Random} to select function nodes to replace with terminals from a {@code PrimitiveSet}.
+    *
+    * @param random
+    *           used to randomly select function nodes
+    * @param primitiveSet
+    *           used to select terminal nodes to replace function nodes with
+    */
    public ShrinkMutation(Random random, PrimitiveSet primitiveSet) {
       this.random = random;
       this.primitiveSet = primitiveSet;

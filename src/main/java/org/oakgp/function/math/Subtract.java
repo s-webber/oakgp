@@ -16,7 +16,6 @@
 package org.oakgp.function.math;
 
 import static org.oakgp.node.NodeType.isConstant;
-import static org.oakgp.node.NodeType.isFunction;
 
 import org.oakgp.Arguments;
 import org.oakgp.Assignments;
@@ -59,7 +58,7 @@ final class Subtract extends ArithmeticOperator {
          // e.g. (- x 0) -> x
          return arg1;
       } else if (numberUtils.isZero(arg1) && numberUtils.isSubtract(arg2)) {
-         // simplify "zero minus ?" expressions
+         // simplify "zero minus n" expressions
          // e.g. (- 0 (- x y) -> (- y x)
          FunctionNode fn2 = (FunctionNode) arg2;
          Arguments fn2Arguments = fn2.getArguments();
@@ -69,32 +68,32 @@ final class Subtract extends ArithmeticOperator {
          // e.g. (- x -1) -> (+ 1 x)
          return new FunctionNode(numberUtils.getAdd(), numberUtils.negate(arg2), arg1);
       } else {
-         if (isFunction(arg2)) {
+         if (numberUtils.isArithmeticExpression(arg2)) {
             FunctionNode fn = (FunctionNode) arg2;
             Function f = fn.getFunction();
             Arguments args = fn.getArguments();
             Node fnArg1 = args.firstArg();
             Node fnArg2 = args.secondArg();
-            if (isConstant(fnArg1) && numberUtils.isMultiply(f)) {
+            if (numberUtils.isMultiply(f) && isConstant(fnArg1)) {
                if (numberUtils.isZero(arg1)) {
+                  // (- 0 (* -3 v0)) -> (* 3 v0)
                   return new FunctionNode(f, numberUtils.negateConstant(fnArg1), fnArg2);
                } else if (numberUtils.isNegative(fnArg1)) {
+                  // (- 7 (* -3 v0)) -> (+ 7 (* 3 v0))
                   return new FunctionNode(numberUtils.getAdd(), arg1, new FunctionNode(f, numberUtils.negateConstant(fnArg1), fnArg2));
                }
-            } else if (numberUtils.isZero(arg1) && numberUtils.isAdd(f)) {
-               // (- 0 (+ v0 v1) -> (+ (0 - v0) (0 - v1))
+            } else if (numberUtils.isAdd(f) && numberUtils.isZero(arg1)) {
+               // (- 0 (+ v0 v1)) -> (+ (0 - v0) (0 - v1))
                return new FunctionNode(f, numberUtils.negate(fnArg1), numberUtils.negate(fnArg2));
-            } else if (isConstant(arg1) && isConstant(fnArg1) && numberUtils.isSubtract(fn)) {
+            } else if (numberUtils.isSubtract(fn) && isConstant(arg1) && isConstant(fnArg1)) {
                if (numberUtils.isZero(arg1)) {
                   // added exception to confirm we never actually get here
                   throw new IllegalArgumentException();
-                  // (- 0 (- 0 v0)) -> v0
-                  // (- 0 (- 7 v0)) -> (- v0 7)
-                  // return Optional.of(new FunctionNode(op, Arguments.createArguments(fnArg2, fnArg1)));
                } else if (numberUtils.isZero(fnArg1)) {
                   // (- 1 (- 0 v0)) -> (+ 1 v0)
                   return new FunctionNode(numberUtils.getAdd(), arg1, fnArg2);
                } else {
+                  // (- 1 (- 7 v0)) -> (- v0 6)
                   return new FunctionNode(numberUtils.getAdd(), numberUtils.subtract(arg1, fnArg1), fnArg2);
                }
             }

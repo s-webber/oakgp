@@ -58,6 +58,8 @@ public final class TreeGeneratorImpl implements TreeGenerator {
     *
     * @param primitiveSet
     *           the collection of functions, variables and constants from which tree will be constructed
+    * @param random
+    *           used to randomly determine the structure of the generated trees
     * @return a {@code TreeGenerator} that uses the "grow" approach to creating trees.
     */
    public static TreeGenerator grow(PrimitiveSet primitiveSet, Random random) {

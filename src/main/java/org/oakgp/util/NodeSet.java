@@ -26,6 +26,8 @@ import org.oakgp.node.Node;
  * @see NodeSimplifier
  */
 public final class NodeSet extends HashSet<Node> {
+   private static final long serialVersionUID = 1L;
+
    /**
     * Adds the simplified version of the specified {@code Node} to this set if it is not already present.
     *

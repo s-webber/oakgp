@@ -22,6 +22,7 @@ import org.oakgp.util.Random;
 public final class RankSelectionFactory implements NodeSelectorFactory {
    private final Random random;
 
+   /** Creates a {@code RankSelectionFactory} that creates {@code RankSelection} instances that use the given {@code Random}. */
    public RankSelectionFactory(Random random) {
       this.random = random;
    }

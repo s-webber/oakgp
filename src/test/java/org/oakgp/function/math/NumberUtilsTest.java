@@ -19,6 +19,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.oakgp.TestUtils.integerConstant;
+import static org.oakgp.TestUtils.readFunctionNode;
 import static org.oakgp.TestUtils.readNode;
 import static org.oakgp.Type.integerType;
 
@@ -135,5 +136,14 @@ public class NumberUtilsTest {
       assertTrue(NUMBER_UTILS.isAddOrSubtract(NUMBER_UTILS.getSubtract()));
       assertFalse(NUMBER_UTILS.isAddOrSubtract(NUMBER_UTILS.getMultiply()));
       assertFalse(NUMBER_UTILS.isAddOrSubtract(new If(integerType())));
+   }
+
+   @Test
+   public void testIsArithmeticExpression() {
+      assertTrue(NUMBER_UTILS.isArithmeticExpression(readFunctionNode("(+ v0 v1)")));
+      assertTrue(NUMBER_UTILS.isArithmeticExpression(readFunctionNode("(- v0 v1)")));
+      assertTrue(NUMBER_UTILS.isArithmeticExpression(readFunctionNode("(* v0 v1)")));
+      assertTrue(NUMBER_UTILS.isArithmeticExpression(readFunctionNode("(/ v0 v1)")));
+      assertFalse(NUMBER_UTILS.isArithmeticExpression(readFunctionNode("(= v0 v1)")));
    }
 }

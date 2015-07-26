@@ -18,6 +18,9 @@ package org.oakgp.rank;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Stream;
 
 /** A sorted immutable collection of {@code RankedCandidate} objects. */
 public final class RankedCandidates implements Iterable<RankedCandidate> {
@@ -26,26 +29,48 @@ public final class RankedCandidates implements Iterable<RankedCandidate> {
    private final RankedCandidate[] sortedCandidates;
    private final int size;
 
+   /**
+    * Constructs a new collection of candidates sorted by their natural ordering.
+    *
+    * @see RankedCandidate#compareTo(RankedCandidate)
+    */
    public RankedCandidates(RankedCandidate[] candidates) {
       this(candidates, COMPARE_TO);
    }
 
+   /** Constructs a new collection of candidates sorted according to the given comparator. */
    public RankedCandidates(RankedCandidate[] candidates, Comparator<RankedCandidate> comparator) {
       this.size = candidates.length;
       this.sortedCandidates = Arrays.copyOf(candidates, size);
       Arrays.sort(sortedCandidates, comparator);
    }
 
-   public RankedCandidate get(int i) {
-      return sortedCandidates[i];
+   /**
+    * Returns the candidate at the specified position in this collection.
+    *
+    * @param index
+    *           index of the candidate to return
+    * @return the candidate at the specified position in this collection
+    * @throws ArrayIndexOutOfBoundsException
+    *            if the index is out of range (<tt>index &lt; 0 || index &gt;= size()</tt>)
+    */
+   public RankedCandidate get(int index) {
+      return sortedCandidates[index];
    }
 
+   /** Returns the best candidate in this collection. */
    public RankedCandidate best() {
       return sortedCandidates[0];
    }
 
+   /** Returns the number of candidates in this collection. */
    public int size() {
       return size;
+   }
+
+   /** Returns a sequential {@code Stream} with this collection as its source. */
+   public Stream<RankedCandidate> stream() {
+      return Arrays.stream(sortedCandidates);
    }
 
    @Override
@@ -54,16 +79,21 @@ public final class RankedCandidates implements Iterable<RankedCandidate> {
    }
 
    private class RankedCandidatesIterator implements Iterator<RankedCandidate> {
-      private int ctr;
+      private final AtomicInteger ctr = new AtomicInteger();
 
       @Override
       public boolean hasNext() {
-         return ctr < size;
+         return ctr.get() < size;
       }
 
       @Override
-      public synchronized RankedCandidate next() {
-         return sortedCandidates[ctr++];
+      public RankedCandidate next() {
+         int next = ctr.getAndIncrement();
+         if (next < size) {
+            return sortedCandidates[next];
+         } else {
+            throw new NoSuchElementException();
+         }
       }
    }
 }

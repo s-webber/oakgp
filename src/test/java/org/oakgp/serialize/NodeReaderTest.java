@@ -16,6 +16,7 @@
 package org.oakgp.serialize;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -42,7 +43,27 @@ import org.oakgp.node.VariableNode;
 import org.oakgp.primitive.VariableSet;
 
 public class NodeReaderTest {
-   // TODO test error conditions using assetReadException
+   @Test
+   public void testIsEndOfStream() throws IOException {
+      try (NodeReader nr = new NodeReader("1 2 3", new Function[0], new ConstantNode[0], VariableSet.createVariableSet())) {
+         assertFalse(nr.isEndOfStream());
+         nr.readNode();
+
+         assertFalse(nr.isEndOfStream());
+         nr.readNode();
+
+         assertFalse(nr.isEndOfStream());
+         nr.readNode();
+
+         assertTrue(nr.isEndOfStream());
+         try {
+            nr.readNode();
+            fail();
+         } catch (IllegalStateException e) {
+            // expected
+         }
+      }
+   }
 
    @Test
    public void testZero() {

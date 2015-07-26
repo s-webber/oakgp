@@ -59,7 +59,7 @@ final class Add extends ArithmeticOperator {
          // e.g. (+ 0 v0) -> v0
          return arg2;
       } else if (numberUtils.isZero(arg2)) {
-         // should never get here to to earlier ordering of arguments
+         // the earlier ordering or arguments means we should never get here
          throw new IllegalArgumentException("arg1 " + arg1 + " arg2 " + arg2);
       } else if (arg1.equals(arg2)) {
          // anything plus itself is equal to itself multiplied by two

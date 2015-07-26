@@ -44,14 +44,14 @@ public class GenerationEvolverImplTest {
       operators.put(generator1, 3);
       operators.put(generator2, 5);
 
-      // create mock objects to return from process method
+      // create mock objects to return from evolve method
       // 10 = 3 selected by elitism, 3 selected by first generator, 4 selected by second generator (excluding duplicate)
       Node[] expectedOutput = new Node[10];
       for (int i = 0; i < expectedOutput.length; i++) {
          expectedOutput[i] = mockNode();
       }
 
-      // create objects to pass as argument to process method
+      // create objects to pass as argument to evolve method
       RankedCandidates input = new RankedCandidates(new RankedCandidate[] { new RankedCandidate(expectedOutput[0], 1),
             new RankedCandidate(expectedOutput[1], 2), new RankedCandidate(expectedOutput[2], elitismSize), new RankedCandidate(mockNode(), 4),
             new RankedCandidate(mockNode(), 5) });
@@ -64,9 +64,9 @@ public class GenerationEvolverImplTest {
       // that will be confirmed when we check actualOutput.size()
       when(generator2.evolve(selector)).thenReturn(expectedOutput[6], expectedOutput[7], expectedOutput[8], expectedOutput[7], expectedOutput[9]);
 
-      // execute process method
+      // execute evolve method
       GenerationEvolverImpl evolver = new GenerationEvolverImpl(elitismSize, selectorFactory, operators);
-      Collection<Node> actualOutput = evolver.process(input);
+      Collection<Node> actualOutput = evolver.evolve(input);
 
       // check output
       assertEquals(expectedOutput.length, actualOutput.size());

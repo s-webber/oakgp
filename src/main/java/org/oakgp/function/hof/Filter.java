@@ -40,6 +40,12 @@ import org.oakgp.node.Node;
 public final class Filter implements Function {
    private final Signature signature;
 
+   /**
+    * Creates a higher order functions that filters the elements of a collection.
+    *
+    * @param type
+    *           the type of the elements contained in the collection
+    */
    public Filter(Type type) {
       signature = Signature.createSignature(arrayType(type), functionType(booleanType(), type), arrayType(type));
    }

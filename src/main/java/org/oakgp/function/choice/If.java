@@ -47,6 +47,7 @@ public final class If implements Function {
 
    private final Signature signature;
 
+   /** Constructs a selection operator that returns values of the specified type. */
    public If(Type type) {
       signature = Signature.createSignature(type, booleanType(), type, type);
    }

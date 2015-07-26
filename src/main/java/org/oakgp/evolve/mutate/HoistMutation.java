@@ -32,6 +32,7 @@ import org.oakgp.util.Utils;
 public final class HoistMutation implements GeneticOperator {
    private final Random random;
 
+   /** Creates a {@code HoistMutation} that uses the given {@code Random} to select subtrees as new offspring. */
    public HoistMutation(Random random) {
       this.random = random;
    }

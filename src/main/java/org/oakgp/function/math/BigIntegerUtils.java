@@ -20,7 +20,8 @@ import static org.oakgp.Type.bigIntegerType;
 import java.math.BigInteger;
 
 /** Provides support for working with instances of {@code java.math.BigInteger}. */
-public class BigIntegerUtils extends NumberUtils<BigInteger> {
+public final class BigIntegerUtils extends NumberUtils<BigInteger> {
+   /** Singleton instance. */
    public static final BigIntegerUtils BIG_INTEGER_UTILS = new BigIntegerUtils();
 
    /** @see #BIG_INTEGER_UTILS */

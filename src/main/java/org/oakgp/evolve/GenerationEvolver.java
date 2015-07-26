@@ -30,5 +30,5 @@ public interface GenerationEvolver {
     *           the existing generation to use as a basis for evolving a new generation
     * @return a new generation of {@code Node} instances evolved from the existing generation specified by {@code oldGeneration}
     */
-   Collection<Node> process(RankedCandidates oldGeneration);
+   Collection<Node> evolve(RankedCandidates oldGeneration);
 }

@@ -28,6 +28,7 @@ import org.oakgp.rank.RankedCandidates;
 public final class TargetFitnessTerminator implements Predicate<RankedCandidates> {
    private final Predicate<RankedCandidate> targetCriteira;
 
+   /** Creates a predicate which returns the result of evaluating the given criteria with the best candidate of a {@code RankedCandidates}. */
    public TargetFitnessTerminator(Predicate<RankedCandidate> targetCriteira) {
       this.targetCriteira = targetCriteira;
    }

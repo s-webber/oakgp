@@ -25,6 +25,7 @@ public final class MaxGenerationsWithoutImprovementTerminator implements Predica
    private int currentGenerationsWithoutImprovement;
    private double currentBest;
 
+   /** Constructs a new {@code Predicate} that will return {@code true} once the given number of consecutive generations have been run without improvement. */
    public MaxGenerationsWithoutImprovementTerminator(int maxGenerationsWithoutImprovement) {
       this.maxGenerationsWithoutImprovement = maxGenerationsWithoutImprovement;
    }
@@ -32,12 +33,12 @@ public final class MaxGenerationsWithoutImprovementTerminator implements Predica
    @Override
    public boolean test(RankedCandidates t) {
       double best = t.best().getFitness();
-      if (best != currentBest) {
+      if (best == currentBest) {
+         return ++currentGenerationsWithoutImprovement >= maxGenerationsWithoutImprovement;
+      } else {
          currentGenerationsWithoutImprovement = 0;
          currentBest = best;
          return false;
-      } else {
-         return ++currentGenerationsWithoutImprovement >= maxGenerationsWithoutImprovement;
       }
    }
 }

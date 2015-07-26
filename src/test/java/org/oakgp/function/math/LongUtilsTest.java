@@ -13,24 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.oakgp.function.compare;
+package org.oakgp.function.math;
 
-import org.oakgp.Type;
+import static org.junit.Assert.assertEquals;
 
-/** Determines if the object represented by the first argument is less than the object represented by the second. */
-public final class LessThan extends ComparisonOperator {
-   /** Constructs a function that compares two arguments of the specified type. */
-   public LessThan(Type type) {
-      super(type, false);
+import org.junit.Test;
+
+public class LongUtilsTest {
+   private static final NumberUtils<Long> UTILS = LongUtils.LONG_UTILS;
+
+   @Test
+   public void testAdd() {
+      assertEquals(Long.valueOf(9), UTILS.add(7L, 2L));
    }
 
-   @Override
-   protected boolean evaluate(int diff) {
-      return diff < 0;
+   @Test
+   public void testSubtract() {
+      assertEquals(Long.valueOf(5), UTILS.subtract(7L, 2L));
    }
 
-   @Override
-   public String getDisplayName() {
-      return "<";
+   @Test
+   public void testMultiply() {
+      assertEquals(Long.valueOf(14), UTILS.multiply(7L, 2L));
+   }
+
+   @Test
+   public void testDivide() {
+      assertEquals(Long.valueOf(3), UTILS.divide(7L, 2L));
    }
 }

@@ -118,5 +118,7 @@ public class SignatureTest {
       assertFalse(s5.equals(s2));
       assertFalse(s5.equals(s3));
       assertFalse(s5.equals(s4));
+
+      assertFalse(s1.equals("string"));
    }
 }

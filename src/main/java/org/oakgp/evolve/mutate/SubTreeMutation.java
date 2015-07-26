@@ -28,6 +28,14 @@ public final class SubTreeMutation implements GeneticOperator {
    private final Random random;
    private final TreeGenerator treeGenerator;
 
+   /**
+    * Creates a {@code SubTreeMutation} that uses the given {@code TreeGenerator} to generate new subtrees to replace existing subtrees.
+    *
+    * @param random
+    *           used to randomly select nodes to mutate
+    * @param treeGenerator
+    *           used to generate new subtrees to replace nodes selected for mutation
+    */
    public SubTreeMutation(Random random, TreeGenerator treeGenerator) {
       this.random = random;
       this.treeGenerator = treeGenerator;

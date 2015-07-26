@@ -36,6 +36,16 @@ public final class SwitchEnum implements Function {
    private final Signature signature;
    private final Enum<?>[] enumConstants;
 
+   /**
+    * Constructs a selection operator that returns values of the specified type.
+    *
+    * @param enumClass
+    *           the enum to compare the first argument against in order to determine which branch to evaluate
+    * @param enumType
+    *           the type associated with {@code enumClass}
+    * @param returnType
+    *           the type associated with values returned from the evaluation of this function
+    */
    public SwitchEnum(Class<? extends Enum<?>> enumClass, Type enumType, Type returnType) {
       this.enumConstants = enumClass.getEnumConstants();
       Type[] types = new Type[enumConstants.length + (isNullable(enumType) ? 2 : 1)];

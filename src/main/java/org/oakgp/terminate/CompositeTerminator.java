@@ -27,6 +27,7 @@ import org.oakgp.rank.RankedCandidates;
 public final class CompositeTerminator implements Predicate<RankedCandidates> {
    private final Predicate<RankedCandidates>[] terminators;
 
+   /** Constructs a new {@code Predicate} consisting of the specified component predicates. */
    @SafeVarargs
    public CompositeTerminator(Predicate<RankedCandidates>... terminators) {
       this.terminators = terminators;

@@ -12,14 +12,6 @@
 -->
 
 <module name="Checker">
-    <!--
-        If you set the basedir property below, then all reported file
-        names will be relative to the specified directory. See
-        http://checkstyle.sourceforge.net/5.x/config.html#Checker
-
-        <property name="basedir" value="${basedir}"/>
-    -->
-
     <!-- Checks that each Java package has a Javadoc file used for commenting. -->
     <!-- See http://checkstyle.sf.net/config_javadoc.html#JavadocPackage       -->
     <module name="JavadocPackage">
@@ -62,14 +54,16 @@
         <!-- Checks for Javadoc comments.                     -->
         <!-- See http://checkstyle.sf.net/config_javadoc.html -->
         <module name="JavadocMethod">
-          <property name="severity" value="warning"/>
           <property name="scope" value="protected"/>
+          <property name="allowMissingPropertyJavadoc" value="true"/>
+          <property name="allowMissingParamTags" value="true"/>
+          <property name="allowMissingReturnTag" value="true"/>
+          <property name="allowMissingThrowsTags" value="true"/>
         </module>
         <module name="JavadocType">
           <property name="scope" value="protected"/>
         </module>
         <module name="JavadocVariable">
-          <property name="severity" value="warning"/>
           <property name="scope" value="protected"/>
         </module>
         <module name="JavadocStyle"/>
@@ -86,21 +80,6 @@
         <module name="ParameterName"/>
         <module name="StaticVariableName"/>
         <module name="TypeName"/>
-
-
-        <!-- Checks for Headers                                -->
-        <!-- See http://checkstyle.sf.net/config_header.html   -->
-        <!-- <module name="Header">                            -->
-            <!-- The follow property value demonstrates the ability     -->
-            <!-- to have access to ANT properties. In this case it uses -->
-            <!-- the ${basedir} property to allow Checkstyle to be run  -->
-            <!-- from any directory within a project. See property      -->
-            <!-- expansion,                                             -->
-            <!-- http://checkstyle.sf.net/config.html#properties        -->
-            <!-- <property                                              -->
-            <!--     name="headerFile"                                  -->
-            <!--     value="${basedir}/java.header"/>                   -->
-        <!-- </module> -->
 
 
         <!-- Checks for imports                              -->
@@ -186,10 +165,10 @@
         <!-- Miscellaneous other checks.                   -->
         <!-- See http://checkstyle.sf.net/config_misc.html -->
         <module name="ArrayTypeStyle"/>
-        <module name="FinalParameters">
+        <module name="TodoComment">
            <property name="severity" value="warning"/>
+           <property name="format" value="(TODO)|(FIXME)"/>
         </module>
-        <module name="TodoComment"/>
         <module name="UpperEll"/>
 
     </module>

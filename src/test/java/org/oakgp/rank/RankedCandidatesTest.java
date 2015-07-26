@@ -15,6 +15,7 @@
  */
 package org.oakgp.rank;
 
+import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
@@ -24,6 +25,7 @@ import static org.oakgp.TestUtils.mockNode;
 
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import org.junit.Test;
 
@@ -61,7 +63,7 @@ public class RankedCandidatesTest {
       try {
          itr.next();
          fail();
-      } catch (ArrayIndexOutOfBoundsException e) {
+      } catch (NoSuchElementException e) {
          // expected
       }
    }
@@ -109,5 +111,40 @@ public class RankedCandidatesTest {
       RankedCandidates reverseOrderedCandidates = new RankedCandidates(input, Collections.reverseOrder());
       assertSame(element1, defaultOrderedCandidates.best());
       assertSame(element5, reverseOrderedCandidates.best());
+   }
+
+   @Test
+   public void testStream() {
+      assertEquals("[-7.0, -2.25, 0.0, 1.0, 785.5]", rankedCandidates.stream().map(c -> c.getFitness()).collect(toList()).toString());
+   }
+
+   @Test
+   public void testImmutable() {
+      // test that making subsequent changes to the array given to the constructor does not alter the RandedCandidate
+      final RankedCandidate[] input = { element3, element1, element2 };
+      final RankedCandidates rankedCandidates = new RankedCandidates(input);
+      input[0] = element4;
+      input[1] = element5;
+      input[2] = element1;
+      assertSame(element1, rankedCandidates.get(0));
+      assertSame(element2, rankedCandidates.get(1));
+      assertSame(element3, rankedCandidates.get(2));
+   }
+
+   @Test
+   public void testGetIndexOutOfBounds() {
+      assertArrayIndexOutOfBoundsException(rankedCandidates, -1);
+      assertArrayIndexOutOfBoundsException(rankedCandidates, rankedCandidates.size());
+      assertArrayIndexOutOfBoundsException(rankedCandidates, rankedCandidates.size() + 1);
+      assertArrayIndexOutOfBoundsException(rankedCandidates, Integer.MAX_VALUE);
+   }
+
+   private void assertArrayIndexOutOfBoundsException(RankedCandidates candidates, int index) {
+      try {
+         candidates.get(index);
+         fail();
+      } catch (ArrayIndexOutOfBoundsException e) {
+         // expected
+      }
    }
 }

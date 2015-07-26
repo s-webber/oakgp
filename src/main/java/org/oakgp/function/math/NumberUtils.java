@@ -177,6 +177,20 @@ abstract class NumberUtils<T extends Comparable<T>> {
       return f == multiply;
    }
 
+   private boolean isDivide(Function f) {
+      return f == divide;
+   }
+
+   public final boolean isArithmeticExpression(Node n) {
+      if (isFunction(n)) {
+         FunctionNode fn = (FunctionNode) n;
+         Function f = fn.getFunction();
+         return isAdd(f) || isSubtract(f) || isMultiply(f) || isDivide(f);
+      } else {
+         return false;
+      }
+   }
+
    protected abstract T add(T i1, T i2);
 
    protected abstract T subtract(T i1, T i2);
@@ -185,15 +199,15 @@ abstract class NumberUtils<T extends Comparable<T>> {
 
    protected abstract T divide(T i1, T i2);
 
-   private final ConstantNode createConstant(T o) {
+   private ConstantNode createConstant(T o) {
       return new ConstantNode(o, type);
    }
 
-   private final T evaluate(Node n) {
+   private T evaluate(Node n) {
       return evaluate(n, null);
    }
 
-   private final T evaluate(Node n, Assignments a) {
+   private T evaluate(Node n, Assignments a) {
       return n.evaluate(a);
    }
 }

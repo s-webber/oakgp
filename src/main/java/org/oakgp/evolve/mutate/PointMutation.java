@@ -40,6 +40,14 @@ public final class PointMutation implements GeneticOperator {
    private final Random random;
    private final PrimitiveSet primitiveSet;
 
+   /**
+    * Creates a {@code PointMutation} that uses the given {@code Random} to select nodes to mutate.
+    *
+    * @param random
+    *           used to randomly select nodes to mutate
+    * @param primitiveSet
+    *           used to select replacements for nodes selected for mutation
+    */
    public PointMutation(Random random, PrimitiveSet primitiveSet) {
       this.random = random;
       this.primitiveSet = primitiveSet;

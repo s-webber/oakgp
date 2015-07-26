@@ -33,12 +33,25 @@ public interface Function {
     */
    Object evaluate(Arguments arguments, Assignments assignments);
 
+   /** Returns the return type and argument types associated with this function. */
    Signature getSignature();
 
+   /**
+    * Attempts to find a simplified alternative to applying this function to the specified arguments.
+    * <p>
+    * Simplification can occur by replacing expressions with constant values (e.g. replacing {@code (+ 1 1)} with {@code 2}) or removing redundant branches
+    * (e.g. replacing {@code (if (< 2 3) (+ v0 v1) (* v0 v1)) with {@code (+ v0 v1)}.
+    *
+    * @param arguments
+    *           the arguments to be applied to (i.e. evaluated by) this function
+    * @return a simplified version of applying this function to the specified arguments, or {@code null} if unable to simplify.
+    * @see org.oakgp.NodeSimplifier
+    */
    default Node simplify(Arguments arguments) {
       return null;
    }
 
+   /** Returns the {@code String} value to use in the textual representation of this function. */
    default String getDisplayName() {
       String className = getClass().getName();
       int packagePos = className.lastIndexOf('.');

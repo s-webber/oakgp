@@ -51,6 +51,7 @@ public final class NodeWriter {
       SUFFIXES.put(bigDecimalType(), "D");
    }
 
+   /** Returns a {@code String} representation of the specified node. */
    public String writeNode(Node node) {
       StringBuilder sb = new StringBuilder();
       writeNode(node, sb);

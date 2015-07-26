@@ -16,7 +16,6 @@
 package org.oakgp.function.math;
 
 import static org.oakgp.node.NodeType.isConstant;
-import static org.oakgp.node.NodeType.isFunction;
 import static org.oakgp.util.NodeComparator.NODE_COMPARATOR;
 
 import org.oakgp.Arguments;
@@ -58,17 +57,17 @@ final class Multiply extends ArithmeticOperator {
          // e.g. (* 0 v0) -> 0
          return numberUtils.zero();
       } else if (numberUtils.isZero(arg2)) {
-         // should never get here to to earlier ordering of arguments
+         // the earlier ordering or arguments means we should never get here
          throw new IllegalArgumentException("arg1 " + arg1 + " arg2 " + arg2);
       } else if (numberUtils.isOne(arg1)) {
          // anything multiplied by one is itself
          // e.g. (* 1 v0) -> v0
          return arg2;
       } else if (numberUtils.isOne(arg2)) {
-         // should never get here to to earlier ordering of arguments
+         // the earlier ordering or arguments means we should never get here
          throw new IllegalArgumentException("arg1 " + arg1 + " arg2 " + arg2);
       } else {
-         if (isConstant(arg1) && isFunction(arg2)) {
+         if (isConstant(arg1) && numberUtils.isArithmeticExpression(arg2)) {
             FunctionNode fn = (FunctionNode) arg2;
             Function f = fn.getFunction();
             Arguments args = fn.getArguments();

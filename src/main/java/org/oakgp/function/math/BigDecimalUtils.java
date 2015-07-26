@@ -21,6 +21,7 @@ import java.math.BigDecimal;
 
 /** Provides support for working with instances of {@code java.math.BigDecimal}. */
 public final class BigDecimalUtils extends NumberUtils<BigDecimal> {
+   /** Singleton instance. */
    public static final BigDecimalUtils BIG_DECIMAL_UTILS = new BigDecimalUtils();
 
    /** @see #BIG_DECIMAL_UTILS */

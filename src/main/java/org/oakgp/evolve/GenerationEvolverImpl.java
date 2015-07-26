@@ -27,11 +27,23 @@ import org.oakgp.select.NodeSelector;
 import org.oakgp.select.NodeSelectorFactory;
 import org.oakgp.util.NodeSet;
 
+/** Uses a user-defined collection of {@code GeneticOperator} instances to evolve new generations from existing generations. */
 public final class GenerationEvolverImpl implements GenerationEvolver {
    private final int elitismSize;
    private final NodeSelectorFactory selectorFactory;
    private final Map<GeneticOperator, Integer> operators;
 
+   /**
+    * Creates a {@code GenerationEvolverImpl} that uses the given values to evolve new generations.
+    *
+    * @param elitismSize
+    *           the number of best candidates from an existing generation to automatically include "as-is" in the next generation
+    * @param selectorFactory
+    *           used to select candidates from an existing generation to be used as a basis for evolving candidates for the next generation
+    * @param operators
+    *           the genetic operators to be used to evolve new candidates where the key = a genetic operator and the value = the number of times that genetic
+    *           operator should be applied during each single invocation of {@link #evolve(RankedCandidates)}
+    */
    public GenerationEvolverImpl(int elitismSize, NodeSelectorFactory selectorFactory, Map<GeneticOperator, Integer> operators) {
       this.elitismSize = elitismSize;
       this.selectorFactory = selectorFactory;
@@ -46,7 +58,7 @@ public final class GenerationEvolverImpl implements GenerationEvolver {
     * @return a new generation of {@code Node} instances evolved from the existing generation specified by {@code oldGeneration}
     */
    @Override
-   public Collection<Node> process(RankedCandidates oldGeneration) {
+   public Collection<Node> evolve(RankedCandidates oldGeneration) {
       NodeSelector selector = selectorFactory.getSelector(oldGeneration);
       Set<Node> newGeneration = new NodeSet();
 

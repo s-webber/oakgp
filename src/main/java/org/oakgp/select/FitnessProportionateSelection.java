@@ -31,6 +31,7 @@ public final class FitnessProportionateSelection implements NodeSelector {
    private final int size;
    private final double sumFitness;
 
+   /** Creates a {@code FitnessProportionateSelection} that uses the given {@code Random} to select from the given {@code RankedCandidates}. */
    public FitnessProportionateSelection(Random random, RankedCandidates candidates) {
       this.random = random;
       this.candidates = candidates;

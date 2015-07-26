@@ -52,7 +52,7 @@ public class GridWarExample {
       // wrap a GridWar object in a FirstPlayerAdvantageGame to avoid bias
       TwoPlayerGame game = new FirstPlayerAdvantageGame(new GridWar(random));
 
-      new RunBuilder().setReturnType(integerType()).setConstants(constants).setVariables(variables).setFunctionSet(functions).setTwoPlayerGame(game)
+      new RunBuilder().setReturnType(integerType()).setConstants(constants).setVariables(variables).setFunctions(functions).setTwoPlayerGame(game)
             .setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_POPULATION_MAX_DEPTH).setMaxGenerations(NUM_GENERATIONS).process();
    }
 }

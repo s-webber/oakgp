@@ -32,6 +32,7 @@ import org.oakgp.node.Node;
 public final class OrElse implements Function {
    private final Signature signature;
 
+   /** Constructs a selection operator that returns values of the specified type. */
    public OrElse(Type type) {
       signature = Signature.createSignature(type, Type.nullableType(type), type);
    }

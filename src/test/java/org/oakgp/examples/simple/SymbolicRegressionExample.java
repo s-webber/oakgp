@@ -44,7 +44,7 @@ public class SymbolicRegressionExample {
       // the fitness function will compare candidates against a data set which maps inputs to their expected outputs
       FitnessFunction fitnessFunction = TestDataFitnessFunction.createIntegerTestDataFitnessFunction(createDataSet());
 
-      new RunBuilder().setReturnType(Type.integerType()).setConstants(constants).setVariables(variableTypes).setFunctionSet(functions)
+      new RunBuilder().setReturnType(Type.integerType()).setConstants(constants).setVariables(variableTypes).setFunctions(functions)
             .setFitnessFunction(fitnessFunction).setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_POPULATION_MAX_DEPTH)
             .setTargetFitness(TARGET_FITNESS).process();
    }
