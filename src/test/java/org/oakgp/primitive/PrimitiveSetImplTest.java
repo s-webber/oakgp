@@ -45,7 +45,7 @@ import org.oakgp.node.VariableNode;
 import org.oakgp.util.DummyRandom;
 import org.oakgp.util.Random;
 
-public class PrimitiveSetTest {
+public class PrimitiveSetImplTest {
    // TODO add extra tests for when: a) numVariables=0, b) numVariables=1 and c) constants.length=0
 
    private static final double VARIABLE_RATIO = .6;
