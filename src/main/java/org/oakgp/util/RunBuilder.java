@@ -27,7 +27,6 @@ import java.util.Map;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
 
-import org.oakgp.Runner;
 import org.oakgp.Type;
 import org.oakgp.evolve.GenerationEvolver;
 import org.oakgp.evolve.GenerationEvolverImpl;

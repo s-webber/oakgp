@@ -72,7 +72,7 @@ public class RunBuilderTest {
    }
 
    @SuppressWarnings("unchecked")
-   public static RankedCandidate createRunExpectations(GenerationRanker ranker, GenerationEvolver evolver, Predicate<RankedCandidates> terminator,
+   static RankedCandidate createRunExpectations(GenerationRanker ranker, GenerationEvolver evolver, Predicate<RankedCandidates> terminator,
          Collection<Node> initialPopulation) {
       // create mock objects used in processing
       RankedCandidates rankedInitialPopulation = singletonRankedCandidates();

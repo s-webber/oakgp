@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.oakgp;
+package org.oakgp.util;
 
 import java.util.Collection;
 import java.util.function.Predicate;

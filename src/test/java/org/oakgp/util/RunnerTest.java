@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.oakgp;
+package org.oakgp.util;
 
 import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.mock;
@@ -27,7 +27,6 @@ import org.oakgp.node.Node;
 import org.oakgp.rank.GenerationRanker;
 import org.oakgp.rank.RankedCandidate;
 import org.oakgp.rank.RankedCandidates;
-import org.oakgp.util.RunBuilderTest;
 
 public class RunnerTest {
    @SuppressWarnings("unchecked")
