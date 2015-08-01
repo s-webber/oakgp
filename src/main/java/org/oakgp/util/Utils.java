@@ -18,12 +18,11 @@ package org.oakgp.util;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.util.Collections.unmodifiableList;
+import static java.util.stream.Collectors.groupingBy;
 import static org.oakgp.Type.booleanType;
 import static org.oakgp.Type.integerType;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -99,33 +98,9 @@ public final class Utils {
     *           the classification function used to group values
     */
    public static <K, V> Map<K, List<V>> groupBy(V[] values, Function<V, K> valueToKey) {
-      Map<K, List<V>> nodesByType = new HashMap<>();
-      for (V v : values) {
-         addToListOfMap(nodesByType, valueToKey.apply(v), v);
-      }
+      Map<K, List<V>> nodesByType = Arrays.stream(values).collect(groupingBy(valueToKey));
       makeValuesImmutable(nodesByType);
       return nodesByType;
-   }
-
-   /**
-    * Adds the specified value to the list associated with the specified key in the specified map.
-    * <p>
-    * If no list is already associated with the specified key then a newly created list is associated with key.
-    *
-    * @param map
-    *           the map that should be updated to include {@code value}
-    * @param key
-    *           the key whose associated list should be appended with {@code value}
-    * @param value
-    *           the value that should be added to the list associated with {@code key} in {@code map}
-    */
-   private static <K, V> void addToListOfMap(Map<K, List<V>> map, K key, V value) {
-      List<V> list = map.get(key);
-      if (list == null) {
-         list = new ArrayList<>();
-         map.put(key, list);
-      }
-      list.add(value);
    }
 
    /** Replaces each {@code List} stored as a value in the specified {@code Map} with an immutable version. */

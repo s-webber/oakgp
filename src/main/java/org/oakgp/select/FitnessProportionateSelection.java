@@ -40,12 +40,7 @@ public final class FitnessProportionateSelection implements NodeSelector {
    }
 
    private static double sumFitness(RankedCandidates candidates) {
-      // return candidates.stream().mapToDouble(c -> c.getFitness()).sum();
-      double s = 0;
-      for (RankedCandidate c : candidates) {
-         s += c.getFitness();
-      }
-      return s;
+      return candidates.stream().mapToDouble(c -> c.getFitness()).sum();
    }
 
    @Override
