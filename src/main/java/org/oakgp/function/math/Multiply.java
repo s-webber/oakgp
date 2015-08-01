@@ -28,6 +28,7 @@ import org.oakgp.node.Node;
 final class Multiply extends ArithmeticOperator {
    private final NumberUtils<?> numberUtils;
 
+   /** @see NumberUtils#getMultiply() */
    Multiply(NumberUtils<?> numberUtils) {
       super(numberUtils.getType());
       this.numberUtils = numberUtils;

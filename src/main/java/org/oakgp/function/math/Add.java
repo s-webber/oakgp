@@ -29,6 +29,7 @@ final class Add extends ArithmeticOperator {
    private final NumberUtils<?> numberUtils;
    private final ArithmeticExpressionSimplifier simplifier;
 
+   /** @see NumberUtils#getAdd() */
    Add(NumberUtils<?> numberUtils) {
       super(numberUtils.getType());
       this.numberUtils = numberUtils;

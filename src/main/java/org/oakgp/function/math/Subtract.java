@@ -28,6 +28,7 @@ final class Subtract extends ArithmeticOperator {
    private final NumberUtils<?> numberUtils;
    private final ArithmeticExpressionSimplifier simplifier;
 
+   /** @see NumberUtils#getSubtract() */
    Subtract(NumberUtils<?> numberUtils) {
       super(numberUtils.getType());
       this.numberUtils = numberUtils;

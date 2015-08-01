@@ -25,6 +25,7 @@ final class Divide extends ArithmeticOperator {
    private final NumberUtils<?> numberUtils;
    private final ConstantNode minusOne;
 
+   /** @see NumberUtils#getDivide() */
    Divide(NumberUtils<?> numberUtils) {
       super(numberUtils.getType());
       this.numberUtils = numberUtils;
