@@ -19,6 +19,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+import static org.oakgp.node.NodeType.isFunction;
 import static org.oakgp.util.Utils.createIntegerTypeArray;
 
 import java.io.IOException;
@@ -27,6 +28,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import org.junit.Test;
+import org.oakgp.Arguments;
 import org.oakgp.Assignments;
 import org.oakgp.NodeSimplifier;
 import org.oakgp.Type;
@@ -194,9 +196,32 @@ public abstract class AbstractFunctionTest {
          inputNode = readFunctionNode(input, variableSet);
          simplifiedNode = NodeSimplifier.simplify(inputNode);
 
+         // assert actual matched expected
          assertEquals(expectedNode, simplifiedNode);
+         assertSame(inputNode.getType(), simplifiedNode.getType());
+
+         if (isFunction(simplifiedNode)) {
+            // assert that signature of function matches the
+            // return type and argument types of the function node the function belongs to
+            FunctionNode fn = (FunctionNode) simplifiedNode;
+            Arguments fnArguments = fn.getArguments();
+            Signature fnSignature = fn.getFunction().getSignature();
+
+            assertSame(fn.getType(), fnSignature.getReturnType());
+            assertSameArgumentTypes(fnArguments, fnSignature);
+         }
+
+         // assert multiple calls to simplify with the same argument produces results that are equal
+         assertEquals(NodeSimplifier.simplify(inputNode), NodeSimplifier.simplify(inputNode));
 
          return this;
+      }
+
+      private void assertSameArgumentTypes(Arguments args, Signature signature) {
+         assertEquals(args.getArgCount(), signature.getArgumentTypesLength());
+         for (int i = 0; i < signature.getArgumentTypesLength(); i++) {
+            assertSame(args.getArg(i).getType(), signature.getArgumentType(i));
+         }
       }
 
       public SimplifyExpectation verify(Object... values) {
