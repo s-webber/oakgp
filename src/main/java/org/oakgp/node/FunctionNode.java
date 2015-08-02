@@ -22,7 +22,15 @@ import org.oakgp.function.Function;
 
 /** Contains a function (operator) and the arguments (operands) to apply to it. */
 public final class FunctionNode implements Node {
+   /**
+    * A sequence of prime numbers.
+    * <p>
+    * Used to generate the {@code hashCode} value. This is used - rather than calling {@code java.util.Arrays.hashCode(Object a[])} with the node's arguments -
+    * so that, for example, the two expressions {@code (- (- (* -1 v3) 0) (- 13 v1))} and {@code (- (- (* -1 v3) 13) (- 0 v1))} have different hash code values.
+    * See {@code org.oakgp.node.FunctionNodeTest.testHashCode()} for more details.
+    */
    private static final int[] PRIMES = { 2, 3, 5, 7, 11, 13, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97 };
+
    private final Function function;
    private final Arguments arguments;
    private final int nodeCount;
@@ -128,7 +136,7 @@ public final class FunctionNode implements Node {
       } else if (o instanceof FunctionNode) {
          FunctionNode fn = (FunctionNode) o;
          // NOTE if we often return false here then that indicates hashCode() could be improved
-         return this.function.getClass().equals(fn.function.getClass()) && this.arguments.equals(fn.arguments);
+         return this.function == fn.function && this.arguments.equals(fn.arguments);
       } else {
          return false;
       }

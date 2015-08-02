@@ -33,6 +33,7 @@ import org.junit.Test;
 import org.oakgp.Arguments;
 import org.oakgp.Assignments;
 import org.oakgp.function.Function;
+import org.oakgp.function.Signature;
 
 public class FunctionNodeTest {
    @Test
@@ -152,6 +153,34 @@ public class FunctionNodeTest {
       assertNotEquals(n, new Object());
 
       assertFalse(n.equals(null));
+   }
+
+   /**
+    * Tests that for two {@code FunctionNode} instances to be considered equal they must share the same instance of {@code Function} (i.e. it is not enough for
+    * them to have separate instances of the same {@code Function} class).
+    */
+   @Test
+   public void testEqualityRequiresSameFunctionInstance() {
+      class DummyFunction implements Function {
+         @Override
+         public Object evaluate(Arguments arguments, Assignments assignments) {
+            throw new UnsupportedOperationException();
+         }
+
+         @Override
+         public Signature getSignature() {
+            throw new UnsupportedOperationException();
+         }
+      }
+
+      Function f1 = new DummyFunction();
+      Function f2 = new DummyFunction();
+      Arguments arguments = Arguments.createArguments(integerConstant(1));
+      FunctionNode fn1 = new FunctionNode(f1, arguments);
+      FunctionNode fn2 = new FunctionNode(f2, arguments);
+
+      assertSame(f1.getClass(), f2.getClass());
+      assertNotEquals(fn1, fn2);
    }
 
    @Test
