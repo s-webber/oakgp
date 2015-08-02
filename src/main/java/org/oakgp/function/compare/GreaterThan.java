@@ -22,9 +22,12 @@ import org.oakgp.node.Node;
 
 /** Determines if the object represented by the first argument is greater than the object represented by the second. */
 public final class GreaterThan extends ComparisonOperator {
+   private final LessThan lessThan;
+
    /** Constructs a function that compares two arguments of the specified type. */
    public GreaterThan(Type type) {
       super(type, false);
+      lessThan = LessThan.create(type);
    }
 
    @Override
@@ -36,8 +39,7 @@ public final class GreaterThan extends ComparisonOperator {
    public Node simplify(Arguments arguments) {
       Node simplifiedVersion = super.simplify(arguments);
       if (simplifiedVersion == null) {
-         // TODO don't create new LessThanOrEqual each time
-         return new FunctionNode(new LessThan(getSignature().getReturnType()), arguments.secondArg(), arguments.firstArg());
+         return new FunctionNode(lessThan, arguments.secondArg(), arguments.firstArg());
       } else {
          return simplifiedVersion;
       }

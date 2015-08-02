@@ -18,7 +18,6 @@ package org.oakgp.primitive;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
 import static org.oakgp.TestUtils.assertUnmodifiable;
 import static org.oakgp.Type.booleanArrayType;
 import static org.oakgp.Type.booleanType;
@@ -110,22 +109,18 @@ public class FunctionSetTest {
 
    private static FunctionSet createFunctionSet() {
       return new FunctionSet(
-      // arithmetic
+            // arithmetic
             ADD, SUBTRACT, MULTIPLY,
             // comparison
-            new LessThan(integerType()), new LessThanOrEqual(integerType()), new GreaterThan(integerType()), new GreaterThanOrEqual(integerType()), new Equal(
-                  integerType()), new NotEqual(integerType()),
-                  // selection
-                  new If(integerType()),
-                  // higher-order functions
-                  new Reduce(integerType()), new Filter(integerType()), new org.oakgp.function.hof.Map(integerType(), booleanType()),
-                  // classify
-                  new IsPositive(), new IsNegative(), new IsZero(),
-                  // collections
-                  new Count(integerType()), new Count(booleanType()));
-   }
-
-   private void assertStartsWith(String expectedPrefix, String input) {
-      assertTrue(input.startsWith(expectedPrefix));
+            LessThan.create(integerType()), LessThanOrEqual.create(integerType()), new GreaterThan(integerType()), new GreaterThanOrEqual(integerType()),
+            new Equal(integerType()), new NotEqual(integerType()),
+            // selection
+            new If(integerType()),
+            // higher-order functions
+            new Reduce(integerType()), new Filter(integerType()), new org.oakgp.function.hof.Map(integerType(), booleanType()),
+            // classify
+            new IsPositive(), new IsNegative(), new IsZero(),
+            // collections
+            new Count(integerType()), new Count(booleanType()));
    }
 }

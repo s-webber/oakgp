@@ -15,12 +15,20 @@
  */
 package org.oakgp.function.compare;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.oakgp.Type;
 
 /** Determines if the object represented by the first argument is less than or equal to the object represented by the second. */
 public final class LessThanOrEqual extends ComparisonOperator {
+   private static final ConcurrentHashMap<Type, LessThanOrEqual> CACHE = new ConcurrentHashMap<>();
+
+   public static LessThanOrEqual create(Type t) {
+      return CACHE.computeIfAbsent(t, (k) -> new LessThanOrEqual(k));
+   }
+
    /** Constructs a function that compares two arguments of the specified type. */
-   public LessThanOrEqual(Type type) {
+   private LessThanOrEqual(Type type) {
       super(type, true);
    }
 

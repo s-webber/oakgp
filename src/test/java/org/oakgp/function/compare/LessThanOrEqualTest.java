@@ -17,16 +17,25 @@ package org.oakgp.function.compare;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertSame;
 import static org.oakgp.Type.integerType;
 import static org.oakgp.Type.stringType;
 
+import org.junit.Test;
 import org.oakgp.function.AbstractFunctionTest;
 import org.oakgp.function.Function;
 
 public class LessThanOrEqualTest extends AbstractFunctionTest {
+   @Test
+   public void assertSingletons() {
+      assertSame(LessThanOrEqual.create(integerType()), LessThanOrEqual.create(integerType()));
+      assertNotSame(LessThanOrEqual.create(integerType()), LessThanOrEqual.create(stringType()));
+   }
+
    @Override
-   protected Function getFunction() {
-      return new LessThanOrEqual(integerType());
+   protected LessThanOrEqual getFunction() {
+      return LessThanOrEqual.create(integerType());
    }
 
    @Override
@@ -57,6 +66,6 @@ public class LessThanOrEqualTest extends AbstractFunctionTest {
 
    @Override
    protected Function[] getFunctionSet() {
-      return new Function[] { getFunction(), new LessThanOrEqual(stringType()) };
+      return new Function[] { getFunction(), LessThanOrEqual.create(stringType()) };
    }
 }

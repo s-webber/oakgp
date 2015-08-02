@@ -66,7 +66,7 @@ public class FitnessFunctionSystemTest {
    private static final int INITIAL_POPULATION_SIZE = 50;
    private static final int INITIAL_POPULATION_MAX_DEPTH = 4;
    private static final Function[] ARITHMETIC_FUNCTIONS = { IntegerUtils.INTEGER_UTILS.getAdd(), IntegerUtils.INTEGER_UTILS.getSubtract(),
-      IntegerUtils.INTEGER_UTILS.getMultiply() };
+         IntegerUtils.INTEGER_UTILS.getMultiply() };
 
    @Test
    public void testSymbolicRegressionExample() {
@@ -85,8 +85,8 @@ public class FitnessFunctionSystemTest {
       }));
 
       new RunBuilder().setReturnType(integerType()).setConstants(constants).setVariables(variableTypes).setFunctions(ARITHMETIC_FUNCTIONS)
-            .setFitnessFunction(fitnessFunction).setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_POPULATION_MAX_DEPTH)
-            .setMaxGenerations(NUM_GENERATIONS).process();
+      .setFitnessFunction(fitnessFunction).setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_POPULATION_MAX_DEPTH)
+      .setMaxGenerations(NUM_GENERATIONS).process();
    }
 
    @Test
@@ -102,8 +102,8 @@ public class FitnessFunctionSystemTest {
       }));
 
       new RunBuilder().setReturnType(integerType()).setConstants(constants).setVariables(variableTypes).setFunctions(ARITHMETIC_FUNCTIONS)
-            .setFitnessFunction(fitnessFunction).setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_POPULATION_MAX_DEPTH)
-            .setMaxGenerations(NUM_GENERATIONS).process();
+      .setFitnessFunction(fitnessFunction).setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_POPULATION_MAX_DEPTH)
+      .setMaxGenerations(NUM_GENERATIONS).process();
    }
 
    @Test
@@ -111,7 +111,7 @@ public class FitnessFunctionSystemTest {
       ConstantNode[] constants = createIntegerConstants(0, 5);
       Type[] variableTypes = createIntegerTypeArray(2);
       Function[] functions = { IntegerUtils.INTEGER_UTILS.getAdd(), IntegerUtils.INTEGER_UTILS.getSubtract(), IntegerUtils.INTEGER_UTILS.getMultiply(),
-            new LessThan(integerType()), new LessThanOrEqual(integerType()), new GreaterThan(integerType()), new GreaterThanOrEqual(integerType()),
+            LessThan.create(integerType()), LessThanOrEqual.create(integerType()), new GreaterThan(integerType()), new GreaterThanOrEqual(integerType()),
             new Equal(integerType()), new NotEqual(integerType()), new If(integerType()) };
 
       FitnessFunction fitnessFunction = createIntegerTestDataFitnessFunction(createTests(variableTypes.length, a -> {
@@ -121,8 +121,8 @@ public class FitnessFunctionSystemTest {
       }));
 
       new RunBuilder().setReturnType(integerType()).setConstants(constants).setVariables(variableTypes).setFunctions(functions)
-            .setFitnessFunction(fitnessFunction).setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_POPULATION_MAX_DEPTH)
-            .setMaxGenerations(NUM_GENERATIONS).process();
+      .setFitnessFunction(fitnessFunction).setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_POPULATION_MAX_DEPTH)
+      .setMaxGenerations(NUM_GENERATIONS).process();
    }
 
    @Test
@@ -151,8 +151,8 @@ public class FitnessFunctionSystemTest {
       FitnessFunction fitnessFunction = createIntegerTestDataFitnessFunction(testData);
 
       new RunBuilder().setReturnType(integerType()).setConstants(constants).setVariables(variableTypes).setFunctions(functions)
-            .setFitnessFunction(fitnessFunction).setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_POPULATION_MAX_DEPTH)
-            .setMaxGenerations(NUM_GENERATIONS).process();
+      .setFitnessFunction(fitnessFunction).setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_POPULATION_MAX_DEPTH)
+      .setMaxGenerations(NUM_GENERATIONS).process();
    }
 
    private static Map<Assignments, Integer> createTests(int numVariables, java.util.function.Function<Assignments, Integer> f) {

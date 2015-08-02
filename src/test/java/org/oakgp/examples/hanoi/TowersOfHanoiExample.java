@@ -50,7 +50,7 @@ public class TowersOfHanoiExample {
 
    public static void main(String[] args) {
       Function[] functions = { new If(MOVE_TYPE), new Equal(MOVE_TYPE), new IsValid(), new SwitchEnum(Move.class, nullableType(MOVE_TYPE), MOVE_TYPE),
-            new GreaterThan(integerType()), new LessThan(integerType()), new Equal(integerType()), new Next() };
+            new GreaterThan(integerType()), LessThan.create(integerType()), new Equal(integerType()), new Next() };
       List<ConstantNode> constants = createConstants();
       Type[] variables = { STATE_TYPE, nullableType(MOVE_TYPE) };
       FitnessFunction fitnessFunction = new TowersOfHanoiFitnessFunction(false);

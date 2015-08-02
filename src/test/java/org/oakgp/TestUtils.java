@@ -125,8 +125,8 @@ public class TestUtils {
       functions.add(IntegerUtils.INTEGER_UTILS.getMultiply());
       functions.add(IntegerUtils.INTEGER_UTILS.getDivide());
 
-      functions.add(new LessThan(integerType()));
-      functions.add(new LessThanOrEqual(integerType()));
+      functions.add(LessThan.create(integerType()));
+      functions.add(LessThanOrEqual.create(integerType()));
       functions.add(new GreaterThan(integerType()));
       functions.add(new GreaterThanOrEqual(integerType()));
       functions.add(new Equal(integerType()));

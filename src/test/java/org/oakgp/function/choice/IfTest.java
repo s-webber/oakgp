@@ -30,7 +30,7 @@ import org.oakgp.function.math.IntegerUtils;
 
 public class IfTest extends AbstractFunctionTest {
    @Override
-   protected Function getFunction() {
+   protected If getFunction() {
       return new If(integerType());
    }
 
@@ -76,7 +76,7 @@ public class IfTest extends AbstractFunctionTest {
 
    @Override
    protected Function[] getFunctionSet() {
-      return new Function[] { getFunction(), IntegerUtils.INTEGER_UTILS.getAdd(), IntegerUtils.INTEGER_UTILS.getMultiply(), new LessThan(integerType()),
+      return new Function[] { getFunction(), IntegerUtils.INTEGER_UTILS.getAdd(), IntegerUtils.INTEGER_UTILS.getMultiply(), LessThan.create(integerType()),
             new GreaterThan(integerType()) };
    }
 }

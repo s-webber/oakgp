@@ -44,7 +44,7 @@ public class GridWarExample {
 
    public static void main(String[] args) {
       Function[] functions = { IntegerUtils.INTEGER_UTILS.getAdd(), IntegerUtils.INTEGER_UTILS.getSubtract(), IntegerUtils.INTEGER_UTILS.getMultiply(),
-            new LessThan(integerType()), new LessThanOrEqual(integerType()), new GreaterThan(integerType()), new GreaterThanOrEqual(integerType()),
+            LessThan.create(integerType()), LessThanOrEqual.create(integerType()), new GreaterThan(integerType()), new GreaterThanOrEqual(integerType()),
             new Equal(integerType()), new NotEqual(integerType()), new If(integerType()) };
       ConstantNode[] constants = Utils.createIntegerConstants(0, 4);
       Type[] variables = createIntegerTypeArray(NUM_VARIABLES);
@@ -53,6 +53,6 @@ public class GridWarExample {
       TwoPlayerGame game = new FirstPlayerAdvantageGame(new GridWar(random));
 
       new RunBuilder().setReturnType(integerType()).setConstants(constants).setVariables(variables).setFunctions(functions).setTwoPlayerGame(game)
-            .setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_POPULATION_MAX_DEPTH).setMaxGenerations(NUM_GENERATIONS).process();
+      .setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_POPULATION_MAX_DEPTH).setMaxGenerations(NUM_GENERATIONS).process();
    }
 }

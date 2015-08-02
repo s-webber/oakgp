@@ -25,7 +25,7 @@ import org.oakgp.function.Function;
 
 public class GreaterThanTest extends AbstractFunctionTest {
    @Override
-   protected Function getFunction() {
+   protected GreaterThan getFunction() {
       return new GreaterThan(integerType());
    }
 
@@ -57,6 +57,6 @@ public class GreaterThanTest extends AbstractFunctionTest {
 
    @Override
    protected Function[] getFunctionSet() {
-      return new Function[] { getFunction(), new GreaterThan(stringType()), new LessThan(integerType()) };
+      return new Function[] { getFunction(), new GreaterThan(stringType()), LessThan.create(integerType()) };
    }
 }
