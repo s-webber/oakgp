@@ -25,7 +25,7 @@ import org.oakgp.function.Function;
 
 public class NotEqualTest extends AbstractFunctionTest {
    @Override
-   protected Function getFunction() {
+   protected NotEqual getFunction() {
       return new NotEqual(integerType());
    }
 

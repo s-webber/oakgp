@@ -25,7 +25,7 @@ import org.oakgp.function.Function;
 
 public class AddTest extends AbstractFunctionTest {
    @Override
-   protected Function getFunction() {
+   protected Add getFunction() {
       return IntegerUtils.INTEGER_UTILS.getAdd();
    }
 

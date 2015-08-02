@@ -20,12 +20,11 @@ import static org.oakgp.Type.integerType;
 import org.oakgp.Arguments;
 import org.oakgp.Type;
 import org.oakgp.function.AbstractFunctionTest;
-import org.oakgp.function.Function;
 import org.oakgp.node.ConstantNode;
 
 public class CountTest extends AbstractFunctionTest {
    @Override
-   protected Function getFunction() {
+   protected Count getFunction() {
       return new Count(integerType());
    }
 

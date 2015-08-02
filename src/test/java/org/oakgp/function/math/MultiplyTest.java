@@ -25,7 +25,7 @@ import org.oakgp.function.Function;
 
 public class MultiplyTest extends AbstractFunctionTest {
    @Override
-   protected Function getFunction() {
+   protected Multiply getFunction() {
       return IntegerUtils.INTEGER_UTILS.getMultiply();
    }
 

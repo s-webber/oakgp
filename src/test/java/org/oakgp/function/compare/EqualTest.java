@@ -25,7 +25,7 @@ import org.oakgp.function.Function;
 
 public class EqualTest extends AbstractFunctionTest {
    @Override
-   protected Function getFunction() {
+   protected Equal getFunction() {
       return new Equal(integerType());
    }
 
