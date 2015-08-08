@@ -15,6 +15,7 @@
  */
 package org.oakgp.util;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -22,6 +23,7 @@ import static org.oakgp.TestUtils.singletonRankedCandidates;
 
 import java.util.Collection;
 import java.util.function.Function;
+import java.util.function.IntFunction;
 import java.util.function.Predicate;
 
 import org.junit.Test;
@@ -29,20 +31,21 @@ import org.oakgp.Type;
 import org.oakgp.evolve.GenerationEvolver;
 import org.oakgp.node.Node;
 import org.oakgp.primitive.DummyPrimitiveSet;
-import org.oakgp.primitive.PrimitiveSet;
 import org.oakgp.rank.GenerationRanker;
 import org.oakgp.rank.RankedCandidate;
 import org.oakgp.rank.RankedCandidates;
 import org.oakgp.util.RunBuilder.Config;
+import org.oakgp.util.RunBuilder.InitialPopulationSetter;
+import org.oakgp.util.RunBuilder.TreeDepthSetter;
 
 public class RunBuilderTest {
+   private static final DummyPrimitiveSet DUMMY_PRIMITIVE_SET = new DummyPrimitiveSet();
+   private static final Random DUMMY_RANDOM = DummyRandom.EMPTY;
+   private static final Type RETURN_TYPE = Type.type("runBuilderTest");
+
    @SuppressWarnings("unchecked")
    @Test
    public void test() {
-      Type returnType = Type.type("runBuilderTest");
-      Random random = DummyRandom.EMPTY;
-      PrimitiveSet primitiveSet = new DummyPrimitiveSet();
-
       // Create mock objects to pass as arguments to process method of Runner
       GenerationRanker ranker = mock(GenerationRanker.class);
       GenerationEvolver evolver = mock(GenerationEvolver.class);
@@ -50,26 +53,59 @@ public class RunBuilderTest {
       Collection<Node> initialPopulation = mock(Collection.class);
 
       Function<Config, Collection<Node>> initialPopulationCreator = c -> {
-         assertSame(c.getPrimitiveSet(), primitiveSet);
-         assertSame(c.getRandom(), random);
-         assertSame(c.getReturnType(), returnType);
+         assertSame(c.getPrimitiveSet(), DUMMY_PRIMITIVE_SET);
+         assertSame(c.getRandom(), DUMMY_RANDOM);
+         assertSame(c.getReturnType(), RETURN_TYPE);
          return initialPopulation;
       };
       Function<Config, GenerationEvolver> generationEvolverCreator = c -> {
-         assertSame(c.getPrimitiveSet(), primitiveSet);
-         assertSame(c.getRandom(), random);
-         assertSame(c.getReturnType(), returnType);
+         assertSame(c.getPrimitiveSet(), DUMMY_PRIMITIVE_SET);
+         assertSame(c.getRandom(), DUMMY_RANDOM);
+         assertSame(c.getReturnType(), RETURN_TYPE);
          return evolver;
       };
 
       RankedCandidate expected = createRunExpectations(ranker, evolver, terminator, initialPopulation);
 
-      RankedCandidates output = new RunBuilder().setReturnType(returnType).setRandom(random).setPrimitiveSet(primitiveSet).setGenerationRanker(ranker)
-            .setInitialPopulation(initialPopulationCreator).setGenerationEvolver(generationEvolverCreator).setTerminator(terminator).process();
+      RankedCandidates output = new RunBuilder().setReturnType(RETURN_TYPE).setRandom(DUMMY_RANDOM).setPrimitiveSet(DUMMY_PRIMITIVE_SET)
+            .setGenerationRanker(ranker).setInitialPopulation(initialPopulationCreator).setGenerationEvolver(generationEvolverCreator)
+            .setTerminator(terminator).process();
       RankedCandidate actual = output.best();
 
       // confirm output matches expected behaviour
       assertSame(expected, actual);
+   }
+
+   @Test
+   public void testInvalidPopulationSize() {
+      InitialPopulationSetter setter = createInitialPopulationSetter();
+      assertInvalidSizes(setter::setInitialPopulationSize);
+   }
+
+   @Test
+   public void testInvalidTreeDepth() {
+      TreeDepthSetter setter = createInitialPopulationSetter().setInitialPopulationSize(1000);
+      assertInvalidSizes(setter::setTreeDepth);
+   }
+
+   private InitialPopulationSetter createInitialPopulationSetter() {
+      GenerationRanker ranker = mock(GenerationRanker.class);
+      return new RunBuilder().setReturnType(RETURN_TYPE).setRandom(DUMMY_RANDOM).setPrimitiveSet(DUMMY_PRIMITIVE_SET).setGenerationRanker(ranker);
+   }
+
+   private void assertInvalidSizes(IntFunction<?> setter) {
+      // confirm negative values and zero are not valid
+      for (int i : new int[] { Integer.MIN_VALUE, -2, -1, 0 }) {
+         assertInvalidSize(setter, i);
+      }
+   }
+
+   private void assertInvalidSize(IntFunction<?> setter, int size) {
+      try {
+         setter.apply(size);
+      } catch (IllegalArgumentException e) {
+         assertEquals("Expected a positive integer but got: " + size, e.getMessage());
+      }
    }
 
    @SuppressWarnings("unchecked")
