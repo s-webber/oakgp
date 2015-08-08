@@ -28,7 +28,7 @@ import org.oakgp.node.Node;
 /**
  * Creates {@code String} representations of {@code Node} instances.
  * <p>
- * e.g. The {@code Node}:
+ * e.g. Calling {@link #writeNode(Node)} with the {@code Node}:
  *
  * <pre>
  * new FunctionNode(new Add(), new ConstantNode(9), new ConstantNode(5))
@@ -43,6 +43,7 @@ import org.oakgp.node.Node;
 public final class NodeWriter {
    private final Map<Class<?>, java.util.function.Function<Object, String>> writers = new HashMap<>();
 
+   /** Creates a {@code NodeWriter} for the purpose of generating textual representations of {@code Node} instances. */
    public NodeWriter() {
       writers.put(Long.class, o -> o + "L");
       writers.put(BigInteger.class, o -> o + "I");
@@ -51,7 +52,7 @@ public final class NodeWriter {
       writers.put(Arguments.class, o -> writeArguments((Arguments) o));
    }
 
-   /** Returns a {@code String} representation of the specified node. */
+   /** Returns a {@code String} representation of the specified {@code Node}. */
    public String writeNode(Node node) {
       switch (node.getNodeType()) {
          case FUNCTION:

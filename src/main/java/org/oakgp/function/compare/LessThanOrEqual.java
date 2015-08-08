@@ -23,6 +23,12 @@ import org.oakgp.Type;
 public final class LessThanOrEqual extends ComparisonOperator {
    private static final ConcurrentHashMap<Type, LessThanOrEqual> CACHE = new ConcurrentHashMap<>();
 
+   /**
+    * Returns a {@code LessThanOrEqual} for comparing functions of the specified type.
+    * <p>
+    * If this is the first call to {@code #create(Type)} with the specified {@code Type} then a new instance will be created and returned. If there has
+    * previously been calls to {@code #create(Type)} for the specified {@code Type} then the existing instance will be returned.
+    */
    public static LessThanOrEqual create(Type t) {
       return CACHE.computeIfAbsent(t, (k) -> new LessThanOrEqual(k));
    }

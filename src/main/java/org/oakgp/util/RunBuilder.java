@@ -84,6 +84,12 @@ public final class RunBuilder {
       return new RandomSetter();
    }
 
+   /**
+    * Provides the option to set a random number generator, or to skip that option and instead configure the primitive set.
+    * <p>
+    * If you do not explicitly specify a random number generator then the {@code RunBuilder} will default to using {@link JavaUtilRandomAdapter}. Unless you
+    * have a specific requirement about how random numbers are generated then the default random number generator will be sufficient.
+    */
    public final class RandomSetter extends PrimitiveSetSetter {
       private RandomSetter() {
       }
@@ -95,6 +101,7 @@ public final class RunBuilder {
       }
    }
 
+   /** Allows the primitive set to be configured. */
    public class PrimitiveSetSetter {
       private PrimitiveSetSetter() {
       }
@@ -117,6 +124,7 @@ public final class RunBuilder {
       }
    }
 
+   /** Allows the variable types to be configured. */
    public final class VariablesSetter {
       private final ConstantSet constantSet;
 
@@ -131,6 +139,7 @@ public final class RunBuilder {
       }
    }
 
+   /** Allows the ratio of variables to constants to be configured. */
    public final class VariablesRatioSetter implements FunctionSetSetter {
       private final ConstantSet constantSet;
       private final VariableSet variableSet;
@@ -167,7 +176,7 @@ public final class RunBuilder {
       }
    }
 
-   public final class FunctionSetSetterImpl implements FunctionSetSetter {
+   private final class FunctionSetSetterImpl implements FunctionSetSetter {
       private final ConstantSet constantSet;
       private final VariableSet variableSet;
       private final double ratioVariables;
@@ -211,6 +220,7 @@ public final class RunBuilder {
       }
    }
 
+   /** Allows the configuration of the mechanism for ranking candidates. */
    public final class GenerationRankerSetter {
       private GenerationRankerSetter() {
       }
@@ -250,6 +260,7 @@ public final class RunBuilder {
       }
    }
 
+   /** Allows the initial population to be specified. */
    public final class InitialPopulationSetter {
       private InitialPopulationSetter() {
       }
@@ -269,39 +280,46 @@ public final class RunBuilder {
       public TreeDepthSetter setInitialPopulationSize(final int generationSize) {
          return new TreeDepthSetter(generationSize);
       }
+   }
 
-      public final class TreeDepthSetter {
-         private final int generationSize;
+   /** Allows configuration of the maximum tree depth of trees randomly generated for the initial population. */
+   public final class TreeDepthSetter {
+      private final int generationSize;
 
-         private TreeDepthSetter(final int generationSize) {
-            this.generationSize = requiresPositive(generationSize);
+      private TreeDepthSetter(final int generationSize) {
+         this.generationSize = requiresPositive(generationSize);
+      }
+
+      /** Set the maximum depth of the trees randomly generated for the initial population. */
+      public GenerationEvolverSetter setTreeDepth(final int treeDepth) {
+         requiresPositive(treeDepth);
+
+         // NOTE could use a NodeSet rather than an ArrayList - but then the resulting population may be < generationSize (due to duplicates)
+         // NOTE could generate using a 50:50 split of TreeGeneratorImpl.grow and TreeGeneratorImpl.full
+         Collection<Node> initialPopulation = new ArrayList<>();
+         TreeGenerator treeGenerator = TreeGeneratorImpl.grow(_primitiveSet, _random);
+         for (int i = 0; i < generationSize; i++) {
+            Node n = treeGenerator.generate(_returnType, treeDepth);
+            initialPopulation.add(n);
          }
+         return new InitialPopulationSetter().setInitialPopulation(initialPopulation);
+      }
 
-         /** Set the maximum depth of the trees randomly generated for the initial population. */
-         public GenerationEvolverSetter setTreeDepth(final int treeDepth) {
-            requiresPositive(treeDepth);
-
-            // NOTE could use a NodeSet rather than an ArrayList - but then the resulting population may be < generationSize (due to duplicates)
-            // NOTE could generate using a 50:50 split of TreeGeneratorImpl.grow and TreeGeneratorImpl.full
-            Collection<Node> initialPopulation = new ArrayList<>();
-            TreeGenerator treeGenerator = TreeGeneratorImpl.grow(_primitiveSet, _random);
-            for (int i = 0; i < generationSize; i++) {
-               Node n = treeGenerator.generate(_returnType, treeDepth);
-               initialPopulation.add(n);
-            }
-            return setInitialPopulation(initialPopulation);
-         }
-
-         private int requiresPositive(final int i) {
-            if (i > 0) {
-               return i;
-            } else {
-               throw new IllegalArgumentException("Expected a positive integer but got: " + i);
-            }
+      private int requiresPositive(final int i) {
+         if (i > 0) {
+            return i;
+         } else {
+            throw new IllegalArgumentException("Expected a positive integer but got: " + i);
          }
       }
    }
 
+   /**
+    * Provides the option to configure the how new generations evolve from existing ones, or to skip that option and instead configure the termination criteria.
+    * <p>
+    * If you do not explicitly specify how generations evolve then a default strategy will be used. The default strategy is sufficient for allowing people to
+    * quickly get started with OakGP
+    */
    public final class GenerationEvolverSetter extends FirstTerminatorSetter {
       private GenerationEvolverSetter() {
       }
@@ -449,6 +467,7 @@ public final class RunBuilder {
       }
    }
 
+   /** Allows the function set to be configured. */
    public interface FunctionSetSetter {
       /** Sets the functions that are available for use in the construction of programs generated by the run. */
       GenerationRankerSetter setFunctions(Function... functions);
@@ -457,9 +476,11 @@ public final class RunBuilder {
       GenerationRankerSetter setFunctions(List<Function> functions);
    }
 
+   /** Provides a method for starting the genetic programming run or setting more termination criteria. */
    public interface TerminatorSetterOrProcessRunner extends TerminatorSetter, ProcessRunner {
    }
 
+   /** Allows termination criteria to be configured. */
    public interface TerminatorSetter extends MaxGenerationsTerminatorSetter {
       /** Sets the criteria used by this run to determine when it should stop. */
       TerminatorSetterOrProcessRunner setTerminator(Predicate<RankedCandidates> terminator);
@@ -468,22 +489,27 @@ public final class RunBuilder {
       MaxGenerationsTerminatorSetterOrProcessRunner setTargetFitness(double targetFitness);
    }
 
+   /** Provides a method for starting the genetic programming run or setting more termination criteria. */
    public interface MaxGenerationsTerminatorSetterOrProcessRunner extends MaxGenerationsTerminatorSetter, ProcessRunner {
    }
 
+   /** Allows termination criteria to be configured. */
    public interface MaxGenerationsTerminatorSetter extends MaxGenerationsWithoutImprovementTerminatorSetter {
       /** Sets the maximum number of generations the run should process before stopping. */
       MaxGenerationsWithoutImprovementTerminatorSetterOrProcessRunner setMaxGenerations(int maxGenerations);
    }
 
+   /** Provides a method for starting the genetic programming run or setting more termination criteria. */
    public interface MaxGenerationsWithoutImprovementTerminatorSetterOrProcessRunner extends MaxGenerationsWithoutImprovementTerminatorSetter, ProcessRunner {
    }
 
+   /** Allows termination criteria to be configured. */
    public interface MaxGenerationsWithoutImprovementTerminatorSetter {
       /** Sets the number of consecutive generations without improvement the run should process before stopping. */
       ProcessRunner setMaxGenerationsWithoutImprovement(int maxGenerationsWithoutImprovement);
    }
 
+   /** Provides a method for starting the genetic programming run. */
    public interface ProcessRunner {
       /**
        * Processes a genetic programming run using the values configured earlier for this {@code RunBuilder}.

@@ -23,6 +23,12 @@ import org.oakgp.Type;
 public final class LessThan extends ComparisonOperator {
    private static final ConcurrentHashMap<Type, LessThan> CACHE = new ConcurrentHashMap<>();
 
+   /**
+    * Returns a {@code LessThan} for comparing functions of the specified type.
+    * <p>
+    * If this is the first call to {@code #create(Type)} with the specified {@code Type} then a new instance will be created and returned. If there has
+    * previously been calls to {@code #create(Type)} for the specified {@code Type} then the existing instance will be returned.
+    */
    public static LessThan create(Type t) {
       return CACHE.computeIfAbsent(t, (k) -> new LessThan(k));
    }
