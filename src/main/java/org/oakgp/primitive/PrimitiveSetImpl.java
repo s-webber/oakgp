@@ -43,7 +43,7 @@ public final class PrimitiveSetImpl implements PrimitiveSet {
     * @param random
     *           used to randomly select components to use in the construction of programs
     * @param ratioVariables
-    *           the ratio of terminal nodes that should be variable nodes, rather than constant nodes
+    *           a value in the range 0 to 1 (inclusive) which specifies the proportion of terminal nodes that should represent variables, rather than constants
     */
    public PrimitiveSetImpl(FunctionSet functionSet, ConstantSet constantSet, VariableSet variableSet, Random random, double ratioVariables) {
       this.functionSet = functionSet;
