@@ -34,6 +34,7 @@ import org.oakgp.function.compare.LessThan;
 import org.oakgp.function.math.IntegerUtils;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
+import org.oakgp.rank.RankedCandidates;
 import org.oakgp.rank.fitness.FitnessFunction;
 import org.oakgp.util.RunBuilder;
 import org.oakgp.util.Utils;
@@ -55,10 +56,11 @@ public class TowersOfHanoiExample {
       Type[] variables = { STATE_TYPE, nullableType(MOVE_TYPE) };
       FitnessFunction fitnessFunction = new TowersOfHanoiFitnessFunction(false);
 
-      Node best = new RunBuilder().setReturnType(MOVE_TYPE).setConstants(constants).setVariables(variables).setFunctions(functions)
+      RankedCandidates output = new RunBuilder().setReturnType(MOVE_TYPE).setConstants(constants).setVariables(variables).setFunctions(functions)
             .setFitnessFunction(fitnessFunction).setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_POPULATION_MAX_DEPTH)
             .setTargetFitness(TARGET_FITNESS).setMaxGenerations(NUM_GENERATIONS).process();
-
+      Node best = output.best().getNode();
+      System.out.println(best);
       new TowersOfHanoiFitnessFunction(true).evaluate(best);
    }
 

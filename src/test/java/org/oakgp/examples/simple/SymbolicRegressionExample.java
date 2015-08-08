@@ -23,6 +23,8 @@ import org.oakgp.Type;
 import org.oakgp.function.Function;
 import org.oakgp.function.math.IntegerUtils;
 import org.oakgp.node.ConstantNode;
+import org.oakgp.node.Node;
+import org.oakgp.rank.RankedCandidates;
 import org.oakgp.rank.fitness.FitnessFunction;
 import org.oakgp.rank.fitness.TestDataFitnessFunction;
 import org.oakgp.util.RunBuilder;
@@ -44,9 +46,11 @@ public class SymbolicRegressionExample {
       // the fitness function will compare candidates against a data set which maps inputs to their expected outputs
       FitnessFunction fitnessFunction = TestDataFitnessFunction.createIntegerTestDataFitnessFunction(createDataSet());
 
-      new RunBuilder().setReturnType(Type.integerType()).setConstants(constants).setVariables(variableTypes).setFunctions(functions)
+      RankedCandidates ouput = new RunBuilder().setReturnType(Type.integerType()).setConstants(constants).setVariables(variableTypes).setFunctions(functions)
             .setFitnessFunction(fitnessFunction).setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_POPULATION_MAX_DEPTH)
             .setTargetFitness(TARGET_FITNESS).process();
+      Node best = ouput.best().getNode();
+      System.out.println(best);
    }
 
    /**

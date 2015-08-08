@@ -29,6 +29,8 @@ import org.oakgp.function.compare.LessThanOrEqual;
 import org.oakgp.function.compare.NotEqual;
 import org.oakgp.function.math.IntegerUtils;
 import org.oakgp.node.ConstantNode;
+import org.oakgp.node.Node;
+import org.oakgp.rank.RankedCandidates;
 import org.oakgp.rank.tournament.FirstPlayerAdvantageGame;
 import org.oakgp.rank.tournament.TwoPlayerGame;
 import org.oakgp.util.JavaUtilRandomAdapter;
@@ -52,7 +54,10 @@ public class GridWarExample {
       // wrap a GridWar object in a FirstPlayerAdvantageGame to avoid bias
       TwoPlayerGame game = new FirstPlayerAdvantageGame(new GridWar(random));
 
-      new RunBuilder().setReturnType(integerType()).setConstants(constants).setVariables(variables).setFunctions(functions).setTwoPlayerGame(game)
-      .setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_POPULATION_MAX_DEPTH).setMaxGenerations(NUM_GENERATIONS).process();
+      RankedCandidates output = new RunBuilder().setReturnType(integerType()).setConstants(constants).setVariables(variables).setFunctions(functions)
+            .setTwoPlayerGame(game).setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_POPULATION_MAX_DEPTH)
+            .setMaxGenerations(NUM_GENERATIONS).process();
+      Node best = output.best().getNode();
+      System.out.println(best);
    }
 }

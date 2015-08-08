@@ -40,8 +40,8 @@ public class RunnerTest {
 
       RankedCandidate expected = RunBuilderTest.createRunExpectations(ranker, evolver, terminator, initialPopulation);
 
-      // run test
-      RankedCandidate actual = Runner.process(ranker, evolver, terminator, initialPopulation);
+      RankedCandidates output = Runner.process(ranker, evolver, terminator, initialPopulation);
+      RankedCandidate actual = output.best();
 
       // confirm output matches expected behaviour
       assertSame(expected, actual);

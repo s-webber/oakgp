@@ -64,11 +64,12 @@ public class RunBuilderTest {
 
       RankedCandidate expected = createRunExpectations(ranker, evolver, terminator, initialPopulation);
 
-      Node output = new RunBuilder().setReturnType(returnType).setRandom(random).setPrimitiveSet(primitiveSet).setGenerationRanker(ranker)
+      RankedCandidates output = new RunBuilder().setReturnType(returnType).setRandom(random).setPrimitiveSet(primitiveSet).setGenerationRanker(ranker)
             .setInitialPopulation(initialPopulationCreator).setGenerationEvolver(generationEvolverCreator).setTerminator(terminator).process();
+      RankedCandidate actual = output.best();
 
       // confirm output matches expected behaviour
-      assertSame(expected.getNode(), output);
+      assertSame(expected, actual);
    }
 
    @SuppressWarnings("unchecked")
