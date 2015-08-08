@@ -9,3 +9,23 @@ Please visit [oakgp.org](http://www.oakgp.org/) for more details. The website in
 - [Symolic Regression](http://www.oakgp.org/symbolic-regression)
 - [Grid War](http://www.oakgp.org/grid-war)
 - [Towers of Hanoi](http://www.oakgp.org/towers-of-hanoi)
+
+You can include the latest *release* version of OakGP as a dependency of your Java project by adding the following to its Maven `pom.xml` file:
+
+```
+<dependency>
+  <groupId>org.oakgp</groupId>
+  <artifactId>oakgp</artifactId>
+  <version>0.0.1</version>
+</dependency>
+```
+
+To use the latest *development* version of OakGP specify the following instead:
+
+```
+<dependency>
+  <groupId>org.oakgp</groupId>
+  <artifactId>oakgp</artifactId>
+  <version>0.1.0-SNAPSHOT</version>
+</dependency>
+```
