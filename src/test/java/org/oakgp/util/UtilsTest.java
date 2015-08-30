@@ -28,7 +28,6 @@ import static org.oakgp.Type.integerType;
 import static org.oakgp.Type.stringType;
 import static org.oakgp.util.DummyRandom.GetIntExpectation.nextInt;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -118,36 +117,6 @@ public class UtilsTest {
       for (Type element : t) {
          assertSame(integerType(), element);
       }
-   }
-
-   @Test
-   public void testAddArray() {
-      String element1 = "qwerty";
-      String element2 = "asdf";
-      String element3 = "zxcf";
-      String element4 = "qwertyuiop";
-      String element5 = "asdfgh";
-
-      List<String> list = new ArrayList<>();
-
-      Utils.addArray(list, new String[0]);
-      assertTrue(list.isEmpty());
-
-      Utils.addArray(list, new String[] { element1 });
-      assertEquals(1, list.size());
-
-      Utils.addArray(list, new String[] { element2, element3 });
-      assertEquals(3, list.size());
-
-      Utils.addArray(list, new String[] { element4, element2, element5 });
-      assertEquals(6, list.size());
-
-      assertSame(element1, list.get(0));
-      assertSame(element2, list.get(1));
-      assertSame(element3, list.get(2));
-      assertSame(element4, list.get(3));
-      assertSame(element2, list.get(4));
-      assertSame(element5, list.get(5));
    }
 
    @Test

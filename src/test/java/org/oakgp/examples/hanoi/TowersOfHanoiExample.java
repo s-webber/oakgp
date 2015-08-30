@@ -15,10 +15,10 @@
  */
 package org.oakgp.examples.hanoi;
 
+import static java.util.Collections.addAll;
 import static org.oakgp.Type.integerType;
 import static org.oakgp.Type.nullableType;
 import static org.oakgp.Type.type;
-import static org.oakgp.util.Utils.addArray;
 import static org.oakgp.util.Utils.createEnumConstants;
 
 import java.util.ArrayList;
@@ -68,8 +68,8 @@ public class TowersOfHanoiExample {
       List<ConstantNode> constants = new ArrayList<>();
       constants.add(IntegerUtils.INTEGER_UTILS.zero());
       constants.add(Utils.TRUE_NODE);
-      addArray(constants, createEnumConstants(Move.class, MOVE_TYPE));
-      addArray(constants, createEnumConstants(Pole.class, POLE_TYPE));
+      addAll(constants, createEnumConstants(Move.class, MOVE_TYPE));
+      addAll(constants, createEnumConstants(Pole.class, POLE_TYPE));
       return constants;
    }
 }

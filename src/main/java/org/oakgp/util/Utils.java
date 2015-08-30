@@ -131,11 +131,4 @@ public final class Utils {
    public static <T> T[] copyOf(T[] original) {
       return Arrays.copyOf(original, original.length);
    }
-
-   /** Adds each element of the specified array to the specified list. */
-   public static <T> void addArray(List<T> list, T[] array) {
-      for (T e : array) {
-         list.add(e);
-      }
-   }
 }

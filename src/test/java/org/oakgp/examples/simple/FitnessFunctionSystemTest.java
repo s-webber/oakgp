@@ -26,6 +26,7 @@ import static org.oakgp.util.Utils.createIntegerConstants;
 import static org.oakgp.util.Utils.createIntegerTypeArray;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,7 +53,6 @@ import org.oakgp.function.math.IntegerUtils;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.rank.fitness.FitnessFunction;
 import org.oakgp.util.RunBuilder;
-import org.oakgp.util.Utils;
 
 /**
  * Performs full genetic programming runs without relying on any mock objects.
@@ -136,8 +136,8 @@ public class FitnessFunctionSystemTest {
             new ConstantNode(0, integerType()) };
       Type[] variableTypes = { integerArrayType() };
       List<Function> functions = new ArrayList<>();
-      Utils.addArray(functions, ARITHMETIC_FUNCTIONS);
-      Utils.addArray(functions, new Function[] { new Filter(integerType()), isPositive, isNegative, isZero, new Count(integerType()) });
+      Collections.addAll(functions, ARITHMETIC_FUNCTIONS);
+      Collections.addAll(functions, new Function[] { new Filter(integerType()), isPositive, isNegative, isZero, new Count(integerType()) });
 
       Map<Assignments, Integer> testData = new HashMap<>();
       testData.put(createAssignments(createArguments("0", "0", "0", "0", "0", "0", "0", "0")), 8);
