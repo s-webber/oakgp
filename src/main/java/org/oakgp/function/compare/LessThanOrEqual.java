@@ -30,7 +30,7 @@ public final class LessThanOrEqual extends ComparisonOperator {
     * previously been calls to {@code #create(Type)} for the specified {@code Type} then the existing instance will be returned.
     */
    public static LessThanOrEqual create(Type t) {
-      return CACHE.computeIfAbsent(t, (k) -> new LessThanOrEqual(k));
+      return CACHE.computeIfAbsent(t, LessThanOrEqual::new);
    }
 
    /** Constructs a function that compares two arguments of the specified type. */

@@ -60,7 +60,7 @@ public final class ShrinkMutation implements GeneticOperator {
          return primitiveSet.nextAlternativeTerminal(root);
       } else {
          int index = Utils.selectSubNodeIndex(random, nodeCount);
-         return StrategyWalk.replaceAt(root, index, (n) -> primitiveSet.nextAlternativeTerminal(n), NodeType::isFunction);
+         return StrategyWalk.replaceAt(root, index, primitiveSet::nextAlternativeTerminal, NodeType::isFunction);
       }
    }
 }

@@ -33,7 +33,7 @@ public final class FunctionSet {
    public FunctionSet(Function... functions) {
       // TODO validate display names using NodeReader.isValidDisplayName
       this.functionsByType = groupBy(functions, f -> f.getSignature().getReturnType());
-      this.functionsBySignature = groupBy(functions, f -> f.getSignature());
+      this.functionsBySignature = groupBy(functions, Function::getSignature);
    }
 
    /**
