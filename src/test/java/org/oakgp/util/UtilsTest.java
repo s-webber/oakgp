@@ -56,7 +56,7 @@ public class UtilsTest {
    @Test
    public void testGroupBy() {
       String[] values = { "aardvark", "apple", "bag", "cat", "cake", "caterpillar" };
-      Map<Character, List<String>> groups = Utils.groupBy(values, (s) -> s.charAt(0));
+      Map<Character, List<String>> groups = Utils.groupBy(values, s -> s.charAt(0));
       assertEquals(3, groups.size());
       assertEquals(asList("aardvark", "apple"), groups.get('a'));
       assertEquals(asList("bag"), groups.get('b'));

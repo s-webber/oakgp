@@ -133,7 +133,7 @@ public final class Type implements Comparable<Type> {
    }
 
    private static Type type(Type t) {
-      return TYPE_CACHE.computeIfAbsent(t, (k) -> k);
+      return TYPE_CACHE.computeIfAbsent(t, k -> k);
    }
 
    /**

@@ -32,7 +32,7 @@ public class FitnessFunctionCacheTest {
       final double fitness1 = 9;
       final double fitness2 = -3;
       final AtomicInteger evaluateCtr = new AtomicInteger(0);
-      final FitnessFunction mockFitnessFunction = (n) -> {
+      final FitnessFunction mockFitnessFunction = n -> {
          evaluateCtr.incrementAndGet();
          if (n == n1) {
             return fitness1;
