@@ -9,6 +9,7 @@ Please visit [oakgp.org](http://www.oakgp.org/) for more details. The website in
 - [Symolic Regression](http://www.oakgp.org/symbolic-regression)
 - [Grid War](http://www.oakgp.org/grid-war)
 - [Towers of Hanoi](http://www.oakgp.org/towers-of-hanoi)
+- [The Artificial Ant Problem](http://www.oakgp.org/artificial-ant-problem) (also known as the Santa Fe Trail problem)
 
 You can include the latest *release* version of OakGP as a dependency of your Java project by adding the following to its Maven `pom.xml` file:
 
