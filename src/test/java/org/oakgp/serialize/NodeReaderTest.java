@@ -26,6 +26,7 @@ import static org.oakgp.TestUtils.readNodes;
 import static org.oakgp.Type.integerToBooleanFunctionType;
 import static org.oakgp.Type.integerType;
 import static org.oakgp.Type.type;
+import static org.oakgp.util.Void.VOID;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -146,6 +147,11 @@ public class NodeReaderTest {
    @Test
    public void testFalse() {
       assertParseLiteral(Boolean.FALSE);
+   }
+
+   @Test
+   public void testVoid() {
+      assertParseLiteral("void", VOID);
    }
 
    @Test

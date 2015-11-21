@@ -26,6 +26,7 @@ import static org.oakgp.Type.stringType;
 import static org.oakgp.util.Utils.FALSE_NODE;
 import static org.oakgp.util.Utils.TRUE_NODE;
 import static org.oakgp.util.Utils.copyOf;
+import static org.oakgp.util.Void.VOID_CONSTANT;
 
 import java.io.BufferedReader;
 import java.io.Closeable;
@@ -108,6 +109,7 @@ public final class NodeReader implements Closeable {
       m.put(NodeReader::isVariable, this::getVariable);
       m.put(s -> "true".equals(s), s -> TRUE_NODE);
       m.put(s -> "false".equals(s), s -> FALSE_NODE);
+      m.put(s -> "void".equals(s), s -> VOID_CONSTANT);
       m.put(NodeReader::isLong, this::createLongConstant);
       m.put(NodeReader::isBigInteger, this::createBigIntegerConstant);
       m.put(NodeReader::isBigDecimal, this::createBigDecimalConstant);

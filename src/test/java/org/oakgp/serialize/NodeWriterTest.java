@@ -26,6 +26,7 @@ import static org.oakgp.TestUtils.longConstant;
 import static org.oakgp.Type.arrayType;
 import static org.oakgp.Type.integerToBooleanFunctionType;
 import static org.oakgp.Type.integerType;
+import static org.oakgp.util.Void.VOID_CONSTANT;
 
 import org.junit.Test;
 import org.oakgp.function.classify.IsPositive;
@@ -68,6 +69,13 @@ public class NodeWriterTest {
       NodeWriter writer = new NodeWriter();
       String output = writer.writeNode(bigIntegerConstant("768"));
       assertEquals("768I", output);
+   }
+
+   @Test
+   public void testVoidConstantNode() {
+      NodeWriter writer = new NodeWriter();
+      String output = writer.writeNode(VOID_CONSTANT);
+      assertEquals("void", output);
    }
 
    @Test
