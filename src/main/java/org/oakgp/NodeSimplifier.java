@@ -29,7 +29,7 @@ import org.oakgp.node.Node;
 /**
  * Attempts to reduce the size of tree structures without altering their functionality.
  * <p>
- * This can be done by replacing expressions constant values or removing redundant branches. e.g. The expression:
+ * This can be done by replacing expressions with constant values or removing redundant branches. e.g. The expression:
  *
  * <pre>
  * (+ 7 (* 3 6))
@@ -41,7 +41,8 @@ import org.oakgp.node.Node;
  * 25
  * </pre>
  *
- * <b>Note:</b> relies on {@code Function} implementations being referentially transparent.
+ * <b>Note:</b> relies on {@link org.oakgp.function.Function#isPure()} to identify if a function is referentially transparent and therefore suitable for
+ * replacement with the result of evaluating it.
  */
 public final class NodeSimplifier {
    private static final int MAX_RETRIES = 100;
@@ -98,23 +99,23 @@ public final class NodeSimplifier {
       // try to simplify each of the arguments
       Arguments inputArgs = input.getArguments();
       Node[] simplifiedArgs = new Node[inputArgs.getArgCount()];
-      boolean modified = false;
-      boolean constants = true;
+      boolean haveAnyArgumentsBeenSimplified = false;
+      boolean areAllArgumentsConstants = true;
       for (int i = 0; i < simplifiedArgs.length; i++) {
          Node originalArg = inputArgs.getArg(i);
          simplifiedArgs[i] = simplifyOnce(originalArg);
          if (originalArg != simplifiedArgs[i]) {
-            modified = true;
+            haveAnyArgumentsBeenSimplified = true;
          }
          if (!isConstant(simplifiedArgs[i])) {
-            constants = false;
+            areAllArgumentsConstants = false;
          }
       }
 
       // if could simplify arguments then use simplified version to create new FunctionNode
       Arguments arguments;
       FunctionNode output;
-      if (modified) {
+      if (haveAnyArgumentsBeenSimplified) {
          arguments = createArguments(simplifiedArgs);
          output = new FunctionNode(input.getFunction(), arguments);
       } else {
@@ -122,8 +123,11 @@ public final class NodeSimplifier {
          output = input;
       }
 
-      // if all arguments are constants then return result of evaluating them
-      if (constants) {
+      // if a function is pure and all its arguments are constants then
+      // the result of evaluating it will always be the same -
+      // so, to avoid unnecessary computation and to reduce bloat,
+      // the function node can be replaced with the result of evaluating it
+      if (areAllArgumentsConstants && input.getFunction().isPure()) {
          return new ConstantNode(output.evaluate(null), output.getType());
       }
 

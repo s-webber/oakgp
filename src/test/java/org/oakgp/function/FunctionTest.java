@@ -17,6 +17,7 @@ package org.oakgp.function;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.oakgp.Arguments;
@@ -38,6 +39,11 @@ public class FunctionTest {
          }
       };
       assertNull(o.simplify(null));
+   }
+
+   @Test
+   public void testIsPure() {
+      assertTrue(new DummyFunction().isPure());
    }
 
    @Test

@@ -62,4 +62,26 @@ public interface Function {
          return lowerCaseNameMinusPackage;
       }
    }
+
+   /**
+    * Returns {@code true} if this function is pure, else returns {@code false}.
+    * <p>
+    * A function is a pure function if it conforms to the following criteria:
+    * <ol>
+    * <li><i>Always</i> returns the same result when given the <i>same</i> arguments.</li>
+    * <li>Doesn't cause any <i>observable</i> side effects.</li>
+    * </ol>
+    * </p>
+    * <p>
+    * If a function is pure then it is <i>referentially transparent</i>. This means that if a function node contains a pure function, and all its arguments are
+    * constants, then the function node can be replaced with the result of evaluating it. This avoids unnecessary computation and to reduces bloat.
+    * </p>
+    * <p>
+    * Default implementation always returns {@code true}.
+    *
+    * @see ImpureFunction
+    */
+   default boolean isPure() {
+      return true;
+   }
 }

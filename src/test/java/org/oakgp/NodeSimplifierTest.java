@@ -1,12 +1,12 @@
 /*
  * Copyright 2015 S. Webber
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,6 +25,8 @@ import static org.oakgp.TestUtils.writeNode;
 
 import org.junit.ComparisonFailure;
 import org.junit.Test;
+import org.oakgp.function.Function;
+import org.oakgp.function.Signature;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
@@ -202,6 +204,55 @@ public class NodeSimplifierTest {
       } catch (ComparisonFailure e) {
          assertEquals("9 vs. 9 expected:<(+ v[1 v0])> but was:<(+ v[0 v1])>", e.getMessage());
       }
+   }
+
+   @Test
+   public void testPureFunctionSimplified() {
+      final int evaluationResult = 87687;
+      Function f = new Function() {
+         @Override
+         public Signature getSignature() {
+            return Signature.createSignature(Type.integerType(), Type.integerType());
+         }
+
+         @Override
+         public Object evaluate(Arguments arguments, Assignments assignments) {
+            return evaluationResult;
+         }
+
+         @Override
+         public boolean isPure() {
+            return true;
+         }
+      };
+
+      FunctionNode fn = new FunctionNode(f, integerConstant(1));
+      Node output = NodeSimplifier.simplify(fn);
+      assertEquals(integerConstant(evaluationResult), output);
+   }
+
+   @Test
+   public void testImpureFunctionNotSimplified() {
+      Function f = new Function() {
+         @Override
+         public Signature getSignature() {
+            throw new UnsupportedOperationException();
+         }
+
+         @Override
+         public Object evaluate(Arguments arguments, Assignments assignments) {
+            throw new UnsupportedOperationException();
+         }
+
+         @Override
+         public boolean isPure() {
+            return false;
+         }
+      };
+
+      FunctionNode fn = new FunctionNode(f, integerConstant(1));
+      Node output = NodeSimplifier.simplify(fn);
+      assertSame(fn, output);
    }
 
    private TestCase when(String input) {
