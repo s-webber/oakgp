@@ -19,7 +19,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.BDDMockito.given;
 import static org.oakgp.TestUtils.integerConstant;
+import static org.oakgp.TestUtils.mockNode;
 import static org.oakgp.TestUtils.readNode;
 
 import org.junit.Test;
@@ -37,12 +39,48 @@ public class RankedCandidateTest {
 
    @Test
    public void testCompareTo() {
-      RankedCandidate a = new RankedCandidate(null, 1);
-      RankedCandidate b = new RankedCandidate(null, 2);
-      RankedCandidate c = new RankedCandidate(null, 1);
-      assertEquals(-1, a.compareTo(b));
-      assertEquals(1, b.compareTo(a));
-      assertEquals(0, a.compareTo(c));
+      final double baseFitness = 500d;
+      final int baseNodeCount = 3;
+      final double betterFitness = 5000d;
+      final int betterNodeCount = 1;
+      final double worseFitness = 250d;
+      final int worseNodeCount = 5;
+
+      RankedCandidate candidate = mockRankedCandidate(baseFitness, baseNodeCount);
+
+      assertEqual(candidate, candidate);
+
+      assertBetter(candidate, mockRankedCandidate(worseFitness, worseNodeCount));
+      assertBetter(candidate, mockRankedCandidate(worseFitness, betterNodeCount));
+      assertBetter(candidate, mockRankedCandidate(worseFitness, baseNodeCount));
+
+      assertWorse(candidate, mockRankedCandidate(betterFitness, worseNodeCount));
+      assertWorse(candidate, mockRankedCandidate(betterFitness, betterNodeCount));
+      assertWorse(candidate, mockRankedCandidate(betterFitness, baseNodeCount));
+
+      assertBetter(candidate, mockRankedCandidate(baseFitness, worseNodeCount));
+      assertWorse(candidate, mockRankedCandidate(baseFitness, betterNodeCount));
+      assertEqual(candidate, mockRankedCandidate(baseFitness, baseNodeCount));
+   }
+
+   private RankedCandidate mockRankedCandidate(double fitness, int nodeCount) {
+      Node mockNode = mockNode();
+      given(mockNode.getNodeCount()).willReturn(nodeCount);
+      return new RankedCandidate(mockNode, fitness);
+   }
+
+   public void assertBetter(RankedCandidate a, RankedCandidate b) {
+      assertEquals(1, a.compareTo(b));
+      assertEquals(-1, b.compareTo(a));
+   }
+
+   public void assertWorse(RankedCandidate a, RankedCandidate b) {
+      assertBetter(b, a);
+   }
+
+   public void assertEqual(RankedCandidate a, RankedCandidate b) {
+      assertEquals(0, a.compareTo(b));
+      assertEquals(0, b.compareTo(a));
    }
 
    @Test

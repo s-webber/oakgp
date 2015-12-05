@@ -53,8 +53,13 @@ public final class RankedCandidate implements Comparable<RankedCandidate> {
 
    @Override
    public int compareTo(RankedCandidate o) {
-      // TODO further improve by, when two candidates have the same fitness, comparing them by node count - so favouring shorter solutions?
-      return Double.compare(fitness, o.fitness);
+      int result = Double.compare(fitness, o.fitness);
+      if (result == 0) {
+         // when two candidates have identical fitness values, compare them by node count - favouring shorter solutions
+         return Integer.compare(o.node.getNodeCount(), node.getNodeCount());
+      } else {
+         return result;
+      }
    }
 
    @Override
