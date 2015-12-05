@@ -37,7 +37,7 @@ public class ArtificialAntExample {
    private static final int INITIAL_POPULATION_SIZE = 100;
    private static final int INITIAL_POPULATION_MAX_DEPTH = 4;
 
-   public static void main(String[] args) throws InterruptedException {
+   public static void main(String[] args) {
       Function[] functions = { new If(VOID_TYPE), new IsFoodAhead(), FORWARD, LEFT, RIGHT, BISEQUENCE, TRISEQUENCE };
       FitnessFunction fitnessFunction = new ArtificialAntFitnessFunction();
 

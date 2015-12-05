@@ -19,7 +19,7 @@ import org.junit.Test;
 
 public class ArtificialAntSystemTest {
    @Test
-   public void test() throws InterruptedException {
+   public void test() {
       ArtificialAntExample.main(null);
    }
 }
