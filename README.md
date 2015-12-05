@@ -1,4 +1,5 @@
 # OakGP
+[![Maven Central](https://img.shields.io/maven-central/v/org.oakgp/oakgp.svg)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22org.oakgp%22%20AND%20a%3A%22oakgp%22)
 [![Build Status](https://travis-ci.org/s-webber/oakgp.png?branch=master)](https://travis-ci.org/s-webber/oakgp)
 [![License](https://img.shields.io/badge/license-Apache%20v2.0-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 
