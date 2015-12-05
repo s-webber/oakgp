@@ -21,7 +21,7 @@ import org.oakgp.node.Node;
 import org.oakgp.node.NodeType;
 
 /** Represents a dummy value to return from functions that do not produce a result. */
-public class Void {
+public final class Void {
    /** Returns the type associated with instances of {@link #VOID}. */
    public static final Type VOID_TYPE = Type.type("void");
    /** Singleton representing a {@code void} value. */
@@ -29,7 +29,7 @@ public class Void {
    /** A constant node containing {@link #VOID}. */
    public static final ConstantNode VOID_CONSTANT = new ConstantNode(VOID, VOID_TYPE);
 
-   /** Private constructor to force use of {@link #VOID} */
+   /** Private constructor to force use of {@link #VOID}. */
    private Void() {
    }
 
