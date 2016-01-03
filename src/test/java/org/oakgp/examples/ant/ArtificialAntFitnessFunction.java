@@ -48,7 +48,7 @@ class ArtificialAntFitnessFunction implements FitnessFunction {
    }
 
    /**
-    * Calculate fitness based in the given state.
+    * Calculate fitness of the given state.
     * <p>
     * Any state where all the food has been eaten is better than any state where there is food remaining. The best solution is the one where all the food has
     * been eaten in the quickest time.
