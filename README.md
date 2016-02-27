@@ -18,7 +18,7 @@ You can include the latest *release* version of OakGP as a dependency of your Ja
 <dependency>
   <groupId>org.oakgp</groupId>
   <artifactId>oakgp</artifactId>
-  <version>0.0.2</version>
+  <version>0.0.3</version>
 </dependency>
 ```
 
