@@ -40,7 +40,7 @@ public interface Function {
     * Attempts to find a simplified alternative to applying this function to the specified arguments.
     * <p>
     * Simplification can occur by replacing expressions with constant values (e.g. replacing {@code (+ 1 1)} with {@code 2}) or removing redundant branches
-    * (e.g. replacing {@code (if (< 2 3) (+ v0 v1) (* v0 v1)) with {@code (+ v0 v1)}.
+    * (e.g. replacing {@code (if (< 2 3) (+ v0 v1) (* v0 v1))} with {@code (+ v0 v1)}.
     *
     * @param arguments
     *           the arguments to be applied to (i.e. evaluated by) this function
@@ -74,7 +74,7 @@ public interface Function {
     * </p>
     * <p>
     * If a function is pure then it is <i>referentially transparent</i>. This means that if a function node contains a pure function, and all its arguments are
-    * constants, then the function node can be replaced with the result of evaluating it. This avoids unnecessary computation and to reduces bloat.
+    * constants, then the function node can be replaced with the result of evaluating it. This avoids unnecessary computation and reduces bloat.
     * </p>
     * <p>
     * Default implementation always returns {@code true}.
