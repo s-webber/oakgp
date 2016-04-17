@@ -73,6 +73,13 @@ final class AntMovement implements ImpureFunction {
       }
    }
 
+   static boolean areAllSame(AntMovement function, Node firstArg, Node secondArg, Node thirdArg) {
+      Function f1 = getFunction(firstArg);
+      Function f2 = getFunction(secondArg);
+      Function f3 = getFunction(thirdArg);
+      return f1 == function && f2 == function && f3 == function;
+   }
+
    private static Function getFunction(Node n) {
       if (NodeType.isFunction(n)) {
          return ((FunctionNode) n).getFunction();

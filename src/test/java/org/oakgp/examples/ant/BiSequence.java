@@ -24,6 +24,7 @@ import org.oakgp.Arguments;
 import org.oakgp.Assignments;
 import org.oakgp.function.ImpureFunction;
 import org.oakgp.function.Signature;
+import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.util.Void;
 
@@ -56,8 +57,23 @@ class BiSequence implements ImpureFunction {
          return firstArg;
       } else if (isLeftAndRight(firstArg, secondArg)) {
          return VOID_CONSTANT;
+      } else if (isBiSequence(firstArg)) {
+         Arguments firstArgArgs = ((FunctionNode) firstArg).getArguments();
+         return createTriSequence(firstArgArgs.firstArg(), firstArgArgs.secondArg(), secondArg);
+      } else if (isBiSequence(secondArg)) {
+         Arguments secondArgArgs = ((FunctionNode) secondArg).getArguments();
+         return createTriSequence(firstArg, secondArgArgs.firstArg(), secondArgArgs.secondArg());
       } else {
          return null;
       }
+   }
+
+   private boolean isBiSequence(Node firstArg) {
+      FunctionNode fn = (FunctionNode) firstArg;
+      return fn.getFunction() == BISEQUENCE;
+   }
+
+   private Node createTriSequence(Node arg1, Node arg2, Node arg3) {
+      return new FunctionNode(TriSequence.TRISEQUENCE, arg1, arg2, arg3);
    }
 }

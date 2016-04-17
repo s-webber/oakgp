@@ -15,6 +15,9 @@
  */
 package org.oakgp.examples.ant;
 
+import static org.oakgp.examples.ant.AntMovement.LEFT;
+import static org.oakgp.examples.ant.AntMovement.RIGHT;
+import static org.oakgp.examples.ant.AntMovement.areAllSame;
 import static org.oakgp.examples.ant.AntMovement.isLeftAndRight;
 import static org.oakgp.util.Void.VOID_TYPE;
 import static org.oakgp.util.Void.isVoid;
@@ -57,11 +60,15 @@ class TriSequence implements ImpureFunction {
       } else if (isVoid(second)) {
          return createBiSequence(first, third);
       } else if (isVoid(third)) {
-         return createBiSequence(first, first);
+         return createBiSequence(first, second);
       } else if (isLeftAndRight(first, second)) {
          return third;
       } else if (isLeftAndRight(second, third)) {
          return first;
+      } else if (areAllSame(LEFT, first, second, third)) {
+         return new FunctionNode(RIGHT, ((FunctionNode) first).getArguments());
+      } else if (areAllSame(RIGHT, first, second, third)) {
+         return new FunctionNode(LEFT, ((FunctionNode) first).getArguments());
       } else {
          return null;
       }
