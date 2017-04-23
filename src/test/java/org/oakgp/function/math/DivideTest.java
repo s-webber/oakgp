@@ -68,6 +68,10 @@ public class DivideTest extends AbstractFunctionTest {
       simplify("(/ 4 -1)").to("-4");
       simplify("(/ -4 -1)").to("4");
       simplify("(/ v0 -1)").to("(- 0 v0)");
+      simplify("(/ 1 1)").to("1");
+      simplify("(/ 7 7)").to("1");
+      simplify("(/ -7 -7)").to("1");
+      simplify("(/ v0 v0)").to("1");
    }
 
    @Override

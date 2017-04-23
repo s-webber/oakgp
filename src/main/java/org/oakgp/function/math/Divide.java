@@ -50,6 +50,8 @@ final class Divide extends ArithmeticOperator {
          return arguments.firstArg();
       } else if (minusOne.equals(arg2)) {
          return numberUtils.negate(arguments.firstArg());
+      } else if (arguments.firstArg().equals(arg2)) {
+         return numberUtils.one();
       } else {
          return null;
       }
