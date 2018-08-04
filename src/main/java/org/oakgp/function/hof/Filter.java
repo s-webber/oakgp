@@ -57,7 +57,7 @@ public final class Filter implements Function {
       List<Node> result = new ArrayList<>();
       for (int i = 0; i < candidates.getArgCount(); i++) {
          Node candidate = candidates.getArg(i);
-         if (((Boolean) f.evaluate(Arguments.createArguments(candidate), assignments)).booleanValue()) {
+         if ((Boolean) f.evaluate(Arguments.createArguments(candidate), assignments)) {
             result.add(candidate);
          }
       }
