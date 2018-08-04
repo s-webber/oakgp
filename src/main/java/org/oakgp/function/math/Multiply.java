@@ -25,11 +25,11 @@ import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 
 /** Performs multiplication. */
-final class Multiply extends ArithmeticOperator {
-   private final NumberUtils<?> numberUtils;
+final class Multiply<T extends Comparable<T>> extends ArithmeticOperator {
+   private final NumberUtils<T> numberUtils;
 
    /** @see NumberUtils#getMultiply() */
-   Multiply(NumberUtils<?> numberUtils) {
+   Multiply(NumberUtils<T> numberUtils) {
       super(numberUtils.getType());
       this.numberUtils = numberUtils;
    }
@@ -40,8 +40,8 @@ final class Multiply extends ArithmeticOperator {
     * @return the result of multiplying {@code arg1} and {@code arg2}
     */
    @Override
-   protected Object evaluate(Node arg1, Node arg2, Assignments assignments) {
-      return numberUtils.multiply(arg1, arg2, assignments).evaluate(null);
+   protected T evaluate(Node arg1, Node arg2, Assignments assignments) {
+      return numberUtils.multiply(arg1, arg2, assignments);
    }
 
    @Override

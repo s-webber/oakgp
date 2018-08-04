@@ -16,29 +16,52 @@
 package org.oakgp.function.math;
 
 import static org.junit.Assert.assertEquals;
+import static org.oakgp.TestUtils.createVariable;
+import static org.oakgp.TestUtils.integerConstant;
 
 import org.junit.Test;
+import org.oakgp.Assignments;
 
 public class IntegerUtilsTest {
    private static final NumberUtils<Integer> UTILS = IntegerUtils.INTEGER_UTILS;
 
    @Test
-   public void testAdd() {
+   public void testAddPrimitive() {
       assertEquals(Integer.valueOf(9), UTILS.add(7, 2));
    }
 
    @Test
-   public void testSubtract() {
+   public void testAddNode() {
+      assertEquals(Integer.valueOf(9), UTILS.add(integerConstant(7), createVariable(0), Assignments.createAssignments(2)));
+   }
+
+   @Test
+   public void testSubtractPrimitive() {
       assertEquals(Integer.valueOf(5), UTILS.subtract(7, 2));
    }
 
    @Test
-   public void testMultiply() {
+   public void testSubtractNode() {
+      assertEquals(Integer.valueOf(5), UTILS.subtract(integerConstant(7), createVariable(0), Assignments.createAssignments(2)));
+   }
+
+   @Test
+   public void testMultiplyPrimitive() {
       assertEquals(Integer.valueOf(14), UTILS.multiply(7, 2));
    }
 
    @Test
-   public void testDivide() {
+   public void testMultiplyNode() {
+      assertEquals(Integer.valueOf(14), UTILS.multiply(integerConstant(7), createVariable(0), Assignments.createAssignments(2)));
+   }
+
+   @Test
+   public void testDividePrimitive() {
       assertEquals(Integer.valueOf(3), UTILS.divide(7, 2));
+   }
+
+   @Test
+   public void testDivideNode() {
+      assertEquals(Integer.valueOf(3), UTILS.divide(integerConstant(7), createVariable(0), Assignments.createAssignments(2)));
    }
 }

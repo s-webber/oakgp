@@ -121,8 +121,8 @@ abstract class NumberUtils<T extends Comparable<T>> {
    }
 
    /** Returns the result of adding the result of evaluating the given {@code Node}s with the given {@code Assignments}. */
-   public final ConstantNode add(Node n1, Node n2, Assignments assignments) {
-      return createConstant(add(evaluate(n1, assignments), evaluate(n2, assignments)));
+   public final T add(Node n1, Node n2, Assignments assignments) {
+      return add(evaluate(n1, assignments), evaluate(n2, assignments));
    }
 
    /**
@@ -134,7 +134,7 @@ abstract class NumberUtils<T extends Comparable<T>> {
     *           a {@code ConstantNode} with a value of type {@link #T}
     */
    public final ConstantNode add(Node n1, Node n2) {
-      return add(n1, n2, null);
+      return createConstant(add(n1, n2, null));
    }
 
    /**
@@ -162,8 +162,8 @@ abstract class NumberUtils<T extends Comparable<T>> {
     *
     * @return {@code n1} - {@code n2}
     */
-   public final ConstantNode subtract(Node n1, Node n2, Assignments assignments) {
-      return createConstant(subtract(evaluate(n1, assignments), evaluate(n2, assignments)));
+   public final T subtract(Node n1, Node n2, Assignments assignments) {
+      return subtract(evaluate(n1, assignments), evaluate(n2, assignments));
    }
 
    /**
@@ -176,7 +176,7 @@ abstract class NumberUtils<T extends Comparable<T>> {
     * @return {@code n1} - {@code n2}
     */
    public final ConstantNode subtract(Node n1, Node n2) {
-      return subtract(n1, n2, null);
+      return createConstant(subtract(n1, n2, null));
    }
 
    /**
@@ -204,8 +204,8 @@ abstract class NumberUtils<T extends Comparable<T>> {
    }
 
    /** Returns the result of multiplying the result of evaluating the given {@code Node}s with the given {@code Assignments}. */
-   public final ConstantNode multiply(Node n1, Node n2, Assignments assignments) {
-      return createConstant(multiply(evaluate(n1, assignments), evaluate(n2, assignments)));
+   public final T multiply(Node n1, Node n2, Assignments assignments) {
+      return multiply(evaluate(n1, assignments), evaluate(n2, assignments));
    }
 
    /**
@@ -217,7 +217,7 @@ abstract class NumberUtils<T extends Comparable<T>> {
     *           a {@code ConstantNode} with a value of type {@link #T}
     */
    public final ConstantNode multiply(Node n1, Node n2) {
-      return multiply(n1, n2, null);
+      return createConstant(multiply(n1, n2, null));
    }
 
    /** Returns a new expression which multiplies the given {@code Node} by two. */
@@ -230,8 +230,8 @@ abstract class NumberUtils<T extends Comparable<T>> {
     *
     * @return {@code n1} / {@code n2}
     */
-   public final ConstantNode divide(Node n1, Node n2, Assignments assignments) {
-      return createConstant(divide(evaluate(n1, assignments), evaluate(n2, assignments)));
+   public final T divide(Node n1, Node n2, Assignments assignments) {
+      return divide(evaluate(n1, assignments), evaluate(n2, assignments));
    }
 
    /**

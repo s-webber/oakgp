@@ -24,12 +24,12 @@ import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 
 /** Performs subtraction. */
-final class Subtract extends ArithmeticOperator {
-   private final NumberUtils<?> numberUtils;
+final class Subtract<T extends Comparable<T>> extends ArithmeticOperator {
+   private final NumberUtils<T> numberUtils;
    private final ArithmeticExpressionSimplifier simplifier;
 
    /** @see NumberUtils#getSubtract() */
-   Subtract(NumberUtils<?> numberUtils) {
+   Subtract(NumberUtils<T> numberUtils) {
       super(numberUtils.getType());
       this.numberUtils = numberUtils;
       this.simplifier = numberUtils.getSimplifier();
@@ -41,8 +41,8 @@ final class Subtract extends ArithmeticOperator {
     * @return the result of subtracting {@code arg2} from {@code arg1}
     */
    @Override
-   protected Object evaluate(Node arg1, Node arg2, Assignments assignments) {
-      return numberUtils.subtract(arg1, arg2, assignments).evaluate(null);
+   protected T evaluate(Node arg1, Node arg2, Assignments assignments) {
+      return numberUtils.subtract(arg1, arg2, assignments);
    }
 
    @Override

@@ -16,29 +16,52 @@
 package org.oakgp.function.math;
 
 import static org.junit.Assert.assertEquals;
+import static org.oakgp.TestUtils.createVariable;
+import static org.oakgp.TestUtils.doubleConstant;
 
 import org.junit.Test;
+import org.oakgp.Assignments;
 
 public class DoubleUtilsTest {
    private static final NumberUtils<Double> UTILS = DoubleUtils.DOUBLE_UTILS;
 
    @Test
-   public void testAdd() {
+   public void testAddPrimitive() {
       assertEquals(Double.valueOf(9), UTILS.add(7d, 2d));
    }
 
    @Test
-   public void testSubtract() {
+   public void testAddNode() {
+      assertEquals(Double.valueOf(9), UTILS.add(doubleConstant(7), createVariable(0), Assignments.createAssignments(2d)));
+   }
+
+   @Test
+   public void testSubtractPrimitive() {
       assertEquals(Double.valueOf(5), UTILS.subtract(7d, 2d));
    }
 
    @Test
-   public void testMultiply() {
+   public void testSubtractNode() {
+      assertEquals(Double.valueOf(5), UTILS.subtract(doubleConstant(7), createVariable(0), Assignments.createAssignments(2d)));
+   }
+
+   @Test
+   public void testMultiplyPrimitive() {
       assertEquals(Double.valueOf(14), UTILS.multiply(7d, 2d));
    }
 
    @Test
-   public void testDivide() {
+   public void testMultiplyNode() {
+      assertEquals(Double.valueOf(14), UTILS.multiply(doubleConstant(7), createVariable(0), Assignments.createAssignments(2d)));
+   }
+
+   @Test
+   public void testDividePrimitive() {
       assertEquals(Double.valueOf(3.5), UTILS.divide(7d, 2d));
+   }
+
+   @Test
+   public void testDivideNode() {
+      assertEquals(Double.valueOf(3.5), UTILS.divide(doubleConstant(7), createVariable(0), Assignments.createAssignments(2d)));
    }
 }

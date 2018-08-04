@@ -21,23 +21,23 @@ import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
 
 /** Performs division. */
-final class Divide extends ArithmeticOperator {
-   private final NumberUtils<?> numberUtils;
+final class Divide<T extends Comparable<T>> extends ArithmeticOperator {
+   private final NumberUtils<T> numberUtils;
    private final ConstantNode minusOne;
 
    /** @see NumberUtils#getDivide() */
-   Divide(NumberUtils<?> numberUtils) {
+   Divide(NumberUtils<T> numberUtils) {
       super(numberUtils.getType());
       this.numberUtils = numberUtils;
       this.minusOne = numberUtils.negateConstant(numberUtils.one());
    }
 
    @Override
-   protected Object evaluate(Node arg1, Node arg2, Assignments assignments) {
+   protected T evaluate(Node arg1, Node arg2, Assignments assignments) {
       if (numberUtils.isZero(arg2)) {
-         return numberUtils.one().evaluate(null);
+         return (T) numberUtils.one().evaluate(null);
       } else {
-         return numberUtils.divide(arg1, arg2, assignments).evaluate(null);
+         return numberUtils.divide(arg1, arg2, assignments);
       }
    }
 

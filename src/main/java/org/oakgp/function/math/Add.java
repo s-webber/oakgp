@@ -25,12 +25,12 @@ import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 
 /** Performs addition. */
-final class Add extends ArithmeticOperator {
-   private final NumberUtils<?> numberUtils;
+final class Add<T extends Comparable<T>> extends ArithmeticOperator {
+   private final NumberUtils<T> numberUtils;
    private final ArithmeticExpressionSimplifier simplifier;
 
    /** @see NumberUtils#getAdd() */
-   Add(NumberUtils<?> numberUtils) {
+   Add(NumberUtils<T> numberUtils) {
       super(numberUtils.getType());
       this.numberUtils = numberUtils;
       this.simplifier = numberUtils.getSimplifier();
@@ -42,8 +42,8 @@ final class Add extends ArithmeticOperator {
     * @return the result of adding {@code arg1} and {@code arg2}
     */
    @Override
-   protected Object evaluate(Node arg1, Node arg2, Assignments assignments) {
-      return numberUtils.add(arg1, arg2, assignments).evaluate(null);
+   protected T evaluate(Node arg1, Node arg2, Assignments assignments) {
+      return numberUtils.add(arg1, arg2, assignments);
    }
 
    @Override
