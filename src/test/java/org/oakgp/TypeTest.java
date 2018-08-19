@@ -72,6 +72,13 @@ public class TypeTest {
    }
 
    @Test
+   public void testMap() {
+      Type t = Type.mapType(Type.stringType(), Type.integerType());
+      assertEquals("map [string, integer]", t.toString());
+      assertSame(t, Type.type("map", Type.stringType(), Type.integerType()));
+   }
+
+   @Test
    public void testNullableInteger() {
       assertNullableType("integer", Type::integerType);
    }

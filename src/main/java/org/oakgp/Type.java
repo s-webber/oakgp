@@ -112,6 +112,11 @@ public final class Type implements Comparable<Type> {
       return type("array", t);
    }
 
+   /** Returns the type associated with a map collection containing entries of the specified key and value types. */
+   public static Type mapType(Type key, Type value) {
+      return type("map", key, value);
+   }
+
    /**
     * Returns a {@code Type} with the given name.
     * <p>

@@ -22,6 +22,7 @@ import static org.oakgp.Type.bigIntegerType;
 import static org.oakgp.Type.doubleType;
 import static org.oakgp.Type.integerType;
 import static org.oakgp.Type.longType;
+import static org.oakgp.Type.mapType;
 import static org.oakgp.Type.stringType;
 import static org.oakgp.util.Utils.FALSE_NODE;
 import static org.oakgp.util.Utils.TRUE_NODE;
@@ -76,6 +77,10 @@ public final class NodeReader implements Closeable {
    private static final String ARRAY_START_STRING = "" + ARRAY_START_CHAR;
    private static final char ARRAY_END_CHAR = ']';
    private static final String ARRAY_END_STRING = "" + ARRAY_END_CHAR;
+   private static final char MAP_START_CHAR = '{';
+   private static final String MAP_START_STRING = "" + MAP_START_CHAR;
+   private static final char MAP_END_CHAR = '}';
+   private static final String MAP_END_STRING = "" + MAP_END_CHAR;
 
    private final Map<Predicate<String>, java.util.function.Function<String, Node>> readers;
    private final CharReader cr;
@@ -139,6 +144,10 @@ public final class NodeReader implements Closeable {
             return ARRAY_START_STRING;
          case ARRAY_END_CHAR:
             return ARRAY_END_STRING;
+         case MAP_START_CHAR:
+            return MAP_START_STRING;
+         case MAP_END_CHAR:
+            return MAP_END_STRING;
          default:
             assertNotEndOfStream(c);
             StringBuilder sb = new StringBuilder();
@@ -158,12 +167,14 @@ public final class NodeReader implements Closeable {
             return createStringConstantNode();
          case ARRAY_START_STRING:
             return createArrayConstantNode();
+         case MAP_START_STRING:
+            return createMapConstantNode();
          default:
             return createNode(firstToken);
       }
    }
 
-   private Node createFunctionNode() throws IOException {
+   private FunctionNode createFunctionNode() throws IOException {
       String functionName = nextToken();
       List<Node> arguments = new ArrayList<>();
       List<Type> types = new ArrayList<>();
@@ -187,14 +198,19 @@ public final class NodeReader implements Closeable {
             return f;
          }
       }
-      throw new IllegalArgumentException("Could not find version of function: " + functionName + " for: " + types + " in: " + Arrays.toString(functions));
+
+      StringBuilder sb = new StringBuilder();
+      for (Function f : functions) {
+         sb.append(" [name: " + f.getDisplayName() + " arguments: " + f.getSignature().getArgumentTypes() + "]");
+      }
+      throw new IllegalArgumentException("Could not find version of function: " + functionName + " for: " + types + " in:" + sb);
    }
 
    private boolean isMatch(String functionName, List<Type> types, Function f) {
       return functionName.equals(f.getDisplayName()) && types.equals(f.getSignature().getArgumentTypes());
    }
 
-   private Node createStringConstantNode() throws IOException {
+   private ConstantNode createStringConstantNode() throws IOException {
       StringBuilder sb = new StringBuilder();
       int next;
       while ((next = cr.next()) != STRING_CHAR) {
@@ -204,7 +220,7 @@ public final class NodeReader implements Closeable {
       return new ConstantNode(sb.toString(), stringType());
    }
 
-   private Node createArrayConstantNode() throws IOException {
+   private ConstantNode createArrayConstantNode() throws IOException {
       List<Node> arguments = new ArrayList<>();
       String nextToken;
       Type t = null;
@@ -217,6 +233,7 @@ public final class NodeReader implements Closeable {
          }
          arguments.add(n);
       }
+      // TODO what is the correct behaviour when the array is empty?
       return new ConstantNode(createArguments(arguments), arrayType(t));
    }
 
@@ -224,9 +241,71 @@ public final class NodeReader implements Closeable {
       return !ARRAY_END_STRING.equals(token);
    }
 
+   private ConstantNode createMapConstantNode() throws IOException {
+      Map<Node, Node> map = new LinkedHashMap<>();
+      String nextToken;
+      Type keyType = null;
+      Type valueType = null;
+      while (notMapEnd(nextToken = nextToken())) {
+         Node key = nextNode(nextToken);
+
+         String valueToken = nextToken();
+         if (isMapEnd(valueToken)) {
+            throw new IllegalStateException("No value specified for key: " + key);
+         }
+         Node value = nextNode(valueToken);
+
+         if (keyType == null) {
+            keyType = key.getType();
+            valueType = value.getType();
+         } else if (keyType != key.getType()) {
+            throw new IllegalStateException("Mixed type map keys: " + keyType + " and " + key.getType());
+         } else if (valueType != value.getType()) {
+            throw new IllegalStateException("Mixed type map values: " + valueType + " and " + value.getType());
+         }
+
+         map.put(key, value);
+      }
+      // TODO what is the correct behaviour when the map is empty?
+      return new ConstantNode(map, mapType(keyType, valueType));
+   }
+
+   private boolean notMapEnd(String token) {
+      return !isMapEnd(token);
+   }
+
+   private boolean isMapEnd(String token) {
+      return MAP_END_STRING.equals(token);
+   }
+
    private Node createNode(String token) {
       return readers.entrySet().stream().filter(e -> e.getKey().test(token)).map(Map.Entry::getValue).findFirst()
             .orElseThrow(() -> new IllegalArgumentException(token)).apply(token);
+   }
+
+   private VariableNode getVariable(String firstToken) {
+      int id = Integer.parseInt(firstToken.substring(1));
+      return variableSet.getById(id);
+   }
+
+   private ConstantNode createLongConstant(String token) {
+      return new ConstantNode(Long.valueOf(token.substring(0, token.length() - 1)), longType());
+   }
+
+   private ConstantNode createBigIntegerConstant(String token) {
+      return new ConstantNode(toBigInteger(token.substring(0, token.length() - 1)), bigIntegerType());
+   }
+
+   private ConstantNode createBigDecimalConstant(String token) {
+      return new ConstantNode(toBigDecimal(token.substring(0, token.length() - 1)), bigDecimalType());
+   }
+
+   private ConstantNode createDoubleConstant(String token) {
+      return new ConstantNode(Double.valueOf(token.substring(0, token.length())), doubleType());
+   }
+
+   private ConstantNode createIntegerConstant(String token) {
+      return new ConstantNode(Integer.valueOf(token), integerType());
    }
 
    private boolean isConstant(String token) {
@@ -240,31 +319,6 @@ public final class NodeReader implements Closeable {
          }
       }
       return null;
-   }
-
-   private VariableNode getVariable(String firstToken) {
-      int id = Integer.parseInt(firstToken.substring(1));
-      return variableSet.getById(id);
-   }
-
-   private ConstantNode createIntegerConstant(String token) {
-      return new ConstantNode(Integer.valueOf(token), integerType());
-   }
-
-   private ConstantNode createLongConstant(String token) {
-      return new ConstantNode(Long.valueOf(token.substring(0, token.length() - 1)), longType());
-   }
-
-   private ConstantNode createDoubleConstant(String token) {
-      return new ConstantNode(Double.valueOf(token.substring(0, token.length())), doubleType());
-   }
-
-   private ConstantNode createBigIntegerConstant(String token) {
-      return new ConstantNode(toBigInteger(token.substring(0, token.length() - 1)), bigIntegerType());
-   }
-
-   private ConstantNode createBigDecimalConstant(String token) {
-      return new ConstantNode(toBigDecimal(token.substring(0, token.length() - 1)), bigDecimalType());
    }
 
    private ConstantNode createFunctionConstant(String token) {
@@ -299,6 +353,7 @@ public final class NodeReader implements Closeable {
 
    private static Type getFunctionType(Function function) {
       Signature signature = function.getSignature();
+      // TODO call signature.getArgumentTypes instead
       Type[] types = new Type[signature.getArgumentTypesLength() + 1];
       types[0] = signature.getReturnType();
       for (int i = 1; i < types.length; i++) {
@@ -362,8 +417,8 @@ public final class NodeReader implements Closeable {
    }
 
    private static boolean isFunctionIdentifierPart(int c) {
-      return c != FUNCTION_END_CHAR && c != FUNCTION_START_CHAR && c != ARRAY_START_CHAR && c != ARRAY_END_CHAR && c != STRING_CHAR
-            && !Character.isWhitespace(c);
+      return c != FUNCTION_END_CHAR && c != FUNCTION_START_CHAR && c != ARRAY_START_CHAR && c != ARRAY_END_CHAR && c != MAP_START_CHAR && c != MAP_END_CHAR
+            && c != STRING_CHAR && !Character.isWhitespace(c);
    }
 
    private static BigInteger toBigInteger(String number) {

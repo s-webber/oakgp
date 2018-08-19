@@ -31,10 +31,12 @@ import static org.oakgp.util.Void.VOID;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.junit.Test;
 import org.oakgp.Arguments;
+import org.oakgp.Type;
 import org.oakgp.function.Function;
 import org.oakgp.function.classify.IsPositive;
 import org.oakgp.node.ConstantNode;
@@ -238,6 +240,31 @@ public class NodeReaderTest {
    }
 
    @Test
+   public void testMap() throws IOException {
+      LinkedHashMap<Object, Object> expected = new LinkedHashMap<>();
+      expected.put(new ConstantNode("a", Type.stringType()), new ConstantNode(5, Type.integerType()));
+      expected.put(new ConstantNode("b", Type.stringType()), new ConstantNode(42, Type.integerType()));
+      expected.put(new ConstantNode("c", Type.stringType()), new ConstantNode(7, Type.integerType()));
+
+      assertParseLiteral("{\"a\" 5 \"b\" 42 \"c\" 7}", expected);
+   }
+
+   @Test
+   public void testMapMixedKeyTypes() throws IOException {
+      assertReadException("{\"a\" 5 6 42 \"c\" 7}", "Mixed type map keys: string and integer");
+   }
+
+   @Test
+   public void testMapMixedValueTypes() throws IOException {
+      assertReadException("{\"a\" 5 \"b\" \"42\" \"c\" 7}", "Mixed type map values: integer and string");
+   }
+
+   @Test
+   public void testMapEmpty() throws IOException {
+      assertParseLiteral("{}", new LinkedHashMap<>());
+   }
+
+   @Test
    public void testUnknown() throws IOException {
       String input = "TEST";
       try (NodeReader r = new NodeReader(input, new Function[0], new ConstantNode[0], VariableSet.createVariableSet())) {
@@ -311,6 +338,7 @@ public class NodeReaderTest {
 
    private void assertParseLiteral(String input, Object expected) {
       Node output = readConstant(input);
+      assertSame(ConstantNode.class, output.getClass());
       assertSame(expected.getClass(), output.evaluate(null).getClass());
       assertEquals(expected.toString(), output.toString());
       assertEquals(expected, output.evaluate(null));
