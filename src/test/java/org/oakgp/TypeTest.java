@@ -62,13 +62,13 @@ public class TypeTest {
    }
 
    @Test
-   public void testIntegerArray() {
-      assertArrayType("integer", Type::integerArrayType);
+   public void testIntegerList() {
+      assertListType("integer", Type::integerListType);
    }
 
    @Test
-   public void testBooleanArray() {
-      assertArrayType("boolean", Type::booleanArrayType);
+   public void testBooleanList() {
+      assertListType("boolean", Type::booleanListType);
    }
 
    @Test
@@ -84,8 +84,8 @@ public class TypeTest {
    }
 
    @Test
-   public void testNullableBooleanArray() {
-      assertNullableType("array [boolean]", Type::booleanArrayType);
+   public void testNullableBooleanList() {
+      assertNullableType("list [boolean]", Type::booleanListType);
    }
 
    @Test
@@ -121,10 +121,10 @@ public class TypeTest {
    public void testNotEquals() {
       // different core types
       assertNotEquals(Type.booleanType(), Type.stringType());
-      // array vs. core type
-      assertNotEquals(Type.booleanType(), Type.booleanArrayType());
-      // different arrays
-      assertNotEquals(Type.booleanArrayType(), Type.integerArrayType());
+      // list vs. core type
+      assertNotEquals(Type.booleanType(), Type.booleanListType());
+      // different lists
+      assertNotEquals(Type.booleanListType(), Type.integerListType());
       // different functions
       assertNotEquals(Type.functionType(Type.integerType(), Type.stringType()), Type.functionType(Type.stringType(), Type.integerType()));
    }
@@ -173,11 +173,11 @@ public class TypeTest {
       assertEquals(name, t.toString());
    }
 
-   private void assertArrayType(String name, Supplier<Type> s) {
+   private void assertListType(String name, Supplier<Type> s) {
       Type t = s.get();
       assertSame(t, s.get());
-      assertSame(t, Type.arrayType(Type.type(name)));
-      assertEquals("array [" + name + "]", t.toString());
+      assertSame(t, Type.listType(Type.type(name)));
+      assertEquals("list [" + name + "]", t.toString());
    }
 
    private void assertNullableType(String name, Supplier<Type> s) {

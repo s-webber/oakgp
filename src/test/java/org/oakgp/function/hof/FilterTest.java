@@ -15,7 +15,7 @@
  */
 package org.oakgp.function.hof;
 
-import static org.oakgp.TestUtils.createArguments;
+import static org.oakgp.TestUtils.createList;
 import static org.oakgp.Type.integerType;
 
 import org.oakgp.function.AbstractFunctionTest;
@@ -32,9 +32,9 @@ public class FilterTest extends AbstractFunctionTest {
 
    @Override
    public void testEvaluate() {
-      evaluate("(filter pos? [2 -12 8 -3 -7 6])").to(createArguments("2", "8", "6"));
-      evaluate("(filter neg? [2 -12 8 -3 -7 6])").to(createArguments("-12", "-3", "-7"));
-      evaluate("(filter zero? [2 -12 8 -3 -7 6])").to(createArguments());
+      evaluate("(filter pos? [2 -12 8 -3 -7 6])").to(createList("2", "8", "6"));
+      evaluate("(filter neg? [2 -12 8 -3 -7 6])").to(createList("-12", "-3", "-7"));
+      evaluate("(filter zero? [2 -12 8 -3 -7 6])").to(createList());
    }
 
    @Override

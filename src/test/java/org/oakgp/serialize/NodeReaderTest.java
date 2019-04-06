@@ -15,6 +15,8 @@
  */
 package org.oakgp.serialize;
 
+import static java.util.Collections.emptyList;
+import static java.util.Collections.unmodifiableList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
@@ -31,11 +33,11 @@ import static org.oakgp.util.Void.VOID;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.junit.Test;
-import org.oakgp.Arguments;
 import org.oakgp.Type;
 import org.oakgp.function.Function;
 import org.oakgp.function.classify.IsPositive;
@@ -173,20 +175,20 @@ public class NodeReaderTest {
    }
 
    @Test
-   public void testEmptyArray() {
-      assertParseLiteral("[]", Arguments.createArguments());
+   public void testEmptyList() {
+      assertParseLiteral("[]", unmodifiableList(emptyList()));
    }
 
    @Test
-   public void testTypeArray() {
-      Arguments expected = Arguments.createArguments(new ConstantNode(9, integerType()), new ConstantNode(2, integerType()), createVariable(0),
+   public void testTypeList() {
+      List<Node> expected = Arrays.asList(new ConstantNode(9, integerType()), new ConstantNode(2, integerType()), createVariable(0),
             new ConstantNode(7, integerType()));
-      assertParseLiteral("[9 2 v0 7]", expected);
+      assertParseLiteral("[9 2 v0 7]", unmodifiableList(expected));
    }
 
    @Test
-   public void testMixedTypeArray() {
-      assertReadException("[true 9 false v0]", "Mixed type array elements: boolean and integer");
+   public void testMixedTypeList() {
+      assertReadException("[true 9 false v0]", "Mixed type list elements: boolean and integer");
    }
 
    @Test

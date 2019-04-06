@@ -17,7 +17,8 @@ package org.oakgp.function.coll;
 
 import static org.oakgp.Type.integerType;
 
-import org.oakgp.Arguments;
+import java.util.Collections;
+
 import org.oakgp.Type;
 import org.oakgp.function.AbstractFunctionTest;
 import org.oakgp.node.ConstantNode;
@@ -30,7 +31,7 @@ public class CountTest extends AbstractFunctionTest {
 
    @Override
    public void testEvaluate() {
-      ConstantNode emptyList = new ConstantNode(Arguments.createArguments(), Type.arrayType(Type.integerType()));
+      ConstantNode emptyList = new ConstantNode(Collections.emptyList(), Type.listType(Type.integerType()));
       evaluate("(count v0)").assigned(emptyList).to(0);
       evaluate("(count [2 -12 8])").to(3);
       evaluate("(count [2 -12 8 -3 -7])").to(5);

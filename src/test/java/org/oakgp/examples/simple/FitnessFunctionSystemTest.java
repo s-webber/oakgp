@@ -16,9 +16,9 @@
 package org.oakgp.examples.simple;
 
 import static org.oakgp.Assignments.createAssignments;
-import static org.oakgp.TestUtils.createArguments;
+import static org.oakgp.TestUtils.createList;
 import static org.oakgp.Type.booleanType;
-import static org.oakgp.Type.integerArrayType;
+import static org.oakgp.Type.integerListType;
 import static org.oakgp.Type.integerToBooleanFunctionType;
 import static org.oakgp.Type.integerType;
 import static org.oakgp.rank.fitness.TestDataFitnessFunction.createIntegerTestDataFitnessFunction;
@@ -33,7 +33,6 @@ import java.util.Map;
 import java.util.Random;
 
 import org.junit.Test;
-import org.oakgp.Arguments;
 import org.oakgp.Assignments;
 import org.oakgp.Type;
 import org.oakgp.function.Function;
@@ -85,8 +84,8 @@ public class FitnessFunctionSystemTest {
       }));
 
       new RunBuilder().setReturnType(integerType()).setConstants(constants).setVariables(variableTypes).setFunctions(ARITHMETIC_FUNCTIONS)
-      .setFitnessFunction(fitnessFunction).setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_POPULATION_MAX_DEPTH)
-      .setMaxGenerations(NUM_GENERATIONS).process();
+            .setFitnessFunction(fitnessFunction).setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_POPULATION_MAX_DEPTH)
+            .setMaxGenerations(NUM_GENERATIONS).process();
    }
 
    @Test
@@ -102,8 +101,8 @@ public class FitnessFunctionSystemTest {
       }));
 
       new RunBuilder().setReturnType(integerType()).setConstants(constants).setVariables(variableTypes).setFunctions(ARITHMETIC_FUNCTIONS)
-      .setFitnessFunction(fitnessFunction).setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_POPULATION_MAX_DEPTH)
-      .setMaxGenerations(NUM_GENERATIONS).process();
+            .setFitnessFunction(fitnessFunction).setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_POPULATION_MAX_DEPTH)
+            .setMaxGenerations(NUM_GENERATIONS).process();
    }
 
    @Test
@@ -121,8 +120,8 @@ public class FitnessFunctionSystemTest {
       }));
 
       new RunBuilder().setReturnType(integerType()).setConstants(constants).setVariables(variableTypes).setFunctions(functions)
-      .setFitnessFunction(fitnessFunction).setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_POPULATION_MAX_DEPTH)
-      .setMaxGenerations(NUM_GENERATIONS).process();
+            .setFitnessFunction(fitnessFunction).setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_POPULATION_MAX_DEPTH)
+            .setMaxGenerations(NUM_GENERATIONS).process();
    }
 
    @Test
@@ -132,27 +131,27 @@ public class FitnessFunctionSystemTest {
       IsZero isZero = new IsZero();
       ConstantNode[] constants = { new ConstantNode(Boolean.TRUE, booleanType()), new ConstantNode(Boolean.FALSE, booleanType()),
             new ConstantNode(isPositive, integerToBooleanFunctionType()), new ConstantNode(isNegative, integerToBooleanFunctionType()),
-            new ConstantNode(isZero, integerToBooleanFunctionType()), new ConstantNode(Arguments.createArguments(), integerArrayType()),
+            new ConstantNode(isZero, integerToBooleanFunctionType()), new ConstantNode(Collections.emptyList(), integerListType()),
             new ConstantNode(0, integerType()) };
-      Type[] variableTypes = { integerArrayType() };
+      Type[] variableTypes = { integerListType() };
       List<Function> functions = new ArrayList<>();
       Collections.addAll(functions, ARITHMETIC_FUNCTIONS);
       Collections.addAll(functions, new Function[] { new Filter(integerType()), isPositive, isNegative, isZero, new Count(integerType()) });
 
       Map<Assignments, Integer> testData = new HashMap<>();
-      testData.put(createAssignments(createArguments("0", "0", "0", "0", "0", "0", "0", "0")), 8);
-      testData.put(createAssignments(createArguments("6", "3", "4", "0", "2", "4", "1", "3")), 1);
-      testData.put(createAssignments(createArguments("0", "0", "4", "0", "0", "0", "1", "0")), 6);
-      testData.put(createAssignments(createArguments("1", "-1", "2", "5", "4", "-2")), 0);
-      testData.put(createAssignments(createArguments("1", "0", "2", "5", "4", "-2")), 1);
-      testData.put(createAssignments(createArguments("1", "0", "2", "5", "4", "0")), 2);
-      testData.put(createAssignments(createArguments("-2", "0", "8", "7", "0", "-3", "0")), 3);
-      testData.put(createAssignments(createArguments("0", "0", "0")), 3);
+      testData.put(createAssignments(createList("0", "0", "0", "0", "0", "0", "0", "0")), 8);
+      testData.put(createAssignments(createList("6", "3", "4", "0", "2", "4", "1", "3")), 1);
+      testData.put(createAssignments(createList("0", "0", "4", "0", "0", "0", "1", "0")), 6);
+      testData.put(createAssignments(createList("1", "-1", "2", "5", "4", "-2")), 0);
+      testData.put(createAssignments(createList("1", "0", "2", "5", "4", "-2")), 1);
+      testData.put(createAssignments(createList("1", "0", "2", "5", "4", "0")), 2);
+      testData.put(createAssignments(createList("-2", "0", "8", "7", "0", "-3", "0")), 3);
+      testData.put(createAssignments(createList("0", "0", "0")), 3);
       FitnessFunction fitnessFunction = createIntegerTestDataFitnessFunction(testData);
 
       new RunBuilder().setReturnType(integerType()).setConstants(constants).setVariables(variableTypes).setFunctions(functions)
-      .setFitnessFunction(fitnessFunction).setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_POPULATION_MAX_DEPTH)
-      .setMaxGenerations(NUM_GENERATIONS).process();
+            .setFitnessFunction(fitnessFunction).setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_POPULATION_MAX_DEPTH)
+            .setMaxGenerations(NUM_GENERATIONS).process();
    }
 
    private static Map<Assignments, Integer> createTests(int numVariables, java.util.function.Function<Assignments, Integer> f) {

@@ -21,7 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Represents a data type.
  * <p>
- * e.g. integer, boolean, string, array, function.
+ * e.g. integer, boolean, string, list, map, function.
  */
 public final class Type implements Comparable<Type> {
    private static final String NULLABLE = "nullable";
@@ -97,19 +97,19 @@ public final class Type implements Comparable<Type> {
       return type("function", signature);
    }
 
-   /** Returns the type associated with a {@code Arguments} containing elements of type {@link #integerType()}. */
-   public static Type integerArrayType() {
-      return arrayType(integerType());
+   /** Returns the type associated with a {@code java.util.List} containing elements of type {@link #integerType()}. */
+   public static Type integerListType() {
+      return listType(integerType());
    }
 
-   /** Returns the type associated with a {@code Arguments} containing elements of type {@link #booleanType()}. */
-   public static Type booleanArrayType() {
-      return arrayType(booleanType());
+   /** Returns the type associated with a {@code java.util.List} containing elements of type {@link #booleanType()}. */
+   public static Type booleanListType() {
+      return listType(booleanType());
    }
 
-   /** Returns the type associated with a {@code Arguments} containing elements of the specified type. */
-   public static Type arrayType(Type t) {
-      return type("array", t);
+   /** Returns the type associated with a {@code java.util.List} containing elements of the specified type. */
+   public static Type listType(Type t) {
+      return type("list", t);
    }
 
    /** Returns the type associated with a map collection containing entries of the specified key and value types. */

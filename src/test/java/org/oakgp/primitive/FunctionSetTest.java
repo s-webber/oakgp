@@ -19,9 +19,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.oakgp.TestUtils.assertUnmodifiable;
-import static org.oakgp.Type.booleanArrayType;
+import static org.oakgp.Type.booleanListType;
 import static org.oakgp.Type.booleanType;
-import static org.oakgp.Type.integerArrayType;
+import static org.oakgp.Type.integerListType;
 import static org.oakgp.Type.integerType;
 import static org.oakgp.Type.stringType;
 import static org.oakgp.function.Signature.createSignature;
@@ -89,11 +89,11 @@ public class FunctionSetTest {
       assertSame(ADD, integers.get(0));
       assertSame(SUBTRACT, integers.get(1));
 
-      List<Function> integerArrays = functionSet.getBySignature(createSignature(integerType(), integerArrayType()));
+      List<Function> integerArrays = functionSet.getBySignature(createSignature(integerType(), integerListType()));
       assertEquals(1, integerArrays.size());
       assertSame(countIntegerArray, integerArrays.get(0));
 
-      List<Function> booleanArrays = functionSet.getBySignature(createSignature(integerType(), booleanArrayType()));
+      List<Function> booleanArrays = functionSet.getBySignature(createSignature(integerType(), booleanListType()));
       assertEquals(1, booleanArrays.size());
       assertSame(countBooleanArray, booleanArrays.get(0));
 

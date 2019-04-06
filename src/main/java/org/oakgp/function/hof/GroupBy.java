@@ -15,11 +15,13 @@
  */
 package org.oakgp.function.hof;
 
-import static org.oakgp.Type.arrayType;
+import static java.util.Collections.unmodifiableMap;
+import static org.oakgp.Type.listType;
 import static org.oakgp.Type.functionType;
 import static org.oakgp.Type.mapType;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 
 import org.oakgp.Arguments;
@@ -34,20 +36,19 @@ public class GroupBy implements Function {
    private final Signature signature;
 
    public GroupBy(Type input, Type key) {
-      signature = Signature.createSignature(mapType(key, arrayType(input)), functionType(key, input), arrayType(input));
+      signature = Signature.createSignature(mapType(key, listType(input)), functionType(key, input), listType(input));
    }
 
    @Override
    public Object evaluate(Arguments arguments, Assignments assignments) {
       Function f = arguments.firstArg().evaluate(assignments);
-      Arguments candidates = arguments.secondArg().evaluate(assignments);
+      Collection<Node> candidates = arguments.secondArg().evaluate(assignments);
       LinkedHashMap<Object, ArrayList<Object>> result = new LinkedHashMap<>();
-      for (int i = 0; i < candidates.getArgCount(); i++) {
-         Node inputNode = candidates.getArg(i);
+      for (Node inputNode : candidates) {
          Object evaluateResult = f.evaluate(Arguments.createArguments(inputNode), assignments);
          result.computeIfAbsent(evaluateResult, k -> new ArrayList<>()).add(inputNode.evaluate(assignments));
       }
-      return result;
+      return unmodifiableMap(result);
    }
 
    @Override

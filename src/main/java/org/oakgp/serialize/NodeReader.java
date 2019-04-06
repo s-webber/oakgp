@@ -15,12 +15,13 @@
  */
 package org.oakgp.serialize;
 
+import static java.util.Collections.unmodifiableList;
 import static org.oakgp.Arguments.createArguments;
-import static org.oakgp.Type.arrayType;
 import static org.oakgp.Type.bigDecimalType;
 import static org.oakgp.Type.bigIntegerType;
 import static org.oakgp.Type.doubleType;
 import static org.oakgp.Type.integerType;
+import static org.oakgp.Type.listType;
 import static org.oakgp.Type.longType;
 import static org.oakgp.Type.mapType;
 import static org.oakgp.Type.stringType;
@@ -73,10 +74,10 @@ public final class NodeReader implements Closeable {
    private static final String FUNCTION_END_STRING = "" + FUNCTION_END_CHAR;
    private static final char STRING_CHAR = '\"';
    private static final String STRING_STRING = "" + STRING_CHAR;
-   private static final char ARRAY_START_CHAR = '[';
-   private static final String ARRAY_START_STRING = "" + ARRAY_START_CHAR;
-   private static final char ARRAY_END_CHAR = ']';
-   private static final String ARRAY_END_STRING = "" + ARRAY_END_CHAR;
+   private static final char LIST_START_CHAR = '[';
+   private static final String LIST_START_STRING = "" + LIST_START_CHAR;
+   private static final char LIST_END_CHAR = ']';
+   private static final String LIST_END_STRING = "" + LIST_END_CHAR;
    private static final char MAP_START_CHAR = '{';
    private static final String MAP_START_STRING = "" + MAP_START_CHAR;
    private static final char MAP_END_CHAR = '}';
@@ -140,10 +141,10 @@ public final class NodeReader implements Closeable {
             return FUNCTION_END_STRING;
          case STRING_CHAR:
             return STRING_STRING;
-         case ARRAY_START_CHAR:
-            return ARRAY_START_STRING;
-         case ARRAY_END_CHAR:
-            return ARRAY_END_STRING;
+         case LIST_START_CHAR:
+            return LIST_START_STRING;
+         case LIST_END_CHAR:
+            return LIST_END_STRING;
          case MAP_START_CHAR:
             return MAP_START_STRING;
          case MAP_END_CHAR:
@@ -165,8 +166,8 @@ public final class NodeReader implements Closeable {
             return createFunctionNode();
          case STRING_STRING:
             return createStringConstantNode();
-         case ARRAY_START_STRING:
-            return createArrayConstantNode();
+         case LIST_START_STRING:
+            return createListConstantNode();
          case MAP_START_STRING:
             return createMapConstantNode();
          default:
@@ -220,25 +221,25 @@ public final class NodeReader implements Closeable {
       return new ConstantNode(sb.toString(), stringType());
    }
 
-   private ConstantNode createArrayConstantNode() throws IOException {
+   private ConstantNode createListConstantNode() throws IOException {
       List<Node> arguments = new ArrayList<>();
       String nextToken;
       Type t = null;
-      while (notArrayEnd(nextToken = nextToken())) {
+      while (notListEnd(nextToken = nextToken())) {
          Node n = nextNode(nextToken);
          if (t == null) {
             t = n.getType();
          } else if (t != n.getType()) {
-            throw new IllegalStateException("Mixed type array elements: " + t + " and " + n.getType());
+            throw new IllegalStateException("Mixed type list elements: " + t + " and " + n.getType());
          }
          arguments.add(n);
       }
-      // TODO what is the correct behaviour when the array is empty?
-      return new ConstantNode(createArguments(arguments), arrayType(t));
+      // TODO what is the correct behaviour when the list is empty?
+      return new ConstantNode(unmodifiableList(arguments), listType(t));
    }
 
-   private boolean notArrayEnd(String token) {
-      return !ARRAY_END_STRING.equals(token);
+   private boolean notListEnd(String token) {
+      return !LIST_END_STRING.equals(token);
    }
 
    private ConstantNode createMapConstantNode() throws IOException {
@@ -400,7 +401,7 @@ public final class NodeReader implements Closeable {
     * <p>
     * A {@code String} is considered suitable as a display name for a {@code Function} - as returned from {@link Function#getDisplayName()} - if it can be
     * successfully parsed by a {@code NodeReader}. Suitable function names do not start with a number or contain any of the special characters used to represent
-    * the start or end of functions (i.e. {@code (} and {@code )}), arrays (i.e. {@code [} and {@code ]}) or strings (i.e. {@code "}).
+    * the start or end of functions (i.e. '(' and ')'), lists (i.e. '[' and ']'), maps (i.e. '{' and '}') or strings (i.e. '"').
     */
    public static boolean isValidDisplayName(String displayName) {
       if (displayName == null || displayName.length() == 0 || isNumber(displayName)) {
@@ -417,7 +418,7 @@ public final class NodeReader implements Closeable {
    }
 
    private static boolean isFunctionIdentifierPart(int c) {
-      return c != FUNCTION_END_CHAR && c != FUNCTION_START_CHAR && c != ARRAY_START_CHAR && c != ARRAY_END_CHAR && c != MAP_START_CHAR && c != MAP_END_CHAR
+      return c != FUNCTION_END_CHAR && c != FUNCTION_START_CHAR && c != LIST_START_CHAR && c != LIST_END_CHAR && c != MAP_START_CHAR && c != MAP_END_CHAR
             && c != STRING_CHAR && !Character.isWhitespace(c);
    }
 

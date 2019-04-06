@@ -15,14 +15,17 @@
  */
 package org.oakgp.function.coll;
 
-import static org.oakgp.Type.arrayType;
+import static org.oakgp.Type.listType;
 import static org.oakgp.Type.integerType;
+
+import java.util.Collection;
 
 import org.oakgp.Arguments;
 import org.oakgp.Assignments;
 import org.oakgp.Type;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
+import org.oakgp.node.Node;
 
 /** Determines the number of elements contained in a collection. */
 public final class Count implements Function {
@@ -30,13 +33,13 @@ public final class Count implements Function {
 
    /** Constructs a function to return the number of items in collections of the specified type. */
    public Count(Type t) {
-      signature = Signature.createSignature(integerType(), arrayType(t));
+      signature = Signature.createSignature(integerType(), listType(t));
    }
 
    @Override
    public Object evaluate(Arguments arguments, Assignments assignments) {
-      Arguments a = arguments.firstArg().evaluate(assignments);
-      return a.getArgCount();
+      Collection<Node> a = arguments.firstArg().evaluate(assignments);
+      return a.size();
    }
 
    @Override

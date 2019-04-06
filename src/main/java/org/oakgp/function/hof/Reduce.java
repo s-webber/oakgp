@@ -16,8 +16,10 @@
 package org.oakgp.function.hof;
 
 import static org.oakgp.Arguments.createArguments;
-import static org.oakgp.Type.arrayType;
+import static org.oakgp.Type.listType;
 import static org.oakgp.Type.functionType;
+
+import java.util.Collection;
 
 import org.oakgp.Arguments;
 import org.oakgp.Assignments;
@@ -49,16 +51,16 @@ public final class Reduce implements Function {
     *           the type of the elements contained in the collection - this will also be the type associated with the value produced by evaluating this function
     */
    public Reduce(Type type) {
-      signature = Signature.createSignature(type, functionType(type, type, type), type, arrayType(type));
+      signature = Signature.createSignature(type, functionType(type, type, type), type, listType(type));
    }
 
    @Override
    public Object evaluate(Arguments arguments, Assignments assignments) {
       Function f = arguments.firstArg().evaluate(assignments);
       Node result = arguments.secondArg();
-      Arguments candidates = arguments.thirdArg().evaluate(assignments);
-      for (int i = 0; i < candidates.getArgCount(); i++) {
-         result = new ConstantNode(f.evaluate(createArguments(result, candidates.getArg(i)), assignments), f.getSignature().getReturnType());
+      Collection<Node> candidates = arguments.thirdArg().evaluate(assignments);
+      for (Node n : candidates) {
+         result = new ConstantNode(f.evaluate(createArguments(result, n), assignments), f.getSignature().getReturnType());
       }
       return result.evaluate(assignments);
    }

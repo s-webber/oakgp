@@ -15,10 +15,12 @@
  */
 package org.oakgp.function.hof;
 
-import static org.oakgp.Type.arrayType;
+import static java.util.Collections.unmodifiableList;
+import static org.oakgp.Type.listType;
 import static org.oakgp.Type.functionType;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.oakgp.Arguments;
@@ -49,22 +51,21 @@ public final class Map implements Function {
     *           the type of the elements contained in the collection returned by the function
     */
    public Map(Type from, Type to) {
-      signature = Signature.createSignature(arrayType(to), functionType(to, from), arrayType(from));
+      signature = Signature.createSignature(listType(to), functionType(to, from), listType(from));
    }
 
    @Override
    public Object evaluate(Arguments arguments, Assignments assignments) {
       Function f = arguments.firstArg().evaluate(assignments);
       Type returnType = f.getSignature().getReturnType();
-      Arguments candidates = arguments.secondArg().evaluate(assignments);
+      Collection<Node> candidates = arguments.secondArg().evaluate(assignments);
       List<Node> result = new ArrayList<>();
-      for (int i = 0; i < candidates.getArgCount(); i++) {
-         Node inputNode = candidates.getArg(i);
+      for (Node inputNode : candidates) {
          Object evaluateResult = f.evaluate(Arguments.createArguments(inputNode), assignments);
          ConstantNode outputNode = new ConstantNode(evaluateResult, returnType);
          result.add(outputNode);
       }
-      return Arguments.createArguments(result.toArray(new Node[result.size()]));
+      return unmodifiableList(result);
    }
 
    @Override

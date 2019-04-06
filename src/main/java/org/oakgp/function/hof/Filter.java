@@ -15,11 +15,13 @@
  */
 package org.oakgp.function.hof;
 
-import static org.oakgp.Type.arrayType;
+import static java.util.Collections.unmodifiableList;
+import static org.oakgp.Type.listType;
 import static org.oakgp.Type.booleanType;
 import static org.oakgp.Type.functionType;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.oakgp.Arguments;
@@ -47,21 +49,20 @@ public final class Filter implements Function {
     *           the type of the elements contained in the collection
     */
    public Filter(Type type) {
-      signature = Signature.createSignature(arrayType(type), functionType(booleanType(), type), arrayType(type));
+      signature = Signature.createSignature(listType(type), functionType(booleanType(), type), listType(type));
    }
 
    @Override
    public Object evaluate(Arguments arguments, Assignments assignments) {
       Function f = arguments.firstArg().evaluate(assignments);
-      Arguments candidates = arguments.secondArg().evaluate(assignments);
+      Collection<Node> candidates = arguments.secondArg().evaluate(assignments);
       List<Node> result = new ArrayList<>();
-      for (int i = 0; i < candidates.getArgCount(); i++) {
-         Node candidate = candidates.getArg(i);
+      for (Node candidate : candidates) {
          if ((Boolean) f.evaluate(Arguments.createArguments(candidate), assignments)) {
             result.add(candidate);
          }
       }
-      return Arguments.createArguments(result.toArray(new Node[result.size()]));
+      return unmodifiableList(result);
    }
 
    @Override

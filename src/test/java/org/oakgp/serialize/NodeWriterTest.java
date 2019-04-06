@@ -24,7 +24,7 @@ import static org.oakgp.TestUtils.doubleConstant;
 import static org.oakgp.TestUtils.integerConstant;
 import static org.oakgp.TestUtils.longConstant;
 import static org.oakgp.TestUtils.stringConstant;
-import static org.oakgp.Type.arrayType;
+import static org.oakgp.Type.listType;
 import static org.oakgp.Type.integerToBooleanFunctionType;
 import static org.oakgp.Type.integerType;
 import static org.oakgp.Type.mapType;
@@ -127,7 +127,7 @@ public class NodeWriterTest {
 
    @Test
    public void testArguments() {
-      ConstantNode input = new ConstantNode(createArguments(integerConstant(6), integerConstant(-2), integerConstant(17)), arrayType(integerType()));
+      ConstantNode input = new ConstantNode(createArguments(integerConstant(6), integerConstant(-2), integerConstant(17)), listType(integerType()));
       String output = new NodeWriter().writeNode(input);
       assertEquals("[6 -2 17]", output);
    }
@@ -135,7 +135,7 @@ public class NodeWriterTest {
    @Test
    public void testFunctionAsArgument() {
       ConstantNode criteria = new ConstantNode(new IsPositive(), integerToBooleanFunctionType());
-      ConstantNode args = new ConstantNode(createArguments(integerConstant(6), integerConstant(-2), integerConstant(17)), arrayType(integerType()));
+      ConstantNode args = new ConstantNode(createArguments(integerConstant(6), integerConstant(-2), integerConstant(17)), listType(integerType()));
       FunctionNode input = new FunctionNode(new Filter(integerType()), criteria, args);
 
       String output = new NodeWriter().writeNode(input);

@@ -34,6 +34,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.oakgp.function.Function;
@@ -150,12 +151,12 @@ public class TestUtils {
       return functions.toArray(new Function[functions.size()]);
    }
 
-   public static Arguments createArguments(String... expressions) {
+   public static List<Node> createList(String... expressions) {
       Node[] args = new Node[expressions.length];
       for (int i = 0; i < expressions.length; i++) {
          args[i] = readNode(expressions[i]);
       }
-      return Arguments.createArguments(args);
+      return Arrays.asList(args);
    }
 
    public static ConstantNode integerConstant(int value) {
