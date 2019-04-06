@@ -70,7 +70,7 @@ public class TreeGeneratorTest {
       PrimitiveSet p = new PrimitiveSetImpl(new FunctionSet(f1, f2), new ConstantSet(c), VariableSet.createVariableSet(type("d")), random, .5);
       TreeGenerator g = TreeGeneratorImpl.full(p);
       Node result = g.generate(type("a"), 3);
-      assertNodeEquals("(f1 (f2 X v0))", result);
+      assertNodeEquals("(f1 (f2 \"X\" v0))", result);
    }
 
    private PrimitiveSet createPrimitiveSet() {

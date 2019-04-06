@@ -23,10 +23,16 @@ import static org.oakgp.TestUtils.createVariable;
 import static org.oakgp.TestUtils.doubleConstant;
 import static org.oakgp.TestUtils.integerConstant;
 import static org.oakgp.TestUtils.longConstant;
+import static org.oakgp.TestUtils.stringConstant;
 import static org.oakgp.Type.arrayType;
 import static org.oakgp.Type.integerToBooleanFunctionType;
 import static org.oakgp.Type.integerType;
+import static org.oakgp.Type.mapType;
+import static org.oakgp.Type.stringType;
 import static org.oakgp.util.Void.VOID_CONSTANT;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.junit.Test;
 import org.oakgp.function.classify.IsPositive;
@@ -36,6 +42,13 @@ import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 
 public class NodeWriterTest {
+   @Test
+   public void testStringConstantNode() {
+      NodeWriter writer = new NodeWriter();
+      String output = writer.writeNode(stringConstant("hello, world!"));
+      assertEquals("\"hello, world!\"", output);
+   }
+
    @Test
    public void testIntegerConstantNode() {
       NodeWriter writer = new NodeWriter();
@@ -99,6 +112,17 @@ public class NodeWriterTest {
       FunctionNode arg2 = new FunctionNode(IntegerUtils.INTEGER_UTILS.getMultiply(), createVariable(1), integerConstant(-6876));
       String output = writer.writeNode(new FunctionNode(IntegerUtils.INTEGER_UTILS.getAdd(), arg1, arg2));
       assertEquals("(+ (- 5 v0) (* v1 -6876))", output);
+   }
+
+   @Test
+   public void testMap() {
+      Map<Object, Object> map = new LinkedHashMap<>();
+      map.put("a", 2);
+      map.put("b", 5);
+      map.put("c", 9);
+      ConstantNode input = new ConstantNode(map, mapType(stringType(), integerType()));
+      String output = new NodeWriter().writeNode(input);
+      assertEquals("{\"a\" 2 \"b\" 5 \"c\" 9}", output);
    }
 
    @Test

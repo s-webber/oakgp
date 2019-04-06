@@ -19,6 +19,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.oakgp.Arguments;
 import org.oakgp.function.Function;
@@ -45,10 +46,12 @@ public final class NodeWriter {
 
    /** Creates a {@code NodeWriter} for the purpose of generating textual representations of {@code Node} instances. */
    public NodeWriter() {
+      writers.put(CharSequence.class, o -> "\"" + o.toString().replace("\"", "\\\"") + "\"");
       writers.put(Long.class, o -> o + "L");
       writers.put(BigInteger.class, o -> o + "I");
       writers.put(BigDecimal.class, o -> o + "D");
       writers.put(Function.class, o -> ((Function) o).getDisplayName());
+      writers.put(Map.class, o -> writeMap((Map<?, ?>) o));
       writers.put(Arguments.class, o -> writeArguments((Arguments) o));
    }
 
@@ -84,6 +87,10 @@ public final class NodeWriter {
 
    private String writeConstantNode(Node node) {
       Object value = node.evaluate(null);
+      return writeRawObject(value);
+   }
+
+   private String writeRawObject(Object value) {
       return writers.entrySet().stream().filter(e -> e.getKey().isInstance(value)).map(Map.Entry::getValue).findFirst().orElse(String::valueOf).apply(value);
    }
 
@@ -97,5 +104,9 @@ public final class NodeWriter {
          sb.append(writeNode(args.getArg(i)));
       }
       return sb.append(']').toString();
+   }
+
+   private String writeMap(Map<?, ?> map) {
+      return map.entrySet().stream().map(e -> writeRawObject(e.getKey()) + " " + writeRawObject(e.getValue())).collect(Collectors.joining(" ", "{", "}"));
    }
 }
