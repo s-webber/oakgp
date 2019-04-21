@@ -74,7 +74,7 @@ public class FitnessFunctionSystemTest {
 
    @Test
    public void testTwoVariableArithmeticExpression() {
-      ConstantNode[] constants = createIntegerConstants(0, 11);
+      List<ConstantNode> constants = createIntegerConstants(0, 11);
       Type[] variableTypes = createIntegerTypeArray(2);
 
       FitnessFunction fitnessFunction = createIntegerTestDataFitnessFunction(createTests(variableTypes.length, a -> {
@@ -90,7 +90,7 @@ public class FitnessFunctionSystemTest {
 
    @Test
    public void testThreeVariableArithmeticExpression() {
-      ConstantNode[] constants = createIntegerConstants(0, 11);
+      List<ConstantNode> constants = createIntegerConstants(0, 11);
       Type[] variableTypes = createIntegerTypeArray(3);
 
       FitnessFunction fitnessFunction = createIntegerTestDataFitnessFunction(createTests(variableTypes.length, a -> {
@@ -107,7 +107,7 @@ public class FitnessFunctionSystemTest {
 
    @Test
    public void testTwoVariableBooleanLogicExpression() {
-      ConstantNode[] constants = createIntegerConstants(0, 5);
+      List<ConstantNode> constants = createIntegerConstants(0, 5);
       Type[] variableTypes = createIntegerTypeArray(2);
       Function[] functions = { IntegerUtils.INTEGER_UTILS.getAdd(), IntegerUtils.INTEGER_UTILS.getSubtract(), IntegerUtils.INTEGER_UTILS.getMultiply(),
             LessThan.create(integerType()), LessThanOrEqual.create(integerType()), new GreaterThan(integerType()), new GreaterThanOrEqual(integerType()),

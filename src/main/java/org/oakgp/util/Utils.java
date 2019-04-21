@@ -22,6 +22,7 @@ import static java.util.stream.Collectors.groupingBy;
 import static org.oakgp.Type.booleanType;
 import static org.oakgp.Type.integerType;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -44,34 +45,34 @@ public final class Utils {
    }
 
    /**
-    * Returns an array consisting of a {@code ConstantNode} instance for each of the possible values of the specified enum.
+    * Returns a list consisting of a {@code ConstantNode} instance for each of the possible values of the specified enum.
     *
     * @param e
     *           the enum that the {@code ConstantNode} instances should wrap
     * @param t
     *           the {@code Type} that should be associated with the {@code ConstantNode} instances
     */
-   public static ConstantNode[] createEnumConstants(Class<? extends Enum<?>> e, Type t) {
+   public static List<ConstantNode> createEnumConstants(Class<? extends Enum<?>> e, Type t) {
       Enum<?>[] enumConstants = e.getEnumConstants();
-      ConstantNode[] constants = new ConstantNode[enumConstants.length];
-      for (int i = 0; i < enumConstants.length; i++) {
-         constants[i] = new ConstantNode(enumConstants[i], t);
+      List<ConstantNode> constants = new ArrayList<>(enumConstants.length);
+      for (Enum<?> enumConstant : enumConstants) {
+         constants.add(new ConstantNode(enumConstant, t));
       }
       return constants;
    }
 
    /**
-    * Returns an array consisting of a {@code ConstantNode} instance for each of the integer values in the specified range.
+    * Returns a list consisting of a {@code ConstantNode} instance for each of the integer values in the specified range.
     *
     * @param minInclusive
-    *           the minimum value (inclusive) to be represented by a {@code ConstantNode} in the returned array
+    *           the minimum value (inclusive) to be represented by a {@code ConstantNode} in the returned list
     * @param maxInclusive
-    *           the minimum value (inclusive) to be represented by a {@code ConstantNode} in the returned array
+    *           the minimum value (inclusive) to be represented by a {@code ConstantNode} in the returned list
     */
-   public static ConstantNode[] createIntegerConstants(int minInclusive, int maxInclusive) {
-      ConstantNode[] constants = new ConstantNode[maxInclusive - minInclusive + 1];
-      for (int n = minInclusive, i = 0; n <= maxInclusive; i++, n++) {
-         constants[i] = new ConstantNode(n, integerType());
+   public static List<ConstantNode> createIntegerConstants(int minInclusive, int maxInclusive) {
+      List<ConstantNode> constants = new ArrayList<>(maxInclusive - minInclusive + 1);
+      for (int i = minInclusive; i <= maxInclusive; i++) {
+         constants.add(new ConstantNode(i, integerType()));
       }
       return constants;
    }

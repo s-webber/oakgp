@@ -18,6 +18,8 @@ package org.oakgp.examples.gridwar;
 import static org.oakgp.Type.integerType;
 import static org.oakgp.util.Utils.createIntegerTypeArray;
 
+import java.util.Collection;
+
 import org.oakgp.Type;
 import org.oakgp.function.Function;
 import org.oakgp.function.choice.If;
@@ -48,7 +50,7 @@ public class GridWarExample {
       Function[] functions = { IntegerUtils.INTEGER_UTILS.getAdd(), IntegerUtils.INTEGER_UTILS.getSubtract(), IntegerUtils.INTEGER_UTILS.getMultiply(),
             LessThan.create(integerType()), LessThanOrEqual.create(integerType()), new GreaterThan(integerType()), new GreaterThanOrEqual(integerType()),
             new Equal(integerType()), new NotEqual(integerType()), new If(integerType()) };
-      ConstantNode[] constants = Utils.createIntegerConstants(0, 4);
+      Collection<ConstantNode> constants = Utils.createIntegerConstants(0, 4);
       Type[] variables = createIntegerTypeArray(NUM_VARIABLES);
       Random random = new JavaUtilRandomAdapter();
       // wrap a GridWar object in a FirstPlayerAdvantageGame to avoid bias

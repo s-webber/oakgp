@@ -16,6 +16,7 @@
 package org.oakgp.examples.simple;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.oakgp.Assignments;
@@ -40,7 +41,7 @@ public class SymbolicRegressionExample {
       // the function set will be the addition, subtraction and multiplication arithmetic operators
       Function[] functions = { IntegerUtils.INTEGER_UTILS.getAdd(), IntegerUtils.INTEGER_UTILS.getSubtract(), IntegerUtils.INTEGER_UTILS.getMultiply() };
       // the constant set will contain the integers in the range 0-10 inclusive
-      ConstantNode[] constants = Utils.createIntegerConstants(0, 10);
+      List<ConstantNode> constants = Utils.createIntegerConstants(0, 10);
       // the variable set will contain a single variable - representing the integer value input to the function
       Type[] variableTypes = { Type.integerType() };
       // the fitness function will compare candidates against a data set which maps inputs to their expected outputs

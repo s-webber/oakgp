@@ -17,6 +17,8 @@ package org.oakgp.examples.tictactoe;
 
 import static org.oakgp.Type.type;
 
+import java.util.Collection;
+
 import org.junit.Test;
 import org.oakgp.Assignments;
 import org.oakgp.Type;
@@ -55,7 +57,7 @@ public class TicTacToeSystemTest {
    @Test
    public void testLowLevelTournament() {
       Function[] functions = { new IsFree(), new IsOccupied(), new GetAnyMove(), new IfValidMove(), new OrElse(MOVE_TYPE), new And(), new If(POSSIBLE_MOVE) };
-      ConstantNode[] constants = getMoveConstants();
+      Collection<ConstantNode> constants = getMoveConstants();
       TwoPlayerGame game = createTicTacToeGame();
 
       new RunBuilder().setReturnType(MOVE_TYPE).setConstants(constants).setVariables(VARIABLE_TYPES).setFunctions(functions).setTwoPlayerGame(game)
@@ -65,15 +67,14 @@ public class TicTacToeSystemTest {
    @Test
    public void testLowLevelFitnessFunction() {
       Function[] functions = { new IsFree(), new IsOccupied(), new GetAnyMove(), new IfValidMove(), new OrElse(MOVE_TYPE), new And(), new If(POSSIBLE_MOVE) };
-      ConstantNode[] constants = getMoveConstants();
+      Collection<ConstantNode> constants = getMoveConstants();
       TicTacToeFitnessFunction fitnessFunction = new TicTacToeFitnessFunction();
 
-      new RunBuilder().setReturnType(MOVE_TYPE).setConstants(constants).setVariables(VARIABLE_TYPES).setFunctions(functions)
-            .setFitnessFunction(fitnessFunction).setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_POPULATION_MAX_DEPTH)
-            .setMaxGenerations(NUM_GENERATIONS).process();
+      new RunBuilder().setReturnType(MOVE_TYPE).setConstants(constants).setVariables(VARIABLE_TYPES).setFunctions(functions).setFitnessFunction(fitnessFunction)
+            .setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_POPULATION_MAX_DEPTH).setMaxGenerations(NUM_GENERATIONS).process();
    }
 
-   private ConstantNode[] getMoveConstants() {
+   private Collection<ConstantNode> getMoveConstants() {
       return Utils.createEnumConstants(Move.class, POSSIBLE_MOVE);
    }
 
@@ -83,7 +84,7 @@ public class TicTacToeSystemTest {
 
    private class TicTacToeFitnessFunction implements FitnessFunction {
       private TicTacToe ticTacToe = new TicTacToe();
-      private Node[] ais = new Node[] {//
+      private Node[] ais = new Node[] { //
             new DummyNode() {
                @Override
                public Move evaluate(Assignments assignments) {

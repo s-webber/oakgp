@@ -93,12 +93,12 @@ public class UtilsTest {
       int minInclusive = 7;
       int maxInclusive = 12;
 
-      ConstantNode[] result = Utils.createIntegerConstants(minInclusive, maxInclusive);
+      List<ConstantNode> result = Utils.createIntegerConstants(minInclusive, maxInclusive);
 
-      assertEquals(6, result.length);
-      for (int i = 0; i < result.length; i++) {
-         assertSame(integerType(), result[i].getType());
-         assertEquals(i + minInclusive, result[i].evaluate(null));
+      assertEquals(6, result.size());
+      for (int i = 0; i < result.size(); i++) {
+         assertSame(integerType(), result.get(i).getType());
+         assertEquals(i + minInclusive, result.get(i).evaluate(null));
       }
    }
 
@@ -132,12 +132,12 @@ public class UtilsTest {
       Type type = Type.type("testCreateEnumConstants");
       TestCreateEnumConstantsEnum[] input = TestCreateEnumConstantsEnum.values();
 
-      ConstantNode[] result = Utils.createEnumConstants(TestCreateEnumConstantsEnum.class, type);
+      List<ConstantNode> result = Utils.createEnumConstants(TestCreateEnumConstantsEnum.class, type);
 
-      assertEquals(input.length, result.length);
-      for (int i = 0; i < input.length; i++) {
-         assertSame(type, result[i].getType());
-         assertSame(input[i], result[i].evaluate(null));
+      assertEquals(input.length, result.size());
+      for (int i = 0; i < result.size(); i++) {
+         assertSame(type, result.get(i).getType());
+         assertSame(input[i], result.get(i).evaluate(null));
       }
    }
 
