@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 S. Webber
+ * Copyright 2019 S. Webber
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,27 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.oakgp.function.classify;
-
-import static org.oakgp.Type.booleanType;
-import static org.oakgp.Type.integerType;
+package org.oakgp.function;
 
 import org.oakgp.Arguments;
-import org.oakgp.function.Function;
-import org.oakgp.function.Signature;
 
-/** Determines if a number is zero. */
-public final class IsZero implements Function {
-   private static final Signature SIGNATURE = Signature.createSignature(booleanType(), integerType());
+/**
+ * Used by higher-order functions to represent the arguments of a function.
+ * <p>
+ * Immutable.
+ */
+public final class HigherOrderFunctionArguments implements Arguments {
+   private final Object[] args;
 
-   @Override
-   public Object evaluate(Arguments arguments) {
-      int i = arguments.first();
-      return i == 0;
+   public HigherOrderFunctionArguments(Object arg) {
+      this.args = new Object[] { arg };
+   }
+
+   public HigherOrderFunctionArguments(Object arg1, Object arg2) {
+      this.args = new Object[] { arg1, arg2 };
    }
 
    @Override
-   public Signature getSignature() {
-      return SIGNATURE;
+   public <T> T getArg(int index) {
+      return (T) args[index];
+   }
+
+   @Override
+   public int size() {
+      return args.length;
    }
 }

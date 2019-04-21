@@ -17,8 +17,8 @@ package org.oakgp.function.compare;
 
 import static org.oakgp.util.NodeComparator.NODE_COMPARATOR;
 
-import org.oakgp.Arguments;
 import org.oakgp.Type;
+import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 
@@ -39,11 +39,11 @@ public final class NotEqual extends ComparisonOperator {
    }
 
    @Override
-   public Node simplify(Arguments arguments) {
-      Node simplifiedVersion = super.simplify(arguments);
-      if (simplifiedVersion == null && NODE_COMPARATOR.compare(arguments.firstArg(), arguments.secondArg()) > 0) {
+   public Node simplify(ChildNodes children) {
+      Node simplifiedVersion = super.simplify(children);
+      if (simplifiedVersion == null && NODE_COMPARATOR.compare(children.first(), children.second()) > 0) {
          // TODO this is similar to the logic in Equal and the arithmetic operators - is it possible to reuse?
-         return new FunctionNode(this, arguments.secondArg(), arguments.firstArg());
+         return new FunctionNode(this, children.second(), children.first());
       } else {
          return simplifiedVersion;
       }

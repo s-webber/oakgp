@@ -16,22 +16,20 @@
 package org.oakgp.function;
 
 import org.oakgp.Arguments;
-import org.oakgp.Assignments;
 import org.oakgp.Type;
+import org.oakgp.node.ChildNodes;
 import org.oakgp.node.Node;
 
 /** Represents an operation. */
 public interface Function {
    /**
-    * Returns the result of applying this operation to the specified {@code Arguments} and {@code Assignments}.
+    * Returns the result of applying this operation to the specified {@code Arguments}.
     *
     * @param arguments
     *           represents the arguments to apply to the operation
-    * @param assignments
-    *           represents values assigned to variables belonging to {@code arguments}
-    * @return the result of applying this operation to the {@code arguments} and {@code assignments}
+    * @return the result of applying this operation to the {@code arguments}
     */
-   Object evaluate(Arguments arguments, Assignments assignments);
+   Object evaluate(Arguments arguments);
 
    /** Returns the return type and argument types associated with this function. */
    Signature getSignature();
@@ -47,7 +45,7 @@ public interface Function {
     * @return a simplified version of applying this function to the specified arguments, or {@code null} if unable to simplify.
     * @see org.oakgp.NodeSimplifier
     */
-   default Node simplify(Arguments arguments) {
+   default Node simplify(ChildNodes children) {
       return null;
    }
 

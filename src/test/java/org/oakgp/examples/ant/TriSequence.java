@@ -23,9 +23,9 @@ import static org.oakgp.util.Void.VOID_TYPE;
 import static org.oakgp.util.Void.isVoid;
 
 import org.oakgp.Arguments;
-import org.oakgp.Assignments;
 import org.oakgp.function.ImpureFunction;
 import org.oakgp.function.Signature;
+import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.util.Void;
@@ -43,18 +43,18 @@ class TriSequence implements ImpureFunction {
    }
 
    @Override
-   public Void evaluate(Arguments arguments, Assignments assignments) {
-      arguments.firstArg().evaluate(assignments);
-      arguments.secondArg().evaluate(assignments);
-      arguments.thirdArg().evaluate(assignments);
+   public Void evaluate(Arguments arguments) {
+      arguments.first();
+      arguments.second();
+      arguments.third();
       return Void.VOID;
    }
 
    @Override
-   public Node simplify(Arguments arguments) {
-      Node first = arguments.firstArg();
-      Node second = arguments.secondArg();
-      Node third = arguments.thirdArg();
+   public Node simplify(ChildNodes children) {
+      Node first = children.first();
+      Node second = children.second();
+      Node third = children.third();
       if (isVoid(first)) {
          return createBiSequence(second, third);
       } else if (isVoid(second)) {
@@ -66,9 +66,9 @@ class TriSequence implements ImpureFunction {
       } else if (isLeftAndRight(second, third)) {
          return first;
       } else if (areAllSame(LEFT, first, second, third)) {
-         return new FunctionNode(RIGHT, ((FunctionNode) first).getArguments());
+         return new FunctionNode(RIGHT, ((FunctionNode) first).getChildren());
       } else if (areAllSame(RIGHT, first, second, third)) {
-         return new FunctionNode(LEFT, ((FunctionNode) first).getArguments());
+         return new FunctionNode(LEFT, ((FunctionNode) first).getChildren());
       } else {
          return null;
       }

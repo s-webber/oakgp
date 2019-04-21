@@ -15,13 +15,12 @@
  */
 package org.oakgp.function.coll;
 
-import static org.oakgp.Type.listType;
 import static org.oakgp.Type.integerType;
+import static org.oakgp.Type.listType;
 
 import java.util.Collection;
 
 import org.oakgp.Arguments;
-import org.oakgp.Assignments;
 import org.oakgp.Type;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
@@ -37,8 +36,8 @@ public final class Count implements Function {
    }
 
    @Override
-   public Object evaluate(Arguments arguments, Assignments assignments) {
-      Collection<Node> a = arguments.firstArg().evaluate(assignments);
+   public Object evaluate(Arguments arguments) {
+      Collection<Node> a = arguments.first();
       return a.size();
    }
 

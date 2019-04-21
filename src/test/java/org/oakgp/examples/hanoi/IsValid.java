@@ -20,7 +20,6 @@ import static org.oakgp.examples.hanoi.TowersOfHanoiExample.MOVE_TYPE;
 import static org.oakgp.examples.hanoi.TowersOfHanoiExample.STATE_TYPE;
 
 import org.oakgp.Arguments;
-import org.oakgp.Assignments;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
 
@@ -41,9 +40,9 @@ class IsValid implements Function {
     * @return {@code true} if the specified move is a valid move for the specified game state, else {@code false}
     */
    @Override
-   public Object evaluate(Arguments arguments, Assignments assignments) {
-      TowersOfHanoi gameState = arguments.firstArg().evaluate(assignments);
-      Move move = arguments.secondArg().evaluate(assignments);
+   public Object evaluate(Arguments arguments) {
+      TowersOfHanoi gameState = arguments.first();
+      Move move = arguments.second();
       return gameState.move(move) != null;
    }
 }

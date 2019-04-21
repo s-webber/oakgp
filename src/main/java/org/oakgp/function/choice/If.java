@@ -15,17 +15,16 @@
  */
 package org.oakgp.function.choice;
 
-import static java.lang.Boolean.TRUE;
 import static org.oakgp.Type.booleanType;
 import static org.oakgp.node.NodeType.isConstant;
 
 import java.util.function.Predicate;
 
 import org.oakgp.Arguments;
-import org.oakgp.Assignments;
 import org.oakgp.Type;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
+import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.node.walk.NodeWalk;
@@ -53,9 +52,9 @@ public final class If implements Function {
    }
 
    @Override
-   public Object evaluate(Arguments arguments, Assignments assignments) {
-      int index = getOutcomeArgumentIndex(arguments, assignments);
-      return arguments.getArg(index).evaluate(assignments);
+   public Object evaluate(Arguments arguments) {
+      int index = getOutcomeArgumentIndex(arguments.first());
+      return arguments.getArg(index);
    }
 
    @Override
@@ -64,16 +63,16 @@ public final class If implements Function {
    }
 
    @Override
-   public Node simplify(Arguments arguments) {
-      Node trueBranch = arguments.secondArg();
-      Node falseBranch = arguments.thirdArg();
+   public Node simplify(ChildNodes children) {
+      Node trueBranch = children.second();
+      Node falseBranch = children.third();
       if (trueBranch.equals(falseBranch)) {
          return trueBranch;
       }
 
-      Node condition = arguments.firstArg();
+      Node condition = children.first();
       if (isConstant(condition)) {
-         int index = getOutcomeArgumentIndex(arguments, null);
+         int index = getOutcomeArgumentIndex(children.first().evaluate(null));
          return index == TRUE_IDX ? trueBranch : falseBranch;
       }
 
@@ -87,7 +86,7 @@ public final class If implements Function {
       }
    }
 
-   private int getOutcomeArgumentIndex(Arguments arguments, Assignments assignments) {
-      return TRUE.equals(arguments.firstArg().evaluate(assignments)) ? TRUE_IDX : FALSE_IDX;
+   private int getOutcomeArgumentIndex(boolean result) {
+      return result ? TRUE_IDX : FALSE_IDX;
    }
 }

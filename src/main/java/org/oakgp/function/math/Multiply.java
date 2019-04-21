@@ -18,14 +18,13 @@ package org.oakgp.function.math;
 import static org.oakgp.node.NodeType.isConstant;
 import static org.oakgp.util.NodeComparator.NODE_COMPARATOR;
 
-import org.oakgp.Arguments;
-import org.oakgp.Assignments;
 import org.oakgp.function.Function;
+import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 
 /** Performs multiplication. */
-final class Multiply<T extends Comparable<T>> extends ArithmeticOperator {
+final class Multiply<T extends Comparable<T>> extends ArithmeticOperator<T> {
    private final NumberUtils<T> numberUtils;
 
    /** @see NumberUtils#getMultiply() */
@@ -40,14 +39,14 @@ final class Multiply<T extends Comparable<T>> extends ArithmeticOperator {
     * @return the result of multiplying {@code arg1} and {@code arg2}
     */
    @Override
-   protected T evaluate(Node arg1, Node arg2, Assignments assignments) {
-      return numberUtils.multiply(arg1, arg2, assignments);
+   protected T evaluate(T arg1, T arg2) {
+      return numberUtils.multiply(arg1, arg2);
    }
 
    @Override
-   public Node simplify(Arguments arguments) {
-      Node arg1 = arguments.firstArg();
-      Node arg2 = arguments.secondArg();
+   public Node simplify(ChildNodes children) {
+      Node arg1 = children.first();
+      Node arg2 = children.second();
 
       if (NODE_COMPARATOR.compare(arg1, arg2) > 0) {
          // as for addition the order of the arguments is not important, order arguments in a consistent way
@@ -71,9 +70,9 @@ final class Multiply<T extends Comparable<T>> extends ArithmeticOperator {
          if (isConstant(arg1) && numberUtils.isArithmeticExpression(arg2)) {
             FunctionNode fn = (FunctionNode) arg2;
             Function f = fn.getFunction();
-            Arguments args = fn.getArguments();
-            Node fnArg1 = args.firstArg();
-            Node fnArg2 = args.secondArg();
+            ChildNodes args = fn.getChildren();
+            Node fnArg1 = args.first();
+            Node fnArg2 = args.second();
             if (isConstant(fnArg1)) {
                if (numberUtils.isAddOrSubtract(f)) {
                   return new FunctionNode(f, numberUtils.multiply(arg1, fnArg1), new FunctionNode(this, arg1, fnArg2));

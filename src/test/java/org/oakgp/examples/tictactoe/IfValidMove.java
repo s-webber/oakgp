@@ -20,7 +20,6 @@ import static org.oakgp.Type.type;
 import static org.oakgp.function.Signature.createSignature;
 
 import org.oakgp.Arguments;
-import org.oakgp.Assignments;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
 
@@ -28,9 +27,9 @@ public class IfValidMove implements Function {
    private static final Signature SIGNATURE = createSignature(nullableType(type("move")), type("board"), type("possibleMove"));
 
    @Override
-   public Object evaluate(Arguments arguments, Assignments assignments) {
-      Board board = arguments.firstArg().evaluate(assignments);
-      Move move = arguments.secondArg().evaluate(assignments);
+   public Object evaluate(Arguments arguments) {
+      Board board = arguments.first();
+      Move move = arguments.second();
       if (board.isFree(move)) {
          return move;
       } else {

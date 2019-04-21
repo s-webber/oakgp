@@ -18,7 +18,7 @@ package org.oakgp.evolve.crossover;
 import static org.oakgp.node.NodeType.areFunctions;
 import static org.oakgp.node.NodeType.areTerminals;
 
-import org.oakgp.Arguments;
+import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 
@@ -32,16 +32,16 @@ final class CommonRegion {
       if (areFunctions(n1, n2)) {
          FunctionNode f1 = (FunctionNode) n1;
          FunctionNode f2 = (FunctionNode) n2;
-         Arguments arguments = f1.getArguments();
-         int argCount = arguments.getArgCount();
-         if (argCount == f2.getArguments().getArgCount()) {
+         ChildNodes children = f1.getChildren();
+         int childCount = children.size();
+         if (childCount == f2.getChildren().size()) {
             int total = 0;
-            for (int i = 0; i < argCount; i++) {
-               Node a1 = arguments.getArg(i);
-               Node a2 = f2.getArguments().getArg(i);
+            for (int i = 0; i < childCount; i++) {
+               Node a1 = children.getNode(i);
+               Node a2 = f2.getChildren().getNode(i);
                int c = getNodeCount(a1, a2);
                if (total + c > crossOverPoint) {
-                  return new FunctionNode(f1.getFunction(), arguments.replaceAt(i, crossoverAt(a1, a2, crossOverPoint - total)));
+                  return new FunctionNode(f1.getFunction(), children.replaceAt(i, crossoverAt(a1, a2, crossOverPoint - total)));
                } else {
                   total += c;
                }
@@ -57,10 +57,10 @@ final class CommonRegion {
          int total = sameType(n1, n2) ? 1 : 0;
          FunctionNode f1 = (FunctionNode) n1;
          FunctionNode f2 = (FunctionNode) n2;
-         int argCount = f1.getArguments().getArgCount();
-         if (argCount == f2.getArguments().getArgCount()) {
-            for (int i = 0; i < argCount; i++) {
-               total += getNodeCount(f1.getArguments().getArg(i), f2.getArguments().getArg(i));
+         int childCount = f1.getChildren().size();
+         if (childCount == f2.getChildren().size()) {
+            for (int i = 0; i < childCount; i++) {
+               total += getNodeCount(f1.getChildren().getNode(i), f2.getChildren().getNode(i));
             }
          }
          return total;

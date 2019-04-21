@@ -16,7 +16,6 @@
 package org.oakgp.serialize;
 
 import static org.junit.Assert.assertEquals;
-import static org.oakgp.Arguments.createArguments;
 import static org.oakgp.TestUtils.bigDecimalConstant;
 import static org.oakgp.TestUtils.bigIntegerConstant;
 import static org.oakgp.TestUtils.createVariable;
@@ -24,13 +23,14 @@ import static org.oakgp.TestUtils.doubleConstant;
 import static org.oakgp.TestUtils.integerConstant;
 import static org.oakgp.TestUtils.longConstant;
 import static org.oakgp.TestUtils.stringConstant;
-import static org.oakgp.Type.listType;
 import static org.oakgp.Type.integerToBooleanFunctionType;
 import static org.oakgp.Type.integerType;
+import static org.oakgp.Type.listType;
 import static org.oakgp.Type.mapType;
 import static org.oakgp.Type.stringType;
 import static org.oakgp.util.Void.VOID_CONSTANT;
 
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -127,7 +127,7 @@ public class NodeWriterTest {
 
    @Test
    public void testArguments() {
-      ConstantNode input = new ConstantNode(createArguments(integerConstant(6), integerConstant(-2), integerConstant(17)), listType(integerType()));
+      ConstantNode input = new ConstantNode(Arrays.asList(integerConstant(6), integerConstant(-2), integerConstant(17)), listType(integerType()));
       String output = new NodeWriter().writeNode(input);
       assertEquals("[6 -2 17]", output);
    }
@@ -135,7 +135,7 @@ public class NodeWriterTest {
    @Test
    public void testFunctionAsArgument() {
       ConstantNode criteria = new ConstantNode(new IsPositive(), integerToBooleanFunctionType());
-      ConstantNode args = new ConstantNode(createArguments(integerConstant(6), integerConstant(-2), integerConstant(17)), listType(integerType()));
+      ConstantNode args = new ConstantNode(Arrays.asList(integerConstant(6), integerConstant(-2), integerConstant(17)), listType(integerType()));
       FunctionNode input = new FunctionNode(new Filter(integerType()), criteria, args);
 
       String output = new NodeWriter().writeNode(input);

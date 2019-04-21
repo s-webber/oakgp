@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 S. Webber
+ * Copyright 2019 S. Webber
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,12 +17,10 @@ package org.oakgp.function.hof;
 
 import static java.util.Collections.unmodifiableMap;
 import static org.oakgp.Type.functionType;
-import static org.oakgp.Type.listType;
 import static org.oakgp.Type.mapType;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.oakgp.Arguments;
 import org.oakgp.Type;
@@ -30,22 +28,21 @@ import org.oakgp.function.Function;
 import org.oakgp.function.HigherOrderFunctionArguments;
 import org.oakgp.function.Signature;
 
-/** Uses a function to group elements of a collection. */
-public final class GroupBy implements Function {
+public final class MapValues implements Function {
    private final Signature signature;
 
-   public GroupBy(Type input, Type key) {
-      signature = Signature.createSignature(mapType(key, listType(input)), functionType(key, input), listType(input));
+   public MapValues(Type key, Type from, Type to) {
+      this.signature = Signature.createSignature(mapType(key, to), functionType(to, from), mapType(key, from));
    }
 
    @Override
    public Object evaluate(Arguments arguments) {
       Function f = arguments.first();
-      Collection<Object> elements = arguments.second();
-      LinkedHashMap<Object, ArrayList<Object>> result = new LinkedHashMap<>();
-      for (Object element : elements) {
-         Object evaluateResult = f.evaluate(new HigherOrderFunctionArguments(element));
-         result.computeIfAbsent(evaluateResult, k -> new ArrayList<>()).add(element);
+      Map<Object, Object> candidates = arguments.second();
+      Map<Object, Object> result = new LinkedHashMap<>();
+      for (Map.Entry<Object, Object> e : candidates.entrySet()) {
+         Object evaluateResult = f.evaluate(new HigherOrderFunctionArguments(e.getValue()));
+         result.put(e.getKey(), evaluateResult);
       }
       return unmodifiableMap(result);
    }

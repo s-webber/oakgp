@@ -16,7 +16,6 @@
 package org.oakgp.examples.ant;
 
 import org.oakgp.Arguments;
-import org.oakgp.Assignments;
 import org.oakgp.Type;
 import org.oakgp.function.ImpureFunction;
 import org.oakgp.function.Signature;
@@ -29,8 +28,8 @@ class IsFoodAhead implements ImpureFunction {
    }
 
    @Override
-   public Boolean evaluate(Arguments arguments, Assignments assignments) {
-      MutableState state = arguments.firstArg().evaluate(assignments);
+   public Boolean evaluate(Arguments arguments) {
+      MutableState state = arguments.first();
       return state.isFoodAhead();
    }
 }

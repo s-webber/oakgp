@@ -17,7 +17,6 @@ package org.oakgp;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
@@ -34,7 +33,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.oakgp.function.Function;
@@ -66,16 +64,6 @@ import org.oakgp.serialize.NodeWriter;
 public class TestUtils {
    public static final VariableSet VARIABLE_SET = VariableSet.createVariableSet(createIntegerTypeArray(100));
    private static final Function[] FUNCTIONS = createDefaultFunctions();
-
-   public static void assertVariable(int expectedId, Node node) {
-      assertTrue(node instanceof VariableNode);
-      assertEquals(expectedId, ((VariableNode) node).getId());
-   }
-
-   public static void assertConstant(Object expectedValue, Node node) {
-      assertTrue(node instanceof ConstantNode);
-      assertEquals(expectedValue, ((ConstantNode) node).evaluate(null));
-   }
 
    @SuppressWarnings({ "unchecked", "rawtypes" })
    public static void assertUnmodifiable(List list) {
@@ -149,14 +137,6 @@ public class TestUtils {
       functions.add(new Count(booleanType()));
 
       return functions.toArray(new Function[functions.size()]);
-   }
-
-   public static List<Node> createList(String... expressions) {
-      Node[] args = new Node[expressions.length];
-      for (int i = 0; i < expressions.length; i++) {
-         args[i] = readNode(expressions[i]);
-      }
-      return Arrays.asList(args);
    }
 
    public static ConstantNode integerConstant(int value) {

@@ -18,11 +18,12 @@ package org.oakgp.serialize;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.oakgp.Arguments;
 import org.oakgp.function.Function;
+import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 
@@ -52,7 +53,7 @@ public final class NodeWriter {
       writers.put(BigDecimal.class, o -> o + "D");
       writers.put(Function.class, o -> ((Function) o).getDisplayName());
       writers.put(Map.class, o -> writeMap((Map<?, ?>) o));
-      writers.put(Arguments.class, o -> writeArguments((Arguments) o));
+      writers.put(List.class, o -> writeList((List<?>) o));
    }
 
    /** Returns a {@code String} representation of the specified {@code Node}. */
@@ -72,11 +73,11 @@ public final class NodeWriter {
    private String writeFunctionNode(Node node) {
       FunctionNode functionNode = (FunctionNode) node;
       Function function = functionNode.getFunction();
-      Arguments arguments = functionNode.getArguments();
+      ChildNodes children = functionNode.getChildren();
       StringBuilder sb = new StringBuilder();
       sb.append('(').append(function.getDisplayName());
-      for (int i = 0; i < arguments.getArgCount(); i++) {
-         sb.append(' ').append(writeNode(arguments.getArg(i)));
+      for (int i = 0; i < children.size(); i++) {
+         sb.append(' ').append(writeNode(children.getNode(i)));
       }
       return sb.append(')').toString();
    }
@@ -94,14 +95,14 @@ public final class NodeWriter {
       return writers.entrySet().stream().filter(e -> e.getKey().isInstance(value)).map(Map.Entry::getValue).findFirst().orElse(String::valueOf).apply(value);
    }
 
-   private String writeArguments(Arguments args) {
+   private String writeList(List<?> args) {
       StringBuilder sb = new StringBuilder();
       sb.append('[');
-      for (int i = 0; i < args.getArgCount(); i++) {
+      for (int i = 0; i < args.size(); i++) {
          if (i != 0) {
             sb.append(' ');
          }
-         sb.append(writeNode(args.getArg(i)));
+         sb.append(writeRawObject(args.get(i)));
       }
       return sb.append(']').toString();
    }

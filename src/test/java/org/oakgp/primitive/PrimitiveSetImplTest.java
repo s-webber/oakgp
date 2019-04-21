@@ -15,13 +15,12 @@
  */
 package org.oakgp.primitive;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
-import static org.oakgp.TestUtils.assertConstant;
-import static org.oakgp.TestUtils.assertVariable;
 import static org.oakgp.TestUtils.createVariable;
 import static org.oakgp.TestUtils.integerConstant;
 import static org.oakgp.Type.booleanType;
@@ -41,6 +40,7 @@ import org.oakgp.function.compare.LessThanOrEqual;
 import org.oakgp.function.compare.NotEqual;
 import org.oakgp.function.math.IntegerUtils;
 import org.oakgp.node.ConstantNode;
+import org.oakgp.node.Node;
 import org.oakgp.node.VariableNode;
 import org.oakgp.util.DummyRandom;
 import org.oakgp.util.Random;
@@ -220,5 +220,15 @@ public class PrimitiveSetImplTest {
 
    private PrimitiveSet createWithFunctions(Random random) {
       return new PrimitiveSetImpl(new FunctionSet(FUNCTIONS), null, null, random, .1);
+   }
+
+   public static void assertVariable(int expectedId, Node node) {
+      assertTrue(node instanceof VariableNode);
+      assertEquals(expectedId, ((VariableNode) node).getId());
+   }
+
+   public static void assertConstant(Object expectedValue, Node node) {
+      assertTrue(node instanceof ConstantNode);
+      assertEquals(expectedValue, ((ConstantNode) node).evaluate(null));
    }
 }

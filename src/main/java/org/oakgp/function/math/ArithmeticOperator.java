@@ -16,13 +16,11 @@
 package org.oakgp.function.math;
 
 import org.oakgp.Arguments;
-import org.oakgp.Assignments;
 import org.oakgp.Type;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
-import org.oakgp.node.Node;
 
-abstract class ArithmeticOperator implements Function {
+abstract class ArithmeticOperator<T extends Comparable<T>> implements Function {
    private final Signature signature;
 
    protected ArithmeticOperator(Type type) {
@@ -30,11 +28,11 @@ abstract class ArithmeticOperator implements Function {
    }
 
    @Override
-   public final Object evaluate(Arguments arguments, Assignments assignments) {
-      return evaluate(arguments.firstArg(), arguments.secondArg(), assignments);
+   public final T evaluate(Arguments arguments) {
+      return evaluate(arguments.first(), arguments.second());
    }
 
-   protected abstract Object evaluate(Node arg1, Node arg2, Assignments assignments);
+   protected abstract T evaluate(T arg1, T arg2);
 
    @Override
    public final Signature getSignature() {

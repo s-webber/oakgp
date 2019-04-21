@@ -19,7 +19,6 @@ import static org.oakgp.Type.booleanType;
 import static org.oakgp.Type.integerType;
 
 import org.oakgp.Arguments;
-import org.oakgp.Assignments;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
 
@@ -28,8 +27,8 @@ public final class IsNegative implements Function {
    private static final Signature SIGNATURE = Signature.createSignature(booleanType(), integerType());
 
    @Override
-   public Object evaluate(Arguments arguments, Assignments assignments) {
-      int i = arguments.firstArg().evaluate(assignments);
+   public Object evaluate(Arguments arguments) {
+      int i = arguments.first();
       return i < 0;
    }
 

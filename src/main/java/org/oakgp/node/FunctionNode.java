@@ -15,7 +15,6 @@
  */
 package org.oakgp.node;
 
-import org.oakgp.Arguments;
 import org.oakgp.Assignments;
 import org.oakgp.Type;
 import org.oakgp.function.Function;
@@ -32,7 +31,7 @@ public final class FunctionNode implements Node {
    private static final int[] PRIMES = { 2, 3, 5, 7, 11, 13, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97 };
 
    private final Function function;
-   private final Arguments arguments;
+   private final ChildNodes arguments;
    private final int nodeCount;
    private final int hashCode;
 
@@ -45,7 +44,7 @@ public final class FunctionNode implements Node {
     *           the arguments (i.e. operands) to apply to {@code function} when evaluating this {@code FunctionNode}
     */
    public FunctionNode(Function function, Node... arguments) {
-      this(function, Arguments.createArguments(arguments));
+      this(function, ChildNodes.createChildNodes(arguments));
    }
 
    /**
@@ -56,26 +55,26 @@ public final class FunctionNode implements Node {
     * @param arguments
     *           the arguments (i.e. operands) to apply to {@code function} when evaluating this {@code FunctionNode}
     */
-   public FunctionNode(Function function, Arguments arguments) {
+   public FunctionNode(Function function, ChildNodes arguments) {
       this.function = function;
       this.arguments = arguments;
       this.nodeCount = calculateNodeCount(arguments);
       this.hashCode = (function.getClass().getName().hashCode() * 31) * createHashCode(arguments, nodeCount);
    }
 
-   private static int calculateNodeCount(Arguments arguments) {
+   private static int calculateNodeCount(ChildNodes arguments) {
       int total = 1;
-      for (int i = 0; i < arguments.getArgCount(); i++) {
-         total += arguments.getArg(i).getNodeCount();
+      for (int i = 0; i < arguments.size(); i++) {
+         total += arguments.getNode(i).getNodeCount();
       }
       return total;
    }
 
-   private static int createHashCode(Arguments arguments, int nodeCount) {
+   private static int createHashCode(ChildNodes arguments, int nodeCount) {
       int hashCode = 0;
       int primesIdx = 0;
-      for (int i = 0; i < arguments.getArgCount(); i++) {
-         hashCode += arguments.getArg(i).hashCode() * (PRIMES[primesIdx] + nodeCount);
+      for (int i = 0; i < arguments.size(); i++) {
+         hashCode += arguments.getNode(i).hashCode() * (PRIMES[primesIdx] + nodeCount);
          if (++primesIdx == PRIMES.length) {
             primesIdx = 0;
          }
@@ -87,14 +86,14 @@ public final class FunctionNode implements Node {
       return function;
    }
 
-   public Arguments getArguments() {
+   public ChildNodes getChildren() {
       return arguments;
    }
 
    @SuppressWarnings("unchecked")
    @Override
    public Object evaluate(Assignments assignments) {
-      return function.evaluate(arguments, assignments);
+      return function.evaluate(new FunctionNodeArguments(arguments, assignments));
    }
 
    @Override
@@ -106,8 +105,8 @@ public final class FunctionNode implements Node {
    public int getHeight() {
       // TODO it may be beneficial to cache this result on its first call
       int height = 0;
-      for (int i = 0; i < arguments.getArgCount(); i++) {
-         height = Math.max(height, arguments.getArg(i).getHeight());
+      for (int i = 0; i < arguments.size(); i++) {
+         height = Math.max(height, arguments.getNode(i).getHeight());
       }
       return height + 1;
    }
@@ -146,8 +145,8 @@ public final class FunctionNode implements Node {
    public String toString() {
       StringBuilder sb = new StringBuilder();
       sb.append('(').append(function.getDisplayName());
-      for (int i = 0; i < arguments.getArgCount(); i++) {
-         sb.append(' ').append(arguments.getArg(i));
+      for (int i = 0; i < arguments.size(); i++) {
+         sb.append(' ').append(arguments.getNode(i));
       }
       return sb.append(')').toString();
    }

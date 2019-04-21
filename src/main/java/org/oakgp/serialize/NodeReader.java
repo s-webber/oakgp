@@ -16,7 +16,6 @@
 package org.oakgp.serialize;
 
 import static java.util.Collections.unmodifiableList;
-import static org.oakgp.Arguments.createArguments;
 import static org.oakgp.Type.bigDecimalType;
 import static org.oakgp.Type.bigIntegerType;
 import static org.oakgp.Type.doubleType;
@@ -25,6 +24,7 @@ import static org.oakgp.Type.listType;
 import static org.oakgp.Type.longType;
 import static org.oakgp.Type.mapType;
 import static org.oakgp.Type.stringType;
+import static org.oakgp.node.ChildNodes.createChildNodes;
 import static org.oakgp.util.Utils.FALSE_NODE;
 import static org.oakgp.util.Utils.TRUE_NODE;
 import static org.oakgp.util.Utils.copyOf;
@@ -186,7 +186,7 @@ public final class NodeReader implements Closeable {
          types.add(n.getType());
       }
       Function function = getFunction(functionName, types);
-      return new FunctionNode(function, createArguments(arguments));
+      return new FunctionNode(function, createChildNodes(arguments));
    }
 
    private boolean notFunctionEnd(String token) {
@@ -222,7 +222,7 @@ public final class NodeReader implements Closeable {
    }
 
    private ConstantNode createListConstantNode() throws IOException {
-      List<Node> arguments = new ArrayList<>();
+      List<Object> arguments = new ArrayList<>();
       String nextToken;
       Type t = null;
       while (notListEnd(nextToken = nextToken())) {
@@ -232,7 +232,7 @@ public final class NodeReader implements Closeable {
          } else if (t != n.getType()) {
             throw new IllegalStateException("Mixed type list elements: " + t + " and " + n.getType());
          }
-         arguments.add(n);
+         arguments.add(n.evaluate(null));
       }
       // TODO what is the correct behaviour when the list is empty?
       return new ConstantNode(unmodifiableList(arguments), listType(t));
@@ -243,7 +243,7 @@ public final class NodeReader implements Closeable {
    }
 
    private ConstantNode createMapConstantNode() throws IOException {
-      Map<Node, Node> map = new LinkedHashMap<>();
+      Map<Object, Object> map = new LinkedHashMap<>();
       String nextToken;
       Type keyType = null;
       Type valueType = null;
@@ -265,7 +265,7 @@ public final class NodeReader implements Closeable {
             throw new IllegalStateException("Mixed type map values: " + valueType + " and " + value.getType());
          }
 
-         map.put(key, value);
+         map.put(key.evaluate(null), value.evaluate(null));
       }
       // TODO what is the correct behaviour when the map is empty?
       return new ConstantNode(map, mapType(keyType, valueType));

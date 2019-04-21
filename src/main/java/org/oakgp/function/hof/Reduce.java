@@ -15,19 +15,16 @@
  */
 package org.oakgp.function.hof;
 
-import static org.oakgp.Arguments.createArguments;
-import static org.oakgp.Type.listType;
 import static org.oakgp.Type.functionType;
+import static org.oakgp.Type.listType;
 
 import java.util.Collection;
 
 import org.oakgp.Arguments;
-import org.oakgp.Assignments;
 import org.oakgp.Type;
 import org.oakgp.function.Function;
+import org.oakgp.function.HigherOrderFunctionArguments;
 import org.oakgp.function.Signature;
-import org.oakgp.node.ConstantNode;
-import org.oakgp.node.Node;
 
 /**
  * Combines the elements of a collection by recursively applying a function.
@@ -55,14 +52,14 @@ public final class Reduce implements Function {
    }
 
    @Override
-   public Object evaluate(Arguments arguments, Assignments assignments) {
-      Function f = arguments.firstArg().evaluate(assignments);
-      Node result = arguments.secondArg();
-      Collection<Node> candidates = arguments.thirdArg().evaluate(assignments);
-      for (Node n : candidates) {
-         result = new ConstantNode(f.evaluate(createArguments(result, n), assignments), f.getSignature().getReturnType());
+   public Object evaluate(Arguments arguments) {
+      Function f = arguments.first();
+      Object result = arguments.second();
+      Collection<Object> elements = arguments.third();
+      for (Object element : elements) {
+         result = f.evaluate(new HigherOrderFunctionArguments(result, element));
       }
-      return result.evaluate(assignments);
+      return result;
    }
 
    @Override

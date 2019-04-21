@@ -16,20 +16,18 @@
 package org.oakgp.function.hof;
 
 import static java.util.Collections.unmodifiableList;
-import static org.oakgp.Type.listType;
 import static org.oakgp.Type.functionType;
+import static org.oakgp.Type.listType;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import org.oakgp.Arguments;
-import org.oakgp.Assignments;
 import org.oakgp.Type;
 import org.oakgp.function.Function;
+import org.oakgp.function.HigherOrderFunctionArguments;
 import org.oakgp.function.Signature;
-import org.oakgp.node.ConstantNode;
-import org.oakgp.node.Node;
 
 /**
  * Returns the result of applying a function to each element of a collection.
@@ -55,15 +53,13 @@ public final class Map implements Function {
    }
 
    @Override
-   public Object evaluate(Arguments arguments, Assignments assignments) {
-      Function f = arguments.firstArg().evaluate(assignments);
-      Type returnType = f.getSignature().getReturnType();
-      Collection<Node> candidates = arguments.secondArg().evaluate(assignments);
-      List<Node> result = new ArrayList<>();
-      for (Node inputNode : candidates) {
-         Object evaluateResult = f.evaluate(Arguments.createArguments(inputNode), assignments);
-         ConstantNode outputNode = new ConstantNode(evaluateResult, returnType);
-         result.add(outputNode);
+   public Object evaluate(Arguments arguments) {
+      Function f = arguments.first();
+      Collection<Object> elements = arguments.second();
+      List<Object> result = new ArrayList<>();
+      for (Object element : elements) {
+         Object evaluateResult = f.evaluate(new HigherOrderFunctionArguments(element));
+         result.add(evaluateResult);
       }
       return unmodifiableList(result);
    }

@@ -17,14 +17,13 @@ package org.oakgp.function.math;
 
 import static org.oakgp.node.NodeType.isConstant;
 
-import org.oakgp.Arguments;
-import org.oakgp.Assignments;
 import org.oakgp.function.Function;
+import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 
 /** Performs subtraction. */
-final class Subtract<T extends Comparable<T>> extends ArithmeticOperator {
+final class Subtract<T extends Comparable<T>> extends ArithmeticOperator<T> {
    private final NumberUtils<T> numberUtils;
    private final ArithmeticExpressionSimplifier simplifier;
 
@@ -41,14 +40,14 @@ final class Subtract<T extends Comparable<T>> extends ArithmeticOperator {
     * @return the result of subtracting {@code arg2} from {@code arg1}
     */
    @Override
-   protected T evaluate(Node arg1, Node arg2, Assignments assignments) {
-      return numberUtils.subtract(arg1, arg2, assignments);
+   protected T evaluate(T arg1, T arg2) {
+      return numberUtils.subtract(arg1, arg2);
    }
 
    @Override
-   public Node simplify(Arguments arguments) {
-      Node arg1 = arguments.firstArg();
-      Node arg2 = arguments.secondArg();
+   public Node simplify(ChildNodes children) {
+      Node arg1 = children.first();
+      Node arg2 = children.second();
 
       if (arg1.equals(arg2)) {
          // anything minus itself is zero
@@ -62,8 +61,8 @@ final class Subtract<T extends Comparable<T>> extends ArithmeticOperator {
          // simplify "zero minus n" expressions
          // e.g. (- 0 (- x y) -> (- y x)
          FunctionNode fn2 = (FunctionNode) arg2;
-         Arguments fn2Arguments = fn2.getArguments();
-         return new FunctionNode(this, fn2Arguments.secondArg(), fn2Arguments.firstArg());
+         ChildNodes fn2Arguments = fn2.getChildren();
+         return new FunctionNode(this, fn2Arguments.second(), fn2Arguments.first());
       } else if (isConstant(arg2) && numberUtils.isNegative(arg2)) {
          // convert double negatives to addition
          // e.g. (- x -1) -> (+ 1 x)
@@ -72,9 +71,9 @@ final class Subtract<T extends Comparable<T>> extends ArithmeticOperator {
          if (numberUtils.isArithmeticExpression(arg2)) {
             FunctionNode fn = (FunctionNode) arg2;
             Function f = fn.getFunction();
-            Arguments args = fn.getArguments();
-            Node fnArg1 = args.firstArg();
-            Node fnArg2 = args.secondArg();
+            ChildNodes args = fn.getChildren();
+            Node fnArg1 = args.first();
+            Node fnArg2 = args.second();
             if (numberUtils.isMultiply(f) && isConstant(fnArg1)) {
                if (numberUtils.isZero(arg1)) {
                   // (- 0 (* -3 v0)) -> (* 3 v0)

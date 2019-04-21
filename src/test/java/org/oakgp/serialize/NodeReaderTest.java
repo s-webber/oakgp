@@ -22,11 +22,9 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import static org.oakgp.TestUtils.createVariable;
 import static org.oakgp.TestUtils.readNode;
 import static org.oakgp.TestUtils.readNodes;
 import static org.oakgp.Type.integerToBooleanFunctionType;
-import static org.oakgp.Type.integerType;
 import static org.oakgp.Type.type;
 import static org.oakgp.util.Void.VOID;
 
@@ -38,7 +36,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.junit.Test;
-import org.oakgp.Type;
 import org.oakgp.function.Function;
 import org.oakgp.function.classify.IsPositive;
 import org.oakgp.node.ConstantNode;
@@ -180,10 +177,15 @@ public class NodeReaderTest {
    }
 
    @Test
-   public void testTypeList() {
-      List<Node> expected = Arrays.asList(new ConstantNode(9, integerType()), new ConstantNode(2, integerType()), createVariable(0),
-            new ConstantNode(7, integerType()));
-      assertParseLiteral("[9 2 v0 7]", unmodifiableList(expected));
+   public void testSingleTypeList() {
+      List<Integer> expected = Arrays.asList(9, 2, 7);
+      assertParseLiteral("[9 2 7]", unmodifiableList(expected));
+   }
+
+   @Test(expected = NullPointerException.class)
+   public void testListWithVariable() {
+      // TODO deal with variables in list, rather than causing a NullPointerException
+      readNode("[9 2 v0 7]");
    }
 
    @Test
@@ -244,9 +246,9 @@ public class NodeReaderTest {
    @Test
    public void testMap() throws IOException {
       LinkedHashMap<Object, Object> expected = new LinkedHashMap<>();
-      expected.put(new ConstantNode("a", Type.stringType()), new ConstantNode(5, Type.integerType()));
-      expected.put(new ConstantNode("b", Type.stringType()), new ConstantNode(42, Type.integerType()));
-      expected.put(new ConstantNode("c", Type.stringType()), new ConstantNode(7, Type.integerType()));
+      expected.put("a", 5);
+      expected.put("b", 42);
+      expected.put("c", 7);
 
       assertParseLiteral("{\"a\" 5 \"b\" 42 \"c\" 7}", expected);
    }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 S. Webber
+ * Copyright 2019 S. Webber
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,31 +15,38 @@
  */
 package org.oakgp.function.hof;
 
-import static java.util.Arrays.asList;
-import static org.oakgp.Type.integerType;
+import java.util.LinkedHashMap;
 
+import org.oakgp.Type;
 import org.oakgp.function.AbstractFunctionTest;
 import org.oakgp.function.Function;
-import org.oakgp.function.classify.IsNegative;
 import org.oakgp.function.classify.IsPositive;
-import org.oakgp.function.classify.IsZero;
 
-public class FilterTest extends AbstractFunctionTest {
+public class MapValuesTest extends AbstractFunctionTest {
    @Override
-   protected Filter getFunction() {
-      return new Filter(integerType());
+   protected MapValues getFunction() {
+      return new MapValues(Type.stringType(), Type.integerType(), Type.booleanType());
    }
 
    @Override
    public void testEvaluate() {
-      evaluate("(filter pos? [2 -12 8 -3 -7 6])").to(asList(2, 8, 6));
-      evaluate("(filter neg? [2 -12 8 -3 -7 6])").to(asList(-12, -3, -7));
-      evaluate("(filter zero? [2 -12 8 -3 -7 6])").to(asList());
+      LinkedHashMap<String, Boolean> expected = new LinkedHashMap<>();
+      expected.put("a", true);
+      expected.put("b", true);
+      expected.put("c", true);
+      expected.put("d", true);
+      expected.put("e", false);
+      expected.put("f", true);
+      expected.put("g", false);
+      expected.put("h", false);
+      expected.put("i", true);
+
+      evaluate("(mapvalues pos? {\"a\" 1 \"b\" 2 \"c\" 3 \"d\" 4 \"e\" -5 \"f\" 6 \"g\" -7 \"h\" -8 \"i\" 9})").to(expected);
    }
 
    @Override
    public void testCanSimplify() {
-      simplify("(filter pos? [2 -12 8])").to("[2 8]");
+      simplify("(mapvalues pos? {\"a\" 1 \"b\" -2 \"c\" 3})").to("{\"a\" true \"b\" false \"c\" true}");
    }
 
    @Override
@@ -48,6 +55,6 @@ public class FilterTest extends AbstractFunctionTest {
 
    @Override
    protected Function[] getFunctionSet() {
-      return new Function[] { getFunction(), new IsPositive(), new IsNegative(), new IsZero() };
+      return new Function[] { getFunction(), new IsPositive() };
    }
 }

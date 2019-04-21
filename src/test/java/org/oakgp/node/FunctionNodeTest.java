@@ -21,7 +21,6 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.mock;
-import static org.oakgp.Arguments.createArguments;
 import static org.oakgp.Assignments.createAssignments;
 import static org.oakgp.TestUtils.createVariable;
 import static org.oakgp.TestUtils.integerConstant;
@@ -46,7 +45,7 @@ public class FunctionNodeTest {
       FunctionNode n1 = new FunctionNode(function, arg1, arg2);
 
       // Construct using Arguments
-      Arguments arguments = createArguments(arg1, arg2);
+      ChildNodes arguments = ChildNodes.createChildNodes(arg1, arg2);
       FunctionNode n2 = new FunctionNode(function, arguments);
 
       // assert the result is the same
@@ -56,11 +55,11 @@ public class FunctionNodeTest {
    @Test
    public void testEvaluate() {
       Function function = INTEGER_UTILS.getMultiply();
-      Arguments arguments = createArguments(integerConstant(42), createVariable(0));
+      ChildNodes arguments = ChildNodes.createChildNodes(integerConstant(42), createVariable(0));
       FunctionNode functionNode = new FunctionNode(function, arguments);
 
       assertSame(function, functionNode.getFunction());
-      assertSame(arguments, functionNode.getArguments());
+      assertSame(arguments, functionNode.getChildren());
 
       Assignments assignments = createAssignments(3);
       assertEquals(126, functionNode.evaluate(assignments));
@@ -163,7 +162,7 @@ public class FunctionNodeTest {
    public void testEqualityRequiresSameFunctionInstance() {
       class DummyFunction implements Function {
          @Override
-         public Object evaluate(Arguments arguments, Assignments assignments) {
+         public Object evaluate(Arguments arguments) {
             throw new UnsupportedOperationException();
          }
 
@@ -175,7 +174,7 @@ public class FunctionNodeTest {
 
       Function f1 = new DummyFunction();
       Function f2 = new DummyFunction();
-      Arguments arguments = Arguments.createArguments(integerConstant(1));
+      ChildNodes arguments = ChildNodes.createChildNodes(integerConstant(1));
       FunctionNode fn1 = new FunctionNode(f1, arguments);
       FunctionNode fn2 = new FunctionNode(f2, arguments);
 
@@ -221,15 +220,15 @@ public class FunctionNodeTest {
 
       FunctionNode n = new FunctionNode(mock(Function.class), args);
 
-      assertEquals(args.length, n.getArguments().getArgCount());
+      assertEquals(args.length, n.getChildren().size());
       for (int i = 0; i < args.length; i++) {
-         assertSame(args[i], n.getArguments().getArg(i));
+         assertSame(args[i], n.getChildren().getNode(i));
       }
    }
 
    /** Returns representation of: {@code (x*y)+z+1} */
    private FunctionNode createFunctionNode() {
-      return new FunctionNode(INTEGER_UTILS.getAdd(), new FunctionNode(INTEGER_UTILS.getMultiply(), createVariable(0), createVariable(1)), new FunctionNode(
-            INTEGER_UTILS.getAdd(), createVariable(2), integerConstant(1)));
+      return new FunctionNode(INTEGER_UTILS.getAdd(), new FunctionNode(INTEGER_UTILS.getMultiply(), createVariable(0), createVariable(1)),
+            new FunctionNode(INTEGER_UTILS.getAdd(), createVariable(2), integerConstant(1)));
    }
 }

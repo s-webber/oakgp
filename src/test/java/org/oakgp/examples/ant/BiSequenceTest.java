@@ -17,7 +17,6 @@ package org.oakgp.examples.ant;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.oakgp.Arguments.createArguments;
 import static org.oakgp.examples.ant.AntMovement.FORWARD;
 import static org.oakgp.examples.ant.AntMovement.LEFT;
 import static org.oakgp.examples.ant.AntMovement.RIGHT;
@@ -26,6 +25,7 @@ import static org.oakgp.examples.ant.TriSequence.TRISEQUENCE;
 import static org.oakgp.util.Void.VOID_CONSTANT;
 
 import org.junit.Test;
+import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.node.VariableNode;
@@ -86,6 +86,6 @@ public class BiSequenceTest {
    }
 
    private Node simplify(Node first, Node second) {
-      return BISEQUENCE.simplify(createArguments(first, second));
+      return BISEQUENCE.simplify(ChildNodes.createChildNodes(first, second));
    }
 }

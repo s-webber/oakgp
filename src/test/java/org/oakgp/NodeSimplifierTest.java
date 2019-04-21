@@ -145,8 +145,7 @@ public class NodeSimplifierTest {
 
    @Test
    public void testDeeplyNestedTreeSimplifedToFunction14() {
-      when(
-            "(- (+ 432 (* -108 v2)) (* 81 (* (+ -3 (* -3 v2)) (- (- (+ (* 162 v0) (* 243 v2)) (* 162 v2)) (+ (* -6 v2) (- (- (* 162 v2) (- 819 (+ (* -162 v0) (* -243 v2)))) (* 12 v2)))))))")
+      when("(- (+ 432 (* -108 v2)) (* 81 (* (+ -3 (* -3 v2)) (- (- (+ (* 162 v0) (* 243 v2)) (* 162 v2)) (+ (* -6 v2) (- (- (* 162 v2) (- 819 (+ (* -162 v0) (* -243 v2)))) (* 12 v2)))))))")
             .expect("(- (+ 432 (* -108 v2)) (* 81 (* (- (* -3 v2) 3) (- (* 180 v2) (- (* -324 v0) 819)))))");
    }
 
@@ -216,7 +215,7 @@ public class NodeSimplifierTest {
          }
 
          @Override
-         public Object evaluate(Arguments arguments, Assignments assignments) {
+         public Object evaluate(Arguments arguments) {
             return evaluationResult;
          }
 
@@ -240,7 +239,7 @@ public class NodeSimplifierTest {
          }
 
          @Override
-         public Object evaluate(Arguments arguments, Assignments assignments) {
+         public Object evaluate(Arguments arguments) {
             throw new UnsupportedOperationException();
          }
 
@@ -271,8 +270,8 @@ public class NodeSimplifierTest {
          Node simplifiedVersion = NodeSimplifier.simplify(inputNode);
 
          // test simplified version produces the same results as original (i.e. unsimplified) version
-         Object[][] assignedValues = { { 0, 0, 0, 0, 0 }, { 1, 21, 8, -3, 3 }, { 2, 14, 4, 5, 6 }, { 3, -6, 2, 12, 4 }, { 7, 3, -1, 0, -6 },
-               { -1, 9, 7, 4, 0 }, { -7, 0, -2, -3, 8 } };
+         Object[][] assignedValues = { { 0, 0, 0, 0, 0 }, { 1, 21, 8, -3, 3 }, { 2, 14, 4, 5, 6 }, { 3, -6, 2, 12, 4 }, { 7, 3, -1, 0, -6 }, { -1, 9, 7, 4, 0 },
+               { -7, 0, -2, -3, 8 } };
          String simplifiedVersionString = writeNode(simplifiedVersion);
          for (Object[] assignedValue : assignedValues) {
             Assignments assignments = Assignments.createAssignments(assignedValue);

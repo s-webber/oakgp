@@ -19,10 +19,10 @@ import static org.oakgp.Type.isNullable;
 import static org.oakgp.node.NodeType.isFunction;
 
 import org.oakgp.Arguments;
-import org.oakgp.Assignments;
 import org.oakgp.Type;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
+import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.node.walk.NodeWalk;
@@ -57,31 +57,31 @@ public final class SwitchEnum implements Function {
    }
 
    @Override
-   public Object evaluate(Arguments arguments, Assignments assignments) {
-      Enum<?> input = arguments.firstArg().evaluate(assignments);
+   public Object evaluate(Arguments arguments) {
+      Enum<?> input = arguments.first();
       int index = (input == null ? enumConstants.length : input.ordinal()) + 1;
-      return arguments.getArg(index).evaluate(assignments);
+      return arguments.getArg(index);
    }
 
    @Override
-   public Node simplify(Arguments arguments) {
+   public Node simplify(ChildNodes children) {
       // TODO this is similar to the logic in NodeWalk.replaceAll - is it possible to reuse?
       boolean updated = false;
-      Node[] replacementArgs = new Node[arguments.getArgCount()];
-      Node input = arguments.firstArg();
+      Node[] replacementArgs = new Node[children.size()];
+      Node input = children.first();
       replacementArgs[0] = input;
-      for (int i = 1; i < arguments.getArgCount(); i++) {
-         Node arg = arguments.getArg(i);
+      for (int i = 1; i < children.size(); i++) {
+         Node arg = children.getNode(i);
          final int idx = i;
-         Node replacedArg = NodeWalk.replaceAll(arg, n -> isFunction(n) && ((FunctionNode) n).getFunction() == this, n -> ((FunctionNode) n).getArguments()
-               .getArg(idx));
+         Node replacedArg = NodeWalk.replaceAll(arg, n -> isFunction(n) && ((FunctionNode) n).getFunction() == this,
+               n -> ((FunctionNode) n).getChildren().getNode(idx));
          if (arg != replacedArg) {
             updated = true;
          }
          replacementArgs[i] = replacedArg;
       }
       if (updated) {
-         return new FunctionNode(this, Arguments.createArguments(replacementArgs));
+         return new FunctionNode(this, ChildNodes.createChildNodes(replacementArgs));
       } else {
          return null;
       }

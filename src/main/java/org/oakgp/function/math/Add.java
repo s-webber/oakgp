@@ -19,13 +19,12 @@ import static org.oakgp.node.NodeType.isConstant;
 import static org.oakgp.node.NodeType.isFunction;
 import static org.oakgp.util.NodeComparator.NODE_COMPARATOR;
 
-import org.oakgp.Arguments;
-import org.oakgp.Assignments;
+import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 
 /** Performs addition. */
-final class Add<T extends Comparable<T>> extends ArithmeticOperator {
+final class Add<T extends Comparable<T>> extends ArithmeticOperator<T> {
    private final NumberUtils<T> numberUtils;
    private final ArithmeticExpressionSimplifier simplifier;
 
@@ -42,14 +41,14 @@ final class Add<T extends Comparable<T>> extends ArithmeticOperator {
     * @return the result of adding {@code arg1} and {@code arg2}
     */
    @Override
-   protected T evaluate(Node arg1, Node arg2, Assignments assignments) {
-      return numberUtils.add(arg1, arg2, assignments);
+   protected T evaluate(T arg1, T arg2) {
+      return numberUtils.add(arg1, arg2);
    }
 
    @Override
-   public Node simplify(Arguments arguments) {
-      Node arg1 = arguments.firstArg();
-      Node arg2 = arguments.secondArg();
+   public Node simplify(ChildNodes children) {
+      Node arg1 = children.first();
+      Node arg2 = children.second();
 
       if (NODE_COMPARATOR.compare(arg1, arg2) > 0) {
          // as for addition the order of the arguments is not important, order arguments in a consistent way
@@ -78,8 +77,8 @@ final class Add<T extends Comparable<T>> extends ArithmeticOperator {
          throw new IllegalArgumentException("arg1 " + arg1 + " arg2 " + arg2);
       } else if (isConstant(arg1) && isFunction(arg2)) {
          FunctionNode fn2 = (FunctionNode) arg2;
-         if (isConstant(fn2.getArguments().firstArg()) && numberUtils.isAddOrSubtract(fn2.getFunction())) {
-            return new FunctionNode(fn2.getFunction(), numberUtils.add(arg1, fn2.getArguments().firstArg()), fn2.getArguments().secondArg());
+         if (isConstant(fn2.getChildren().first()) && numberUtils.isAddOrSubtract(fn2.getFunction())) {
+            return new FunctionNode(fn2.getFunction(), numberUtils.add(arg1, fn2.getChildren().first()), fn2.getChildren().second());
          }
       }
 

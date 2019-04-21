@@ -16,20 +16,19 @@
 package org.oakgp.function.hof;
 
 import static java.util.Collections.unmodifiableList;
-import static org.oakgp.Type.listType;
 import static org.oakgp.Type.booleanType;
 import static org.oakgp.Type.functionType;
+import static org.oakgp.Type.listType;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import org.oakgp.Arguments;
-import org.oakgp.Assignments;
 import org.oakgp.Type;
 import org.oakgp.function.Function;
+import org.oakgp.function.HigherOrderFunctionArguments;
 import org.oakgp.function.Signature;
-import org.oakgp.node.Node;
 
 /**
  * Uses a function to filter the elements of a collection.
@@ -53,12 +52,12 @@ public final class Filter implements Function {
    }
 
    @Override
-   public Object evaluate(Arguments arguments, Assignments assignments) {
-      Function f = arguments.firstArg().evaluate(assignments);
-      Collection<Node> candidates = arguments.secondArg().evaluate(assignments);
-      List<Node> result = new ArrayList<>();
-      for (Node candidate : candidates) {
-         if ((Boolean) f.evaluate(Arguments.createArguments(candidate), assignments)) {
+   public Object evaluate(Arguments arguments) {
+      Function f = arguments.first();
+      Collection<Object> candidates = arguments.second();
+      List<Object> result = new ArrayList<>();
+      for (Object candidate : candidates) {
+         if ((Boolean) f.evaluate(new HigherOrderFunctionArguments(candidate))) {
             result.add(candidate);
          }
       }

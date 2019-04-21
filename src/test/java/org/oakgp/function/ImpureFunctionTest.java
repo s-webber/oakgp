@@ -19,7 +19,6 @@ import static org.junit.Assert.assertFalse;
 
 import org.junit.Test;
 import org.oakgp.Arguments;
-import org.oakgp.Assignments;
 
 public class ImpureFunctionTest {
    @Test
@@ -31,7 +30,7 @@ public class ImpureFunctionTest {
          }
 
          @Override
-         public Object evaluate(Arguments arguments, Assignments assignments) {
+         public Object evaluate(Arguments arguments) {
             throw new UnsupportedOperationException();
          }
       };

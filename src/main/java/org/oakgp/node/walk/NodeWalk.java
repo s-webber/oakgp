@@ -18,7 +18,7 @@ package org.oakgp.node.walk;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import org.oakgp.Arguments;
+import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.node.NodeType;
@@ -40,10 +40,10 @@ public final class NodeWalk {
    public static Node getAt(Node node, int index) {
       if (NodeType.isFunction(node)) {
          FunctionNode functionNode = (FunctionNode) node;
-         Arguments arguments = functionNode.getArguments();
+         ChildNodes children = functionNode.getChildren();
          int total = 0;
-         for (int i = 0; i < arguments.getArgCount(); i++) {
-            Node child = arguments.getArg(i);
+         for (int i = 0; i < children.size(); i++) {
+            Node child = children.getNode(i);
             int c = child.getNodeCount();
             if (total + c > index) {
                return getAt(child, index - total);
@@ -68,13 +68,13 @@ public final class NodeWalk {
    public static Node replaceAt(Node node, int index, Function<Node, Node> replacement) {
       if (NodeType.isFunction(node)) {
          FunctionNode functionNode = (FunctionNode) node;
-         Arguments arguments = functionNode.getArguments();
+         ChildNodes children = functionNode.getChildren();
          int total = 0;
-         for (int i = 0; i < arguments.getArgCount(); i++) {
-            Node child = arguments.getArg(i);
+         for (int i = 0; i < children.size(); i++) {
+            Node child = children.getNode(i);
             int c = child.getNodeCount();
             if (total + c > index) {
-               return new FunctionNode(functionNode.getFunction(), arguments.replaceAt(i, replaceAt(child, index - total, replacement)));
+               return new FunctionNode(functionNode.getFunction(), children.replaceAt(i, replaceAt(child, index - total, replacement)));
             } else {
                total += c;
             }
@@ -97,11 +97,11 @@ public final class NodeWalk {
             return replaceAll(replacement.apply(node), criteria, replacement);
          } else {
             FunctionNode functionNode = (FunctionNode) node;
-            Arguments arguments = functionNode.getArguments();
+            ChildNodes children = functionNode.getChildren();
             boolean updated = false;
-            Node[] replacementArgs = new Node[arguments.getArgCount()];
-            for (int i = 0; i < arguments.getArgCount(); i++) {
-               Node arg = arguments.getArg(i);
+            Node[] replacementArgs = new Node[children.size()];
+            for (int i = 0; i < children.size(); i++) {
+               Node arg = children.getNode(i);
                Node replacedArg = replaceAll(arg, criteria, replacement);
                if (arg != replacedArg) {
                   updated = true;
@@ -109,7 +109,7 @@ public final class NodeWalk {
                replacementArgs[i] = replacedArg;
             }
             if (updated) {
-               return new FunctionNode(functionNode.getFunction(), Arguments.createArguments(replacementArgs));
+               return new FunctionNode(functionNode.getFunction(), ChildNodes.createChildNodes(replacementArgs));
             } else {
                return node;
             }

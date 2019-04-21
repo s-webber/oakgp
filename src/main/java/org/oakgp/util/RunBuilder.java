@@ -382,8 +382,8 @@ public final class RunBuilder {
       }
    }
 
-   private class MaxGenerationsTerminatorSetterImpl extends MaxGenerationsWithoutImprovementTerminatorSetterImpl implements
-   MaxGenerationsTerminatorSetterOrProcessRunner {
+   private class MaxGenerationsTerminatorSetterImpl extends MaxGenerationsWithoutImprovementTerminatorSetterImpl
+         implements MaxGenerationsTerminatorSetterOrProcessRunner {
       private MaxGenerationsTerminatorSetterImpl(List<Predicate<RankedCandidates>> terminators) {
          super(terminators);
       }

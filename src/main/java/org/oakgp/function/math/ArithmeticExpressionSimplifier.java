@@ -20,9 +20,9 @@ import static org.oakgp.node.NodeType.isConstant;
 import static org.oakgp.node.NodeType.isFunction;
 import static org.oakgp.util.NodeComparator.NODE_COMPARATOR;
 
-import org.oakgp.Arguments;
 import org.oakgp.Assignments;
 import org.oakgp.function.Function;
+import org.oakgp.node.ChildNodes;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
@@ -89,17 +89,17 @@ final class ArithmeticExpressionSimplifier {
       if (numberUtils.isArithmeticExpression(nodeToWalk)) {
          FunctionNode fn = (FunctionNode) nodeToWalk;
          Function f = fn.getFunction();
-         Node firstArg = fn.getArguments().firstArg();
-         Node secondArg = fn.getArguments().secondArg();
+         Node firstArg = fn.getChildren().first();
+         Node secondArg = fn.getChildren().second();
          if (numberUtils.isMultiply(f) && isFunction(nodeToRemove)) {
             FunctionNode x = (FunctionNode) nodeToRemove;
-            Arguments a = x.getArguments();
-            if (numberUtils.isMultiply(x) && isConstant(firstArg) && isConstant(a.firstArg()) && secondArg.equals(a.secondArg())) {
+            ChildNodes a = x.getChildren();
+            if (numberUtils.isMultiply(x) && isConstant(firstArg) && isConstant(a.first()) && secondArg.equals(a.second())) {
                ConstantNode result;
                if (isPos) {
-                  result = numberUtils.add(a.firstArg(), firstArg);
+                  result = numberUtils.add(a.first(), firstArg);
                } else {
-                  result = numberUtils.subtract(a.firstArg(), firstArg);
+                  result = numberUtils.subtract(a.first(), firstArg);
                }
                Node tmp = new FunctionNode(f, result, secondArg);
                return new NodePair(numberUtils.zero(), tmp);
@@ -157,8 +157,8 @@ final class ArithmeticExpressionSimplifier {
       }
 
       FunctionNode currentFunctionNode = (FunctionNode) nodeToWalk;
-      Node firstArg = currentFunctionNode.getArguments().firstArg();
-      Node secondArg = currentFunctionNode.getArguments().secondArg();
+      Node firstArg = currentFunctionNode.getChildren().first();
+      Node secondArg = currentFunctionNode.getChildren().second();
       Function currentFunction = currentFunctionNode.getFunction();
       boolean isAdd = numberUtils.isAdd(currentFunction);
       boolean isSubtract = numberUtils.isSubtract(currentFunction);
@@ -254,8 +254,8 @@ final class ArithmeticExpressionSimplifier {
       if (areFunctions(n1, n2)) {
          FunctionNode f1 = (FunctionNode) n1;
          FunctionNode f2 = (FunctionNode) n2;
-         if (numberUtils.isMultiply(f1) && numberUtils.isMultiply(f2) && isConstant(f1.getArguments().firstArg()) && isConstant(f2.getArguments().firstArg())
-               && f1.getArguments().secondArg().equals(f2.getArguments().secondArg())) {
+         if (numberUtils.isMultiply(f1) && numberUtils.isMultiply(f2) && isConstant(f1.getChildren().first()) && isConstant(f2.getChildren().first())
+               && f1.getChildren().second().equals(f2.getChildren().second())) {
             return true;
          }
       }
@@ -268,11 +268,11 @@ final class ArithmeticExpressionSimplifier {
       FunctionNode f2 = (FunctionNode) n2;
       ConstantNode result;
       if (isPos) {
-         result = numberUtils.add(f1.getArguments().firstArg(), f2.getArguments().firstArg());
+         result = numberUtils.add(f1.getChildren().first(), f2.getChildren().first());
       } else {
-         result = numberUtils.subtract(f1.getArguments().firstArg(), f2.getArguments().firstArg());
+         result = numberUtils.subtract(f1.getChildren().first(), f2.getChildren().first());
       }
-      return new FunctionNode(f1.getFunction(), result, f1.getArguments().secondArg());
+      return new FunctionNode(f1.getFunction(), result, f1.getChildren().second());
    }
 
    private static void sanityCheck(Runnable r) {
@@ -310,7 +310,7 @@ final class ArithmeticExpressionSimplifier {
     * @throws IllegalArgumentException
     *            if the specified nodes evaluate to different results
     */
-   static void assertEvaluateToSameResult(Node first, Node second) {
+   static void assertEvaluateToSameResult(Node first, Node second) { // TODO move to test utils
       Object[] assignedValues = { 2, 14, 4, 9, 7 };
       Assignments assignments = Assignments.createAssignments(assignedValues);
       Object firstResult = first.evaluate(assignments);

@@ -15,13 +15,14 @@
  */
 package org.oakgp;
 
-import static org.oakgp.Arguments.createArguments;
+import static org.oakgp.node.ChildNodes.createChildNodes;
 import static org.oakgp.node.NodeType.isConstant;
 import static org.oakgp.node.NodeType.isFunction;
 
 import java.util.HashSet;
 import java.util.Set;
 
+import org.oakgp.node.ChildNodes;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
@@ -56,7 +57,7 @@ public final class NodeSimplifier {
     * Attempts to reduce the size of the specified tree structures without altering its functionality.
     * <p>
     * Simplification can occur by replacing expressions with constant values (e.g. replacing {@code (+ 1 1)} with {@code 2}) or removing redundant branches
-    * (e.g. replacing {@code (if (< 2 3) (+ v0 v1) (* v0 v1)) with {@code (+ v0 v1)}.
+    * (e.g. replacing {@code (if (< 2 3) (+ v0 v1) (* v0 v1))} with {@code (+ v0 v1)}.
     *
     * @param input
     *           the node to attempt to simplify.
@@ -97,12 +98,12 @@ public final class NodeSimplifier {
       // TODO it may be beneficial to add a "isSimplified" flag to FunctionNode to indicate that if it has already been simplified (to avoid trying again here)
 
       // try to simplify each of the arguments
-      Arguments inputArgs = input.getArguments();
-      Node[] simplifiedArgs = new Node[inputArgs.getArgCount()];
+      ChildNodes inputChildren = input.getChildren();
+      Node[] simplifiedArgs = new Node[inputChildren.size()];
       boolean haveAnyArgumentsBeenSimplified = false;
       boolean areAllArgumentsConstants = true;
       for (int i = 0; i < simplifiedArgs.length; i++) {
-         Node originalArg = inputArgs.getArg(i);
+         Node originalArg = inputChildren.getNode(i);
          simplifiedArgs[i] = simplifyOnce(originalArg);
          if (originalArg != simplifiedArgs[i]) {
             haveAnyArgumentsBeenSimplified = true;
@@ -113,13 +114,13 @@ public final class NodeSimplifier {
       }
 
       // if could simplify arguments then use simplified version to create new FunctionNode
-      Arguments arguments;
+      ChildNodes arguments;
       FunctionNode output;
       if (haveAnyArgumentsBeenSimplified) {
-         arguments = createArguments(simplifiedArgs);
+         arguments = createChildNodes(simplifiedArgs);
          output = new FunctionNode(input.getFunction(), arguments);
       } else {
-         arguments = inputArgs;
+         arguments = inputChildren;
          output = input;
       }
 

@@ -21,10 +21,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.oakgp.Arguments;
-import org.oakgp.Assignments;
 import org.oakgp.Type;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
+import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 
@@ -38,10 +38,10 @@ public final class OrElse implements Function {
    }
 
    @Override
-   public Object evaluate(Arguments arguments, Assignments assignments) {
-      Object result = arguments.firstArg().evaluate(assignments);
+   public Object evaluate(Arguments arguments) {
+      Object result = arguments.first();
       if (result == null) {
-         return arguments.secondArg().evaluate(assignments);
+         return arguments.second();
       } else {
          return result;
       }
@@ -53,22 +53,22 @@ public final class OrElse implements Function {
    }
 
    @Override
-   public Node simplify(Arguments arguments) {
+   public Node simplify(ChildNodes children) {
       List<Node> nodes = new ArrayList<>();
-      nodes.add(arguments.firstArg());
-      Node next = arguments.secondArg();
+      nodes.add(children.first());
+      Node next = children.second();
       int indexOfLastDuplicate = 0;
       Node nodeAfterLastDuplicate = null;
       while (isFunction(next) && ((FunctionNode) next).getFunction() == this) {
          FunctionNode fn = ((FunctionNode) next);
-         Arguments args = fn.getArguments();
-         if (nodes.contains(args.firstArg())) {
+         ChildNodes childsChildren = fn.getChildren();
+         if (nodes.contains(childsChildren.first())) {
             indexOfLastDuplicate = nodes.size();
-            nodeAfterLastDuplicate = args.secondArg();
+            nodeAfterLastDuplicate = childsChildren.second();
          } else {
-            nodes.add(args.firstArg());
+            nodes.add(childsChildren.first());
          }
-         next = args.secondArg();
+         next = childsChildren.second();
       }
 
       if (indexOfLastDuplicate == 0) {

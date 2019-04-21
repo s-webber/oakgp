@@ -19,7 +19,6 @@ import static org.oakgp.Type.type;
 import static org.oakgp.function.Signature.createSignature;
 
 import org.oakgp.Arguments;
-import org.oakgp.Assignments;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
 
@@ -27,8 +26,8 @@ public class GetAnyMove implements Function {
    private static final Signature SIGNATURE = createSignature(type("move"), type("board"));
 
    @Override
-   public Object evaluate(Arguments arguments, Assignments assignments) {
-      Board board = arguments.firstArg().evaluate(assignments);
+   public Object evaluate(Arguments arguments) {
+      Board board = arguments.first();
       return board.getFreeMove();
    }
 

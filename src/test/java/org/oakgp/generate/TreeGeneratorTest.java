@@ -24,7 +24,6 @@ import static org.oakgp.util.DummyRandom.random;
 
 import org.junit.Test;
 import org.oakgp.Arguments;
-import org.oakgp.Assignments;
 import org.oakgp.Type;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
@@ -93,7 +92,7 @@ public class TreeGeneratorTest {
    private Function createFunction(String displayName, Type returnType, Type... arguments) {
       return new Function() {
          @Override
-         public Object evaluate(Arguments arguments, Assignments assignments) {
+         public Object evaluate(Arguments arguments) {
             throw new UnsupportedOperationException();
          }
 

@@ -20,7 +20,6 @@ import static org.oakgp.Type.type;
 import static org.oakgp.function.Signature.createSignature;
 
 import org.oakgp.Arguments;
-import org.oakgp.Assignments;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
 
@@ -28,10 +27,10 @@ public class IsOccupied implements Function {
    private static final Signature SIGNATURE = createSignature(booleanType(), type("board"), type("possibleMove"), type("symbol"));
 
    @Override
-   public Object evaluate(Arguments arguments, Assignments assignments) {
-      Board board = arguments.firstArg().evaluate(assignments);
-      Move move = arguments.secondArg().evaluate(assignments);
-      Symbol symbol = arguments.thirdArg().evaluate(assignments);
+   public Object evaluate(Arguments arguments) {
+      Board board = arguments.first();
+      Move move = arguments.second();
+      Symbol symbol = arguments.third();
       return board.isOccupied(move, symbol);
    }
 

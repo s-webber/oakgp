@@ -15,8 +15,8 @@
  */
 package org.oakgp.examples.simple;
 
+import static java.util.Arrays.asList;
 import static org.oakgp.Assignments.createAssignments;
-import static org.oakgp.TestUtils.createList;
 import static org.oakgp.Type.booleanType;
 import static org.oakgp.Type.integerListType;
 import static org.oakgp.Type.integerToBooleanFunctionType;
@@ -139,14 +139,14 @@ public class FitnessFunctionSystemTest {
       Collections.addAll(functions, new Function[] { new Filter(integerType()), isPositive, isNegative, isZero, new Count(integerType()) });
 
       Map<Assignments, Integer> testData = new HashMap<>();
-      testData.put(createAssignments(createList("0", "0", "0", "0", "0", "0", "0", "0")), 8);
-      testData.put(createAssignments(createList("6", "3", "4", "0", "2", "4", "1", "3")), 1);
-      testData.put(createAssignments(createList("0", "0", "4", "0", "0", "0", "1", "0")), 6);
-      testData.put(createAssignments(createList("1", "-1", "2", "5", "4", "-2")), 0);
-      testData.put(createAssignments(createList("1", "0", "2", "5", "4", "-2")), 1);
-      testData.put(createAssignments(createList("1", "0", "2", "5", "4", "0")), 2);
-      testData.put(createAssignments(createList("-2", "0", "8", "7", "0", "-3", "0")), 3);
-      testData.put(createAssignments(createList("0", "0", "0")), 3);
+      testData.put(createAssignments(asList(0, 0, 0, 0, 0, 0, 0, 0)), 8);
+      testData.put(createAssignments(asList(6, 3, 4, 0, 2, 4, 1, 3)), 1);
+      testData.put(createAssignments(asList(0, 0, 4, 0, 0, 0, 1, 0)), 6);
+      testData.put(createAssignments(asList(1, -1, 2, 5, 4, -2)), 0);
+      testData.put(createAssignments(asList(1, 0, 2, 5, 4, -2)), 1);
+      testData.put(createAssignments(asList(1, 0, 2, 5, 4, 0)), 2);
+      testData.put(createAssignments(asList(-2, 0, 8, 7, 0, -3, 0)), 3);
+      testData.put(createAssignments(asList(0, 0, 0)), 3);
       FitnessFunction fitnessFunction = createIntegerTestDataFitnessFunction(testData);
 
       new RunBuilder().setReturnType(integerType()).setConstants(constants).setVariables(variableTypes).setFunctions(functions)

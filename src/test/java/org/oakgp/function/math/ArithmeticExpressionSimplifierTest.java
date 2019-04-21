@@ -1,12 +1,12 @@
 /*
  * Copyright 2015 S. Webber
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,8 +25,8 @@ import static org.oakgp.TestUtils.readNode;
 import java.util.Optional;
 
 import org.junit.Test;
-import org.oakgp.Arguments;
 import org.oakgp.Assignments;
+import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 
@@ -136,8 +136,7 @@ public class ArithmeticExpressionSimplifierTest {
 
    private void assertSimplify(String input, String expectedOutput) {
       FunctionNode in = readFunctionNode(input);
-      Arguments args = in.getArguments();
-      Node simplifiedVersion = simplify(in, args).orElse(in);
+      Node simplifiedVersion = simplify(in, in.getChildren()).orElse(in);
       assertNodeEquals(expectedOutput, simplifiedVersion);
       if (!simplifiedVersion.equals(in)) {
          int[][] assignedValues = { { 0, 0 }, { 1, 21 }, { 2, 14 }, { 3, -6 }, { 7, 3 }, { -1, 9 }, { -7, 0 } };
@@ -150,8 +149,8 @@ public class ArithmeticExpressionSimplifierTest {
       }
    }
 
-   private Optional<Node> simplify(FunctionNode in, Arguments args) {
-      return Optional.ofNullable(SIMPLIFIER.simplify(in.getFunction(), args.firstArg(), args.secondArg()));
+   private Optional<Node> simplify(FunctionNode in, ChildNodes args) {
+      return Optional.ofNullable(SIMPLIFIER.simplify(in.getFunction(), args.first(), args.second()));
    }
 
    @Test

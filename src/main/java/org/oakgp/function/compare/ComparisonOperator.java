@@ -18,10 +18,10 @@ package org.oakgp.function.compare;
 import static org.oakgp.Type.booleanType;
 
 import org.oakgp.Arguments;
-import org.oakgp.Assignments;
 import org.oakgp.Type;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
+import org.oakgp.node.ChildNodes;
 import org.oakgp.node.Node;
 import org.oakgp.util.Utils;
 
@@ -35,9 +35,9 @@ abstract class ComparisonOperator implements Function {
    }
 
    @Override
-   public final Object evaluate(Arguments arguments, Assignments assignments) {
-      Comparable o1 = arguments.firstArg().evaluate(assignments);
-      Comparable o2 = arguments.secondArg().evaluate(assignments);
+   public final Object evaluate(Arguments arguments) {
+      Comparable o1 = arguments.first();
+      Comparable o2 = arguments.second();
       int diff = o1.compareTo(o2);
       if (evaluate(diff)) {
          return Boolean.TRUE;
@@ -54,8 +54,8 @@ abstract class ComparisonOperator implements Function {
    }
 
    @Override
-   public Node simplify(Arguments arguments) {
-      if (arguments.firstArg().equals(arguments.secondArg())) {
+   public Node simplify(ChildNodes children) {
+      if (children.first().equals(children.second())) {
          return equalsIsTrue ? Utils.TRUE_NODE : Utils.FALSE_NODE;
       } else {
          return null;

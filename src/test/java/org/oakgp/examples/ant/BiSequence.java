@@ -21,9 +21,9 @@ import static org.oakgp.util.Void.VOID_TYPE;
 import static org.oakgp.util.Void.isVoid;
 
 import org.oakgp.Arguments;
-import org.oakgp.Assignments;
 import org.oakgp.function.ImpureFunction;
 import org.oakgp.function.Signature;
+import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.util.Void;
@@ -41,16 +41,16 @@ class BiSequence implements ImpureFunction {
    }
 
    @Override
-   public Void evaluate(Arguments arguments, Assignments assignments) {
-      arguments.firstArg().evaluate(assignments);
-      arguments.secondArg().evaluate(assignments);
+   public Void evaluate(Arguments arguments) {
+      arguments.first();
+      arguments.second();
       return Void.VOID;
    }
 
    @Override
-   public Node simplify(Arguments arguments) {
-      Node firstArg = arguments.firstArg();
-      Node secondArg = arguments.secondArg();
+   public Node simplify(ChildNodes children) {
+      Node firstArg = children.first();
+      Node secondArg = children.second();
       if (isVoid(firstArg)) {
          return secondArg;
       } else if (isVoid(secondArg)) {
@@ -58,11 +58,11 @@ class BiSequence implements ImpureFunction {
       } else if (isLeftAndRight(firstArg, secondArg)) {
          return VOID_CONSTANT;
       } else if (isBiSequence(firstArg)) {
-         Arguments firstArgArgs = ((FunctionNode) firstArg).getArguments();
-         return createTriSequence(firstArgArgs.firstArg(), firstArgArgs.secondArg(), secondArg);
+         ChildNodes firstArgChildren = ((FunctionNode) firstArg).getChildren();
+         return createTriSequence(firstArgChildren.first(), firstArgChildren.second(), secondArg);
       } else if (isBiSequence(secondArg)) {
-         Arguments secondArgArgs = ((FunctionNode) secondArg).getArguments();
-         return createTriSequence(firstArg, secondArgArgs.firstArg(), secondArgArgs.secondArg());
+         ChildNodes secondArgChildren = ((FunctionNode) secondArg).getChildren();
+         return createTriSequence(firstArg, secondArgChildren.first(), secondArgChildren.second());
       } else {
          return null;
       }

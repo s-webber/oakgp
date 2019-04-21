@@ -15,13 +15,12 @@
  */
 package org.oakgp.function.math;
 
-import org.oakgp.Arguments;
-import org.oakgp.Assignments;
+import org.oakgp.node.ChildNodes;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
 
 /** Performs division. */
-final class Divide<T extends Comparable<T>> extends ArithmeticOperator {
+final class Divide<T extends Comparable<T>> extends ArithmeticOperator<T> {
    private final NumberUtils<T> numberUtils;
    private final ConstantNode minusOne;
 
@@ -33,24 +32,24 @@ final class Divide<T extends Comparable<T>> extends ArithmeticOperator {
    }
 
    @Override
-   protected T evaluate(Node arg1, Node arg2, Assignments assignments) {
-      if (numberUtils.isZero(arg2)) {
+   protected T evaluate(T arg1, T arg2) {
+      if (numberUtils.zero().evaluate(null).equals(arg2)) { // TODO
          return (T) numberUtils.one().evaluate(null);
       } else {
-         return numberUtils.divide(arg1, arg2, assignments);
+         return numberUtils.divide(arg1, arg2);
       }
    }
 
    @Override
-   public Node simplify(Arguments arguments) {
-      Node arg2 = arguments.secondArg();
+   public Node simplify(ChildNodes children) {
+      Node arg2 = children.second();
       if (numberUtils.isZero(arg2)) {
          return numberUtils.one();
       } else if (numberUtils.isOne(arg2)) {
-         return arguments.firstArg();
+         return children.first();
       } else if (minusOne.equals(arg2)) {
-         return numberUtils.negate(arguments.firstArg());
-      } else if (arguments.firstArg().equals(arg2)) {
+         return numberUtils.negate(children.first());
+      } else if (children.first().equals(arg2)) {
          return numberUtils.one();
       } else {
          return null;

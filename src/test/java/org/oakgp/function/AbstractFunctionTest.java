@@ -28,10 +28,10 @@ import java.util.Observable;
 import java.util.Observer;
 
 import org.junit.Test;
-import org.oakgp.Arguments;
 import org.oakgp.Assignments;
 import org.oakgp.NodeSimplifier;
 import org.oakgp.Type;
+import org.oakgp.node.ChildNodes;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
@@ -203,12 +203,11 @@ public abstract class AbstractFunctionTest {
          if (isFunction(simplifiedNode)) {
             // assert that signature of function matches the
             // return type and argument types of the function node the function belongs to
-            FunctionNode fn = (FunctionNode) simplifiedNode;
-            Arguments fnArguments = fn.getArguments();
-            Signature fnSignature = fn.getFunction().getSignature();
+            FunctionNode functionNode = (FunctionNode) simplifiedNode;
+            Signature functionNodeSignature = functionNode.getFunction().getSignature();
 
-            assertSame(fn.getType(), fnSignature.getReturnType());
-            assertSameArgumentTypes(fnArguments, fnSignature);
+            assertSame(functionNode.getType(), functionNodeSignature.getReturnType());
+            assertSameArgumentTypes(functionNode.getChildren(), functionNodeSignature);
          }
 
          // assert multiple calls to simplify with the same argument produces results that are equal
@@ -217,10 +216,10 @@ public abstract class AbstractFunctionTest {
          return this;
       }
 
-      private void assertSameArgumentTypes(Arguments args, Signature signature) {
-         assertEquals(args.getArgCount(), signature.getArgumentTypesLength());
+      private void assertSameArgumentTypes(ChildNodes args, Signature signature) {
+         assertEquals(args.size(), signature.getArgumentTypesLength());
          for (int i = 0; i < signature.getArgumentTypesLength(); i++) {
-            assertSame(args.getArg(i).getType(), signature.getArgumentType(i));
+            assertSame(args.getNode(i).getType(), signature.getArgumentType(i));
          }
       }
 

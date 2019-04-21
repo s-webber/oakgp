@@ -15,7 +15,7 @@
  */
 package org.oakgp.node.walk;
 
-import org.oakgp.Arguments;
+import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.node.NodeType;
@@ -41,9 +41,9 @@ public final class DepthWalk {
       if (NodeType.isFunction(node)) {
          int total = treeWalkerStrategy.test(node, currentDepth) ? 1 : 0;
          FunctionNode functionNode = (FunctionNode) node;
-         Arguments arguments = functionNode.getArguments();
-         for (int i = 0; i < arguments.getArgCount(); i++) {
-            total += getNodeCount(arguments.getArg(i), treeWalkerStrategy, currentDepth + 1);
+         ChildNodes children = functionNode.getChildren();
+         for (int i = 0; i < children.size(); i++) {
+            total += getNodeCount(children.getNode(i), treeWalkerStrategy, currentDepth + 1);
          }
          return total;
       } else {
@@ -60,9 +60,9 @@ public final class DepthWalk {
       if (NodeType.isFunction(current)) {
          int total = 0;
          FunctionNode functionNode = (FunctionNode) current;
-         Arguments arguments = functionNode.getArguments();
-         for (int i = 0; i < arguments.getArgCount(); i++) {
-            Node child = arguments.getArg(i);
+         ChildNodes children = functionNode.getChildren();
+         for (int i = 0; i < children.size(); i++) {
+            Node child = children.getNode(i);
             int c = getNodeCount(child, treeWalkerStrategy, currentDepth + 1);
             if (total + c > index) {
                return getAt(child, index - total, treeWalkerStrategy, currentDepth + 1);
@@ -95,12 +95,12 @@ public final class DepthWalk {
       if (NodeType.isFunction(current)) {
          int total = 0;
          FunctionNode functionNode = (FunctionNode) current;
-         Arguments arguments = functionNode.getArguments();
-         for (int i = 0; i < arguments.getArgCount(); i++) {
-            Node child = arguments.getArg(i);
+         ChildNodes children = functionNode.getChildren();
+         for (int i = 0; i < children.size(); i++) {
+            Node child = children.getNode(i);
             int c = child.getNodeCount();
             if (total + c > index) {
-               return new FunctionNode(functionNode.getFunction(), arguments.replaceAt(i, replaceAt(child, index - total, replacement, currentDepth + 1)));
+               return new FunctionNode(functionNode.getFunction(), children.replaceAt(i, replaceAt(child, index - total, replacement, currentDepth + 1)));
             } else {
                total += c;
             }

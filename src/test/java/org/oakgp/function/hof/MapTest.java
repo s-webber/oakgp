@@ -15,7 +15,7 @@
  */
 package org.oakgp.function.hof;
 
-import static org.oakgp.TestUtils.createList;
+import static java.util.Arrays.asList;
 import static org.oakgp.Type.booleanType;
 import static org.oakgp.Type.integerType;
 
@@ -33,9 +33,9 @@ public class MapTest extends AbstractFunctionTest {
 
    @Override
    public void testEvaluate() {
-      evaluate("(map pos? [2 -12 8 -3 -7 6])").to(createList("true", "false", "true", "false", "false", "true"));
-      evaluate("(map neg? [2 -12 8 -3 -7 6])").to(createList("false", "true", "false", "true", "true", "false"));
-      evaluate("(map zero? [2 -12 8 -3 -7 6])").to(createList("false", "false", "false", "false", "false", "false"));
+      evaluate("(map pos? [2 -12 8 -3 -7 6])").to(asList(true, false, true, false, false, true));
+      evaluate("(map neg? [2 -12 8 -3 -7 6])").to(asList(false, true, false, true, true, false));
+      evaluate("(map zero? [2 -12 8 -3 -7 6])").to(asList(false, false, false, false, false, false));
    }
 
    @Override

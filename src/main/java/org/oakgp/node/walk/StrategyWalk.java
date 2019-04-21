@@ -17,7 +17,7 @@ package org.oakgp.node.walk;
 
 import java.util.function.Predicate;
 
-import org.oakgp.Arguments;
+import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.node.NodeType;
@@ -39,9 +39,9 @@ public final class StrategyWalk {
       int total = treeWalkerStrategy.test(node) ? 1 : 0;
       if (NodeType.isFunction(node)) {
          FunctionNode functionNode = (FunctionNode) node;
-         Arguments arguments = functionNode.getArguments();
-         for (int i = 0; i < arguments.getArgCount(); i++) {
-            total += getNodeCount(arguments.getArg(i), treeWalkerStrategy);
+         ChildNodes children = functionNode.getChildren();
+         for (int i = 0; i < children.size(); i++) {
+            total += getNodeCount(children.getNode(i), treeWalkerStrategy);
          }
       }
       return total;
@@ -51,10 +51,10 @@ public final class StrategyWalk {
    public static Node getAt(Node node, int index, Predicate<Node> treeWalkerStrategy) {
       if (NodeType.isFunction(node)) {
          FunctionNode functionNode = (FunctionNode) node;
-         Arguments arguments = functionNode.getArguments();
+         ChildNodes children = functionNode.getChildren();
          int total = 0;
-         for (int i = 0; i < arguments.getArgCount(); i++) {
-            Node child = arguments.getArg(i);
+         for (int i = 0; i < children.size(); i++) {
+            Node child = children.getNode(i);
             int c = getNodeCount(child, treeWalkerStrategy);
             if (total + c > index) {
                return getAt(child, index - total, treeWalkerStrategy);
@@ -82,13 +82,13 @@ public final class StrategyWalk {
    public static Node replaceAt(Node node, int index, java.util.function.Function<Node, Node> replacement, Predicate<Node> treeWalkerStrategy) {
       if (NodeType.isFunction(node)) {
          FunctionNode functionNode = (FunctionNode) node;
-         Arguments arguments = functionNode.getArguments();
+         ChildNodes children = functionNode.getChildren();
          int total = 0;
-         for (int i = 0; i < arguments.getArgCount(); i++) {
-            Node child = arguments.getArg(i);
+         for (int i = 0; i < children.size(); i++) {
+            Node child = children.getNode(i);
             int c = getNodeCount(child, treeWalkerStrategy);
             if (total + c > index) {
-               return new FunctionNode(functionNode.getFunction(), arguments.replaceAt(i, replaceAt(child, index - total, replacement, treeWalkerStrategy)));
+               return new FunctionNode(functionNode.getFunction(), children.replaceAt(i, replaceAt(child, index - total, replacement, treeWalkerStrategy)));
             } else {
                total += c;
             }

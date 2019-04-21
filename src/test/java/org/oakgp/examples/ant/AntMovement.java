@@ -18,7 +18,6 @@ package org.oakgp.examples.ant;
 import java.util.function.Consumer;
 
 import org.oakgp.Arguments;
-import org.oakgp.Assignments;
 import org.oakgp.function.Function;
 import org.oakgp.function.ImpureFunction;
 import org.oakgp.function.Signature;
@@ -50,8 +49,8 @@ final class AntMovement implements ImpureFunction {
    }
 
    @Override
-   public Void evaluate(Arguments arguments, Assignments assignments) {
-      MutableState state = arguments.firstArg().evaluate(assignments);
+   public Void evaluate(Arguments arguments) {
+      MutableState state = arguments.first();
       movement.accept(state);
       return Void.VOID;
    }

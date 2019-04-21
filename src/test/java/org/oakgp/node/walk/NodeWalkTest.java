@@ -110,7 +110,7 @@ public class NodeWalkTest {
 
       Predicate<Node> criteria = n -> isFunction(n) && ((FunctionNode) n).getFunction() == INTEGER_UTILS.getSubtract();
       assertNodeEquals("(+ (+ (* -1 v3) 0) (+ 13 v1))",
-            NodeWalk.replaceAll(input, criteria, n -> new FunctionNode(INTEGER_UTILS.getAdd(), ((FunctionNode) n).getArguments())));
+            NodeWalk.replaceAll(input, criteria, n -> new FunctionNode(INTEGER_UTILS.getAdd(), ((FunctionNode) n).getChildren())));
    }
 
    @Test

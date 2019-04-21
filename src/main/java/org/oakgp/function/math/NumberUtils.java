@@ -18,7 +18,6 @@ package org.oakgp.function.math;
 import static org.oakgp.node.NodeType.isConstant;
 import static org.oakgp.node.NodeType.isFunction;
 
-import org.oakgp.Assignments;
 import org.oakgp.Type;
 import org.oakgp.function.Function;
 import org.oakgp.node.ConstantNode;
@@ -39,10 +38,10 @@ abstract class NumberUtils<T extends Comparable<T>> {
    private final ConstantNode one;
    private final ConstantNode two;
    private final ArithmeticExpressionSimplifier simplifier;
-   private final Add add;
-   private final Subtract subtract;
-   private final Multiply multiply;
-   private final Divide divide;
+   private final Add<T> add;
+   private final Subtract<T> subtract;
+   private final Multiply<T> multiply;
+   private final Divide<T> divide;
 
    /**
     * Creates a {@code NumberUtils} for the numeric values represented by instances of {@link #T}.
@@ -64,10 +63,10 @@ abstract class NumberUtils<T extends Comparable<T>> {
       this.one = createConstant(one);
       this.two = createConstant(two);
       this.simplifier = new ArithmeticExpressionSimplifier(this);
-      this.add = new Add(this);
-      this.subtract = new Subtract(this);
-      this.multiply = new Multiply(this);
-      this.divide = new Divide(this);
+      this.add = new Add<>(this);
+      this.subtract = new Subtract<>(this);
+      this.multiply = new Multiply<>(this);
+      this.divide = new Divide<>(this);
    }
 
    /** Returns the {@code Type} associated with the numeric values this instance is concerned with. */
@@ -81,22 +80,22 @@ abstract class NumberUtils<T extends Comparable<T>> {
    }
 
    /** Returns an addition operator for the numeric type this instance is concerned with. */
-   public final Add getAdd() {
+   public final Add<T> getAdd() {
       return add;
    }
 
    /** Returns a subtraction operator for the numeric type this instance is concerned with. */
-   public final Subtract getSubtract() {
+   public final Subtract<T> getSubtract() {
       return subtract;
    }
 
    /** Returns a multiplication operator for the numeric type this instance is concerned with. */
-   public final Multiply getMultiply() {
+   public final Multiply<T> getMultiply() {
       return multiply;
    }
 
    /** Returns a division operator for the numeric type this instance is concerned with. */
-   public final Divide getDivide() {
+   public final Divide<T> getDivide() {
       return divide;
    }
 
@@ -120,11 +119,6 @@ abstract class NumberUtils<T extends Comparable<T>> {
       return one;
    }
 
-   /** Returns the result of adding the result of evaluating the given {@code Node}s with the given {@code Assignments}. */
-   public final T add(Node n1, Node n2, Assignments assignments) {
-      return add(evaluate(n1, assignments), evaluate(n2, assignments));
-   }
-
    /**
     * Returns the result of adding the numeric values represented by the given {@code Node}s.
     *
@@ -134,7 +128,7 @@ abstract class NumberUtils<T extends Comparable<T>> {
     *           a {@code ConstantNode} with a value of type {@link #T}
     */
    public final ConstantNode add(Node n1, Node n2) {
-      return createConstant(add(n1, n2, null));
+      return createConstant(add(evaluate(n1), evaluate(n2)));
    }
 
    /**
@@ -158,15 +152,6 @@ abstract class NumberUtils<T extends Comparable<T>> {
    }
 
    /**
-    * Returns the result of subtracting the result of evaluating the given {@code Node}s with the given {@code Assignments}.
-    *
-    * @return {@code n1} - {@code n2}
-    */
-   public final T subtract(Node n1, Node n2, Assignments assignments) {
-      return subtract(evaluate(n1, assignments), evaluate(n2, assignments));
-   }
-
-   /**
     * Returns the result of subtracting the numeric values represented by the given {@code Node}s.
     *
     * @param n1
@@ -176,7 +161,7 @@ abstract class NumberUtils<T extends Comparable<T>> {
     * @return {@code n1} - {@code n2}
     */
    public final ConstantNode subtract(Node n1, Node n2) {
-      return createConstant(subtract(n1, n2, null));
+      return createConstant(subtract(evaluate(n1), evaluate(n2)));
    }
 
    /**
@@ -203,11 +188,6 @@ abstract class NumberUtils<T extends Comparable<T>> {
       return subtract(zero, n);
    }
 
-   /** Returns the result of multiplying the result of evaluating the given {@code Node}s with the given {@code Assignments}. */
-   public final T multiply(Node n1, Node n2, Assignments assignments) {
-      return multiply(evaluate(n1, assignments), evaluate(n2, assignments));
-   }
-
    /**
     * Returns the result of multiplying the numeric values represented by the given {@code Node}s.
     *
@@ -217,21 +197,12 @@ abstract class NumberUtils<T extends Comparable<T>> {
     *           a {@code ConstantNode} with a value of type {@link #T}
     */
    public final ConstantNode multiply(Node n1, Node n2) {
-      return createConstant(multiply(n1, n2, null));
+      return createConstant(multiply(evaluate(n1), evaluate(n2)));
    }
 
    /** Returns a new expression which multiplies the given {@code Node} by two. */
    public final FunctionNode multiplyByTwo(Node arg) {
       return new FunctionNode(multiply, two, arg);
-   }
-
-   /**
-    * Returns the result of dividing the result of evaluating the given {@code Node}s with the given {@code Assignments}.
-    *
-    * @return {@code n1} / {@code n2}
-    */
-   public final T divide(Node n1, Node n2, Assignments assignments) {
-      return divide(evaluate(n1, assignments), evaluate(n2, assignments));
    }
 
    /**
@@ -311,10 +282,6 @@ abstract class NumberUtils<T extends Comparable<T>> {
    }
 
    private T evaluate(Node n) {
-      return evaluate(n, null);
-   }
-
-   private T evaluate(Node n, Assignments a) {
-      return n.evaluate(a);
+      return n.evaluate(null);
    }
 }

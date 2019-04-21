@@ -20,7 +20,6 @@ import static org.oakgp.examples.hanoi.TowersOfHanoiExample.POLE_TYPE;
 import static org.oakgp.examples.hanoi.TowersOfHanoiExample.STATE_TYPE;
 
 import org.oakgp.Arguments;
-import org.oakgp.Assignments;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
 
@@ -41,9 +40,9 @@ class Next implements Function {
     * @return the ID of the upper (i.e. top) disc of the specified pole, or {code 0} if there are no discs on the pole
     */
    @Override
-   public Object evaluate(Arguments arguments, Assignments assignments) {
-      TowersOfHanoi gameState = arguments.firstArg().evaluate(assignments);
-      Pole pole = arguments.secondArg().evaluate(assignments);
+   public Object evaluate(Arguments arguments) {
+      TowersOfHanoi gameState = arguments.first();
+      Pole pole = arguments.second();
       return gameState.upperDisc(pole);
    }
 }

@@ -21,7 +21,6 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.oakgp.Arguments;
-import org.oakgp.Assignments;
 import org.oakgp.Type;
 
 public class FunctionTest {
@@ -34,7 +33,7 @@ public class FunctionTest {
          }
 
          @Override
-         public Object evaluate(Arguments arguments, Assignments assignments) {
+         public Object evaluate(Arguments arguments) {
             throw new UnsupportedOperationException();
          }
       };
@@ -64,7 +63,7 @@ class DummyFunction implements Function {
    }
 
    @Override
-   public Object evaluate(Arguments arguments, Assignments assignments) {
+   public Object evaluate(Arguments arguments) {
       throw new UnsupportedOperationException();
    }
 }
@@ -76,7 +75,7 @@ class IsBooleanDummyFunction implements Function {
    }
 
    @Override
-   public Object evaluate(Arguments arguments, Assignments assignments) {
+   public Object evaluate(Arguments arguments) {
       throw new UnsupportedOperationException();
    }
 }
