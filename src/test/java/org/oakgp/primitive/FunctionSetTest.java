@@ -103,7 +103,7 @@ public class FunctionSetTest {
    @Test
    public void assertGetBySignatureUnmodifiable() {
       FunctionSet functionSet = createFunctionSet();
-      List<Function> integers = functionSet.getByType(integerType());
+      List<Function> integers = functionSet.getBySignature(createSignature(integerType(), integerType(), integerType()));
       assertUnmodifiable(integers);
    }
 
