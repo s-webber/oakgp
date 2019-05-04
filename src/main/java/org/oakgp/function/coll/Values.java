@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 S. Webber
+ * Copyright 2019 S. Webber
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,29 +15,28 @@
  */
 package org.oakgp.function.coll;
 
-import static org.oakgp.Type.integerType;
 import static org.oakgp.Type.listType;
+import static org.oakgp.Type.mapType;
 
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.Map;
 
 import org.oakgp.Arguments;
 import org.oakgp.Type;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
 
-/** Determines the number of elements contained in a collection. */
-public final class Count implements Function {
+public class Values implements Function {
    private final Signature signature;
 
-   /** Constructs a function to return the number of items in collections of the specified type. */
-   public Count(Type t) {
-      signature = Signature.createSignature(integerType(), listType(t));
+   public Values(Type key, Type value) {
+      signature = Signature.createSignature(listType(value), mapType(key, value));
    }
 
    @Override
    public Object evaluate(Arguments arguments) {
-      Collection<?> a = arguments.first();
-      return a.size();
+      Map<?, ?> a = arguments.first();
+      return new ArrayList<>(a.values()); // TODO should we just return a.values() instead?
    }
 
    @Override

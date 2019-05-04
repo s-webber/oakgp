@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 S. Webber
+ * Copyright 2019 S. Webber
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,32 +23,31 @@ import org.oakgp.Type;
 import org.oakgp.function.AbstractFunctionTest;
 import org.oakgp.node.ConstantNode;
 
-public class CountTest extends AbstractFunctionTest {
+public class ContainsTest extends AbstractFunctionTest {
    @Override
-   protected Count getFunction() {
-      return new Count(integerType());
+   protected Contains getFunction() {
+      return new Contains(integerType());
    }
 
    @Override
    public void testEvaluate() {
+      evaluate("(contains [8 5 6] 8)").to(true);
+      evaluate("(contains [8 5 6] 5)").to(true);
+      evaluate("(contains [8 5 6] 6)").to(true);
+
+      evaluate("(contains [8 5 6] 0)").to(false);
+      evaluate("(contains [8 5 6] 1)").to(false);
+      evaluate("(contains [8 5 6] 7)").to(false);
+      evaluate("(contains [8 5 6] 42)").to(false);
+      evaluate("(contains [8 5 6] -8)").to(false);
+
       ConstantNode emptyList = new ConstantNode(Collections.emptyList(), Type.listType(Type.integerType()));
-      evaluate("(count v0)").assigned(emptyList).to(0);
-      evaluate("(count [2 -12 8])").to(3);
-      evaluate("(count [2 -12 8 -3 -7])").to(5);
+      evaluate("(contains v0 1)").assigned(emptyList).to(false);
    }
 
    @Override
    public void testCanSimplify() {
-      simplify("(count [2 -12 8])").to("3");
-
-      // TODO:
-      // (count (map f v0))
-      // (count (map-values f v0))
-      // (count (values v0))
-      //
-      // all all simplify to:
-      //
-      // (count v0)
+      simplify("(contains [2 -12 8] -12)").to("true");
    }
 
    @Override

@@ -225,11 +225,6 @@ abstract class NumberUtils<T extends Comparable<T>> {
       return f == add;
    }
 
-   /** Returns {@code true} if the given {@code Node} is a {@code FunctionNode} with the same {@code Function} as returned from {@link #getSubtract()}. */
-   public final boolean isSubtract(Node n) {
-      return isFunction(n) && isSubtract((FunctionNode) n);
-   }
-
    /** Returns {@code true} if the {@code Function} of the given {@code FunctionNode} is the same as returned from {@link #getSubtract()}. */
    public final boolean isSubtract(FunctionNode n) {
       return isSubtract(n.getFunction());
@@ -251,7 +246,7 @@ abstract class NumberUtils<T extends Comparable<T>> {
    }
 
    /** Returns {@code true} if the given {@code Function} is the same as returned from {@link #getDivide()}. */
-   private boolean isDivide(Function f) {
+   public final boolean isDivide(Function f) {
       return f == divide;
    }
 

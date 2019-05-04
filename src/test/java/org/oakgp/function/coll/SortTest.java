@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 S. Webber
+ * Copyright 2019 S. Webber
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,38 +17,31 @@ package org.oakgp.function.coll;
 
 import static org.oakgp.Type.integerType;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 import org.oakgp.Type;
 import org.oakgp.function.AbstractFunctionTest;
 import org.oakgp.node.ConstantNode;
 
-public class CountTest extends AbstractFunctionTest {
+public class SortTest extends AbstractFunctionTest {
    @Override
-   protected Count getFunction() {
-      return new Count(integerType());
+   protected Sort getFunction() {
+      return new Sort(integerType());
    }
 
    @Override
    public void testEvaluate() {
       ConstantNode emptyList = new ConstantNode(Collections.emptyList(), Type.listType(Type.integerType()));
-      evaluate("(count v0)").assigned(emptyList).to(0);
-      evaluate("(count [2 -12 8])").to(3);
-      evaluate("(count [2 -12 8 -3 -7])").to(5);
+      evaluate("(sort v0)").assigned(emptyList).to(Collections.emptyList());
+      evaluate("(sort [2 5 3 6 9 8 2 7])").to(Arrays.asList(2, 2, 3, 5, 6, 7, 8, 9));
+      evaluate("(sort [2 2 3 5 6 7 8 9])").to(Arrays.asList(2, 2, 3, 5, 6, 7, 8, 9));
    }
 
    @Override
    public void testCanSimplify() {
-      simplify("(count [2 -12 8])").to("3");
-
-      // TODO:
-      // (count (map f v0))
-      // (count (map-values f v0))
-      // (count (values v0))
-      //
-      // all all simplify to:
-      //
-      // (count v0)
+      simplify("(sort (sort v0))").with(Type.listType(Type.integerType())).to("(sort v0)");
+      simplify("(sort [7 8 6])").to("[6 7 8]");
    }
 
    @Override

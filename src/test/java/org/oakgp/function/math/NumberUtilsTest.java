@@ -78,17 +78,12 @@ public class NumberUtilsTest {
       assertIsAdd("(+ 1 2)", true);
       assertIsAdd("(- 1 2)", false);
       assertIsAdd("(* 1 2)", false);
-      assertIsAdd("1", false);
-      assertIsAdd("true", false);
+      assertIsAdd("(/ 1 2)", false);
    }
 
    private void assertIsAdd(String input, boolean expectedResult) {
-      Node n = readNode(input);
-      if (n instanceof FunctionNode) {
-         assertEquals(expectedResult, NUMBER_UTILS.isAdd(((FunctionNode) n).getFunction()));
-      } else {
-         assertFalse(expectedResult);
-      }
+      FunctionNode n = readFunctionNode(input);
+      assertEquals(expectedResult, NUMBER_UTILS.isAdd(n.getFunction()));
    }
 
    @Test
@@ -96,19 +91,13 @@ public class NumberUtilsTest {
       assertIsSubtract("(- 1 2)", true);
       assertIsSubtract("(+ 1 2)", false);
       assertIsSubtract("(* 1 2)", false);
-      assertIsSubtract("1", false);
-      assertIsSubtract("true", false);
+      assertIsSubtract("(/ 1 2)", false);
    }
 
    private void assertIsSubtract(String input, boolean expectedResult) {
-      Node n = readNode(input);
+      FunctionNode n = readFunctionNode(input);
       assertEquals(expectedResult, NUMBER_UTILS.isSubtract(n));
-      if (n instanceof FunctionNode) {
-         assertEquals(expectedResult, NUMBER_UTILS.isSubtract((FunctionNode) n));
-         assertEquals(expectedResult, NUMBER_UTILS.isSubtract(((FunctionNode) n).getFunction()));
-      } else {
-         assertFalse(expectedResult);
-      }
+      assertEquals(expectedResult, NUMBER_UTILS.isSubtract(n.getFunction()));
    }
 
    @Test
@@ -116,18 +105,26 @@ public class NumberUtilsTest {
       assertIsMultiply("(* 1 2)", true);
       assertIsMultiply("(+ 1 2)", false);
       assertIsMultiply("(- 1 2)", false);
-      assertIsMultiply("1", false);
-      assertIsMultiply("true", false);
+      assertIsMultiply("(/ 1 2)", false);
    }
 
    private void assertIsMultiply(String input, boolean expectedResult) {
-      Node n = readNode(input);
-      if (n instanceof FunctionNode) {
-         assertEquals(expectedResult, NUMBER_UTILS.isMultiply((FunctionNode) n));
-         assertEquals(expectedResult, NUMBER_UTILS.isMultiply(((FunctionNode) n).getFunction()));
-      } else {
-         assertFalse(expectedResult);
-      }
+      FunctionNode n = readFunctionNode(input);
+      assertEquals(expectedResult, NUMBER_UTILS.isMultiply(n));
+      assertEquals(expectedResult, NUMBER_UTILS.isMultiply(n.getFunction()));
+   }
+
+   @Test
+   public void testIsDivide() {
+      assertIsDivide("(/ 1 2)", true);
+      assertIsDivide("(+ 1 2)", false);
+      assertIsDivide("(- 1 2)", false);
+      assertIsDivide("(* 1 2)", false);
+   }
+
+   private void assertIsDivide(String input, boolean expectedResult) {
+      FunctionNode n = readFunctionNode(input);
+      assertEquals(expectedResult, NUMBER_UTILS.isDivide(n.getFunction()));
    }
 
    @Test
@@ -144,6 +141,13 @@ public class NumberUtilsTest {
       assertTrue(NUMBER_UTILS.isArithmeticExpression(readFunctionNode("(- v0 v1)")));
       assertTrue(NUMBER_UTILS.isArithmeticExpression(readFunctionNode("(* v0 v1)")));
       assertTrue(NUMBER_UTILS.isArithmeticExpression(readFunctionNode("(/ v0 v1)")));
+   }
+
+   @Test
+   public void testIsNotArithmeticExpression() {
       assertFalse(NUMBER_UTILS.isArithmeticExpression(readFunctionNode("(= v0 v1)")));
+      assertFalse(NUMBER_UTILS.isArithmeticExpression(readNode("1")));
+      assertFalse(NUMBER_UTILS.isArithmeticExpression(readNode("[1]")));
+      assertFalse(NUMBER_UTILS.isArithmeticExpression(readNode("\"1\"")));
    }
 }

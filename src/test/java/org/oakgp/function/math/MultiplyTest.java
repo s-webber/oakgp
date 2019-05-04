@@ -25,7 +25,7 @@ import org.oakgp.function.Function;
 
 public class MultiplyTest extends AbstractFunctionTest {
    @Override
-   protected Multiply getFunction() {
+   protected Multiply<Integer> getFunction() {
       return IntegerUtils.INTEGER_UTILS.getMultiply();
    }
 
@@ -66,7 +66,7 @@ public class MultiplyTest extends AbstractFunctionTest {
       simplify("(* v1 1)").to("v1");
       simplify("(* 1 v1)").to("v1");
 
-      // (* 3 (- 0 (+ 1 v2))) = 3*(0-(1+x)) = -3-3x
+      // (* 3 (- 0 (+ 1 v0))) = 3*(0-(1+x)) = -3-3x
       simplify("(* 3 (- 0 (+ 1 v0)))").to("(- (* -3 v0) 3)");
 
       simplify("(* 3 (+ 9 v0))").to("(+ 27 (* 3 v0))");
@@ -81,11 +81,13 @@ public class MultiplyTest extends AbstractFunctionTest {
       cannotSimplify("(* 2 v0)", integerType());
       cannotSimplify("(* -1 v0)", integerType());
       cannotSimplify("(* v0 v1)", integerType(), integerType());
+      cannotSimplify("(* 3 (/ 9 v0))", integerType());
    }
 
    @Override
    protected Function[] getFunctionSet() {
-      return new Function[] { getFunction(), IntegerUtils.INTEGER_UTILS.getAdd(), IntegerUtils.INTEGER_UTILS.getSubtract(), LongUtils.LONG_UTILS.getMultiply(),
-            DoubleUtils.DOUBLE_UTILS.getMultiply(), BigIntegerUtils.BIG_INTEGER_UTILS.getMultiply(), BigDecimalUtils.BIG_DECIMAL_UTILS.getMultiply() };
+      return new Function[] { getFunction(), IntegerUtils.INTEGER_UTILS.getAdd(), IntegerUtils.INTEGER_UTILS.getSubtract(),
+            IntegerUtils.INTEGER_UTILS.getDivide(), LongUtils.LONG_UTILS.getMultiply(), DoubleUtils.DOUBLE_UTILS.getMultiply(),
+            BigIntegerUtils.BIG_INTEGER_UTILS.getMultiply(), BigDecimalUtils.BIG_DECIMAL_UTILS.getMultiply() };
    }
 }

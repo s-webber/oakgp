@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 S. Webber
+ * Copyright 2019 S. Webber
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,33 +15,48 @@
  */
 package org.oakgp.function.coll;
 
-import static org.oakgp.Type.integerType;
 import static org.oakgp.Type.listType;
+import static org.oakgp.node.NodeType.isFunction;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.oakgp.Arguments;
 import org.oakgp.Type;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
+import org.oakgp.node.ChildNodes;
+import org.oakgp.node.FunctionNode;
+import org.oakgp.node.Node;
 
-/** Determines the number of elements contained in a collection. */
-public final class Count implements Function {
+public class Sort implements Function {
    private final Signature signature;
 
-   /** Constructs a function to return the number of items in collections of the specified type. */
-   public Count(Type t) {
-      signature = Signature.createSignature(integerType(), listType(t));
+   public Sort(Type t) {
+      signature = Signature.createSignature(listType(t), listType(t));
    }
 
    @Override
    public Object evaluate(Arguments arguments) {
-      Collection<?> a = arguments.first();
-      return a.size();
+      Collection<Comparable<?>> input = arguments.first();
+      List<Comparable<?>> output = new ArrayList<>(input);
+      output.sort(null);
+      return output;
    }
 
    @Override
    public Signature getSignature() {
       return signature;
+   }
+
+   @Override
+   public Node simplify(ChildNodes children) {
+      Node n = children.first();
+      if (isFunction(n) && ((FunctionNode) n).getFunction() == this) {
+         return n;
+      } else {
+         return null;
+      }
    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 S. Webber
+ * Copyright 2019 S. Webber
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,39 +16,26 @@
 package org.oakgp.function.coll;
 
 import static org.oakgp.Type.integerType;
+import static org.oakgp.Type.stringType;
 
-import java.util.Collections;
+import java.util.Arrays;
 
-import org.oakgp.Type;
 import org.oakgp.function.AbstractFunctionTest;
-import org.oakgp.node.ConstantNode;
 
-public class CountTest extends AbstractFunctionTest {
+public class ValuesTest extends AbstractFunctionTest {
    @Override
-   protected Count getFunction() {
-      return new Count(integerType());
+   protected Values getFunction() {
+      return new Values(stringType(), integerType());
    }
 
    @Override
    public void testEvaluate() {
-      ConstantNode emptyList = new ConstantNode(Collections.emptyList(), Type.listType(Type.integerType()));
-      evaluate("(count v0)").assigned(emptyList).to(0);
-      evaluate("(count [2 -12 8])").to(3);
-      evaluate("(count [2 -12 8 -3 -7])").to(5);
+      evaluate("(values {\"a\" 1})").to(Arrays.asList(1));
    }
 
    @Override
    public void testCanSimplify() {
-      simplify("(count [2 -12 8])").to("3");
-
-      // TODO:
-      // (count (map f v0))
-      // (count (map-values f v0))
-      // (count (values v0))
-      //
-      // all all simplify to:
-      //
-      // (count v0)
+      simplify("(values {\"a\" 1})").to("[1]");
    }
 
    @Override

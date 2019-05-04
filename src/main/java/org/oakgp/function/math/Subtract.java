@@ -16,6 +16,7 @@
 package org.oakgp.function.math;
 
 import static org.oakgp.node.NodeType.isConstant;
+import static org.oakgp.node.NodeType.isFunction;
 
 import org.oakgp.function.Function;
 import org.oakgp.node.ChildNodes;
@@ -57,7 +58,7 @@ final class Subtract<T extends Comparable<T>> extends ArithmeticOperator<T> {
          // anything minus zero is itself
          // e.g. (- x 0) -> x
          return arg1;
-      } else if (numberUtils.isZero(arg1) && numberUtils.isSubtract(arg2)) {
+      } else if (numberUtils.isZero(arg1) && isSubtract(arg2)) {
          // simplify "zero minus n" expressions
          // e.g. (- 0 (- x y) -> (- y x)
          FunctionNode fn2 = (FunctionNode) arg2;
@@ -101,6 +102,10 @@ final class Subtract<T extends Comparable<T>> extends ArithmeticOperator<T> {
 
          return simplifier.simplify(this, arg1, arg2);
       }
+   }
+
+   private boolean isSubtract(Node arg2) {
+      return isFunction(arg2) && numberUtils.isSubtract((FunctionNode) arg2);
    }
 
    @Override

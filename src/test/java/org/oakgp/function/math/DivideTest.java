@@ -25,7 +25,7 @@ import org.oakgp.function.Function;
 
 public class DivideTest extends AbstractFunctionTest {
    @Override
-   protected Divide getFunction() {
+   protected Divide<Integer> getFunction() {
       return IntegerUtils.INTEGER_UTILS.getDivide();
    }
 
