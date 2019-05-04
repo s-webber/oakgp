@@ -58,9 +58,10 @@ public final class VariableNode extends TerminalNode {
     *
     * @return the value stored in {@code Assignments} at the index specified by the ID of this {@code VariableNode}
     */
+   @SuppressWarnings("unchecked")
    @Override
-   public Object evaluate(Assignments assignments) {
-      return assignments.get(id);
+   public <T> T evaluate(Assignments assignments) {
+      return (T) assignments.get(id);
    }
 
    @Override

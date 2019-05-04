@@ -98,7 +98,7 @@ public class UtilsTest {
       assertEquals(6, result.size());
       for (int i = 0; i < result.size(); i++) {
          assertSame(integerType(), result.get(i).getType());
-         assertEquals(i + minInclusive, result.get(i).evaluate(null));
+         assertEquals(new Integer(i + minInclusive), result.get(i).evaluate(null));
       }
    }
 

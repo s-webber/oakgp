@@ -92,8 +92,8 @@ public final class FunctionNode implements Node {
 
    @SuppressWarnings("unchecked")
    @Override
-   public Object evaluate(Assignments assignments) {
-      return function.evaluate(new FunctionNodeArguments(arguments, assignments));
+   public <T> T evaluate(Assignments assignments) {
+      return (T) function.evaluate(new FunctionNodeArguments(arguments, assignments));
    }
 
    @Override

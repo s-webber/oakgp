@@ -62,7 +62,7 @@ public class FunctionNodeTest {
       assertSame(arguments, functionNode.getChildren());
 
       Assignments assignments = createAssignments(3);
-      assertEquals(126, functionNode.evaluate(assignments));
+      assertEquals(new Integer(126), functionNode.evaluate(assignments));
    }
 
    @Test

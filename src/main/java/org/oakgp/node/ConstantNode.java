@@ -45,9 +45,10 @@ public final class ConstantNode extends TerminalNode {
    /**
     * Returns the value specified when this {@code ConstantNode} was constructed.
     */
+   @SuppressWarnings("unchecked")
    @Override
-   public Object evaluate(Assignments assignments) {
-      return value;
+   public <T> T evaluate(Assignments assignments) {
+      return (T) value;
    }
 
    @Override

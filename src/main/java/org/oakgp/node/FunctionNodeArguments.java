@@ -34,7 +34,7 @@ final class FunctionNodeArguments implements Arguments {
 
    @Override
    public <T> T getArg(int index) {
-      return (T) childNodes.getNode(index).evaluate(assignments);
+      return childNodes.getNode(index).evaluate(assignments);
    }
 
    @Override
