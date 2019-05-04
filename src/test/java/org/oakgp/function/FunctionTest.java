@@ -47,19 +47,19 @@ public class FunctionTest {
 
    @Test
    public void testGetDisplayName() {
-      assertEquals("dummyfunction", new DummyFunction().getDisplayName());
+      assertEquals("dummy-function", new DummyFunction().getDisplayName());
    }
 
    @Test
    public void testGetDisplayNameBooleanReturnType() {
-      assertEquals("booleandummyfunction?", new IsBooleanDummyFunction().getDisplayName());
+      assertEquals("boolean-dummy-function?", new IsBooleanDummyFunction().getDisplayName());
    }
 }
 
 class DummyFunction implements Function {
    @Override
    public Signature getSignature() {
-      throw new UnsupportedOperationException();
+      return Signature.createSignature(Type.booleanType(), Type.integerType());
    }
 
    @Override

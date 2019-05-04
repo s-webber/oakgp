@@ -40,10 +40,10 @@ public class OrElseTest extends AbstractFunctionTest {
       ConstantNode neverNullValue = new ConstantNode("default", stringType());
 
       ConstantNode nullValue = new ConstantNode(null, nullableType(stringType()));
-      evaluate("(orelse v0 v1)").assigned(nullValue, neverNullValue).to("default");
+      evaluate("(or-else v0 v1)").assigned(nullValue, neverNullValue).to("default");
 
       ConstantNode nonNullValue = new ConstantNode("hello", nullableType(stringType()));
-      evaluate("(orelse v0 v1)").assigned(nonNullValue, neverNullValue).to("hello");
+      evaluate("(or-else v0 v1)").assigned(nonNullValue, neverNullValue).to("hello");
    }
 
    @Override
@@ -59,8 +59,8 @@ public class OrElseTest extends AbstractFunctionTest {
       simplify(new FunctionNode(getFunction(), v0, new FunctionNode(getFunction(), v0, new FunctionNode(getFunction(), v0, fn))), fn);
 
       VariableNode v1 = new VariableNode(1, Type.stringType());
-      simplify(new FunctionNode(getFunction(), v0, new FunctionNode(getFunction(), v1, new FunctionNode(getFunction(), v0, fn))), new FunctionNode(
-            getFunction(), v0, new FunctionNode(getFunction(), v1, arg2)));
+      simplify(new FunctionNode(getFunction(), v0, new FunctionNode(getFunction(), v1, new FunctionNode(getFunction(), v0, fn))),
+            new FunctionNode(getFunction(), v0, new FunctionNode(getFunction(), v1, arg2)));
    }
 
    private void simplify(FunctionNode input, Node expected) {
@@ -69,6 +69,6 @@ public class OrElseTest extends AbstractFunctionTest {
 
    @Override
    public void testCannotSimplify() {
-      cannotSimplify("(orelse v0 v1)", nullableType(stringType()), stringType());
+      cannotSimplify("(or-else v0 v1)", nullableType(stringType()), stringType());
    }
 }

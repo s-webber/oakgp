@@ -49,15 +49,32 @@ public interface Function {
       return null;
    }
 
-   /** Returns the {@code String} value to use in the textual representation of this function. */
+   /**
+    * Returns the {@code String} value to use in the textual representation of this function.
+    * <p>
+    * Converts class names to kebab-case function names. Replaces "is-" prefix with "?" suffix in names of boolean functions.
+    */
    default String getDisplayName() {
-      String className = getClass().getName();
-      int packagePos = className.lastIndexOf('.');
-      String lowerCaseNameMinusPackage = className.substring(packagePos + 1).toLowerCase();
-      if (lowerCaseNameMinusPackage.startsWith("is") && getSignature().getReturnType() == Type.booleanType()) {
-         return lowerCaseNameMinusPackage.substring(2) + "?";
+      StringBuilder sb = new StringBuilder();
+
+      String className = getClass().getSimpleName();
+      for (int i = 0; i < className.length(); i++) {
+         char c = className.charAt(i);
+         if (Character.isUpperCase(c)) {
+            if (i != 0) {
+               sb.append('-');
+            }
+            sb.append(Character.toLowerCase(c));
+         } else {
+            sb.append(c);
+         }
+      }
+
+      String result = sb.toString();
+      if (getSignature().getReturnType() == Type.booleanType() && result.startsWith("is-")) {
+         return sb.substring(3) + '?';
       } else {
-         return lowerCaseNameMinusPackage;
+         return result;
       }
    }
 

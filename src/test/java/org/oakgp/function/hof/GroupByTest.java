@@ -39,16 +39,16 @@ public class GroupByTest extends AbstractFunctionTest {
       LinkedHashMap<Boolean, List<Integer>> expected = new LinkedHashMap<>();
       expected.put(true, Arrays.asList(4, 6, 8, 11, 42));
       expected.put(false, Arrays.asList(-7, -10));
-      evaluate("(groupby pos? [4 6 -7 8 -10 11 42])").to(expected);
+      evaluate("(group-by pos? [4 6 -7 8 -10 11 42])").to(expected);
 
       expected = new LinkedHashMap<>();
       expected.put(false, Arrays.asList(4, 6, 8, 11, 42));
       expected.put(true, Arrays.asList(-7, -10));
-      evaluate("(groupby neg? [4 6 -7 8 -10 11 42])").to(expected);
+      evaluate("(group-by neg? [4 6 -7 8 -10 11 42])").to(expected);
 
       expected = new LinkedHashMap<>();
       expected.put(false, Arrays.asList(4, 6, -7, 8, -10, 11, 42));
-      evaluate("(groupby zero? [4 6 -7 8 -10 11 42])").to(expected);
+      evaluate("(group-by zero? [4 6 -7 8 -10 11 42])").to(expected);
    }
 
    @Override
