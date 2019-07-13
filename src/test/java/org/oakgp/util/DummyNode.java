@@ -15,9 +15,9 @@
  */
 package org.oakgp.util;
 
-import org.oakgp.Type;
 import org.oakgp.node.Node;
 import org.oakgp.node.NodeType;
+import org.oakgp.type.Types.Type;
 
 public abstract class DummyNode implements Node {
    @Override

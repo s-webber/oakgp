@@ -18,7 +18,7 @@ package org.oakgp.node;
 import java.util.Objects;
 
 import org.oakgp.Assignments;
-import org.oakgp.Type;
+import org.oakgp.type.Types.Type;
 
 /**
  * Represents a constant value.

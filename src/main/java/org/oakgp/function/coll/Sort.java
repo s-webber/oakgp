@@ -15,20 +15,20 @@
  */
 package org.oakgp.function.coll;
 
-import static org.oakgp.Type.listType;
 import static org.oakgp.node.NodeType.isFunction;
+import static org.oakgp.type.CommonTypes.listType;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import org.oakgp.Arguments;
-import org.oakgp.Type;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
 import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
+import org.oakgp.type.Types.Type;
 
 public class Sort implements Function {
    private final Signature signature;

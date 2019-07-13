@@ -18,8 +18,8 @@ package org.oakgp.primitive;
 import java.util.List;
 import java.util.Map;
 
-import org.oakgp.Type;
 import org.oakgp.node.VariableNode;
+import org.oakgp.type.Types.Type;
 import org.oakgp.util.Utils;
 
 /** Represents the range of possible variables to use during a genetic programming run. */

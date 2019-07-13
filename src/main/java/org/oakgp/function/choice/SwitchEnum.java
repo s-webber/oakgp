@@ -15,17 +15,17 @@
  */
 package org.oakgp.function.choice;
 
-import static org.oakgp.Type.isNullable;
 import static org.oakgp.node.NodeType.isFunction;
+import static org.oakgp.type.CommonTypes.isNullable;
 
 import org.oakgp.Arguments;
-import org.oakgp.Type;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
 import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.node.walk.NodeWalk;
+import org.oakgp.type.Types.Type;
 
 /**
  * A selection operator that uses the value of an enum to determine which code to evaluate.

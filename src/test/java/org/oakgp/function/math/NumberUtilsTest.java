@@ -21,7 +21,7 @@ import static org.junit.Assert.assertTrue;
 import static org.oakgp.TestUtils.integerConstant;
 import static org.oakgp.TestUtils.readFunctionNode;
 import static org.oakgp.TestUtils.readNode;
-import static org.oakgp.Type.integerType;
+import static org.oakgp.type.CommonTypes.integerType;
 
 import org.junit.Test;
 import org.oakgp.function.choice.If;

@@ -15,7 +15,7 @@
  */
 package org.oakgp.function.math;
 
-import static org.oakgp.Type.integerType;
+import static org.oakgp.type.CommonTypes.integerType;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -25,7 +25,7 @@ import org.oakgp.function.Function;
 
 public class SubtractTest extends AbstractFunctionTest {
    @Override
-   protected Subtract getFunction() {
+   protected Subtract<Integer> getFunction() {
       return IntegerUtils.INTEGER_UTILS.getSubtract();
    }
 

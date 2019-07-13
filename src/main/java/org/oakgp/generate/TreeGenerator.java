@@ -15,8 +15,8 @@
  */
 package org.oakgp.generate;
 
-import org.oakgp.Type;
 import org.oakgp.node.Node;
+import org.oakgp.type.Types.Type;
 
 /**
  * Creates tree data structures.

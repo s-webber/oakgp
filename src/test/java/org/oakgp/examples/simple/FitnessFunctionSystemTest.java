@@ -17,11 +17,11 @@ package org.oakgp.examples.simple;
 
 import static java.util.Arrays.asList;
 import static org.oakgp.Assignments.createAssignments;
-import static org.oakgp.Type.booleanType;
-import static org.oakgp.Type.integerListType;
-import static org.oakgp.Type.integerToBooleanFunctionType;
-import static org.oakgp.Type.integerType;
 import static org.oakgp.rank.fitness.TestDataFitnessFunction.createIntegerTestDataFitnessFunction;
+import static org.oakgp.type.CommonTypes.booleanType;
+import static org.oakgp.type.CommonTypes.integerListType;
+import static org.oakgp.type.CommonTypes.integerToBooleanFunctionType;
+import static org.oakgp.type.CommonTypes.integerType;
 import static org.oakgp.util.Utils.createIntegerConstants;
 import static org.oakgp.util.Utils.createIntegerTypeArray;
 
@@ -34,7 +34,6 @@ import java.util.Random;
 
 import org.junit.Test;
 import org.oakgp.Assignments;
-import org.oakgp.Type;
 import org.oakgp.function.Function;
 import org.oakgp.function.choice.If;
 import org.oakgp.function.classify.IsNegative;
@@ -51,6 +50,7 @@ import org.oakgp.function.hof.Filter;
 import org.oakgp.function.math.IntegerUtils;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.rank.fitness.FitnessFunction;
+import org.oakgp.type.Types.Type;
 import org.oakgp.util.RunBuilder;
 
 /**

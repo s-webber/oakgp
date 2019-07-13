@@ -15,15 +15,14 @@
  */
 package org.oakgp.examples.hanoi;
 
-import static org.oakgp.Type.integerType;
-import static org.oakgp.Type.nullableType;
-import static org.oakgp.Type.type;
+import static org.oakgp.type.CommonTypes.integerType;
+import static org.oakgp.type.CommonTypes.nullableType;
+import static org.oakgp.type.Types.declareType;
 import static org.oakgp.util.Utils.createEnumConstants;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.oakgp.Type;
 import org.oakgp.function.Function;
 import org.oakgp.function.choice.If;
 import org.oakgp.function.choice.SwitchEnum;
@@ -35,13 +34,14 @@ import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
 import org.oakgp.rank.RankedCandidates;
 import org.oakgp.rank.fitness.FitnessFunction;
+import org.oakgp.type.Types.Type;
 import org.oakgp.util.RunBuilder;
 import org.oakgp.util.Utils;
 
 public class TowersOfHanoiExample {
-   static final Type STATE_TYPE = type("gameState");
-   static final Type MOVE_TYPE = type("move");
-   static final Type POLE_TYPE = type("pole");
+   static final Type STATE_TYPE = declareType("gameState");
+   static final Type MOVE_TYPE = declareType("move");
+   static final Type POLE_TYPE = declareType("pole");
 
    private static final int TARGET_FITNESS = 0;
    private static final int NUM_GENERATIONS = 1000;

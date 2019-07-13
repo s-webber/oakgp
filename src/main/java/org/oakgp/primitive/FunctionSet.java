@@ -20,9 +20,9 @@ import static org.oakgp.util.Utils.groupBy;
 import java.util.List;
 import java.util.Map;
 
-import org.oakgp.Type;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
+import org.oakgp.type.Types.Type;
 
 /** Represents the set of possible {@code Function} implementations to use during a genetic programming run. */
 public final class FunctionSet {

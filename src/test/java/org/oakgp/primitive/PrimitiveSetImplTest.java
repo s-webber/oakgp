@@ -23,13 +23,12 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.oakgp.TestUtils.createVariable;
 import static org.oakgp.TestUtils.integerConstant;
-import static org.oakgp.Type.booleanType;
-import static org.oakgp.Type.integerType;
-import static org.oakgp.Type.stringType;
+import static org.oakgp.type.CommonTypes.booleanType;
+import static org.oakgp.type.CommonTypes.integerType;
+import static org.oakgp.type.CommonTypes.stringType;
 import static org.oakgp.util.Utils.createIntegerTypeArray;
 
 import org.junit.Test;
-import org.oakgp.Type;
 import org.oakgp.function.Function;
 import org.oakgp.function.choice.If;
 import org.oakgp.function.compare.Equal;
@@ -42,6 +41,7 @@ import org.oakgp.function.math.IntegerUtils;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
 import org.oakgp.node.VariableNode;
+import org.oakgp.type.Types.Type;
 import org.oakgp.util.DummyRandom;
 import org.oakgp.util.Random;
 

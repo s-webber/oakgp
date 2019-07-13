@@ -19,7 +19,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.oakgp.Type;
+import org.oakgp.type.Types.Type;
 import org.oakgp.util.Utils;
 
 /**
@@ -82,7 +82,8 @@ public final class Signature {
          return true;
       } else if (o instanceof Signature) {
          Signature s = (Signature) o;
-         return this.returnType == s.returnType && Type.sameTypes(this.argumentTypes, s.argumentTypes);
+         // TODO use sameTypes (which compares types using "==") rather than Arrays.equals
+         return this.returnType == s.returnType && Arrays.equals(this.argumentTypes, s.argumentTypes);
       } else {
          return false;
       }

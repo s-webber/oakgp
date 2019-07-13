@@ -30,13 +30,13 @@ import java.util.Observer;
 import org.junit.Test;
 import org.oakgp.Assignments;
 import org.oakgp.NodeSimplifier;
-import org.oakgp.Type;
 import org.oakgp.node.ChildNodes;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.primitive.VariableSet;
 import org.oakgp.serialize.NodeReader;
+import org.oakgp.type.Types.Type;
 
 public abstract class AbstractFunctionTest {
    private static final Type[] DEFAULT_VARIABLE_TYPES = createIntegerTypeArray(100);

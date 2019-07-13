@@ -15,7 +15,7 @@
  */
 package org.oakgp.function.math;
 
-import static org.oakgp.Type.bigDecimalType;
+import static org.oakgp.type.CommonTypes.bigDecimalType;
 
 import java.math.BigDecimal;
 

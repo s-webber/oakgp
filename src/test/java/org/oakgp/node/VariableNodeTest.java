@@ -22,11 +22,10 @@ import static org.junit.Assert.assertSame;
 import static org.oakgp.Assignments.createAssignments;
 import static org.oakgp.TestUtils.createVariable;
 import static org.oakgp.TestUtils.integerConstant;
-import static org.oakgp.Type.integerType;
+import static org.oakgp.type.CommonTypes.integerType;
 
 import org.junit.Test;
 import org.oakgp.Assignments;
-import org.oakgp.Type;
 
 public class VariableNodeTest {
    @Test
@@ -55,8 +54,8 @@ public class VariableNodeTest {
 
    @Test
    public void testEqualsAndHashCode() {
-      final VariableNode n1 = new VariableNode(1, Type.integerType());
-      final VariableNode n2 = new VariableNode(1, Type.integerType());
+      final VariableNode n1 = new VariableNode(1, integerType());
+      final VariableNode n2 = new VariableNode(1, integerType());
       assertNotSame(n1, n2);
       assertEquals(n1, n1);
       assertEquals(n2, n2);

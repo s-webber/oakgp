@@ -27,7 +27,6 @@ import java.util.Map;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
 
-import org.oakgp.Type;
 import org.oakgp.evolve.GenerationEvolver;
 import org.oakgp.evolve.GenerationEvolverImpl;
 import org.oakgp.evolve.GeneticOperator;
@@ -60,6 +59,7 @@ import org.oakgp.terminate.CompositeTerminator;
 import org.oakgp.terminate.MaxGenerationsTerminator;
 import org.oakgp.terminate.MaxGenerationsWithoutImprovementTerminator;
 import org.oakgp.terminate.TargetFitnessTerminator;
+import org.oakgp.type.Types.Type;
 
 /**
  * Provides a convenient way to configure and start a genetic programming run.
@@ -445,7 +445,7 @@ public final class RunBuilder {
          int populationSize = _initialPopulation.size();
          NodeSelectorFactory nodeSelectorFactory = new RankSelectionFactory(_random);
          Map<GeneticOperator, Integer> operators = createDefaultGeneticOperators(populationSize);
-         int operatorsSize = operators.values().stream().mapToInt(l -> l).sum();
+         int operatorsSize = operators.values().stream().mapToInt(Integer::intValue).sum();
          int elitismSize = populationSize - operatorsSize;
          Logger.getGlobal().info("total: " + populationSize + " elitism: " + elitismSize + " " + operators);
          return new GenerationEvolverImpl(elitismSize, nodeSelectorFactory, operators);

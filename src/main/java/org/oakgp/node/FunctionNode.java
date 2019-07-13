@@ -16,8 +16,8 @@
 package org.oakgp.node;
 
 import org.oakgp.Assignments;
-import org.oakgp.Type;
 import org.oakgp.function.Function;
+import org.oakgp.type.Types.Type;
 
 /** Contains a function (operator) and the arguments (operands) to apply to it. */
 public final class FunctionNode implements Node {

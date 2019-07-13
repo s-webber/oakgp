@@ -15,19 +15,19 @@
  */
 package org.oakgp.function.choice;
 
-import static org.oakgp.Type.booleanType;
 import static org.oakgp.node.NodeType.isConstant;
+import static org.oakgp.type.CommonTypes.booleanType;
 
 import java.util.function.Predicate;
 
 import org.oakgp.Arguments;
-import org.oakgp.Type;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
 import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.node.walk.NodeWalk;
+import org.oakgp.type.Types.Type;
 import org.oakgp.util.Utils;
 
 /**

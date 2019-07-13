@@ -24,8 +24,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.oakgp.TestUtils.readNode;
 import static org.oakgp.TestUtils.readNodes;
-import static org.oakgp.Type.integerToBooleanFunctionType;
-import static org.oakgp.Type.type;
+import static org.oakgp.type.CommonTypes.integerToBooleanFunctionType;
 import static org.oakgp.util.Void.VOID;
 
 import java.io.IOException;
@@ -43,6 +42,7 @@ import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.node.VariableNode;
 import org.oakgp.primitive.VariableSet;
+import org.oakgp.type.Types;
 
 public class NodeReaderTest {
    @Test
@@ -172,7 +172,7 @@ public class NodeReaderTest {
    }
 
    @Test
-   public void testEmptyList() {
+   public void testListEmpty() {
       assertParseLiteral("[]", unmodifiableList(emptyList()));
    }
 
@@ -190,7 +190,7 @@ public class NodeReaderTest {
 
    @Test
    public void testMixedTypeList() {
-      assertReadException("[true 9 false v0]", "Mixed type list elements: boolean and integer");
+      assertReadException("[true 9 false v0]", "Mixed type list elements: Boolean and Integer");
    }
 
    @Test
@@ -236,7 +236,7 @@ public class NodeReaderTest {
    @Test
    public void testConstantNode() throws IOException {
       String input = "TEST";
-      ConstantNode expected = new ConstantNode(input, type("testConstantNode"));
+      ConstantNode expected = new ConstantNode(input, Types.declareType("testConstantNode"));
       try (NodeReader r = new NodeReader(input, new Function[0], new ConstantNode[] { expected }, VariableSet.createVariableSet())) {
          Node actual = r.readNode();
          assertSame(expected, actual);
@@ -255,12 +255,12 @@ public class NodeReaderTest {
 
    @Test
    public void testMapMixedKeyTypes() throws IOException {
-      assertReadException("{\"a\" 5 6 42 \"c\" 7}", "Mixed type map keys: string and integer");
+      assertReadException("{\"a\" 5 6 42 \"c\" 7}", "Mixed type map keys: String and Integer");
    }
 
    @Test
    public void testMapMixedValueTypes() throws IOException {
-      assertReadException("{\"a\" 5 \"b\" \"42\" \"c\" 7}", "Mixed type map values: integer and string");
+      assertReadException("{\"a\" 5 \"b\" \"42\" \"c\" 7}", "Mixed type map values: Integer and String");
    }
 
    @Test

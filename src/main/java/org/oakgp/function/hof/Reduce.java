@@ -15,16 +15,16 @@
  */
 package org.oakgp.function.hof;
 
-import static org.oakgp.Type.functionType;
-import static org.oakgp.Type.listType;
+import static org.oakgp.type.CommonTypes.functionType;
+import static org.oakgp.type.CommonTypes.listType;
 
 import java.util.Collection;
 
 import org.oakgp.Arguments;
-import org.oakgp.Type;
 import org.oakgp.function.Function;
 import org.oakgp.function.HigherOrderFunctionArguments;
 import org.oakgp.function.Signature;
+import org.oakgp.type.Types.Type;
 
 /**
  * Combines the elements of a collection by recursively applying a function.
@@ -48,7 +48,8 @@ public final class Reduce implements Function {
     *           the type of the elements contained in the collection - this will also be the type associated with the value produced by evaluating this function
     */
    public Reduce(Type type) {
-      signature = Signature.createSignature(type, functionType(type, type, type), type, listType(type));
+      // TODO second argument of signature should be for a function that accepts two args, not one
+      signature = Signature.createSignature(type, functionType(type, type), type, listType(type));
    }
 
    @Override

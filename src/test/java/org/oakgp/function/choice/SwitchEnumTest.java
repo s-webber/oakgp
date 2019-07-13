@@ -15,17 +15,17 @@
  */
 package org.oakgp.function.choice;
 
-import static org.oakgp.Type.integerType;
-import static org.oakgp.Type.nullableType;
-import static org.oakgp.Type.type;
+import static org.oakgp.type.CommonTypes.integerType;
+import static org.oakgp.type.CommonTypes.nullableType;
+import static org.oakgp.type.Types.declareType;
 
-import org.oakgp.Type;
 import org.oakgp.function.AbstractFunctionTest;
 import org.oakgp.function.Function;
 import org.oakgp.node.ConstantNode;
+import org.oakgp.type.Types.Type;
 
 public class SwitchEnumTest extends AbstractFunctionTest {
-   private static final Type ENUM_TYPE = type("exampleEnum");
+   private static final Type ENUM_TYPE = declareType("exampleEnum");
    private static final Type NULLABLE_ENUM_TYPE = nullableType(ENUM_TYPE);
    private static final SwitchEnum SWITCH_ENUM = new SwitchEnum(ExampleEnum.class, ENUM_TYPE, integerType());
    private static final SwitchEnum SWITCH_NULLABLE_ENUM = new SwitchEnum(ExampleEnum.class, NULLABLE_ENUM_TYPE, integerType());

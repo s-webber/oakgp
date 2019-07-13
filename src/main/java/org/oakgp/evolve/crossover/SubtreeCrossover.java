@@ -17,12 +17,12 @@ package org.oakgp.evolve.crossover;
 
 import java.util.function.Predicate;
 
-import org.oakgp.Type;
 import org.oakgp.evolve.GeneticOperator;
 import org.oakgp.node.Node;
 import org.oakgp.node.walk.DepthWalk;
 import org.oakgp.node.walk.StrategyWalk;
 import org.oakgp.select.NodeSelector;
+import org.oakgp.type.Types.Type;
 import org.oakgp.util.Random;
 import org.oakgp.util.Utils;
 

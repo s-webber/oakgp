@@ -19,8 +19,8 @@ import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.util.Collections.unmodifiableList;
 import static java.util.stream.Collectors.groupingBy;
-import static org.oakgp.Type.booleanType;
-import static org.oakgp.Type.integerType;
+import static org.oakgp.type.CommonTypes.booleanType;
+import static org.oakgp.type.CommonTypes.integerType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,9 +28,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-import org.oakgp.Type;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
+import org.oakgp.type.Types.Type;
 
 /** Utility methods that support the functionality provided by the rest of the framework. */
 public final class Utils {

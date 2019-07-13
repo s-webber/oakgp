@@ -18,11 +18,11 @@ package org.oakgp.function.math;
 import static org.oakgp.node.NodeType.isConstant;
 import static org.oakgp.node.NodeType.isFunction;
 
-import org.oakgp.Type;
 import org.oakgp.function.Function;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
+import org.oakgp.type.Types.Type;
 
 /**
  * Provides support for working with classes that represent numeric values.

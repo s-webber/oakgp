@@ -22,9 +22,9 @@ import static org.junit.Assert.assertSame;
 import static org.oakgp.TestUtils.assertUnmodifiable;
 import static org.oakgp.TestUtils.booleanConstant;
 import static org.oakgp.TestUtils.integerConstant;
-import static org.oakgp.Type.booleanType;
-import static org.oakgp.Type.integerType;
-import static org.oakgp.Type.stringType;
+import static org.oakgp.type.CommonTypes.booleanType;
+import static org.oakgp.type.CommonTypes.integerType;
+import static org.oakgp.type.CommonTypes.stringType;
 
 import java.util.List;
 

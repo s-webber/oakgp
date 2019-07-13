@@ -19,8 +19,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.oakgp.NodeSimplifier.simplify;
 import static org.oakgp.TestUtils.readNode;
-import static org.oakgp.Type.integerType;
 import static org.oakgp.function.math.ArithmeticExpressionSimplifier.assertEvaluateToSameResult;
+import static org.oakgp.type.CommonTypes.integerType;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,7 +28,6 @@ import java.nio.file.Files;
 import java.util.List;
 
 import org.junit.Test;
-import org.oakgp.Type;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
 import org.oakgp.node.Node;
@@ -39,7 +38,7 @@ public class ArithmeticOperatorTest {
 
    @Test
    public void testGetSignature() {
-      Function f = new ArithmeticOperator<Integer>(Type.integerType()) {
+      Function f = new ArithmeticOperator<Integer>(integerType()) {
          @Override
          protected Integer evaluate(Integer arg1, Integer arg2) {
             throw new UnsupportedOperationException();

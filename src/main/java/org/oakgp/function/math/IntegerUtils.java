@@ -15,7 +15,7 @@
  */
 package org.oakgp.function.math;
 
-import static org.oakgp.Type.integerType;
+import static org.oakgp.type.CommonTypes.integerType;
 
 /** Provides support for working with instances of {@code java.lang.Integer}. */
 public final class IntegerUtils extends NumberUtils<Integer> {

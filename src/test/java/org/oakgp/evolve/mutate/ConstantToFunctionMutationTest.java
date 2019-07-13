@@ -21,7 +21,7 @@ import static org.mockito.Mockito.mock;
 import static org.oakgp.TestUtils.assertNodeEquals;
 import static org.oakgp.TestUtils.integerConstant;
 import static org.oakgp.TestUtils.readNode;
-import static org.oakgp.Type.integerType;
+import static org.oakgp.type.CommonTypes.integerType;
 import static org.oakgp.util.DummyRandom.GetIntExpectation.nextInt;
 
 import org.junit.Test;

@@ -15,9 +15,9 @@
  */
 package org.oakgp.primitive;
 
-import org.oakgp.Type;
 import org.oakgp.function.Function;
 import org.oakgp.node.Node;
+import org.oakgp.type.Types.Type;
 
 /** Represents the range of possible functions and terminal nodes to use during a genetic programming run. */
 public interface PrimitiveSet {

@@ -16,7 +16,7 @@
 package org.oakgp.node;
 
 import org.oakgp.Assignments;
-import org.oakgp.Type;
+import org.oakgp.type.Types.Type;
 
 /** A node represents a single point of a tree structure. */
 public interface Node {

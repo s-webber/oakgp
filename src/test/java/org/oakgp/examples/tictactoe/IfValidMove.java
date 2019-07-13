@@ -15,16 +15,16 @@
  */
 package org.oakgp.examples.tictactoe;
 
-import static org.oakgp.Type.nullableType;
-import static org.oakgp.Type.type;
 import static org.oakgp.function.Signature.createSignature;
+import static org.oakgp.type.CommonTypes.nullableType;
+import static org.oakgp.type.Types.type;
 
 import org.oakgp.Arguments;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
 
 public class IfValidMove implements Function {
-   private static final Signature SIGNATURE = createSignature(nullableType(type("move")), type("board"), type("possibleMove"));
+   private static final Signature SIGNATURE = createSignature(nullableType(type("tictactoemove")), type("board"), type("possibleMove"));
 
    @Override
    public Object evaluate(Arguments arguments) {

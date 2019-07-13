@@ -17,10 +17,10 @@ package org.oakgp.function.compare;
 
 import static org.oakgp.util.NodeComparator.NODE_COMPARATOR;
 
-import org.oakgp.Type;
 import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
+import org.oakgp.type.Types.Type;
 
 /**
  * Determines if two objects are not equal.

@@ -15,9 +15,12 @@
  */
 package org.oakgp.function.hof;
 
+import static org.oakgp.type.CommonTypes.booleanType;
+import static org.oakgp.type.CommonTypes.integerType;
+import static org.oakgp.type.CommonTypes.stringType;
+
 import java.util.LinkedHashMap;
 
-import org.oakgp.Type;
 import org.oakgp.function.AbstractFunctionTest;
 import org.oakgp.function.Function;
 import org.oakgp.function.classify.IsPositive;
@@ -25,7 +28,7 @@ import org.oakgp.function.classify.IsPositive;
 public class MapValuesTest extends AbstractFunctionTest {
    @Override
    protected MapValues getFunction() {
-      return new MapValues(Type.stringType(), Type.integerType(), Type.booleanType());
+      return new MapValues(stringType(), integerType(), booleanType());
    }
 
    @Override

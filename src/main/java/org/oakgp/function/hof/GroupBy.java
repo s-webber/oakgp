@@ -16,19 +16,19 @@
 package org.oakgp.function.hof;
 
 import static java.util.Collections.unmodifiableMap;
-import static org.oakgp.Type.functionType;
-import static org.oakgp.Type.listType;
-import static org.oakgp.Type.mapType;
+import static org.oakgp.type.CommonTypes.functionType;
+import static org.oakgp.type.CommonTypes.listType;
+import static org.oakgp.type.CommonTypes.mapType;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 
 import org.oakgp.Arguments;
-import org.oakgp.Type;
 import org.oakgp.function.Function;
 import org.oakgp.function.HigherOrderFunctionArguments;
 import org.oakgp.function.Signature;
+import org.oakgp.type.Types.Type;
 
 /** Uses a function to group elements of a collection. */
 public final class GroupBy implements Function {

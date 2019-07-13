@@ -25,9 +25,9 @@ import static org.junit.Assert.assertTrue;
 import static org.oakgp.TestUtils.createVariable;
 import static org.oakgp.TestUtils.integerConstant;
 import static org.oakgp.TestUtils.stringConstant;
-import static org.oakgp.Type.integerType;
-import static org.oakgp.Type.nullableType;
-import static org.oakgp.Type.stringType;
+import static org.oakgp.type.CommonTypes.integerType;
+import static org.oakgp.type.CommonTypes.nullableType;
+import static org.oakgp.type.CommonTypes.stringType;
 
 import org.junit.Test;
 

@@ -18,10 +18,11 @@ package org.oakgp.function;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.oakgp.type.CommonTypes.booleanType;
+import static org.oakgp.type.CommonTypes.integerType;
 
 import org.junit.Test;
 import org.oakgp.Arguments;
-import org.oakgp.Type;
 
 public class FunctionTest {
    @Test
@@ -59,7 +60,7 @@ public class FunctionTest {
 class DummyFunction implements Function {
    @Override
    public Signature getSignature() {
-      return Signature.createSignature(Type.booleanType(), Type.integerType());
+      return Signature.createSignature(booleanType(), integerType());
    }
 
    @Override
@@ -71,7 +72,7 @@ class DummyFunction implements Function {
 class IsBooleanDummyFunction implements Function {
    @Override
    public Signature getSignature() {
-      return Signature.createSignature(Type.booleanType(), Type.integerType());
+      return Signature.createSignature(booleanType(), integerType());
    }
 
    @Override

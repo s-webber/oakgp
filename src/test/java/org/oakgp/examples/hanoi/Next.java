@@ -15,9 +15,9 @@
  */
 package org.oakgp.examples.hanoi;
 
-import static org.oakgp.Type.integerType;
 import static org.oakgp.examples.hanoi.TowersOfHanoiExample.POLE_TYPE;
 import static org.oakgp.examples.hanoi.TowersOfHanoiExample.STATE_TYPE;
+import static org.oakgp.type.CommonTypes.integerType;
 
 import org.oakgp.Arguments;
 import org.oakgp.function.Function;

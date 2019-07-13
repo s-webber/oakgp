@@ -15,15 +15,15 @@
  */
 package org.oakgp.function.coll;
 
-import static org.oakgp.Type.integerType;
-import static org.oakgp.Type.listType;
+import static org.oakgp.type.CommonTypes.integerType;
+import static org.oakgp.type.CommonTypes.listType;
 
 import java.util.Collection;
 
 import org.oakgp.Arguments;
-import org.oakgp.Type;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
+import org.oakgp.type.Types.Type;
 
 /** Determines the number of elements contained in a collection. */
 public final class Count implements Function {

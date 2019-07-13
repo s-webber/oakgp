@@ -15,7 +15,7 @@
  */
 package org.oakgp.function.math;
 
-import static org.oakgp.Type.bigIntegerType;
+import static org.oakgp.type.CommonTypes.bigIntegerType;
 
 import java.math.BigInteger;
 

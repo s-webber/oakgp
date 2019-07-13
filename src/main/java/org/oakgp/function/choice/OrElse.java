@@ -16,17 +16,18 @@
 package org.oakgp.function.choice;
 
 import static org.oakgp.node.NodeType.isFunction;
+import static org.oakgp.type.CommonTypes.nullableType;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.oakgp.Arguments;
-import org.oakgp.Type;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
 import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
+import org.oakgp.type.Types.Type;
 
 /** Returns the first argument if not {@code null}, else returns the second argument. */
 public final class OrElse implements Function {
@@ -34,7 +35,7 @@ public final class OrElse implements Function {
 
    /** Constructs a selection operator that returns values of the specified type. */
    public OrElse(Type type) {
-      signature = Signature.createSignature(type, Type.nullableType(type), type);
+      signature = Signature.createSignature(type, nullableType(type), type);
    }
 
    @Override

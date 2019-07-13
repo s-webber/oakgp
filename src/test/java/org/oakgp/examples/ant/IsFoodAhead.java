@@ -15,8 +15,9 @@
  */
 package org.oakgp.examples.ant;
 
+import static org.oakgp.type.CommonTypes.booleanType;
+
 import org.oakgp.Arguments;
-import org.oakgp.Type;
 import org.oakgp.function.ImpureFunction;
 import org.oakgp.function.Signature;
 
@@ -24,7 +25,7 @@ import org.oakgp.function.Signature;
 class IsFoodAhead implements ImpureFunction {
    @Override
    public Signature getSignature() {
-      return Signature.createSignature(Type.booleanType(), MutableState.STATE_TYPE);
+      return Signature.createSignature(booleanType(), MutableState.STATE_TYPE);
    }
 
    @Override

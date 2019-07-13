@@ -15,8 +15,9 @@
  */
 package org.oakgp.function;
 
+import static org.oakgp.type.CommonTypes.booleanType;
+
 import org.oakgp.Arguments;
-import org.oakgp.Type;
 import org.oakgp.node.ChildNodes;
 import org.oakgp.node.Node;
 
@@ -71,7 +72,7 @@ public interface Function {
       }
 
       String result = sb.toString();
-      if (getSignature().getReturnType() == Type.booleanType() && result.startsWith("is-")) {
+      if (getSignature().getReturnType() == booleanType() && result.startsWith("is-")) {
          return sb.substring(3) + '?';
       } else {
          return result;

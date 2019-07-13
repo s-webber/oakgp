@@ -27,13 +27,14 @@ import java.util.function.IntFunction;
 import java.util.function.Predicate;
 
 import org.junit.Test;
-import org.oakgp.Type;
 import org.oakgp.evolve.GenerationEvolver;
 import org.oakgp.node.Node;
 import org.oakgp.primitive.DummyPrimitiveSet;
 import org.oakgp.rank.GenerationRanker;
 import org.oakgp.rank.RankedCandidate;
 import org.oakgp.rank.RankedCandidates;
+import org.oakgp.type.Types;
+import org.oakgp.type.Types.Type;
 import org.oakgp.util.RunBuilder.Config;
 import org.oakgp.util.RunBuilder.InitialPopulationSetter;
 import org.oakgp.util.RunBuilder.TreeDepthSetter;
@@ -41,7 +42,7 @@ import org.oakgp.util.RunBuilder.TreeDepthSetter;
 public class RunBuilderTest {
    private static final DummyPrimitiveSet DUMMY_PRIMITIVE_SET = new DummyPrimitiveSet();
    private static final Random DUMMY_RANDOM = DummyRandom.EMPTY;
-   private static final Type RETURN_TYPE = Type.type("runBuilderTest");
+   private static final Type RETURN_TYPE = Types.declareType("runBuilderTest");
 
    @SuppressWarnings("unchecked")
    @Test

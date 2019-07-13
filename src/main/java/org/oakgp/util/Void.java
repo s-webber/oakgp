@@ -15,15 +15,16 @@
  */
 package org.oakgp.util;
 
-import org.oakgp.Type;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
 import org.oakgp.node.NodeType;
+import org.oakgp.type.Types;
+import org.oakgp.type.Types.Type;
 
 /** Represents a dummy value to return from functions that do not produce a result. */
 public final class Void {
    /** Returns the type associated with instances of {@link #VOID}. */
-   public static final Type VOID_TYPE = Type.type("void");
+   public static final Type VOID_TYPE = Types.declareType("void");
    /** Singleton representing a {@code void} value. */
    public static final Void VOID = new Void();
    /** A constant node containing {@link #VOID}. */

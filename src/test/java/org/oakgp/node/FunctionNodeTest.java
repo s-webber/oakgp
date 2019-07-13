@@ -25,8 +25,8 @@ import static org.oakgp.Assignments.createAssignments;
 import static org.oakgp.TestUtils.createVariable;
 import static org.oakgp.TestUtils.integerConstant;
 import static org.oakgp.TestUtils.readNode;
-import static org.oakgp.Type.integerType;
 import static org.oakgp.function.math.IntegerUtils.INTEGER_UTILS;
+import static org.oakgp.type.CommonTypes.integerType;
 
 import org.junit.Test;
 import org.oakgp.Arguments;

@@ -18,8 +18,8 @@ package org.oakgp.primitive;
 import java.util.List;
 import java.util.Map;
 
-import org.oakgp.Type;
 import org.oakgp.node.ConstantNode;
+import org.oakgp.type.Types.Type;
 import org.oakgp.util.Utils;
 
 /** Represents the range of possible constants to use during a genetic programming run. */

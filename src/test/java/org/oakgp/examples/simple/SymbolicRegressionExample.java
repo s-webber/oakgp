@@ -15,12 +15,13 @@
  */
 package org.oakgp.examples.simple;
 
+import static org.oakgp.type.CommonTypes.integerType;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.oakgp.Assignments;
-import org.oakgp.Type;
 import org.oakgp.function.Function;
 import org.oakgp.function.math.IntegerUtils;
 import org.oakgp.node.ConstantNode;
@@ -28,6 +29,7 @@ import org.oakgp.node.Node;
 import org.oakgp.rank.RankedCandidates;
 import org.oakgp.rank.fitness.FitnessFunction;
 import org.oakgp.rank.fitness.TestDataFitnessFunction;
+import org.oakgp.type.Types.Type;
 import org.oakgp.util.RunBuilder;
 import org.oakgp.util.Utils;
 
@@ -43,11 +45,11 @@ public class SymbolicRegressionExample {
       // the constant set will contain the integers in the range 0-10 inclusive
       List<ConstantNode> constants = Utils.createIntegerConstants(0, 10);
       // the variable set will contain a single variable - representing the integer value input to the function
-      Type[] variableTypes = { Type.integerType() };
+      Type[] variableTypes = { integerType() };
       // the fitness function will compare candidates against a data set which maps inputs to their expected outputs
       FitnessFunction fitnessFunction = TestDataFitnessFunction.createIntegerTestDataFitnessFunction(createDataSet());
 
-      RankedCandidates ouput = new RunBuilder().setReturnType(Type.integerType()).setConstants(constants).setVariables(variableTypes).setFunctions(functions)
+      RankedCandidates ouput = new RunBuilder().setReturnType(integerType()).setConstants(constants).setVariables(variableTypes).setFunctions(functions)
             .setFitnessFunction(fitnessFunction).setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_POPULATION_MAX_DEPTH)
             .setTargetFitness(TARGET_FITNESS).process();
       Node best = ouput.best().getNode();

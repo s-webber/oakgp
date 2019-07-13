@@ -23,9 +23,9 @@ import static org.junit.Assert.assertTrue;
 import static org.oakgp.TestUtils.integerConstant;
 import static org.oakgp.TestUtils.mockNode;
 import static org.oakgp.TestUtils.readNode;
-import static org.oakgp.Type.booleanType;
-import static org.oakgp.Type.integerType;
-import static org.oakgp.Type.stringType;
+import static org.oakgp.type.CommonTypes.booleanType;
+import static org.oakgp.type.CommonTypes.integerType;
+import static org.oakgp.type.CommonTypes.stringType;
 import static org.oakgp.util.DummyRandom.GetIntExpectation.nextInt;
 
 import java.util.Arrays;
@@ -33,9 +33,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.Test;
-import org.oakgp.Type;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
+import org.oakgp.type.Types;
+import org.oakgp.type.Types.Type;
 
 public class UtilsTest {
    @Test
@@ -129,7 +130,7 @@ public class UtilsTest {
 
    @Test
    public void testCreateEnumConstants() {
-      Type type = Type.type("testCreateEnumConstants");
+      Type type = Types.declareType("testCreateEnumConstants");
       TestCreateEnumConstantsEnum[] input = TestCreateEnumConstantsEnum.values();
 
       List<ConstantNode> result = Utils.createEnumConstants(TestCreateEnumConstantsEnum.class, type);

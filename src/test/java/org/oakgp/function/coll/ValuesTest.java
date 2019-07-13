@@ -15,8 +15,8 @@
  */
 package org.oakgp.function.coll;
 
-import static org.oakgp.Type.integerType;
-import static org.oakgp.Type.stringType;
+import static org.oakgp.type.CommonTypes.integerType;
+import static org.oakgp.type.CommonTypes.stringType;
 
 import java.util.Arrays;
 

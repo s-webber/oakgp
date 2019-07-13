@@ -19,12 +19,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.oakgp.TestUtils.assertUnmodifiable;
-import static org.oakgp.Type.booleanListType;
-import static org.oakgp.Type.booleanType;
-import static org.oakgp.Type.integerListType;
-import static org.oakgp.Type.integerType;
-import static org.oakgp.Type.stringType;
 import static org.oakgp.function.Signature.createSignature;
+import static org.oakgp.type.CommonTypes.booleanListType;
+import static org.oakgp.type.CommonTypes.booleanType;
+import static org.oakgp.type.CommonTypes.integerListType;
+import static org.oakgp.type.CommonTypes.integerType;
+import static org.oakgp.type.CommonTypes.stringType;
 
 import java.util.List;
 

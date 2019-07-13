@@ -16,15 +16,16 @@
 package org.oakgp.serialize;
 
 import static java.util.Collections.unmodifiableList;
-import static org.oakgp.Type.bigDecimalType;
-import static org.oakgp.Type.bigIntegerType;
-import static org.oakgp.Type.doubleType;
-import static org.oakgp.Type.integerType;
-import static org.oakgp.Type.listType;
-import static org.oakgp.Type.longType;
-import static org.oakgp.Type.mapType;
-import static org.oakgp.Type.stringType;
 import static org.oakgp.node.ChildNodes.createChildNodes;
+import static org.oakgp.type.CommonTypes.bigDecimalType;
+import static org.oakgp.type.CommonTypes.bigIntegerType;
+import static org.oakgp.type.CommonTypes.doubleType;
+import static org.oakgp.type.CommonTypes.functionType;
+import static org.oakgp.type.CommonTypes.integerType;
+import static org.oakgp.type.CommonTypes.listType;
+import static org.oakgp.type.CommonTypes.longType;
+import static org.oakgp.type.CommonTypes.mapType;
+import static org.oakgp.type.CommonTypes.stringType;
 import static org.oakgp.util.Utils.FALSE_NODE;
 import static org.oakgp.util.Utils.TRUE_NODE;
 import static org.oakgp.util.Utils.copyOf;
@@ -43,7 +44,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
-import org.oakgp.Type;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
 import org.oakgp.node.ConstantNode;
@@ -51,6 +51,8 @@ import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.node.VariableNode;
 import org.oakgp.primitive.VariableSet;
+import org.oakgp.type.Types;
+import org.oakgp.type.Types.Type;
 
 /**
  * Creates {@code Node} instances from {@code String} representations.
@@ -68,6 +70,7 @@ import org.oakgp.primitive.VariableSet;
  * </pre>
  */
 public final class NodeReader implements Closeable {
+   private static final Type UNKNOWN_TYPE = Types.declareType("Unknown"); // TODO review
    private static final char FUNCTION_START_CHAR = '(';
    private static final String FUNCTION_START_STRING = "" + FUNCTION_START_CHAR;
    private static final char FUNCTION_END_CHAR = ')';
@@ -234,7 +237,10 @@ public final class NodeReader implements Closeable {
          }
          arguments.add(n.evaluate(null));
       }
-      // TODO what is the correct behaviour when the list is empty?
+      if (t == null) {
+         // TODO what is the correct behaviour when the list is empty?
+         t = UNKNOWN_TYPE;
+      }
       return new ConstantNode(unmodifiableList(arguments), listType(t));
    }
 
@@ -267,7 +273,11 @@ public final class NodeReader implements Closeable {
 
          map.put(key.evaluate(null), value.evaluate(null));
       }
-      // TODO what is the correct behaviour when the map is empty?
+      if (keyType == null) {
+         // TODO what is the correct behaviour when the map is empty?
+         keyType = UNKNOWN_TYPE;
+         valueType = UNKNOWN_TYPE;
+      }
       return new ConstantNode(map, mapType(keyType, valueType));
    }
 
@@ -360,7 +370,7 @@ public final class NodeReader implements Closeable {
       for (int i = 1; i < types.length; i++) {
          types[i] = signature.getArgumentType(i - 1);
       }
-      return Type.functionType(types);
+      return functionType(types[0], types[1]);// TODO
    }
 
    private static boolean isVariable(String token) {

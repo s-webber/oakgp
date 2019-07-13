@@ -20,20 +20,25 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.fail;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
-import static org.oakgp.Type.bigDecimalType;
-import static org.oakgp.Type.bigIntegerType;
-import static org.oakgp.Type.booleanType;
-import static org.oakgp.Type.doubleType;
-import static org.oakgp.Type.integerType;
-import static org.oakgp.Type.longType;
-import static org.oakgp.Type.stringType;
+import static org.oakgp.type.CommonTypes.bigDecimalType;
+import static org.oakgp.type.CommonTypes.bigIntegerType;
+import static org.oakgp.type.CommonTypes.booleanType;
+import static org.oakgp.type.CommonTypes.doubleType;
+import static org.oakgp.type.CommonTypes.integerType;
+import static org.oakgp.type.CommonTypes.longType;
+import static org.oakgp.type.CommonTypes.stringType;
 import static org.oakgp.util.Utils.createIntegerTypeArray;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.oakgp.function.Function;
 import org.oakgp.function.choice.If;
@@ -60,10 +65,13 @@ import org.oakgp.rank.RankedCandidate;
 import org.oakgp.rank.RankedCandidates;
 import org.oakgp.serialize.NodeReader;
 import org.oakgp.serialize.NodeWriter;
+import org.oakgp.type.Types;
+import org.oakgp.type.Types.Type;
 
 public class TestUtils {
    public static final VariableSet VARIABLE_SET = VariableSet.createVariableSet(createIntegerTypeArray(100));
    private static final Function[] FUNCTIONS = createDefaultFunctions();
+   private static final AtomicLong TYPE_CTR = new AtomicLong();
 
    @SuppressWarnings({ "unchecked", "rawtypes" })
    public static void assertUnmodifiable(List list) {
@@ -160,11 +168,11 @@ public class TestUtils {
    }
 
    public static ConstantNode booleanConstant(Boolean value) {
-      return new ConstantNode(value, Type.booleanType());
+      return new ConstantNode(value, booleanType());
    }
 
    public static ConstantNode stringConstant(String value) {
-      return new ConstantNode(value, Type.stringType());
+      return new ConstantNode(value, stringType());
    }
 
    public static VariableNode createVariable(int id) {
@@ -196,5 +204,23 @@ public class TestUtils {
       Node mockNode = mock(Node.class);
       given(mockNode.getType()).willReturn(type);
       return mockNode;
+   }
+
+   @SafeVarargs
+   public static <T> Set<T> asSet(T... values) { // TODO unit test
+      Set<T> result = new HashSet<>(Arrays.asList(values));
+      if (result.size() != values.length) {
+         throw new RuntimeException();
+      }
+      return Collections.unmodifiableSet(result);
+   }
+
+   public static Type uniqueType() { // TODO unit test
+      // TODO confirm name really is unique by first calling Types.type
+      return Types.declareType(uniqueTypeName());
+   }
+
+   public static String uniqueTypeName() { // TODO unit test
+      return "TestUtils-uniqueTypeName-" + TYPE_CTR.incrementAndGet();
    }
 }

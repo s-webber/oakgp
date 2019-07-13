@@ -16,7 +16,7 @@
 package org.oakgp.function.hof;
 
 import static java.util.Arrays.asList;
-import static org.oakgp.Type.integerType;
+import static org.oakgp.type.CommonTypes.integerType;
 
 import org.oakgp.function.AbstractFunctionTest;
 import org.oakgp.function.Function;

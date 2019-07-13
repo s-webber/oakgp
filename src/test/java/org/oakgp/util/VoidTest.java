@@ -19,10 +19,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+import static org.oakgp.type.CommonTypes.integerType;
 
 import org.junit.Test;
-import org.oakgp.Type;
 import org.oakgp.node.ConstantNode;
+import org.oakgp.type.Types;
 
 public class VoidTest {
    @Test
@@ -33,7 +34,7 @@ public class VoidTest {
 
    @Test
    public void testType() {
-      assertSame(Type.type("void"), Void.VOID_TYPE);
+      assertSame(Types.type("void"), Void.VOID_TYPE);
    }
 
    @Test
@@ -44,13 +45,13 @@ public class VoidTest {
    @Test
    public void testIsVoid() {
       assertTrue(Void.isVoid(Void.VOID_CONSTANT));
-      assertTrue(Void.isVoid(new ConstantNode(Void.VOID, Type.type("void"))));
-      assertTrue(Void.isVoid(new ConstantNode(Void.VOID, Type.type("dummy"))));
+      assertTrue(Void.isVoid(new ConstantNode(Void.VOID, Types.type("void"))));
+      assertTrue(Void.isVoid(new ConstantNode(Void.VOID, Types.declareType("dummy"))));
    }
 
    @Test
    public void testIsNotVoid() {
-      assertFalse(Void.isVoid(new ConstantNode(new Object(), Type.type("void"))));
-      assertFalse(Void.isVoid(new ConstantNode(1, Type.integerType())));
+      assertFalse(Void.isVoid(new ConstantNode(new Object(), Void.VOID_TYPE)));
+      assertFalse(Void.isVoid(new ConstantNode(1, integerType())));
    }
 }

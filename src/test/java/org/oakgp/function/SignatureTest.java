@@ -21,14 +21,14 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.oakgp.TestUtils.assertUnmodifiable;
-import static org.oakgp.Type.booleanType;
-import static org.oakgp.Type.integerType;
 import static org.oakgp.function.Signature.createSignature;
+import static org.oakgp.type.CommonTypes.booleanType;
+import static org.oakgp.type.CommonTypes.integerType;
 
 import java.util.List;
 
 import org.junit.Test;
-import org.oakgp.Type;
+import org.oakgp.type.Types.Type;
 
 public class SignatureTest {
    @Test
@@ -68,7 +68,7 @@ public class SignatureTest {
    @Test
    public void testToString() {
       Signature signature = createSignature(integerType(), booleanType(), integerType(), booleanType());
-      assertEquals("integer [boolean, integer, boolean]", signature.toString());
+      assertEquals("Integer [Boolean, Integer, Boolean]", signature.toString());
    }
 
    @Test

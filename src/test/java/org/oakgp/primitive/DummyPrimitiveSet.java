@@ -15,10 +15,10 @@
  */
 package org.oakgp.primitive;
 
-import org.oakgp.Type;
 import org.oakgp.function.Function;
 import org.oakgp.node.Node;
 import org.oakgp.primitive.PrimitiveSet;
+import org.oakgp.type.Types.Type;
 
 public class DummyPrimitiveSet implements PrimitiveSet {
    @Override

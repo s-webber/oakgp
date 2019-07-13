@@ -16,18 +16,18 @@
 package org.oakgp.function.hof;
 
 import static java.util.Collections.unmodifiableList;
-import static org.oakgp.Type.functionType;
-import static org.oakgp.Type.listType;
+import static org.oakgp.type.CommonTypes.functionType;
+import static org.oakgp.type.CommonTypes.listType;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import org.oakgp.Arguments;
-import org.oakgp.Type;
 import org.oakgp.function.Function;
 import org.oakgp.function.HigherOrderFunctionArguments;
 import org.oakgp.function.Signature;
+import org.oakgp.type.Types.Type;
 
 /**
  * Returns the result of applying a function to each element of a collection.

@@ -17,14 +17,14 @@ package org.oakgp.generate;
 
 import static org.oakgp.TestUtils.assertNodeEquals;
 import static org.oakgp.TestUtils.integerConstant;
-import static org.oakgp.Type.integerType;
-import static org.oakgp.Type.type;
 import static org.oakgp.function.math.IntegerUtils.INTEGER_UTILS;
+import static org.oakgp.type.CommonTypes.integerType;
+import static org.oakgp.type.Types.declareType;
+import static org.oakgp.type.Types.type;
 import static org.oakgp.util.DummyRandom.random;
 
 import org.junit.Test;
 import org.oakgp.Arguments;
-import org.oakgp.Type;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
 import org.oakgp.node.ConstantNode;
@@ -35,6 +35,7 @@ import org.oakgp.primitive.FunctionSet;
 import org.oakgp.primitive.PrimitiveSet;
 import org.oakgp.primitive.PrimitiveSetImpl;
 import org.oakgp.primitive.VariableSet;
+import org.oakgp.type.Types.Type;
 import org.oakgp.util.DummyRandom;
 
 public class TreeGeneratorTest {
@@ -61,12 +62,17 @@ public class TreeGeneratorTest {
     */
    @Test
    public void testWhenTypesEnforceStructure() {
-      Function f1 = createFunction("f1", type("a"), type("b"));
-      Function f2 = createFunction("f2", type("b"), type("c"), type("d"));
-      ConstantNode c = new ConstantNode("X", type("c"));
+      Type a = declareType("a");
+      Type b = declareType("b");
+      Type c = declareType("c");
+      Type d = declareType("d");
+
+      Function f1 = createFunction("f1", a, b);
+      Function f2 = createFunction("f2", b, c, d);
+      ConstantNode cn = new ConstantNode("X", c);
 
       DummyRandom random = random().setDoubles(1d, 1d).build();
-      PrimitiveSet p = new PrimitiveSetImpl(new FunctionSet(f1, f2), new ConstantSet(c), VariableSet.createVariableSet(type("d")), random, .5);
+      PrimitiveSet p = new PrimitiveSetImpl(new FunctionSet(f1, f2), new ConstantSet(cn), VariableSet.createVariableSet(type("d")), random, .5);
       TreeGenerator g = TreeGeneratorImpl.full(p);
       Node result = g.generate(type("a"), 3);
       assertNodeEquals("(f1 (f2 \"X\" v0))", result);

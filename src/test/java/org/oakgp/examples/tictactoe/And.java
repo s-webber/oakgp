@@ -15,7 +15,7 @@
  */
 package org.oakgp.examples.tictactoe;
 
-import static org.oakgp.Type.booleanType;
+import static org.oakgp.type.CommonTypes.booleanType;
 
 import org.oakgp.Arguments;
 import org.oakgp.function.Function;

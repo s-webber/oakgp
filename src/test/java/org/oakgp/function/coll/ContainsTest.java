@@ -15,11 +15,11 @@
  */
 package org.oakgp.function.coll;
 
-import static org.oakgp.Type.integerType;
+import static org.oakgp.type.CommonTypes.integerType;
+import static org.oakgp.type.CommonTypes.listType;
 
 import java.util.Collections;
 
-import org.oakgp.Type;
 import org.oakgp.function.AbstractFunctionTest;
 import org.oakgp.node.ConstantNode;
 
@@ -41,7 +41,7 @@ public class ContainsTest extends AbstractFunctionTest {
       evaluate("(contains [8 5 6] 42)").to(false);
       evaluate("(contains [8 5 6] -8)").to(false);
 
-      ConstantNode emptyList = new ConstantNode(Collections.emptyList(), Type.listType(Type.integerType()));
+      ConstantNode emptyList = new ConstantNode(Collections.emptyList(), listType(integerType()));
       evaluate("(contains v0 1)").assigned(emptyList).to(false);
    }
 

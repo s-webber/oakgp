@@ -22,6 +22,7 @@ import static org.oakgp.TestUtils.createVariable;
 import static org.oakgp.TestUtils.integerConstant;
 import static org.oakgp.TestUtils.readNode;
 import static org.oakgp.TestUtils.writeNode;
+import static org.oakgp.type.CommonTypes.integerType;
 
 import org.junit.ComparisonFailure;
 import org.junit.Test;
@@ -211,7 +212,7 @@ public class NodeSimplifierTest {
       Function f = new Function() {
          @Override
          public Signature getSignature() {
-            return Signature.createSignature(Type.integerType(), Type.integerType());
+            return Signature.createSignature(integerType(), integerType());
          }
 
          @Override

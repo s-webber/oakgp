@@ -17,10 +17,10 @@ package org.oakgp.primitive;
 
 import java.util.List;
 
-import org.oakgp.Type;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
 import org.oakgp.node.Node;
+import org.oakgp.type.Types.Type;
 import org.oakgp.util.Random;
 
 /** Represents the range of possible functions and terminal nodes to use during a genetic programming run. */

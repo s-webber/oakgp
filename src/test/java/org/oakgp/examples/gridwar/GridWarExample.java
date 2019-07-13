@@ -15,12 +15,11 @@
  */
 package org.oakgp.examples.gridwar;
 
-import static org.oakgp.Type.integerType;
+import static org.oakgp.type.CommonTypes.integerType;
 import static org.oakgp.util.Utils.createIntegerTypeArray;
 
 import java.util.Collection;
 
-import org.oakgp.Type;
 import org.oakgp.function.Function;
 import org.oakgp.function.choice.If;
 import org.oakgp.function.compare.Equal;
@@ -35,6 +34,7 @@ import org.oakgp.node.Node;
 import org.oakgp.rank.RankedCandidates;
 import org.oakgp.rank.tournament.FirstPlayerAdvantageGame;
 import org.oakgp.rank.tournament.TwoPlayerGame;
+import org.oakgp.type.Types.Type;
 import org.oakgp.util.JavaUtilRandomAdapter;
 import org.oakgp.util.Random;
 import org.oakgp.util.RunBuilder;

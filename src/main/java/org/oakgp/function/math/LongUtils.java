@@ -15,7 +15,7 @@
  */
 package org.oakgp.function.math;
 
-import static org.oakgp.Type.longType;
+import static org.oakgp.type.CommonTypes.longType;
 
 /** Provides support for working with instances of {@code java.lang.Long}. */
 public final class LongUtils extends NumberUtils<Long> {

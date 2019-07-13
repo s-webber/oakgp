@@ -15,8 +15,8 @@
  */
 package org.oakgp.function.hof;
 
-import static org.oakgp.Type.booleanType;
-import static org.oakgp.Type.integerType;
+import static org.oakgp.type.CommonTypes.booleanType;
+import static org.oakgp.type.CommonTypes.integerType;
 
 import java.util.Arrays;
 import java.util.LinkedHashMap;

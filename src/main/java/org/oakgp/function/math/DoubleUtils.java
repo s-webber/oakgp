@@ -15,7 +15,7 @@
  */
 package org.oakgp.function.math;
 
-import static org.oakgp.Type.doubleType;
+import static org.oakgp.type.CommonTypes.doubleType;
 
 /** Provides support for working with instances of {@code java.lang.Double}. */
 public final class DoubleUtils extends NumberUtils<Double> {

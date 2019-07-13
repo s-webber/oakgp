@@ -15,15 +15,15 @@
  */
 package org.oakgp.function.coll;
 
-import static org.oakgp.Type.booleanType;
-import static org.oakgp.Type.listType;
+import static org.oakgp.type.CommonTypes.booleanType;
+import static org.oakgp.type.CommonTypes.listType;
 
 import java.util.Collection;
 
 import org.oakgp.Arguments;
-import org.oakgp.Type;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
+import org.oakgp.type.Types.Type;
 
 public class Contains implements Function {
    private final Signature signature;

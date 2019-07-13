@@ -16,9 +16,9 @@
 package org.oakgp.function.math;
 
 import org.oakgp.Arguments;
-import org.oakgp.Type;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
+import org.oakgp.type.Types.Type;
 
 abstract class ArithmeticOperator<T extends Comparable<T>> implements Function {
    private final Signature signature;

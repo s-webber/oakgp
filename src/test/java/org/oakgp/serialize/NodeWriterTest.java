@@ -23,11 +23,11 @@ import static org.oakgp.TestUtils.doubleConstant;
 import static org.oakgp.TestUtils.integerConstant;
 import static org.oakgp.TestUtils.longConstant;
 import static org.oakgp.TestUtils.stringConstant;
-import static org.oakgp.Type.integerToBooleanFunctionType;
-import static org.oakgp.Type.integerType;
-import static org.oakgp.Type.listType;
-import static org.oakgp.Type.mapType;
-import static org.oakgp.Type.stringType;
+import static org.oakgp.type.CommonTypes.integerToBooleanFunctionType;
+import static org.oakgp.type.CommonTypes.integerType;
+import static org.oakgp.type.CommonTypes.listType;
+import static org.oakgp.type.CommonTypes.mapType;
+import static org.oakgp.type.CommonTypes.stringType;
 import static org.oakgp.util.Void.VOID_CONSTANT;
 
 import java.util.Arrays;

@@ -17,17 +17,18 @@ package org.oakgp.function.compare;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
-import static org.oakgp.Type.booleanType;
+import static org.oakgp.type.CommonTypes.booleanType;
 
 import org.junit.Test;
-import org.oakgp.Type;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
+import org.oakgp.type.Types;
+import org.oakgp.type.Types.Type;
 
 public class ComparisonOperatorTest {
    @Test
    public void testGetSignature() {
-      Type type = Type.type("ComparisonOperatorTest");
+      Type type = Types.declareType("ComparisonOperatorTest");
       Function f = new ComparisonOperator(type, true) {
          @Override
          protected boolean evaluate(int diff) {

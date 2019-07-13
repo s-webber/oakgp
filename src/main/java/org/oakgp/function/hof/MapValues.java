@@ -16,17 +16,17 @@
 package org.oakgp.function.hof;
 
 import static java.util.Collections.unmodifiableMap;
-import static org.oakgp.Type.functionType;
-import static org.oakgp.Type.mapType;
+import static org.oakgp.type.CommonTypes.functionType;
+import static org.oakgp.type.CommonTypes.mapType;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.oakgp.Arguments;
-import org.oakgp.Type;
 import org.oakgp.function.Function;
 import org.oakgp.function.HigherOrderFunctionArguments;
 import org.oakgp.function.Signature;
+import org.oakgp.type.Types.Type;
 
 public final class MapValues implements Function {
    private final Signature signature;

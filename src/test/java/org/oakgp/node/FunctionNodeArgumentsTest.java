@@ -17,9 +17,9 @@ package org.oakgp.node;
 
 import static org.junit.Assert.assertEquals;
 import static org.oakgp.TestUtils.longConstant;
-import static org.oakgp.Type.booleanType;
-import static org.oakgp.Type.integerType;
-import static org.oakgp.Type.stringType;
+import static org.oakgp.type.CommonTypes.booleanType;
+import static org.oakgp.type.CommonTypes.integerType;
+import static org.oakgp.type.CommonTypes.stringType;
 
 import org.junit.Test;
 import org.oakgp.Assignments;

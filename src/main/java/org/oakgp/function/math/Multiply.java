@@ -49,7 +49,7 @@ final class Multiply<T extends Comparable<T>> extends ArithmeticOperator<T> {
       Node arg2 = children.second();
 
       if (NODE_COMPARATOR.compare(arg1, arg2) > 0) {
-         // as for addition the order of the arguments is not important, order arguments in a consistent way
+         // for multiplication the order of the arguments is not important, so order arguments in a consistent way
          // e.g. (* v1 1) -> (* 1 v1)
          return new FunctionNode(this, arg2, arg1);
       } else if (numberUtils.isZero(arg1)) {

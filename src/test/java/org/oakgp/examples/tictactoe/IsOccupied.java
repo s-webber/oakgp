@@ -15,9 +15,9 @@
  */
 package org.oakgp.examples.tictactoe;
 
-import static org.oakgp.Type.booleanType;
-import static org.oakgp.Type.type;
 import static org.oakgp.function.Signature.createSignature;
+import static org.oakgp.type.CommonTypes.booleanType;
+import static org.oakgp.type.Types.type;
 
 import org.oakgp.Arguments;
 import org.oakgp.function.Function;

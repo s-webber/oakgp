@@ -15,10 +15,10 @@
  */
 package org.oakgp.function.compare;
 
-import org.oakgp.Type;
 import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
+import org.oakgp.type.Types.Type;
 
 /** Determines if the object represented by the first argument is greater than the object represented by the second. */
 public final class GreaterThan extends ComparisonOperator {

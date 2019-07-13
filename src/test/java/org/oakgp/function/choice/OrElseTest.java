@@ -16,11 +16,10 @@
 package org.oakgp.function.choice;
 
 import static org.junit.Assert.assertEquals;
-import static org.oakgp.Type.nullableType;
-import static org.oakgp.Type.stringType;
+import static org.oakgp.type.CommonTypes.nullableType;
+import static org.oakgp.type.CommonTypes.stringType;
 
 import org.oakgp.NodeSimplifier;
-import org.oakgp.Type;
 import org.oakgp.function.AbstractFunctionTest;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
@@ -52,13 +51,13 @@ public class OrElseTest extends AbstractFunctionTest {
       ConstantNode arg2 = new ConstantNode("world!", stringType());
       simplify(new FunctionNode(getFunction(), arg1, arg2), new ConstantNode("hello", stringType()));
 
-      VariableNode v0 = new VariableNode(0, Type.stringType());
+      VariableNode v0 = new VariableNode(0, stringType());
       FunctionNode fn = new FunctionNode(getFunction(), v0, arg2);
       simplify(new FunctionNode(getFunction(), v0, fn), fn);
 
       simplify(new FunctionNode(getFunction(), v0, new FunctionNode(getFunction(), v0, new FunctionNode(getFunction(), v0, fn))), fn);
 
-      VariableNode v1 = new VariableNode(1, Type.stringType());
+      VariableNode v1 = new VariableNode(1, stringType());
       simplify(new FunctionNode(getFunction(), v0, new FunctionNode(getFunction(), v1, new FunctionNode(getFunction(), v0, fn))),
             new FunctionNode(getFunction(), v0, new FunctionNode(getFunction(), v1, arg2)));
    }
