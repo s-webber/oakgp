@@ -18,6 +18,7 @@ package org.oakgp.evolve.mutate;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.oakgp.TestUtils.integerConstant;
+import static org.oakgp.type.CommonTypes.integerType;
 import static org.oakgp.util.DummyRandom.GetIntExpectation.nextInt;
 
 import org.junit.Test;
@@ -63,7 +64,7 @@ public class PointMutationTest {
       Function outputFunction = IntegerUtils.INTEGER_UTILS.getSubtract();
       Node inputArg1 = integerConstant(3);
       Node inputArg2 = integerConstant(7);
-      Node input = new FunctionNode(rootFunction, new FunctionNode(inputFunction, inputArg1, inputArg2));
+      Node input = new FunctionNode(rootFunction, integerType(), new FunctionNode(inputFunction, integerType(), inputArg1, inputArg2));
       DummyNodeSelector dummySelector = new DummyNodeSelector(input, input, input);
       Node outputArg1 = integerConstant(9);
       Node outputArg2 = integerConstant(2);
@@ -82,9 +83,12 @@ public class PointMutationTest {
       };
       GeneticOperator pointMutation = new PointMutation(dummyRandom, primitiveSet);
 
-      assertEquals(new FunctionNode(rootFunction, new FunctionNode(inputFunction, inputArg1, outputArg2)), pointMutation.evolve(dummySelector));
-      assertEquals(new FunctionNode(rootFunction, new FunctionNode(outputFunction, inputArg1, inputArg2)), pointMutation.evolve(dummySelector));
-      assertEquals(new FunctionNode(rootFunction, new FunctionNode(inputFunction, outputArg1, inputArg2)), pointMutation.evolve(dummySelector));
+      assertEquals(new FunctionNode(rootFunction, integerType(), new FunctionNode(inputFunction, integerType(), inputArg1, outputArg2)),
+            pointMutation.evolve(dummySelector));
+      assertEquals(new FunctionNode(rootFunction, integerType(), new FunctionNode(outputFunction, integerType(), inputArg1, inputArg2)),
+            pointMutation.evolve(dummySelector));
+      assertEquals(new FunctionNode(rootFunction, integerType(), new FunctionNode(inputFunction, integerType(), outputArg1, inputArg2)),
+            pointMutation.evolve(dummySelector));
 
       dummyRandom.assertEmpty();
       dummySelector.assertEmpty();

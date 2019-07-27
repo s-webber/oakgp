@@ -61,7 +61,7 @@ public final class PointMutation implements GeneticOperator {
          if (isFunction(node)) {
             FunctionNode functionNode = (FunctionNode) node;
             Function function = primitiveSet.nextAlternativeFunction(functionNode.getFunction());
-            return new FunctionNode(function, functionNode.getChildren());
+            return new FunctionNode(function, node.getType(), functionNode.getChildren());
          } else {
             return primitiveSet.nextAlternativeTerminal(node);
          }

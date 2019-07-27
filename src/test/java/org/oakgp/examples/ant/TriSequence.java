@@ -51,7 +51,8 @@ class TriSequence implements ImpureFunction {
    }
 
    @Override
-   public Node simplify(ChildNodes children) {
+   public Node simplify(FunctionNode functionNode) {
+      ChildNodes children = functionNode.getChildren();
       Node first = children.first();
       Node second = children.second();
       Node third = children.third();
@@ -66,15 +67,15 @@ class TriSequence implements ImpureFunction {
       } else if (isLeftAndRight(second, third)) {
          return first;
       } else if (areAllSame(LEFT, first, second, third)) {
-         return new FunctionNode(RIGHT, ((FunctionNode) first).getChildren());
+         return new FunctionNode(RIGHT, VOID_TYPE, ((FunctionNode) first).getChildren());
       } else if (areAllSame(RIGHT, first, second, third)) {
-         return new FunctionNode(LEFT, ((FunctionNode) first).getChildren());
+         return new FunctionNode(LEFT, VOID_TYPE, ((FunctionNode) first).getChildren());
       } else {
          return null;
       }
    }
 
    private Node createBiSequence(Node arg1, Node arg2) {
-      return new FunctionNode(BiSequence.BISEQUENCE, arg1, arg2);
+      return new FunctionNode(BiSequence.BISEQUENCE, VOID_TYPE, arg1, arg2);
    }
 }

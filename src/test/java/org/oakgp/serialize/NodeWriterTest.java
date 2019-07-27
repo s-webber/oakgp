@@ -101,16 +101,16 @@ public class NodeWriterTest {
    @Test
    public void testFunctionNode() {
       NodeWriter writer = new NodeWriter();
-      String output = writer.writeNode(new FunctionNode(IntegerUtils.INTEGER_UTILS.getAdd(), integerConstant(5), createVariable(0)));
+      String output = writer.writeNode(new FunctionNode(IntegerUtils.INTEGER_UTILS.getAdd(), integerType(), integerConstant(5), createVariable(0)));
       assertEquals("(+ 5 v0)", output);
    }
 
    @Test
    public void testFunctionNodeWithFunctionNodeArguments() {
       NodeWriter writer = new NodeWriter();
-      FunctionNode arg1 = new FunctionNode(IntegerUtils.INTEGER_UTILS.getSubtract(), integerConstant(5), createVariable(0));
-      FunctionNode arg2 = new FunctionNode(IntegerUtils.INTEGER_UTILS.getMultiply(), createVariable(1), integerConstant(-6876));
-      String output = writer.writeNode(new FunctionNode(IntegerUtils.INTEGER_UTILS.getAdd(), arg1, arg2));
+      FunctionNode arg1 = new FunctionNode(IntegerUtils.INTEGER_UTILS.getSubtract(), integerType(), integerConstant(5), createVariable(0));
+      FunctionNode arg2 = new FunctionNode(IntegerUtils.INTEGER_UTILS.getMultiply(), integerType(), createVariable(1), integerConstant(-6876));
+      String output = writer.writeNode(new FunctionNode(IntegerUtils.INTEGER_UTILS.getAdd(), integerType(), arg1, arg2));
       assertEquals("(+ (- 5 v0) (* v1 -6876))", output);
    }
 
@@ -136,7 +136,7 @@ public class NodeWriterTest {
    public void testFunctionAsArgument() {
       ConstantNode criteria = new ConstantNode(new IsPositive(), integerToBooleanFunctionType());
       ConstantNode args = new ConstantNode(Arrays.asList(integerConstant(6), integerConstant(-2), integerConstant(17)), listType(integerType()));
-      FunctionNode input = new FunctionNode(new Filter(integerType()), criteria, args);
+      FunctionNode input = new FunctionNode(new Filter(integerType()), integerType(), criteria, args);
 
       String output = new NodeWriter().writeNode(input);
 

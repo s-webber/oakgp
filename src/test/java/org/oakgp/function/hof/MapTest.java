@@ -16,19 +16,22 @@
 package org.oakgp.function.hof;
 
 import static java.util.Arrays.asList;
+import static org.junit.Assert.assertTrue;
 import static org.oakgp.type.CommonTypes.booleanType;
 import static org.oakgp.type.CommonTypes.integerType;
 
+import org.junit.Test;
 import org.oakgp.function.AbstractFunctionTest;
-import org.oakgp.function.Function;
 import org.oakgp.function.classify.IsNegative;
 import org.oakgp.function.classify.IsPositive;
 import org.oakgp.function.classify.IsZero;
+import org.oakgp.primitive.FunctionSet;
+import org.oakgp.util.FunctionSetBuilder;
 
 public class MapTest extends AbstractFunctionTest {
    @Override
    protected Map getFunction() {
-      return new Map(integerType(), booleanType());
+      return new Map();
    }
 
    @Override
@@ -48,7 +51,12 @@ public class MapTest extends AbstractFunctionTest {
    }
 
    @Override
-   protected Function[] getFunctionSet() {
-      return new Function[] { getFunction(), new IsPositive(), new IsNegative(), new IsZero() };
+   protected FunctionSet getFunctionSet() {
+      return new FunctionSetBuilder().add(getFunction(), booleanType(), integerType()).add(new IsPositive()).add(new IsNegative()).add(new IsZero()).build();
+   }
+
+   @Test
+   public void testIsTemplate() {
+      assertTrue(new Map().getSignature().isTemplate());
    }
 }

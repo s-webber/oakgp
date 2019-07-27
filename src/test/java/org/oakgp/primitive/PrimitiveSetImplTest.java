@@ -21,6 +21,7 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
+import static org.oakgp.TestUtils.createFunctionSet;
 import static org.oakgp.TestUtils.createVariable;
 import static org.oakgp.TestUtils.integerConstant;
 import static org.oakgp.type.CommonTypes.booleanType;
@@ -57,14 +58,14 @@ public class PrimitiveSetImplTest {
 
    @Test
    public void testHasFunctions() {
-      PrimitiveSet p = createWithFunctions(DummyRandom.EMPTY);
+      PrimitiveSetImpl p = createWithFunctions(DummyRandom.EMPTY);
       assertTrue(p.hasFunctions(integerType()));
       assertFalse(p.hasFunctions(stringType()));
    }
 
    @Test
    public void testHasTerminals() {
-      PrimitiveSet p = createWithTerminals(DummyRandom.EMPTY);
+      PrimitiveSetImpl p = createWithTerminals(DummyRandom.EMPTY);
       assertTrue(p.hasTerminals(integerType()));
       assertFalse(p.hasTerminals(stringType()));
    }
@@ -77,7 +78,7 @@ public class PrimitiveSetImplTest {
       // mock randomly selecting one of the 6 functions in OPERATORS with a boolean return type
       given(mockRandom.nextInt(6)).willReturn(1, 0, 5, 4);
 
-      PrimitiveSet functionSet = createWithFunctions(mockRandom);
+      PrimitiveSetImpl functionSet = createWithFunctions(mockRandom);
 
       // TODO test with more than just integerType()
       assertSame(FUNCTIONS[1], functionSet.nextFunction(integerType()));
@@ -97,7 +98,7 @@ public class PrimitiveSetImplTest {
    @Test
    public void testNextAlternativeFunction() {
       Random mockRandom = mock(Random.class);
-      PrimitiveSet functionSet = createWithFunctions(mockRandom);
+      PrimitiveSetImpl functionSet = createWithFunctions(mockRandom);
 
       given(mockRandom.nextInt(3)).willReturn(0, 1, 2, 0);
       given(mockRandom.nextInt(2)).willReturn(0, 1);
@@ -127,7 +128,7 @@ public class PrimitiveSetImplTest {
       given(mockRandom.nextDouble()).willReturn(0.0, VARIABLE_RATIO, VARIABLE_RATIO + .01, .9, VARIABLE_RATIO - .01, .7);
       given(mockRandom.nextInt(3)).willReturn(1, 0, 2, 1, 0, 2);
 
-      PrimitiveSet terminalSet = createWithTerminals(mockRandom);
+      PrimitiveSetImpl terminalSet = createWithTerminals(mockRandom);
 
       // TODO test with more than just integerType()
       assertVariable(1, terminalSet.nextTerminal(integerType()));
@@ -143,7 +144,7 @@ public class PrimitiveSetImplTest {
       Random mockRandom = mock(Random.class);
       given(mockRandom.nextDouble()).willReturn(VARIABLE_RATIO); // this will force constants to be produced
 
-      PrimitiveSet terminalSet = createWithTerminals(mockRandom);
+      PrimitiveSetImpl terminalSet = createWithTerminals(mockRandom);
 
       given(mockRandom.nextInt(3)).willReturn(0, 1, 2, 0);
       given(mockRandom.nextInt(2)).willReturn(0, 1);
@@ -212,14 +213,14 @@ public class PrimitiveSetImplTest {
       assertVariable(1, terminalSet.nextAlternativeTerminal(constantNode));
    }
 
-   private PrimitiveSet createWithTerminals(Random random) {
+   private PrimitiveSetImpl createWithTerminals(Random random) {
       ConstantSet constantSet = new ConstantSet(CONSTANTS);
       VariableSet variableSet = VariableSet.createVariableSet(VARIABLE_TYPES);
       return new PrimitiveSetImpl(null, constantSet, variableSet, random, VARIABLE_RATIO);
    }
 
-   private PrimitiveSet createWithFunctions(Random random) {
-      return new PrimitiveSetImpl(new FunctionSet(FUNCTIONS), null, null, random, .1);
+   private PrimitiveSetImpl createWithFunctions(Random random) {
+      return new PrimitiveSetImpl(createFunctionSet(FUNCTIONS), null, null, random, .1);
    }
 
    public static void assertVariable(int expectedId, Node node) {

@@ -36,10 +36,12 @@ public final class GreaterThanOrEqual extends ComparisonOperator {
    }
 
    @Override
-   public Node simplify(ChildNodes children) {
-      Node simplifiedVersion = super.simplify(children);
+   public Node simplify(FunctionNode functionNode) {
+      Type returnType = functionNode.getType();
+      ChildNodes children = functionNode.getChildren();
+      Node simplifiedVersion = simplifyToTrue(children);
       if (simplifiedVersion == null) {
-         return new FunctionNode(lessThanOrEqual, children.second(), children.first());
+         return new FunctionNode(lessThanOrEqual, returnType, children.second(), children.first());
       } else {
          return simplifiedVersion;
       }

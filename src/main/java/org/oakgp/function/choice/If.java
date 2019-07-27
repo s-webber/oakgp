@@ -63,7 +63,9 @@ public final class If implements Function {
    }
 
    @Override
-   public Node simplify(ChildNodes children) {
+   public Node simplify(FunctionNode functionNode) {
+      Type returnType = functionNode.getType();
+      ChildNodes children = functionNode.getChildren();
       Node trueBranch = children.second();
       Node falseBranch = children.third();
       if (trueBranch.equals(falseBranch)) {
@@ -80,7 +82,7 @@ public final class If implements Function {
       Node simplifiedTrueBranch = NodeWalk.replaceAll(trueBranch, criteria, n -> Utils.TRUE_NODE);
       Node simplifiedFalseBranch = NodeWalk.replaceAll(falseBranch, criteria, n -> Utils.FALSE_NODE);
       if (trueBranch != simplifiedTrueBranch || falseBranch != simplifiedFalseBranch) {
-         return new FunctionNode(this, condition, simplifiedTrueBranch, simplifiedFalseBranch);
+         return new FunctionNode(this, returnType, condition, simplifiedTrueBranch, simplifiedFalseBranch);
       } else {
          return null;
       }

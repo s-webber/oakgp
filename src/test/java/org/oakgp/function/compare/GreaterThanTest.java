@@ -21,7 +21,8 @@ import static org.oakgp.type.CommonTypes.integerType;
 import static org.oakgp.type.CommonTypes.stringType;
 
 import org.oakgp.function.AbstractFunctionTest;
-import org.oakgp.function.Function;
+import org.oakgp.primitive.FunctionSet;
+import org.oakgp.util.FunctionSetBuilder;
 
 public class GreaterThanTest extends AbstractFunctionTest {
    @Override
@@ -56,7 +57,7 @@ public class GreaterThanTest extends AbstractFunctionTest {
    }
 
    @Override
-   protected Function[] getFunctionSet() {
-      return new Function[] { getFunction(), new GreaterThan(stringType()), LessThan.create(integerType()) };
+   protected FunctionSet getFunctionSet() {
+      return new FunctionSetBuilder().add(getFunction()).add(new GreaterThan(stringType())).add(LessThan.create(integerType())).build();
    }
 }

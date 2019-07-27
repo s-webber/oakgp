@@ -20,9 +20,10 @@ import static org.oakgp.type.CommonTypes.nullableType;
 import static org.oakgp.type.Types.declareType;
 
 import org.oakgp.function.AbstractFunctionTest;
-import org.oakgp.function.Function;
 import org.oakgp.node.ConstantNode;
+import org.oakgp.primitive.FunctionSet;
 import org.oakgp.type.Types.Type;
+import org.oakgp.util.FunctionSetBuilder;
 
 public class SwitchEnumTest extends AbstractFunctionTest {
    private static final Type ENUM_TYPE = declareType("exampleEnum");
@@ -72,7 +73,7 @@ public class SwitchEnumTest extends AbstractFunctionTest {
    }
 
    @Override
-   protected Function[] getFunctionSet() {
-      return new Function[] { SWITCH_ENUM, SWITCH_NULLABLE_ENUM };
+   protected FunctionSet getFunctionSet() {
+      return new FunctionSetBuilder().add(getFunction()).add(SWITCH_ENUM).add(SWITCH_NULLABLE_ENUM).build();
    }
 }

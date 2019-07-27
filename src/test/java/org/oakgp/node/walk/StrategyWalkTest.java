@@ -24,6 +24,7 @@ import static org.oakgp.TestUtils.integerConstant;
 import static org.oakgp.TestUtils.mockNode;
 import static org.oakgp.TestUtils.readNode;
 import static org.oakgp.function.math.IntegerUtils.INTEGER_UTILS;
+import static org.oakgp.type.CommonTypes.integerType;
 import static org.oakgp.util.Utils.TRUE_NODE;
 
 import java.util.function.Predicate;
@@ -66,9 +67,9 @@ public class StrategyWalkTest {
       VariableNode v2 = createVariable(2);
       ConstantNode c1 = integerConstant(0);
       Function f = INTEGER_UTILS.getAdd();
-      FunctionNode branch1 = new FunctionNode(f, v0, c1);
-      FunctionNode branch2 = new FunctionNode(f, v2, v1);
-      FunctionNode tree = new FunctionNode(f, branch1, branch2);
+      FunctionNode branch1 = new FunctionNode(f, integerType(), v0, c1);
+      FunctionNode branch2 = new FunctionNode(f, integerType(), v2, v1);
+      FunctionNode tree = new FunctionNode(f, integerType(), branch1, branch2);
 
       assertSame(v0, StrategyWalk.getAt(tree, 0, NodeType::isVariable));
       assertSame(v2, StrategyWalk.getAt(tree, 1, NodeType::isVariable));

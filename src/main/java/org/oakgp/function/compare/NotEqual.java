@@ -39,11 +39,13 @@ public final class NotEqual extends ComparisonOperator {
    }
 
    @Override
-   public Node simplify(ChildNodes children) {
-      Node simplifiedVersion = super.simplify(children);
+   public Node simplify(FunctionNode functionNode) {
+      Type returnType = functionNode.getType();
+      ChildNodes children = functionNode.getChildren();
+      Node simplifiedVersion = simplifyToTrue(children);
       if (simplifiedVersion == null && NODE_COMPARATOR.compare(children.first(), children.second()) > 0) {
          // TODO this is similar to the logic in Equal and the arithmetic operators - is it possible to reuse?
-         return new FunctionNode(this, children.second(), children.first());
+         return new FunctionNode(this, returnType, children.second(), children.first());
       } else {
          return simplifiedVersion;
       }

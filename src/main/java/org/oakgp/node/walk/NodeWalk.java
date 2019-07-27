@@ -74,7 +74,7 @@ public final class NodeWalk {
             Node child = children.getNode(i);
             int c = child.getNodeCount();
             if (total + c > index) {
-               return new FunctionNode(functionNode.getFunction(), children.replaceAt(i, replaceAt(child, index - total, replacement)));
+               return new FunctionNode(functionNode, children.replaceAt(i, replaceAt(child, index - total, replacement)));
             } else {
                total += c;
             }
@@ -109,7 +109,7 @@ public final class NodeWalk {
                replacementArgs[i] = replacedArg;
             }
             if (updated) {
-               return new FunctionNode(functionNode.getFunction(), ChildNodes.createChildNodes(replacementArgs));
+               return new FunctionNode(functionNode, ChildNodes.createChildNodes(replacementArgs));
             } else {
                return node;
             }

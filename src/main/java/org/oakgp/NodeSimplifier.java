@@ -118,7 +118,7 @@ public final class NodeSimplifier {
       FunctionNode output;
       if (haveAnyArgumentsBeenSimplified) {
          arguments = createChildNodes(simplifiedArgs);
-         output = new FunctionNode(input.getFunction(), arguments);
+         output = new FunctionNode(input, arguments);
       } else {
          arguments = inputChildren;
          output = input;
@@ -133,7 +133,8 @@ public final class NodeSimplifier {
       }
 
       // try to simplify using function specific logic
-      Node simplifiedByFunctionVersion = input.getFunction().simplify(arguments);
+      // TODO avoid creating function node
+      Node simplifiedByFunctionVersion = input.getFunction().simplify(output);
       if (simplifiedByFunctionVersion == null) {
          return output;
       } else {

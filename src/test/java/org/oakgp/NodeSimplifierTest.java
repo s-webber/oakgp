@@ -226,7 +226,7 @@ public class NodeSimplifierTest {
          }
       };
 
-      FunctionNode fn = new FunctionNode(f, integerConstant(1));
+      FunctionNode fn = new FunctionNode(f, integerType(), integerConstant(1));
       Node output = NodeSimplifier.simplify(fn);
       assertEquals(integerConstant(evaluationResult), output);
    }
@@ -250,7 +250,7 @@ public class NodeSimplifierTest {
          }
       };
 
-      FunctionNode fn = new FunctionNode(f, integerConstant(1));
+      FunctionNode fn = new FunctionNode(f, integerType(), integerConstant(1));
       Node output = NodeSimplifier.simplify(fn);
       assertSame(fn, output);
    }

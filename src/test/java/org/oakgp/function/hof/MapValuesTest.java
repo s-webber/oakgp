@@ -22,8 +22,9 @@ import static org.oakgp.type.CommonTypes.stringType;
 import java.util.LinkedHashMap;
 
 import org.oakgp.function.AbstractFunctionTest;
-import org.oakgp.function.Function;
 import org.oakgp.function.classify.IsPositive;
+import org.oakgp.primitive.FunctionSet;
+import org.oakgp.util.FunctionSetBuilder;
 
 public class MapValuesTest extends AbstractFunctionTest {
    @Override
@@ -57,7 +58,7 @@ public class MapValuesTest extends AbstractFunctionTest {
    }
 
    @Override
-   protected Function[] getFunctionSet() {
-      return new Function[] { getFunction(), new IsPositive() };
+   protected FunctionSet getFunctionSet() {
+      return new FunctionSetBuilder().add(getFunction()).add(new IsPositive()).build();
    }
 }

@@ -21,7 +21,8 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import org.oakgp.function.AbstractFunctionTest;
-import org.oakgp.function.Function;
+import org.oakgp.primitive.FunctionSet;
+import org.oakgp.util.FunctionSetBuilder;
 
 public class SubtractTest extends AbstractFunctionTest {
    @Override
@@ -135,8 +136,9 @@ public class SubtractTest extends AbstractFunctionTest {
    }
 
    @Override
-   protected Function[] getFunctionSet() {
-      return new Function[] { getFunction(), IntegerUtils.INTEGER_UTILS.getAdd(), IntegerUtils.INTEGER_UTILS.getMultiply(), LongUtils.LONG_UTILS.getSubtract(),
-            DoubleUtils.DOUBLE_UTILS.getSubtract(), BigIntegerUtils.BIG_INTEGER_UTILS.getSubtract(), BigDecimalUtils.BIG_DECIMAL_UTILS.getSubtract() };
+   protected FunctionSet getFunctionSet() {
+      return new FunctionSetBuilder().add(getFunction()).add(IntegerUtils.INTEGER_UTILS.getAdd()).add(IntegerUtils.INTEGER_UTILS.getMultiply())
+            .add(LongUtils.LONG_UTILS.getSubtract()).add(DoubleUtils.DOUBLE_UTILS.getSubtract()).add(BigIntegerUtils.BIG_INTEGER_UTILS.getSubtract())
+            .add(BigDecimalUtils.BIG_DECIMAL_UTILS.getSubtract()).build();
    }
 }

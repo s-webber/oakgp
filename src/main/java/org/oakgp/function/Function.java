@@ -18,7 +18,7 @@ package org.oakgp.function;
 import static org.oakgp.type.CommonTypes.booleanType;
 
 import org.oakgp.Arguments;
-import org.oakgp.node.ChildNodes;
+import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 
 /** Represents an operation. */
@@ -46,7 +46,7 @@ public interface Function {
     * @return a simplified version of applying this function to the specified arguments, or {@code null} if unable to simplify.
     * @see org.oakgp.NodeSimplifier
     */
-   default Node simplify(ChildNodes children) {
+   default Node simplify(FunctionNode functionNode) {
       return null;
    }
 

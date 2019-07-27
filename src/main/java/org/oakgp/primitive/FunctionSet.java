@@ -15,10 +15,16 @@
  */
 package org.oakgp.primitive;
 
-import static org.oakgp.util.Utils.groupBy;
+import static java.util.Collections.singletonList;
+import static java.util.Collections.unmodifiableList;
+import static java.util.stream.Collectors.toMap;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BinaryOperator;
+import java.util.stream.Collector;
 
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
@@ -26,14 +32,28 @@ import org.oakgp.type.Types.Type;
 
 /** Represents the set of possible {@code Function} implementations to use during a genetic programming run. */
 public final class FunctionSet {
-   private final Map<Type, List<Function>> functionsByType;
+   private static final BinaryOperator<List<Function>> MERGE_FUNCTION = (x, y) -> {
+      ArrayList<Function> a = new ArrayList<>();
+      a.addAll(x);
+      a.addAll(y);
+      return unmodifiableList(a);
+   };
+
+   private final List<Key> functions;
    private final Map<Signature, List<Function>> functionsBySignature;
+   private final Map<Type, List<Function>> functionsByType;
 
    /** Constructs a function set containing the specified functions. */
-   public FunctionSet(Function... functions) {
+   public FunctionSet(List<FunctionSet.Key> functions) {
       // TODO validate display names using NodeReader.isValidDisplayName
-      this.functionsByType = groupBy(functions, f -> f.getSignature().getReturnType());
-      this.functionsBySignature = groupBy(functions, Function::getSignature);
+      this.functions = unmodifiableList(new ArrayList<>(functions)); // TODO add immutableCopy(List) method to Utils
+      this.functionsBySignature = functions.stream().collect(toMultiValueMap(k -> k.getSignature(), k -> singletonList(k.getFunction())));
+      this.functionsByType = functionsBySignature.entrySet().stream().collect(toMultiValueMap(e -> e.getKey().getReturnType(), Map.Entry::getValue));
+   }
+
+   private <I, K> Collector<I, ?, LinkedHashMap<K, List<Function>>> toMultiValueMap(java.util.function.Function<I, K> keyMapper,
+         java.util.function.Function<I, List<Function>> valueMapper) {
+      return toMap(keyMapper, valueMapper, MERGE_FUNCTION, LinkedHashMap::new);
    }
 
    /**
@@ -60,5 +80,35 @@ public final class FunctionSet {
    public List<Function> getBySignature(Signature signature) {
       // TODO should this return an empty list, rather than null, if no match found?
       return functionsBySignature.get(signature);
+   }
+
+   public List<Key> getFunctions() {
+      return functions;
+   }
+
+   @Override
+   public String toString() {
+      return functionsBySignature.toString();
+   }
+
+   public static class Key {
+      private final Function function;
+      private final Signature signature;
+
+      public Key(Function function, Signature signature) {
+         if (signature.isTemplate()) {
+            throw new IllegalArgumentException(signature.toString());
+         }
+         this.function = function;
+         this.signature = signature;
+      }
+
+      public Function getFunction() {
+         return function;
+      }
+
+      public Signature getSignature() {
+         return signature;
+      }
    }
 }

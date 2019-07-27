@@ -48,7 +48,8 @@ class BiSequence implements ImpureFunction {
    }
 
    @Override
-   public Node simplify(ChildNodes children) {
+   public Node simplify(FunctionNode functionNode) {
+      ChildNodes children = functionNode.getChildren();
       Node firstArg = children.first();
       Node secondArg = children.second();
       if (isVoid(firstArg)) {
@@ -74,6 +75,6 @@ class BiSequence implements ImpureFunction {
    }
 
    private Node createTriSequence(Node arg1, Node arg2, Node arg3) {
-      return new FunctionNode(TriSequence.TRISEQUENCE, arg1, arg2, arg3);
+      return new FunctionNode(TriSequence.TRISEQUENCE, VOID_TYPE, arg1, arg2, arg3);
    }
 }

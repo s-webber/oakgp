@@ -22,11 +22,12 @@ import static org.oakgp.type.CommonTypes.integerType;
 
 import org.junit.Test;
 import org.oakgp.function.AbstractFunctionTest;
-import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
 import org.oakgp.function.compare.GreaterThan;
 import org.oakgp.function.compare.LessThan;
 import org.oakgp.function.math.IntegerUtils;
+import org.oakgp.primitive.FunctionSet;
+import org.oakgp.util.FunctionSetBuilder;
 
 public class IfTest extends AbstractFunctionTest {
    @Override
@@ -75,8 +76,8 @@ public class IfTest extends AbstractFunctionTest {
    }
 
    @Override
-   protected Function[] getFunctionSet() {
-      return new Function[] { getFunction(), IntegerUtils.INTEGER_UTILS.getAdd(), IntegerUtils.INTEGER_UTILS.getMultiply(), LessThan.create(integerType()),
-            new GreaterThan(integerType()) };
+   protected FunctionSet getFunctionSet() {
+      return new FunctionSetBuilder().add(getFunction()).add(IntegerUtils.INTEGER_UTILS.getAdd()).add(IntegerUtils.INTEGER_UTILS.getMultiply())
+            .add(LessThan.create(integerType())).add(new GreaterThan(integerType())).build();
    }
 }

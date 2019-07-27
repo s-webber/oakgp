@@ -54,7 +54,9 @@ public final class OrElse implements Function {
    }
 
    @Override
-   public Node simplify(ChildNodes children) {
+   public Node simplify(FunctionNode functionNode) {
+      Type returnType = functionNode.getType();
+      ChildNodes children = functionNode.getChildren();
       List<Node> nodes = new ArrayList<>();
       nodes.add(children.first());
       Node next = children.second();
@@ -78,7 +80,7 @@ public final class OrElse implements Function {
 
       Node n = nodeAfterLastDuplicate;
       for (int i = indexOfLastDuplicate - 1; i > -1; i--) {
-         n = new FunctionNode(this, nodes.get(i), n);
+         n = new FunctionNode(this, returnType, nodes.get(i), n);
       }
       return n;
    }

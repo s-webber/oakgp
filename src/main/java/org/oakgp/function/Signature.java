@@ -17,8 +17,12 @@ package org.oakgp.function;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 
+import org.oakgp.type.Types;
 import org.oakgp.type.Types.Type;
 import org.oakgp.util.Utils;
 
@@ -69,6 +73,67 @@ public final class Signature {
    /** Returns an unmodifiable list containing the type of each argument associated with this signature. */
    public List<Type> getArgumentTypes() {
       return Collections.unmodifiableList(Arrays.asList(argumentTypes));
+   }
+
+   public Signature create(Type... types) {
+      Type[] generics = getGenerics();
+      if (types.length != generics.length) {
+         throw new IllegalArgumentException("Wrong number of arguments " + types.length + " != " + generics.length);
+      }
+
+      Map<Type, Type> assignments = new HashMap<>();
+      for (int i = 0; i < types.length; i++) {
+         Types.match(generics[i], types[i], assignments);
+      }
+
+      Type newReturnType = replace(getReturnType(), assignments);
+      Type[] newArgumentTypes = new Type[getArgumentTypesLength()];
+      for (int i = 0; i < getArgumentTypesLength(); i++) {
+         newArgumentTypes[i] = replace(getArgumentType(i), assignments);
+      }
+      return Signature.createSignature(newReturnType, newArgumentTypes);
+   }
+
+   public boolean isTemplate() {
+      return getGenerics().length > 0;
+   }
+
+   private Type[] getGenerics() {
+      LinkedHashSet<Type> generics = new LinkedHashSet<>();
+      getGenerics(returnType, generics);
+      for (Type argumentType : argumentTypes) {
+         getGenerics(argumentType, generics);
+      }
+      return generics.toArray(new Type[generics.size()]);
+   }
+
+   private void getGenerics(Type type, LinkedHashSet<Type> generics) {
+      if (type.isGeneric()) {
+         generics.add(type);
+      } else {
+         for (Type parameterType : type.getParameters()) {
+            getGenerics(parameterType, generics);
+         }
+      }
+   }
+
+   private static Type replace(Type original, Map<Type, Type> assignments) {
+      if (original.isGeneric()) {
+         return assignments.get(original);
+      }
+
+      List<Type> originalParameters = original.getParameters();
+      if (originalParameters.isEmpty()) {
+         return original;
+      } else {
+         Type[] newParameters = new Type[originalParameters.size()];
+         for (int i = 0; i < originalParameters.size(); i++) {
+            Type originalParameter = originalParameters.get(i);
+            Type newParameter = assignments.getOrDefault(originalParameter, originalParameter);
+            newParameters[i] = newParameter;
+         }
+         return Types.type(original.getName(), newParameters);
+      }
    }
 
    @Override

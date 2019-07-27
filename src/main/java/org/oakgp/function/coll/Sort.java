@@ -25,7 +25,6 @@ import java.util.List;
 import org.oakgp.Arguments;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
-import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.type.Types.Type;
@@ -51,8 +50,8 @@ public class Sort implements Function {
    }
 
    @Override
-   public Node simplify(ChildNodes children) {
-      Node n = children.first();
+   public Node simplify(FunctionNode functionNode) {
+      Node n = functionNode.getChildren().first();
       if (isFunction(n) && ((FunctionNode) n).getFunction() == this) {
          return n;
       } else {

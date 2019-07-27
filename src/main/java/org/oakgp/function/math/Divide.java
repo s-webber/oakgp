@@ -17,6 +17,7 @@ package org.oakgp.function.math;
 
 import org.oakgp.node.ChildNodes;
 import org.oakgp.node.ConstantNode;
+import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 
 /** Performs division. */
@@ -41,7 +42,8 @@ final class Divide<T extends Comparable<T>> extends ArithmeticOperator<T> {
    }
 
    @Override
-   public Node simplify(ChildNodes children) {
+   public Node simplify(FunctionNode functionNode) {
+      ChildNodes children = functionNode.getChildren();
       Node arg2 = children.second();
       if (numberUtils.isZero(arg2)) {
          return numberUtils.one();

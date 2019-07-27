@@ -22,6 +22,7 @@ import static org.oakgp.TestUtils.assertUnmodifiable;
 import static org.oakgp.function.Signature.createSignature;
 import static org.oakgp.type.CommonTypes.booleanListType;
 import static org.oakgp.type.CommonTypes.booleanType;
+import static org.oakgp.type.CommonTypes.doubleType;
 import static org.oakgp.type.CommonTypes.integerListType;
 import static org.oakgp.type.CommonTypes.integerType;
 import static org.oakgp.type.CommonTypes.stringType;
@@ -30,6 +31,7 @@ import java.util.List;
 
 import org.junit.Test;
 import org.oakgp.function.Function;
+import org.oakgp.function.Signature;
 import org.oakgp.function.choice.If;
 import org.oakgp.function.classify.IsNegative;
 import org.oakgp.function.classify.IsPositive;
@@ -42,8 +44,12 @@ import org.oakgp.function.compare.LessThan;
 import org.oakgp.function.compare.LessThanOrEqual;
 import org.oakgp.function.compare.NotEqual;
 import org.oakgp.function.hof.Filter;
+import org.oakgp.function.hof.Map;
 import org.oakgp.function.hof.Reduce;
+import org.oakgp.function.math.BigDecimalUtils;
+import org.oakgp.function.math.DoubleUtils;
 import org.oakgp.function.math.IntegerUtils;
+import org.oakgp.util.FunctionSetBuilder;
 
 public class FunctionSetTest {
    private static final Function ADD = IntegerUtils.INTEGER_UTILS.getAdd();
@@ -53,7 +59,7 @@ public class FunctionSetTest {
    @Test
    public void testGetByType() {
       IsZero isZero = new IsZero();
-      FunctionSet functionSet = new FunctionSet(ADD, SUBTRACT, MULTIPLY, isZero);
+      FunctionSet functionSet = new FunctionSetBuilder().add(ADD).add(SUBTRACT).add(MULTIPLY).add(isZero).build();
 
       List<Function> integers = functionSet.getByType(integerType());
       assertEquals(3, integers.size());
@@ -79,7 +85,7 @@ public class FunctionSetTest {
    public void testGetBySignature() {
       Count countIntegerArray = new Count(integerType());
       Count countBooleanArray = new Count(booleanType());
-      FunctionSet functionSet = new FunctionSet(ADD, SUBTRACT, countIntegerArray, countBooleanArray);
+      FunctionSet functionSet = new FunctionSetBuilder().add(ADD).add(SUBTRACT).add(countIntegerArray).add(countBooleanArray).build();
 
       // sanity check we have added 4 functions with a return type of integer
       assertEquals(4, functionSet.getByType(integerType()).size());
@@ -101,26 +107,77 @@ public class FunctionSetTest {
    }
 
    @Test
-   public void assertGetBySignatureUnmodifiable() {
+   public void testGetBySignatureUnmodifiable() {
       FunctionSet functionSet = createFunctionSet();
       List<Function> integers = functionSet.getBySignature(createSignature(integerType(), integerType(), integerType()));
       assertUnmodifiable(integers);
    }
 
+   @Test
+   public void testGetFunctions_sameFunctionNamesDifferentSignatures() {
+      Function addIntegers = IntegerUtils.INTEGER_UTILS.getAdd();
+      Function addDoubles = DoubleUtils.DOUBLE_UTILS.getAdd();
+      Function addBigDecimals = BigDecimalUtils.BIG_DECIMAL_UTILS.getAdd();
+      FunctionSet functionSet = new FunctionSetBuilder().add(addIntegers).add(addDoubles).add(addBigDecimals).build();
+
+      List<FunctionSet.Key> functions = functionSet.getFunctions();
+
+      assertEquals(3, functions.size());
+      assertSame(addIntegers, functions.get(0).getFunction());
+      assertSame(addIntegers.getSignature(), functions.get(0).getSignature());
+      assertSame(addDoubles, functions.get(1).getFunction());
+      assertSame(addDoubles.getSignature(), functions.get(1).getSignature());
+      assertSame(addBigDecimals, functions.get(2).getFunction());
+      assertSame(addBigDecimals.getSignature(), functions.get(2).getSignature());
+   }
+
+   @Test
+   public void testGetFunctions_sameReturnTypeDifferentSignatures() {
+      Function addIntegers = IntegerUtils.INTEGER_UTILS.getAdd();
+      IsZero isZero = new IsZero();
+      FunctionSet functionSet = new FunctionSetBuilder().add(addIntegers).add(isZero).build();
+
+      List<FunctionSet.Key> functions = functionSet.getFunctions();
+
+      assertEquals(2, functions.size());
+      assertSame(addIntegers, functions.get(0).getFunction());
+      assertSame(addIntegers.getSignature(), functions.get(0).getSignature());
+      assertSame(isZero, functions.get(1).getFunction());
+      assertSame(isZero.getSignature(), functions.get(1).getSignature());
+   }
+
+   @Test
+   public void testGetFunctions_sameFunctionDifferentSignatures() {
+      Map function = new Map();
+      Signature signature1 = function.getSignature().create(integerType(), booleanType());
+      Signature signature2 = function.getSignature().create(stringType(), doubleType());
+      FunctionSet functionSet = new FunctionSetBuilder().add(function, integerType(), booleanType()).add(function, stringType(), doubleType()).build();
+
+      List<FunctionSet.Key> functions = functionSet.getFunctions();
+
+      assertEquals(2, functions.size());
+      assertSame(function, functions.get(0).getFunction());
+      assertEquals(signature1, functions.get(0).getSignature());
+      assertSame(function, functions.get(1).getFunction());
+      assertEquals(signature2, functions.get(1).getSignature());
+   }
+
    private static FunctionSet createFunctionSet() {
-      return new FunctionSet(
+      return new FunctionSetBuilder()
             // arithmetic
-            ADD, SUBTRACT, MULTIPLY,
+            .add(ADD).add(SUBTRACT).add(MULTIPLY)
             // comparison
-            LessThan.create(integerType()), LessThanOrEqual.create(integerType()), new GreaterThan(integerType()), new GreaterThanOrEqual(integerType()),
-            new Equal(integerType()), new NotEqual(integerType()),
+            .add(LessThan.create(integerType())).add(LessThanOrEqual.create(integerType())).add(new GreaterThan(integerType()))
+            .add(new GreaterThanOrEqual(integerType())).add(new Equal(integerType())).add(new NotEqual(integerType()))
             // selection
-            new If(integerType()),
+            .add(new If(integerType()))
             // higher-order functions
-            new Reduce(integerType()), new Filter(integerType()), new org.oakgp.function.hof.Map(integerType(), booleanType()),
+            .add(new Reduce(integerType())).add(new Filter(integerType()))// .add(new org.oakgp.function.hof.Map(integerType(), booleanType()))
             // classify
-            new IsPositive(), new IsNegative(), new IsZero(),
+            .add(new IsPositive()).add(new IsNegative()).add(new IsZero())
             // collections
-            new Count(integerType()), new Count(booleanType()));
+            .add(new Count(integerType())).add(new Count(booleanType()))
+            // construct
+            .build();
    }
 }

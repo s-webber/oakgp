@@ -174,7 +174,7 @@ abstract class NumberUtils<T extends Comparable<T>> {
       if (isConstant(arg)) {
          return negateConstant(arg);
       } else {
-         return new FunctionNode(subtract, zero, arg);
+         return new FunctionNode(subtract, type, zero, arg);
       }
    }
 
@@ -202,7 +202,7 @@ abstract class NumberUtils<T extends Comparable<T>> {
 
    /** Returns a new expression which multiplies the given {@code Node} by two. */
    public final FunctionNode multiplyByTwo(Node arg) {
-      return new FunctionNode(multiply, two, arg);
+      return new FunctionNode(multiply, type, two, arg);
    }
 
    /**

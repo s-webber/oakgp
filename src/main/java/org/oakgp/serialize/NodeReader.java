@@ -38,7 +38,6 @@ import java.io.StringReader;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,9 +49,11 @@ import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.node.VariableNode;
+import org.oakgp.primitive.FunctionSet;
 import org.oakgp.primitive.VariableSet;
 import org.oakgp.type.Types;
 import org.oakgp.type.Types.Type;
+import org.oakgp.util.FunctionSetBuilder;
 
 /**
  * Creates {@code Node} instances from {@code String} representations.
@@ -88,26 +89,30 @@ public final class NodeReader implements Closeable {
 
    private final Map<Predicate<String>, java.util.function.Function<String, Node>> readers;
    private final CharReader cr;
-   private final Function[] functions;
+   private final FunctionSet functionSet;
    private final ConstantNode[] constants;
    private final VariableSet variableSet;
+
+   public NodeReader(String input, Function[] functions, ConstantNode[] constants, VariableSet variableSet) {
+      this(input, new FunctionSetBuilder().addAll(functions).build(), constants, variableSet);
+   }
 
    /**
     * Creates a {@code NodeReader} that reads from the given {@code java.lang.String}.
     *
     * @param input
     *           contains the s-expressions, representing programs as tree structures, that will be read to construct new {@code Node} instances
-    * @param functions
+    * @param functionSet
     *           a collection of {@code Function}s to use to represent functions read from {@code input}
     * @param constants
     *           a collection of {@code ConstantNode}s to use to represent constants read from {@code input}
     * @param variableSet
     *           the variable set to use to represent variables read from {@code input}
     */
-   public NodeReader(String input, Function[] functions, ConstantNode[] constants, VariableSet variableSet) {
+   public NodeReader(String input, FunctionSet functionSet, ConstantNode[] constants, VariableSet variableSet) {
       StringReader sr = new StringReader(input);
       this.cr = new CharReader(new BufferedReader(sr));
-      this.functions = copyOf(functions);
+      this.functionSet = functionSet;
       this.constants = copyOf(constants);
       this.variableSet = variableSet;
       this.readers = createReaders();
@@ -188,30 +193,25 @@ public final class NodeReader implements Closeable {
          arguments.add(n);
          types.add(n.getType());
       }
-      Function function = getFunction(functionName, types);
-      return new FunctionNode(function, createChildNodes(arguments));
+      FunctionSet.Key key = getFunction(functionName, types);
+      return new FunctionNode(key.getFunction(), key.getSignature().getReturnType(), createChildNodes(arguments));
    }
 
    private boolean notFunctionEnd(String token) {
       return !FUNCTION_END_STRING.equals(token);
    }
 
-   private Function getFunction(String functionName, List<Type> types) {
-      for (Function f : functions) {
-         if (isMatch(functionName, types, f)) {
-            return f;
+   private FunctionSet.Key getFunction(String functionName, List<Type> types) {
+      for (FunctionSet.Key key : functionSet.getFunctions()) {
+         if (isMatch(functionName, types, key)) {
+            return key;
          }
       }
-
-      StringBuilder sb = new StringBuilder();
-      for (Function f : functions) {
-         sb.append(" [name: " + f.getDisplayName() + " arguments: " + f.getSignature().getArgumentTypes() + "]");
-      }
-      throw new IllegalArgumentException("Could not find version of function: " + functionName + " for: " + types + " in:" + sb);
+      throw new IllegalArgumentException("Could not find version of function: " + functionName + " for: " + types + " in: " + functionSet);
    }
 
-   private boolean isMatch(String functionName, List<Type> types, Function f) {
-      return functionName.equals(f.getDisplayName()) && types.equals(f.getSignature().getArgumentTypes());
+   private boolean isMatch(String functionName, List<Type> types, FunctionSet.Key key) {
+      return functionName.equals(key.getFunction().getDisplayName()) && types.equals(key.getSignature().getArgumentTypes());
    }
 
    private ConstantNode createStringConstantNode() throws IOException {
@@ -338,12 +338,12 @@ public final class NodeReader implements Closeable {
    }
 
    private Function getFunction(String token) {
-      for (Function f : functions) {
-         if (token.equals(f.getDisplayName())) {
-            return f;
+      for (FunctionSet.Key key : functionSet.getFunctions()) {
+         if (token.equals(key.getFunction().getDisplayName())) {
+            return key.getFunction();
          }
       }
-      throw new IllegalArgumentException("Could not find version of function: " + token + " in: " + Arrays.toString(functions));
+      throw new IllegalArgumentException("Could not find version of function: " + token + " in: " + functionSet);
    }
 
    private static void assertNotEndOfStream(int c) {

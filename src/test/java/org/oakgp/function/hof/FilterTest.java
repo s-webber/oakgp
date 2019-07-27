@@ -19,10 +19,11 @@ import static java.util.Arrays.asList;
 import static org.oakgp.type.CommonTypes.integerType;
 
 import org.oakgp.function.AbstractFunctionTest;
-import org.oakgp.function.Function;
 import org.oakgp.function.classify.IsNegative;
 import org.oakgp.function.classify.IsPositive;
 import org.oakgp.function.classify.IsZero;
+import org.oakgp.primitive.FunctionSet;
+import org.oakgp.util.FunctionSetBuilder;
 
 public class FilterTest extends AbstractFunctionTest {
    @Override
@@ -47,7 +48,7 @@ public class FilterTest extends AbstractFunctionTest {
    }
 
    @Override
-   protected Function[] getFunctionSet() {
-      return new Function[] { getFunction(), new IsPositive(), new IsNegative(), new IsZero() };
+   protected FunctionSet getFunctionSet() {
+      return new FunctionSetBuilder().add(getFunction()).add(new IsPositive()).add(new IsNegative()).add(new IsZero()).build();
    }
 }

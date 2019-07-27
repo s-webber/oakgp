@@ -22,6 +22,7 @@ import static org.oakgp.util.NodeComparator.NODE_COMPARATOR;
 import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
+import org.oakgp.type.Types.Type;
 
 /** Performs addition. */
 final class Add<T extends Comparable<T>> extends ArithmeticOperator<T> {
@@ -46,14 +47,16 @@ final class Add<T extends Comparable<T>> extends ArithmeticOperator<T> {
    }
 
    @Override
-   public Node simplify(ChildNodes children) {
+   public Node simplify(FunctionNode functionNode) {
+      Type returnType = functionNode.getType();
+      ChildNodes children = functionNode.getChildren();
       Node arg1 = children.first();
       Node arg2 = children.second();
 
       if (NODE_COMPARATOR.compare(arg1, arg2) > 0) {
          // for addition the order of the arguments is not important, so order arguments in a consistent way
          // e.g. (+ v1 1) -> (+ 1 v1)
-         return new FunctionNode(this, arg2, arg1);
+         return new FunctionNode(this, returnType, arg2, arg1);
       } else if (numberUtils.isZero(arg1)) {
          // anything plus zero is itself
          // e.g. (+ 0 v0) -> v0
@@ -68,7 +71,7 @@ final class Add<T extends Comparable<T>> extends ArithmeticOperator<T> {
       } else if (isConstant(arg1) && numberUtils.isNegative(arg1)) {
          // convert addition of negative numbers to subtraction
          // e.g. (+ -3 x) -> (- x 3)
-         return new FunctionNode(numberUtils.getSubtract(), arg2, numberUtils.negateConstant(arg1));
+         return new FunctionNode(numberUtils.getSubtract(), returnType, arg2, numberUtils.negateConstant(arg1));
       } else if (isConstant(arg2) && numberUtils.isNegative(arg2)) {
          // should never get here as, due to the earlier ordering of arguments,
          // the only time the second argument will be a constant is when the first argument is also a constant -
@@ -78,7 +81,7 @@ final class Add<T extends Comparable<T>> extends ArithmeticOperator<T> {
       } else if (isConstant(arg1) && isFunction(arg2)) {
          FunctionNode fn2 = (FunctionNode) arg2;
          if (isConstant(fn2.getChildren().first()) && numberUtils.isAddOrSubtract(fn2.getFunction())) {
-            return new FunctionNode(fn2.getFunction(), numberUtils.add(arg1, fn2.getChildren().first()), fn2.getChildren().second());
+            return new FunctionNode(fn2.getFunction(), returnType, numberUtils.add(arg1, fn2.getChildren().first()), fn2.getChildren().second());
          }
       }
 

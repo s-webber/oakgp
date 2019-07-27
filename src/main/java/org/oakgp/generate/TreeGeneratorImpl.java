@@ -87,7 +87,7 @@ public final class TreeGeneratorImpl implements TreeGenerator {
             Node arg = generate(argType, depth - 1);
             args[i] = arg;
          }
-         return new FunctionNode(function, args);
+         return new FunctionNode(function, type, args);
       } else {
          return primitiveSet.nextTerminal(type);
       }

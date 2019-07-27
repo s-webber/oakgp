@@ -16,6 +16,7 @@
 package org.oakgp.generate;
 
 import static org.oakgp.TestUtils.assertNodeEquals;
+import static org.oakgp.TestUtils.createFunctionSet;
 import static org.oakgp.TestUtils.integerConstant;
 import static org.oakgp.function.math.IntegerUtils.INTEGER_UTILS;
 import static org.oakgp.type.CommonTypes.integerType;
@@ -31,7 +32,6 @@ import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
 import org.oakgp.primitive.ConstantSet;
 import org.oakgp.primitive.DummyPrimitiveSet;
-import org.oakgp.primitive.FunctionSet;
 import org.oakgp.primitive.PrimitiveSet;
 import org.oakgp.primitive.PrimitiveSetImpl;
 import org.oakgp.primitive.VariableSet;
@@ -72,7 +72,7 @@ public class TreeGeneratorTest {
       ConstantNode cn = new ConstantNode("X", c);
 
       DummyRandom random = random().setDoubles(1d, 1d).build();
-      PrimitiveSet p = new PrimitiveSetImpl(new FunctionSet(f1, f2), new ConstantSet(cn), VariableSet.createVariableSet(type("d")), random, .5);
+      PrimitiveSet p = new PrimitiveSetImpl(createFunctionSet(f1, f2), new ConstantSet(cn), VariableSet.createVariableSet(type("d")), random, .5);
       TreeGenerator g = TreeGeneratorImpl.full(p);
       Node result = g.generate(type("a"), 3);
       assertNodeEquals("(f1 (f2 \"X\" v0))", result);

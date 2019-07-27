@@ -21,7 +21,8 @@ import static org.oakgp.type.CommonTypes.integerType;
 import static org.oakgp.type.CommonTypes.stringType;
 
 import org.oakgp.function.AbstractFunctionTest;
-import org.oakgp.function.Function;
+import org.oakgp.primitive.FunctionSet;
+import org.oakgp.util.FunctionSetBuilder;
 
 public class NotEqualTest extends AbstractFunctionTest {
    @Override
@@ -57,7 +58,7 @@ public class NotEqualTest extends AbstractFunctionTest {
    }
 
    @Override
-   protected Function[] getFunctionSet() {
-      return new Function[] { getFunction(), new NotEqual(stringType()) };
+   protected FunctionSet getFunctionSet() {
+      return new FunctionSetBuilder().add(getFunction()).add(new NotEqual(stringType())).build();
    }
 }

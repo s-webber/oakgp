@@ -21,7 +21,8 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import org.oakgp.function.AbstractFunctionTest;
-import org.oakgp.function.Function;
+import org.oakgp.primitive.FunctionSet;
+import org.oakgp.util.FunctionSetBuilder;
 
 public class DivideTest extends AbstractFunctionTest {
    @Override
@@ -80,8 +81,9 @@ public class DivideTest extends AbstractFunctionTest {
    }
 
    @Override
-   protected Function[] getFunctionSet() {
-      return new Function[] { getFunction(), IntegerUtils.INTEGER_UTILS.getSubtract(), LongUtils.LONG_UTILS.getDivide(), DoubleUtils.DOUBLE_UTILS.getDivide(),
-            BigIntegerUtils.BIG_INTEGER_UTILS.getDivide(), BigDecimalUtils.BIG_DECIMAL_UTILS.getDivide() };
+   protected FunctionSet getFunctionSet() {
+      return new FunctionSetBuilder().add(getFunction()).add(IntegerUtils.INTEGER_UTILS.getSubtract()).add(LongUtils.LONG_UTILS.getDivide())
+            .add(DoubleUtils.DOUBLE_UTILS.getDivide()).add(BigIntegerUtils.BIG_INTEGER_UTILS.getDivide()).add(BigDecimalUtils.BIG_DECIMAL_UTILS.getDivide())
+            .build();
    }
 }

@@ -100,7 +100,7 @@ public final class DepthWalk {
             Node child = children.getNode(i);
             int c = child.getNodeCount();
             if (total + c > index) {
-               return new FunctionNode(functionNode.getFunction(), children.replaceAt(i, replaceAt(child, index - total, replacement, currentDepth + 1)));
+               return new FunctionNode(functionNode, children.replaceAt(i, replaceAt(child, index - total, replacement, currentDepth + 1)));
             } else {
                total += c;
             }

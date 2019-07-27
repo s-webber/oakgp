@@ -25,6 +25,7 @@ import static org.oakgp.function.math.IntegerUtils.INTEGER_UTILS;
 import static org.oakgp.node.NodeType.isConstant;
 import static org.oakgp.node.NodeType.isFunction;
 import static org.oakgp.node.NodeType.isVariable;
+import static org.oakgp.type.CommonTypes.integerType;
 
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -110,7 +111,7 @@ public class NodeWalkTest {
 
       Predicate<Node> criteria = n -> isFunction(n) && ((FunctionNode) n).getFunction() == INTEGER_UTILS.getSubtract();
       assertNodeEquals("(+ (+ (* -1 v3) 0) (+ 13 v1))",
-            NodeWalk.replaceAll(input, criteria, n -> new FunctionNode(INTEGER_UTILS.getAdd(), ((FunctionNode) n).getChildren())));
+            NodeWalk.replaceAll(input, criteria, n -> new FunctionNode(INTEGER_UTILS.getAdd(), integerType(), ((FunctionNode) n).getChildren())));
    }
 
    @Test
@@ -128,7 +129,8 @@ public class NodeWalkTest {
 
    /** Returns representation of: {@code (x*y)+z+1} */
    private FunctionNode createFunctionNode() {
-      return new FunctionNode(INTEGER_UTILS.getAdd(), new FunctionNode(INTEGER_UTILS.getMultiply(), createVariable(0), createVariable(1)), new FunctionNode(
-            INTEGER_UTILS.getAdd(), createVariable(2), integerConstant(1)));
+      return new FunctionNode(INTEGER_UTILS.getAdd(), integerType(),
+            new FunctionNode(INTEGER_UTILS.getMultiply(), integerType(), createVariable(0), createVariable(1)),
+            new FunctionNode(INTEGER_UTILS.getAdd(), integerType(), createVariable(2), integerConstant(1)));
    }
 }

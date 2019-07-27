@@ -22,6 +22,7 @@ import org.oakgp.function.Function;
 import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
+import org.oakgp.type.Types.Type;
 
 /** Performs multiplication. */
 final class Multiply<T extends Comparable<T>> extends ArithmeticOperator<T> {
@@ -44,14 +45,16 @@ final class Multiply<T extends Comparable<T>> extends ArithmeticOperator<T> {
    }
 
    @Override
-   public Node simplify(ChildNodes children) {
+   public Node simplify(FunctionNode functionNode) {
+      Type returnType = functionNode.getType();
+      ChildNodes children = functionNode.getChildren();
       Node arg1 = children.first();
       Node arg2 = children.second();
 
       if (NODE_COMPARATOR.compare(arg1, arg2) > 0) {
          // for multiplication the order of the arguments is not important, so order arguments in a consistent way
          // e.g. (* v1 1) -> (* 1 v1)
-         return new FunctionNode(this, arg2, arg1);
+         return new FunctionNode(this, returnType, arg2, arg1);
       } else if (numberUtils.isZero(arg1)) {
          // anything multiplied by zero is zero
          // e.g. (* 0 v0) -> 0
@@ -75,9 +78,9 @@ final class Multiply<T extends Comparable<T>> extends ArithmeticOperator<T> {
             Node fnArg2 = args.second();
             if (isConstant(fnArg1)) {
                if (numberUtils.isAddOrSubtract(f)) {
-                  return new FunctionNode(f, numberUtils.multiply(arg1, fnArg1), new FunctionNode(this, arg1, fnArg2));
+                  return new FunctionNode(f, returnType, numberUtils.multiply(arg1, fnArg1), new FunctionNode(this, returnType, arg1, fnArg2));
                } else if (numberUtils.isMultiply(f)) {
-                  return new FunctionNode(this, numberUtils.multiply(arg1, fnArg1), fnArg2);
+                  return new FunctionNode(this, returnType, numberUtils.multiply(arg1, fnArg1), fnArg2);
                } else if (numberUtils.isDivide(f)) {
                   return null;
                } else {
@@ -85,7 +88,7 @@ final class Multiply<T extends Comparable<T>> extends ArithmeticOperator<T> {
                   throw new IllegalArgumentException();
                }
             } else if (numberUtils.isAddOrSubtract(f)) {
-               return new FunctionNode(f, new FunctionNode(this, arg1, fnArg1), new FunctionNode(this, arg1, fnArg2));
+               return new FunctionNode(f, returnType, new FunctionNode(this, returnType, arg1, fnArg1), new FunctionNode(this, returnType, arg1, fnArg2));
             }
          }
 

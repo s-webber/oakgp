@@ -60,6 +60,7 @@ import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.node.VariableNode;
+import org.oakgp.primitive.FunctionSet;
 import org.oakgp.primitive.VariableSet;
 import org.oakgp.rank.RankedCandidate;
 import org.oakgp.rank.RankedCandidates;
@@ -67,6 +68,7 @@ import org.oakgp.serialize.NodeReader;
 import org.oakgp.serialize.NodeWriter;
 import org.oakgp.type.Types;
 import org.oakgp.type.Types.Type;
+import org.oakgp.util.FunctionSetBuilder;
 
 public class TestUtils {
    public static final VariableSet VARIABLE_SET = VariableSet.createVariableSet(createIntegerTypeArray(100));
@@ -135,7 +137,7 @@ public class TestUtils {
 
       functions.add(new Reduce(integerType()));
       functions.add(new Filter(integerType()));
-      functions.add(new org.oakgp.function.hof.Map(integerType(), booleanType()));
+      // functions.add(new org.oakgp.function.hof.Map(integerType(), booleanType()));
 
       functions.add(new IsPositive());
       functions.add(new IsNegative());
@@ -222,5 +224,9 @@ public class TestUtils {
 
    public static String uniqueTypeName() { // TODO unit test
       return "TestUtils-uniqueTypeName-" + TYPE_CTR.incrementAndGet();
+   }
+
+   public static FunctionSet createFunctionSet(Function... functions) {
+      return new FunctionSetBuilder().addAll(functions).build();
    }
 }

@@ -31,6 +31,7 @@ public final class FunctionNode implements Node {
    private static final int[] PRIMES = { 2, 3, 5, 7, 11, 13, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97 };
 
    private final Function function;
+   private final Type returnType;
    private final ChildNodes arguments;
    private final int nodeCount;
    private final int hashCode;
@@ -43,8 +44,12 @@ public final class FunctionNode implements Node {
     * @param arguments
     *           the arguments (i.e. operands) to apply to {@code function} when evaluating this {@code FunctionNode}
     */
-   public FunctionNode(Function function, Node... arguments) {
-      this(function, ChildNodes.createChildNodes(arguments));
+   public FunctionNode(Function function, Type returnType, Node... arguments) {
+      this(function, returnType, ChildNodes.createChildNodes(arguments));
+   }
+
+   public FunctionNode(FunctionNode original, ChildNodes arguments) {
+      this(original.getFunction(), original.getType(), arguments);
    }
 
    /**
@@ -55,8 +60,9 @@ public final class FunctionNode implements Node {
     * @param arguments
     *           the arguments (i.e. operands) to apply to {@code function} when evaluating this {@code FunctionNode}
     */
-   public FunctionNode(Function function, ChildNodes arguments) {
+   public FunctionNode(Function function, Type returnType, ChildNodes arguments) {
       this.function = function;
+      this.returnType = returnType;
       this.arguments = arguments;
       this.nodeCount = calculateNodeCount(arguments);
       this.hashCode = (function.getClass().getName().hashCode() * 31) * createHashCode(arguments, nodeCount);
@@ -113,7 +119,7 @@ public final class FunctionNode implements Node {
 
    @Override
    public Type getType() {
-      return function.getSignature().getReturnType();
+      return returnType;
    }
 
    @Override

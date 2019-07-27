@@ -19,6 +19,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+import static org.oakgp.TestUtils.createFunctionSet;
 import static org.oakgp.node.NodeType.isFunction;
 import static org.oakgp.util.Utils.createIntegerTypeArray;
 
@@ -34,6 +35,7 @@ import org.oakgp.node.ChildNodes;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
+import org.oakgp.primitive.FunctionSet;
 import org.oakgp.primitive.VariableSet;
 import org.oakgp.serialize.NodeReader;
 import org.oakgp.type.Types.Type;
@@ -41,7 +43,8 @@ import org.oakgp.type.Types.Type;
 public abstract class AbstractFunctionTest {
    private static final Type[] DEFAULT_VARIABLE_TYPES = createIntegerTypeArray(100);
 
-   private final Function[] functions;
+   private final FunctionSet functionSet;
+
    /**
     * Observable allows other objects to be notified of the tests that are run.
     * <p>
@@ -56,7 +59,7 @@ public abstract class AbstractFunctionTest {
    };
 
    protected AbstractFunctionTest() {
-      functions = getFunctionSet();
+      functionSet = getFunctionSet();
    }
 
    protected abstract Function getFunction();
@@ -83,8 +86,8 @@ public abstract class AbstractFunctionTest {
       assertTrue(NodeReader.isValidDisplayName(displayName));
    }
 
-   protected Function[] getFunctionSet() {
-      return new Function[] { getFunction() };
+   protected FunctionSet getFunctionSet() {
+      return createFunctionSet(getFunction());
    }
 
    protected void cannotSimplify(String input, Type... variableTypes) {
@@ -107,7 +110,7 @@ public abstract class AbstractFunctionTest {
    }
 
    private Node readNode(String input, VariableSet variableSet) {
-      try (NodeReader nodeReader = new NodeReader(input, functions, new ConstantNode[0], variableSet)) {
+      try (NodeReader nodeReader = new NodeReader(input, functionSet, new ConstantNode[0], variableSet)) {
          return nodeReader.readNode();
       } catch (IOException e) {
          throw new UncheckedIOException(e);

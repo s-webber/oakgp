@@ -27,6 +27,7 @@ import org.oakgp.Arguments;
 import org.oakgp.function.Function;
 import org.oakgp.function.HigherOrderFunctionArguments;
 import org.oakgp.function.Signature;
+import org.oakgp.type.Types;
 import org.oakgp.type.Types.Type;
 
 /**
@@ -37,7 +38,7 @@ import org.oakgp.type.Types.Type;
  *
  * @see <a href="http://en.wikipedia.org/wiki/Map_(higher-order_function)">Wikipedia</a>
  */
-public final class Map implements Function {
+public final class Map implements Function { // TODO rename to transform
    private final Signature signature;
 
    /**
@@ -48,7 +49,9 @@ public final class Map implements Function {
     * @param to
     *           the type of the elements contained in the collection returned by the function
     */
-   public Map(Type from, Type to) {
+   public Map() {
+      Type from = Types.generic("From");
+      Type to = Types.generic("To");
       signature = Signature.createSignature(listType(to), functionType(to, from), listType(from));
    }
 

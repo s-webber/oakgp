@@ -49,17 +49,20 @@ public class OrElseTest extends AbstractFunctionTest {
    public void testCanSimplify() {
       ConstantNode arg1 = new ConstantNode("hello", nullableType(stringType()));
       ConstantNode arg2 = new ConstantNode("world!", stringType());
-      simplify(new FunctionNode(getFunction(), arg1, arg2), new ConstantNode("hello", stringType()));
+      simplify(new FunctionNode(getFunction(), stringType(), arg1, arg2), new ConstantNode("hello", stringType()));
 
       VariableNode v0 = new VariableNode(0, stringType());
-      FunctionNode fn = new FunctionNode(getFunction(), v0, arg2);
-      simplify(new FunctionNode(getFunction(), v0, fn), fn);
+      FunctionNode fn = new FunctionNode(getFunction(), stringType(), v0, arg2);
+      simplify(new FunctionNode(getFunction(), stringType(), v0, fn), fn);
 
-      simplify(new FunctionNode(getFunction(), v0, new FunctionNode(getFunction(), v0, new FunctionNode(getFunction(), v0, fn))), fn);
+      simplify(new FunctionNode(getFunction(), stringType(), v0,
+            new FunctionNode(getFunction(), stringType(), v0, new FunctionNode(getFunction(), stringType(), v0, fn))), fn);
 
       VariableNode v1 = new VariableNode(1, stringType());
-      simplify(new FunctionNode(getFunction(), v0, new FunctionNode(getFunction(), v1, new FunctionNode(getFunction(), v0, fn))),
-            new FunctionNode(getFunction(), v0, new FunctionNode(getFunction(), v1, arg2)));
+      simplify(
+            new FunctionNode(getFunction(), stringType(), v0,
+                  new FunctionNode(getFunction(), stringType(), v1, new FunctionNode(getFunction(), stringType(), v0, fn))),
+            new FunctionNode(getFunction(), stringType(), v0, new FunctionNode(getFunction(), stringType(), v1, arg2)));
    }
 
    private void simplify(FunctionNode input, Node expected) {

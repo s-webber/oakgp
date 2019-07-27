@@ -31,32 +31,58 @@ import static org.oakgp.type.CommonTypes.integerType;
 import org.junit.Test;
 import org.oakgp.Arguments;
 import org.oakgp.Assignments;
+import org.oakgp.TestUtils;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
+import org.oakgp.type.Types.Type;
 
 public class FunctionNodeTest {
+   /** Test all 3 FunctionNode constructors. */
    @Test
    public void testConstructors() {
       Function function = INTEGER_UTILS.getMultiply();
+      Type returnType = TestUtils.uniqueType();
       ConstantNode arg1 = integerConstant(42);
       VariableNode arg2 = createVariable(0);
 
-      // construct using Node array
-      FunctionNode n1 = new FunctionNode(function, arg1, arg2);
+      // Construct using Node array
+      FunctionNode n1 = new FunctionNode(function, returnType, arg1, arg2);
 
       // Construct using Arguments
       ChildNodes arguments = ChildNodes.createChildNodes(arg1, arg2);
-      FunctionNode n2 = new FunctionNode(function, arguments);
+      FunctionNode n2 = new FunctionNode(function, returnType, arguments);
 
-      // assert the result is the same
+      // Construct using Arguments and another FunctionNode
+      FunctionNode original = new FunctionNode(function, returnType, integerConstant(7), integerConstant(8));
+      FunctionNode n3 = new FunctionNode(original, arguments);
+
+      // assert the resulting nodes are equal
       assertEquals(n1, n2);
+      assertEquals(n1, n3);
+      assertEquals(n2, n3);
+      // assert return types
+      assertSame(returnType, n1.getType());
+      assertSame(returnType, n2.getType());
+      assertSame(returnType, n3.getType());
+      // assert functions
+      assertSame(function, n1.getFunction());
+      assertSame(function, n2.getFunction());
+      assertSame(function, n3.getFunction());
+      // assert node count
+      assertEquals(3, n1.getNodeCount());
+      assertEquals(3, n2.getNodeCount());
+      assertEquals(3, n3.getNodeCount());
+      // assert children
+      assertEquals(arguments, n1.getChildren());
+      assertEquals(arguments, n2.getChildren());
+      assertEquals(arguments, n3.getChildren());
    }
 
    @Test
    public void testEvaluate() {
       Function function = INTEGER_UTILS.getMultiply();
       ChildNodes arguments = ChildNodes.createChildNodes(integerConstant(42), createVariable(0));
-      FunctionNode functionNode = new FunctionNode(function, arguments);
+      FunctionNode functionNode = new FunctionNode(function, integerType(), arguments);
 
       assertSame(function, functionNode.getFunction());
       assertSame(arguments, functionNode.getChildren());
@@ -115,35 +141,35 @@ public class FunctionNodeTest {
    public void testNotEquals() {
       Function add = INTEGER_UTILS.getAdd();
 
-      final FunctionNode n = new FunctionNode(add, createVariable(0), integerConstant(7));
+      final FunctionNode n = new FunctionNode(add, integerType(), createVariable(0), integerConstant(7));
 
       // verify (sanity-check) that equals will return true when it should
-      assertEquals(n, new FunctionNode(add, createVariable(0), integerConstant(7)));
+      assertEquals(n, new FunctionNode(add, integerType(), createVariable(0), integerConstant(7)));
 
       // test different function
       Function multiply = INTEGER_UTILS.getMultiply();
-      assertNotEquals(n, new FunctionNode(multiply, createVariable(0), integerConstant(7)));
+      assertNotEquals(n, new FunctionNode(multiply, integerType(), createVariable(0), integerConstant(7)));
 
       // test different first argument
-      assertNotEquals(n, new FunctionNode(add, createVariable(1), integerConstant(7)));
+      assertNotEquals(n, new FunctionNode(add, integerType(), createVariable(1), integerConstant(7)));
 
       // test different second argument
-      assertNotEquals(n, new FunctionNode(add, createVariable(0), integerConstant(6)));
+      assertNotEquals(n, new FunctionNode(add, integerType(), createVariable(0), integerConstant(6)));
 
       // test same arguments but different order
-      assertNotEquals(n, new FunctionNode(add, integerConstant(7), createVariable(0)));
+      assertNotEquals(n, new FunctionNode(add, integerType(), integerConstant(7), createVariable(0)));
 
       // test wrong arguments but different order
-      assertNotEquals(n, new FunctionNode(add, integerConstant(0), createVariable(7)));
+      assertNotEquals(n, new FunctionNode(add, integerType(), integerConstant(0), createVariable(7)));
 
       // test extra argument
-      assertNotEquals(n, new FunctionNode(add, createVariable(0), integerConstant(7), integerConstant(7)));
+      assertNotEquals(n, new FunctionNode(add, integerType(), createVariable(0), integerConstant(7), integerConstant(7)));
 
       // test one less argument
-      assertNotEquals(n, new FunctionNode(add, createVariable(0)));
+      assertNotEquals(n, new FunctionNode(add, integerType(), createVariable(0)));
 
       // test no arguments
-      assertNotEquals(n, new FunctionNode(add));
+      assertNotEquals(n, new FunctionNode(add, integerType()));
 
       // test not equal to other Node implementations
       assertNotEquals(n, integerConstant(7));
@@ -175,8 +201,8 @@ public class FunctionNodeTest {
       Function f1 = new DummyFunction();
       Function f2 = new DummyFunction();
       ChildNodes arguments = ChildNodes.createChildNodes(integerConstant(1));
-      FunctionNode fn1 = new FunctionNode(f1, arguments);
-      FunctionNode fn2 = new FunctionNode(f2, arguments);
+      FunctionNode fn1 = new FunctionNode(f1, integerType(), arguments);
+      FunctionNode fn2 = new FunctionNode(f2, integerType(), arguments);
 
       assertSame(f1.getClass(), f2.getClass());
       assertNotEquals(fn1, fn2);
@@ -218,7 +244,7 @@ public class FunctionNodeTest {
          args[i] = integerConstant(i);
       }
 
-      FunctionNode n = new FunctionNode(mock(Function.class), args);
+      FunctionNode n = new FunctionNode(mock(Function.class), integerType(), args);
 
       assertEquals(args.length, n.getChildren().size());
       for (int i = 0; i < args.length; i++) {
@@ -228,7 +254,8 @@ public class FunctionNodeTest {
 
    /** Returns representation of: {@code (x*y)+z+1} */
    private FunctionNode createFunctionNode() {
-      return new FunctionNode(INTEGER_UTILS.getAdd(), new FunctionNode(INTEGER_UTILS.getMultiply(), createVariable(0), createVariable(1)),
-            new FunctionNode(INTEGER_UTILS.getAdd(), createVariable(2), integerConstant(1)));
+      return new FunctionNode(INTEGER_UTILS.getAdd(), integerType(),
+            new FunctionNode(INTEGER_UTILS.getMultiply(), integerType(), createVariable(0), createVariable(1)),
+            new FunctionNode(INTEGER_UTILS.getAdd(), integerType(), createVariable(2), integerConstant(1)));
    }
 }

@@ -22,6 +22,7 @@ import org.oakgp.function.Function;
 import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
+import org.oakgp.type.Types.Type;
 
 /** Performs subtraction. */
 final class Subtract<T extends Comparable<T>> extends ArithmeticOperator<T> {
@@ -46,7 +47,9 @@ final class Subtract<T extends Comparable<T>> extends ArithmeticOperator<T> {
    }
 
    @Override
-   public Node simplify(ChildNodes children) {
+   public Node simplify(FunctionNode functionNode) {
+      Type returnType = functionNode.getType();
+      ChildNodes children = functionNode.getChildren();
       Node arg1 = children.first();
       Node arg2 = children.second();
 
@@ -63,11 +66,11 @@ final class Subtract<T extends Comparable<T>> extends ArithmeticOperator<T> {
          // e.g. (- 0 (- x y) -> (- y x)
          FunctionNode fn2 = (FunctionNode) arg2;
          ChildNodes fn2Arguments = fn2.getChildren();
-         return new FunctionNode(this, fn2Arguments.second(), fn2Arguments.first());
+         return new FunctionNode(this, returnType, fn2Arguments.second(), fn2Arguments.first());
       } else if (isConstant(arg2) && numberUtils.isNegative(arg2)) {
          // convert double negatives to addition
          // e.g. (- x -1) -> (+ 1 x)
-         return new FunctionNode(numberUtils.getAdd(), numberUtils.negate(arg2), arg1);
+         return new FunctionNode(numberUtils.getAdd(), returnType, numberUtils.negate(arg2), arg1);
       } else {
          if (numberUtils.isArithmeticExpression(arg2)) {
             FunctionNode fn = (FunctionNode) arg2;
@@ -78,24 +81,24 @@ final class Subtract<T extends Comparable<T>> extends ArithmeticOperator<T> {
             if (numberUtils.isMultiply(f) && isConstant(fnArg1)) {
                if (numberUtils.isZero(arg1)) {
                   // (- 0 (* -3 v0)) -> (* 3 v0)
-                  return new FunctionNode(f, numberUtils.negateConstant(fnArg1), fnArg2);
+                  return new FunctionNode(f, returnType, numberUtils.negateConstant(fnArg1), fnArg2);
                } else if (numberUtils.isNegative(fnArg1)) {
                   // (- 7 (* -3 v0)) -> (+ 7 (* 3 v0))
-                  return new FunctionNode(numberUtils.getAdd(), arg1, new FunctionNode(f, numberUtils.negateConstant(fnArg1), fnArg2));
+                  return new FunctionNode(numberUtils.getAdd(), returnType, arg1, new FunctionNode(f, returnType, numberUtils.negateConstant(fnArg1), fnArg2));
                }
             } else if (numberUtils.isAdd(f) && numberUtils.isZero(arg1)) {
                // (- 0 (+ v0 v1)) -> (+ (0 - v0) (0 - v1))
-               return new FunctionNode(f, numberUtils.negate(fnArg1), numberUtils.negate(fnArg2));
+               return new FunctionNode(f, returnType, numberUtils.negate(fnArg1), numberUtils.negate(fnArg2));
             } else if (numberUtils.isSubtract(fn) && isConstant(arg1) && isConstant(fnArg1)) {
                if (numberUtils.isZero(arg1)) {
                   // added exception to confirm we never actually get here
                   throw new IllegalArgumentException();
                } else if (numberUtils.isZero(fnArg1)) {
                   // (- 1 (- 0 v0)) -> (+ 1 v0)
-                  return new FunctionNode(numberUtils.getAdd(), arg1, fnArg2);
+                  return new FunctionNode(numberUtils.getAdd(), returnType, arg1, fnArg2);
                } else {
                   // (- 1 (- 7 v0)) -> (- v0 6)
-                  return new FunctionNode(numberUtils.getAdd(), numberUtils.subtract(arg1, fnArg1), fnArg2);
+                  return new FunctionNode(numberUtils.getAdd(), returnType, numberUtils.subtract(arg1, fnArg1), fnArg2);
                }
             }
          }

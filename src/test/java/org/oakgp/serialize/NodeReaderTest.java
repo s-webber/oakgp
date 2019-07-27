@@ -276,7 +276,7 @@ public class NodeReaderTest {
          fail();
       } catch (IllegalArgumentException e) {
          // expected
-         assertEquals("Could not find version of function: TEST in: []", e.getMessage());
+         assertEquals("Could not find version of function: TEST in: {}", e.getMessage());
       }
    }
 

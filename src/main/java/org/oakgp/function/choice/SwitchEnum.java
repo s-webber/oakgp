@@ -64,7 +64,9 @@ public final class SwitchEnum implements Function {
    }
 
    @Override
-   public Node simplify(ChildNodes children) {
+   public Node simplify(FunctionNode functionNode) {
+      Type returnType = functionNode.getType();
+      ChildNodes children = functionNode.getChildren();
       // TODO this is similar to the logic in NodeWalk.replaceAll - is it possible to reuse?
       boolean updated = false;
       Node[] replacementArgs = new Node[children.size()];
@@ -81,7 +83,7 @@ public final class SwitchEnum implements Function {
          replacementArgs[i] = replacedArg;
       }
       if (updated) {
-         return new FunctionNode(this, ChildNodes.createChildNodes(replacementArgs));
+         return new FunctionNode(this, returnType, ChildNodes.createChildNodes(replacementArgs));
       } else {
          return null;
       }

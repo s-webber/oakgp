@@ -41,7 +41,7 @@ final class CommonRegion {
                Node a2 = f2.getChildren().getNode(i);
                int c = getNodeCount(a1, a2);
                if (total + c > crossOverPoint) {
-                  return new FunctionNode(f1.getFunction(), children.replaceAt(i, crossoverAt(a1, a2, crossOverPoint - total)));
+                  return new FunctionNode(f1, children.replaceAt(i, crossoverAt(a1, a2, crossOverPoint - total)));
                } else {
                   total += c;
                }

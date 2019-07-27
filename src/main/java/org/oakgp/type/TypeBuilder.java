@@ -18,16 +18,16 @@ package org.oakgp.type;
 import org.oakgp.type.Types.Type;
 
 /** Provides a convenient way for {@link CommonTypes} to define types. */
-class TypeBuilder {
+public final class TypeBuilder {
    private final String name;
    private Type[] parents = new Type[0];
    private Type[] parameters = new Type[0];
 
-   static TypeBuilder name(Class<?> typeClass) {
+   public static TypeBuilder name(Class<?> typeClass) {
       return name(typeClass.getSimpleName());
    }
 
-   static TypeBuilder name(String name) {
+   public static TypeBuilder name(String name) {
       return new TypeBuilder(name);
    }
 
@@ -35,17 +35,17 @@ class TypeBuilder {
       this.name = name;
    }
 
-   TypeBuilder parents(Type... parents) {
+   public TypeBuilder parents(Type... parents) {
       this.parents = parents;
       return this;
    }
 
-   TypeBuilder parameters(Type... parameters) {
+   public TypeBuilder parameters(Type... parameters) {
       this.parameters = parameters;
       return this;
    }
 
-   Type build() {
+   public Type build() {
       return Types.declareType(name, parents, parameters);
    }
 }

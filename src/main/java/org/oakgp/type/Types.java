@@ -76,7 +76,7 @@ public final class Types {
          throw new IllegalArgumentException("Parameter length mismatch");
       }
 
-      HashMap<Type, Type> assignments = new HashMap<>();
+      Map<Type, Type> assignments = new HashMap<>();
       for (int i = 0; i < parameters.length; i++) {
          match(template.parameters[i], parameters[i], assignments);
       }
@@ -88,7 +88,8 @@ public final class Types {
       return parents;
    }
 
-   private static void match(Type template, Type actual, HashMap<Type, Type> assignments) {
+   // TODO move to separate class?
+   public static void match(Type template, Type actual, Map<Type, Type> assignments) {
       template = assignments.getOrDefault(template, template);
       if (template.template) {
          if (!actual.getHierarchy().containsAll(template.getHierarchy())) {
@@ -119,7 +120,7 @@ public final class Types {
       }
    }
 
-   private static Type replace(Type child, HashMap<Type, Type> assignments) {
+   private static Type replace(Type child, Map<Type, Type> assignments) {
       if (assignments.containsKey(child)) {
          return assignments.get(child);
       }
@@ -165,7 +166,7 @@ public final class Types {
          return name;
       }
 
-      public Set<Type> getParents() {
+      Set<Type> getParents() {
          return parents;
       }
 
@@ -173,7 +174,7 @@ public final class Types {
          return Arrays.asList(parameters);
       }
 
-      public Set<Type> getHierarchy() {
+      private Set<Type> getHierarchy() {
          Set<Type> result = new HashSet<>();
          if (!template) {
             result.add(this);
@@ -182,6 +183,10 @@ public final class Types {
             result.addAll(p.getHierarchy());
          }
          return result;
+      }
+
+      public boolean isGeneric() {
+         return template;
       }
 
       @Override

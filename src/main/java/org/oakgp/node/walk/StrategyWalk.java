@@ -88,7 +88,7 @@ public final class StrategyWalk {
             Node child = children.getNode(i);
             int c = getNodeCount(child, treeWalkerStrategy);
             if (total + c > index) {
-               return new FunctionNode(functionNode.getFunction(), children.replaceAt(i, replaceAt(child, index - total, replacement, treeWalkerStrategy)));
+               return new FunctionNode(functionNode, children.replaceAt(i, replaceAt(child, index - total, replacement, treeWalkerStrategy)));
             } else {
                total += c;
             }

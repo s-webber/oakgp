@@ -24,7 +24,8 @@ import static org.oakgp.type.CommonTypes.stringType;
 
 import org.junit.Test;
 import org.oakgp.function.AbstractFunctionTest;
-import org.oakgp.function.Function;
+import org.oakgp.primitive.FunctionSet;
+import org.oakgp.util.FunctionSetBuilder;
 
 public class LessThanOrEqualTest extends AbstractFunctionTest {
    @Test
@@ -65,7 +66,7 @@ public class LessThanOrEqualTest extends AbstractFunctionTest {
    }
 
    @Override
-   protected Function[] getFunctionSet() {
-      return new Function[] { getFunction(), LessThanOrEqual.create(stringType()) };
+   protected FunctionSet getFunctionSet() {
+      return new FunctionSetBuilder().add(getFunction()).add(LessThanOrEqual.create(stringType())).build();
    }
 }
