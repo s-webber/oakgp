@@ -18,10 +18,10 @@ package org.oakgp.generate;
 import java.util.Objects;
 import java.util.function.IntPredicate;
 
-import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
+import org.oakgp.primitive.FunctionSet;
 import org.oakgp.primitive.PrimitiveSet;
 import org.oakgp.type.Types.Type;
 import org.oakgp.util.Random;
@@ -79,15 +79,19 @@ public final class TreeGeneratorImpl implements TreeGenerator {
    @Override
    public Node generate(Type type, int depth) {
       if (shouldCreateFunction(type, depth)) {
-         Function function = primitiveSet.nextFunction(type);
-         Signature signature = function.getSignature();
+         FunctionSet.Key key = primitiveSet.nextFunction(type);
+         Signature signature = key.getSignature();
          Node[] args = new Node[signature.getArgumentTypesLength()];
          for (int i = 0; i < args.length; i++) {
             Type argType = signature.getArgumentType(i);
             Node arg = generate(argType, depth - 1);
             args[i] = arg;
          }
-         return new FunctionNode(function, type, args);
+         if (key.getReturnType() != type) {
+            // should never get here
+            throw new RuntimeException();
+         }
+         return new FunctionNode(key.getFunction(), type, args);
       } else {
          return primitiveSet.nextTerminal(type);
       }

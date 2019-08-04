@@ -72,7 +72,7 @@ import org.oakgp.util.FunctionSetBuilder;
 
 public class TestUtils {
    public static final VariableSet VARIABLE_SET = VariableSet.createVariableSet(createIntegerTypeArray(100));
-   private static final Function[] FUNCTIONS = createDefaultFunctions();
+   private static final FunctionSet FUNCTION_SET = createDefaultFunctions();
    private static final AtomicLong TYPE_CTR = new AtomicLong();
 
    @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -101,12 +101,8 @@ public class TestUtils {
    }
 
    public static List<Node> readNodes(String input) {
-      return readNodes(input, FUNCTIONS, VARIABLE_SET);
-   }
-
-   private static List<Node> readNodes(String input, Function[] functions, VariableSet variableSet) {
       List<Node> outputs = new ArrayList<>();
-      try (NodeReader nr = new NodeReader(input, functions, new ConstantNode[0], variableSet)) {
+      try (NodeReader nr = new NodeReader(input, FUNCTION_SET, new ConstantNode[0], VARIABLE_SET)) {
          while (!nr.isEndOfStream()) {
             outputs.add(nr.readNode());
          }
@@ -116,37 +112,44 @@ public class TestUtils {
       return outputs;
    }
 
-   private static Function[] createDefaultFunctions() {
-      List<Function> functions = new ArrayList<>();
+   private static FunctionSet createDefaultFunctions() {
+      FunctionSetBuilder builder = new FunctionSetBuilder();
 
-      functions.add(IntegerUtils.INTEGER_UTILS.getAdd());
-      functions.add(IntegerUtils.INTEGER_UTILS.getSubtract());
-      functions.add(IntegerUtils.INTEGER_UTILS.getMultiply());
-      functions.add(IntegerUtils.INTEGER_UTILS.getDivide());
+      builder.add(IntegerUtils.INTEGER_UTILS.getAdd());
+      builder.add(IntegerUtils.INTEGER_UTILS.getSubtract());
+      builder.add(IntegerUtils.INTEGER_UTILS.getMultiply());
+      builder.add(IntegerUtils.INTEGER_UTILS.getDivide());
 
-      functions.add(LessThan.create(integerType()));
-      functions.add(LessThanOrEqual.create(integerType()));
-      functions.add(new GreaterThan(integerType()));
-      functions.add(new GreaterThanOrEqual(integerType()));
-      functions.add(new Equal(integerType()));
-      functions.add(new NotEqual(integerType()));
+      builder.add(LessThan.getSingleton(), integerType());
+      builder.add(LessThanOrEqual.getSingleton(), integerType());
+      builder.add(new GreaterThan(), integerType());
+      builder.add(new GreaterThanOrEqual(), integerType());
+      builder.add(new Equal(), integerType());
+      builder.add(new NotEqual(), integerType());
 
-      functions.add(new If(integerType()));
-      functions.add(new OrElse(stringType()));
-      functions.add(new OrElse(integerType()));
+      builder.add(new If(), integerType());
 
-      functions.add(new Reduce(integerType()));
-      functions.add(new Filter(integerType()));
-      // functions.add(new org.oakgp.function.hof.Map(integerType(), booleanType()));
+      Function orElse = new OrElse();
+      builder.add(orElse, stringType());
+      builder.add(orElse, integerType());
 
-      functions.add(new IsPositive());
-      functions.add(new IsNegative());
-      functions.add(new IsZero());
+      builder.add(new Reduce(integerType()));
 
-      functions.add(new Count(integerType()));
-      functions.add(new Count(booleanType()));
+      Filter filter = new Filter();
+      builder.add(filter, integerType());
 
-      return functions.toArray(new Function[functions.size()]);
+      org.oakgp.function.hof.Map transform = new org.oakgp.function.hof.Map();
+      builder.add(transform, integerType(), booleanType());
+
+      builder.add(new IsPositive());
+      builder.add(new IsNegative());
+      builder.add(new IsZero());
+
+      Count count = new Count();
+      builder.add(count, integerType());
+      builder.add(count, booleanType());
+
+      return builder.build();
    }
 
    public static ConstantNode integerConstant(int value) {

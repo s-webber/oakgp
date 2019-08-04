@@ -27,7 +27,7 @@ import org.oakgp.util.FunctionSetBuilder;
 public class NotEqualTest extends AbstractFunctionTest {
    @Override
    protected NotEqual getFunction() {
-      return new NotEqual(integerType());
+      return new NotEqual();
    }
 
    @Override
@@ -59,6 +59,7 @@ public class NotEqualTest extends AbstractFunctionTest {
 
    @Override
    protected FunctionSet getFunctionSet() {
-      return new FunctionSetBuilder().add(getFunction()).add(new NotEqual(stringType())).build();
+      NotEqual function = getFunction();
+      return new FunctionSetBuilder().add(function, integerType()).add(function, stringType()).build();
    }
 }

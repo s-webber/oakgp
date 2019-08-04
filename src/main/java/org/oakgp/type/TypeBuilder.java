@@ -31,7 +31,7 @@ public final class TypeBuilder {
       return new TypeBuilder(name);
    }
 
-   private TypeBuilder(String name) {
+   public TypeBuilder(String name) {
       this.name = name;
    }
 

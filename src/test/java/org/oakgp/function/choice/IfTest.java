@@ -30,9 +30,11 @@ import org.oakgp.primitive.FunctionSet;
 import org.oakgp.util.FunctionSetBuilder;
 
 public class IfTest extends AbstractFunctionTest {
+   private static final If IF = new If();
+
    @Override
    protected If getFunction() {
-      return new If(integerType());
+      return IF;
    }
 
    @Override
@@ -67,7 +69,7 @@ public class IfTest extends AbstractFunctionTest {
 
    @Test
    public void testGetSignature() {
-      Signature signature = getFunction().getSignature();
+      Signature signature = getFunction().getSignature().create(integerType());
       assertSame(integerType(), signature.getReturnType());
       assertEquals(3, signature.getArgumentTypesLength());
       assertSame(booleanType(), signature.getArgumentType(0));
@@ -77,7 +79,7 @@ public class IfTest extends AbstractFunctionTest {
 
    @Override
    protected FunctionSet getFunctionSet() {
-      return new FunctionSetBuilder().add(getFunction()).add(IntegerUtils.INTEGER_UTILS.getAdd()).add(IntegerUtils.INTEGER_UTILS.getMultiply())
-            .add(LessThan.create(integerType())).add(new GreaterThan(integerType())).build();
+      return new FunctionSetBuilder().add(getFunction(), integerType()).add(IntegerUtils.INTEGER_UTILS.getAdd()).add(IntegerUtils.INTEGER_UTILS.getMultiply())
+            .add(LessThan.getSingleton(), integerType()).add(new GreaterThan(), integerType()).build();
    }
 }

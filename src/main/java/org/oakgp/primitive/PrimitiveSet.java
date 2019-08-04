@@ -15,7 +15,7 @@
  */
 package org.oakgp.primitive;
 
-import org.oakgp.function.Function;
+import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.type.Types.Type;
 
@@ -46,18 +46,22 @@ public interface PrimitiveSet {
    /**
     * Returns a randomly selected {@code Function} of the specified {@code Type}.
     *
+    * TODO correct this Javadoc
+    * 
     * @param type
     *           the required return type of the {@code Function}
     * @return a randomly selected {@code Function} with a return type of {@code type}
     */
-   Function nextFunction(Type type);
+   FunctionSet.Key nextFunction(Type type);
 
    /**
     * Returns a randomly selected {@code Function} that is not the same as the specified {@code Function}.
+    *
+    * TODO correct this Javadoc
     *
     * @param current
     *           the current {@code Function} that the returned result should be an alternative to (i.e. not the same as)
     * @return a randomly selected {@code Function} that is not the same as the specified {@code Function}
     */
-   Function nextAlternativeFunction(Function current);
+   FunctionSet.Key nextAlternativeFunction(FunctionNode current);
 }

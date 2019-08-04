@@ -21,7 +21,6 @@ import static org.junit.Assert.assertTrue;
 import static org.oakgp.TestUtils.integerConstant;
 import static org.oakgp.TestUtils.readFunctionNode;
 import static org.oakgp.TestUtils.readNode;
-import static org.oakgp.type.CommonTypes.integerType;
 
 import org.junit.Test;
 import org.oakgp.function.choice.If;
@@ -132,7 +131,7 @@ public class NumberUtilsTest {
       assertTrue(NUMBER_UTILS.isAddOrSubtract(NUMBER_UTILS.getAdd()));
       assertTrue(NUMBER_UTILS.isAddOrSubtract(NUMBER_UTILS.getSubtract()));
       assertFalse(NUMBER_UTILS.isAddOrSubtract(NUMBER_UTILS.getMultiply()));
-      assertFalse(NUMBER_UTILS.isAddOrSubtract(new If(integerType())));
+      assertFalse(NUMBER_UTILS.isAddOrSubtract(new If()));
    }
 
    @Test

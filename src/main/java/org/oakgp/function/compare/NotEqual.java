@@ -29,8 +29,8 @@ import org.oakgp.type.Types.Type;
  */
 public final class NotEqual extends ComparisonOperator {
    /** Constructs a function that compares two arguments of the specified type. */
-   public NotEqual(Type type) {
-      super(type, false);
+   public NotEqual() {
+      super(false);
    }
 
    @Override

@@ -27,6 +27,7 @@ import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.node.walk.NodeWalk;
+import org.oakgp.type.Types;
 import org.oakgp.type.Types.Type;
 import org.oakgp.util.Utils;
 
@@ -47,7 +48,8 @@ public final class If implements Function {
    private final Signature signature;
 
    /** Constructs a selection operator that returns values of the specified type. */
-   public If(Type type) {
+   public If() {
+      Type type = Types.generic("Type");
       signature = Signature.createSignature(type, booleanType(), type, type);
    }
 

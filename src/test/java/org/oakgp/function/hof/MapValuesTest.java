@@ -29,7 +29,7 @@ import org.oakgp.util.FunctionSetBuilder;
 public class MapValuesTest extends AbstractFunctionTest {
    @Override
    protected MapValues getFunction() {
-      return new MapValues(stringType(), integerType(), booleanType());
+      return new MapValues();
    }
 
    @Override
@@ -59,6 +59,6 @@ public class MapValuesTest extends AbstractFunctionTest {
 
    @Override
    protected FunctionSet getFunctionSet() {
-      return new FunctionSetBuilder().add(getFunction()).add(new IsPositive()).build();
+      return new FunctionSetBuilder().add(getFunction(), stringType(), booleanType(), integerType()).add(new IsPositive()).build();
    }
 }

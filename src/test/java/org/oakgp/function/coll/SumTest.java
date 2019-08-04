@@ -22,42 +22,29 @@ import java.util.Collections;
 
 import org.oakgp.function.AbstractFunctionTest;
 import org.oakgp.node.ConstantNode;
-import org.oakgp.primitive.FunctionSet;
-import org.oakgp.util.FunctionSetBuilder;
 
-public class ContainsTest extends AbstractFunctionTest {
+public class SumTest extends AbstractFunctionTest {
    @Override
-   protected Contains getFunction() {
-      return new Contains();
+   protected Sum getFunction() {
+      return new Sum();
    }
 
    @Override
    public void testEvaluate() {
-      evaluate("(contains [8 5 6] 8)").to(true);
-      evaluate("(contains [8 5 6] 5)").to(true);
-      evaluate("(contains [8 5 6] 6)").to(true);
-
-      evaluate("(contains [8 5 6] 0)").to(false);
-      evaluate("(contains [8 5 6] 1)").to(false);
-      evaluate("(contains [8 5 6] 7)").to(false);
-      evaluate("(contains [8 5 6] 42)").to(false);
-      evaluate("(contains [8 5 6] -8)").to(false);
-
       ConstantNode emptyList = new ConstantNode(Collections.emptyList(), listType(integerType()));
-      evaluate("(contains v0 1)").assigned(emptyList).to(false);
+      evaluate("(sum v0)").assigned(emptyList).to(0);
+      evaluate("(sum [7])").to(7);
+      evaluate("(sum [42 50])").to(92);
+      evaluate("(sum [8 4 7])").to(19);
+      evaluate("(sum [2 -12 8])").to(-2);
    }
 
    @Override
    public void testCanSimplify() {
-      simplify("(contains [2 -12 8] -12)").to("true");
+      simplify("(sum [2 -12 8])").to("-2");
    }
 
    @Override
    public void testCannotSimplify() {
-   }
-
-   @Override
-   protected FunctionSet getFunctionSet() {
-      return new FunctionSetBuilder().add(getFunction(), integerType()).build();
    }
 }

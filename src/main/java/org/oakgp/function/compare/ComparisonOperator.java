@@ -23,6 +23,7 @@ import org.oakgp.function.Signature;
 import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
+import org.oakgp.type.Types;
 import org.oakgp.type.Types.Type;
 import org.oakgp.util.Utils;
 
@@ -30,7 +31,8 @@ abstract class ComparisonOperator implements Function {
    private final Signature signature;
    private final boolean equalsIsTrue;
 
-   protected ComparisonOperator(Type type, boolean equalsIsTrue) {
+   protected ComparisonOperator(boolean equalsIsTrue) {
+      Type type = Types.generic("Type");
       this.signature = Signature.createSignature(booleanType(), type, type);
       this.equalsIsTrue = equalsIsTrue;
    }

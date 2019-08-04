@@ -15,7 +15,7 @@
  */
 package org.oakgp.function.coll;
 
-import static org.oakgp.type.CommonTypes.booleanType;
+import static org.oakgp.type.CommonTypes.integerType;
 import static org.oakgp.type.CommonTypes.listType;
 
 import java.util.Collection;
@@ -23,21 +23,18 @@ import java.util.Collection;
 import org.oakgp.Arguments;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
-import org.oakgp.type.Types;
-import org.oakgp.type.Types.Type;
 
-public class Contains implements Function {
-   private final Signature signature;
-
-   public Contains() {
-      Type type = Types.generic("ElementType");
-      signature = Signature.createSignature(booleanType(), listType(type), type);
-   }
+public class Sum implements Function {
+   private final Signature signature = Signature.createSignature(integerType(), listType(integerType()));
 
    @Override
    public Object evaluate(Arguments arguments) {
-      Collection<?> collection = arguments.first();
-      return collection.contains(arguments.second());
+      Collection<Integer> input = arguments.first();
+      int result = 0;
+      for (int i : input) {
+         result += i;
+      }
+      return result;
    }
 
    @Override

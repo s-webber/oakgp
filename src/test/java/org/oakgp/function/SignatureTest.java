@@ -25,6 +25,7 @@ import static org.oakgp.type.CommonTypes.booleanType;
 import static org.oakgp.type.CommonTypes.functionType;
 import static org.oakgp.type.CommonTypes.integerType;
 import static org.oakgp.type.CommonTypes.listType;
+import static org.oakgp.type.CommonTypes.mapType;
 
 import java.util.List;
 
@@ -129,15 +130,16 @@ public class SignatureTest {
    @Test
    public void testIsTemplate() {
       Type generic = Types.generic("X");
-      assertTrue(Signature.createSignature(generic).isTemplate());
-      assertTrue(Signature.createSignature(listType(generic)).isTemplate());
-      assertTrue(Signature.createSignature(listType(listType(generic))).isTemplate());
-      assertTrue(Signature.createSignature(integerType(), generic).isTemplate());
-      assertTrue(Signature.createSignature(generic, booleanType()).isTemplate());
       assertTrue(Signature.createSignature(generic, generic).isTemplate());
+      assertTrue(Signature.createSignature(generic, booleanType()).isTemplate());
+      assertTrue(Signature.createSignature(booleanType(), generic).isTemplate());
+      assertTrue(Signature.createSignature(listType(generic), booleanType()).isTemplate());
+      assertTrue(Signature.createSignature(booleanType(), listType(generic)).isTemplate());
+      assertTrue(Signature.createSignature(listType(listType(generic)), booleanType()).isTemplate());
+      assertTrue(Signature.createSignature(booleanType(), listType(listType(generic))).isTemplate());
 
-      assertFalse(Signature.createSignature(integerType()).isTemplate());
-      assertFalse(Signature.createSignature(integerType(), booleanType()).isTemplate());
+      assertFalse(Signature.createSignature(integerType(), integerType()).isTemplate());
+      assertFalse(Signature.createSignature(integerType(), listType(booleanType())).isTemplate());
    }
 
    @Test
@@ -165,6 +167,19 @@ public class SignatureTest {
       assertFalse(output.isTemplate());
       assertSame(listType(to), template.getReturnType());
       assertSame(listType(integerType()), output.getReturnType());
+   }
+
+   @Test
+   public void testCreate_genericParameterOfParameter() {
+      Type key = Types.generic("Key");
+      Type input = Types.generic("Input");
+      // "Input" is a parameter of "listType" which in turn is a parameter if "mapType".
+      Signature template = Signature.createSignature(mapType(key, listType(input)), functionType(key, input), listType(input));
+      Signature output = template.create(integerType(), booleanType());
+      assertTrue(template.isTemplate());
+      assertFalse(output.isTemplate());
+      assertSame(mapType(key, listType(input)), template.getReturnType());
+      assertSame(mapType(integerType(), listType(booleanType())), output.getReturnType());
    }
 
    @Test

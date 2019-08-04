@@ -27,7 +27,7 @@ import org.oakgp.util.FunctionSetBuilder;
 public class EqualTest extends AbstractFunctionTest {
    @Override
    protected Equal getFunction() {
-      return new Equal(integerType());
+      return new Equal();
    }
 
    @Override
@@ -59,6 +59,7 @@ public class EqualTest extends AbstractFunctionTest {
 
    @Override
    protected FunctionSet getFunctionSet() {
-      return new FunctionSetBuilder().add(getFunction()).add(new Equal(stringType())).build();
+      Equal function = getFunction();
+      return new FunctionSetBuilder().add(function, integerType()).add(function, stringType()).build();
    }
 }

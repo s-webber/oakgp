@@ -32,7 +32,7 @@ import org.oakgp.util.FunctionSetBuilder;
 public class GroupByTest extends AbstractFunctionTest {
    @Override
    protected GroupBy getFunction() {
-      return new GroupBy(integerType(), booleanType());
+      return new GroupBy();
    }
 
    @Override
@@ -62,6 +62,6 @@ public class GroupByTest extends AbstractFunctionTest {
 
    @Override
    protected FunctionSet getFunctionSet() {
-      return new FunctionSetBuilder().add(getFunction()).add(new IsPositive()).add(new IsNegative()).add(new IsZero()).build();
+      return new FunctionSetBuilder().add(getFunction(), booleanType(), integerType()).add(new IsPositive()).add(new IsNegative()).add(new IsZero()).build();
    }
 }

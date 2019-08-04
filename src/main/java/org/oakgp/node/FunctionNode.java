@@ -36,6 +36,8 @@ public final class FunctionNode implements Node {
    private final int nodeCount;
    private final int hashCode;
 
+   // TODO have a constructor that takes a FunctionSet.Key
+
    /**
     * Constructs a new {@code FunctionNode} with the specified function function and arguments.
     *
@@ -141,6 +143,7 @@ public final class FunctionNode implements Node {
       } else if (o instanceof FunctionNode) {
          FunctionNode fn = (FunctionNode) o;
          // NOTE if we often return false here then that indicates hashCode() could be improved
+         // TODO replace "this.function.getClass() == fn.function.getClass()" with "this.function == fn.function"
          return this.function == fn.function && this.arguments.equals(fn.arguments);
       } else {
          return false;

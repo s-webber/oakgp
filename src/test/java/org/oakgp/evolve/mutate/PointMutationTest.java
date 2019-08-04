@@ -29,6 +29,7 @@ import org.oakgp.function.math.IntegerUtils;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.primitive.DummyPrimitiveSet;
+import org.oakgp.primitive.FunctionSet;
 import org.oakgp.primitive.PrimitiveSet;
 import org.oakgp.select.DummyNodeSelector;
 import org.oakgp.util.DummyRandom;
@@ -72,8 +73,8 @@ public class PointMutationTest {
       DummyValuesMap<Node, Node> alternativeTerminals = new DummyValuesMap.Builder<Node, Node>().put(inputArg1, outputArg1).put(inputArg2, outputArg2).build();
       PrimitiveSet primitiveSet = new DummyPrimitiveSet() {
          @Override
-         public Function nextAlternativeFunction(Function current) {
-            return alternativeFunctions.next(current);
+         public FunctionSet.Key nextAlternativeFunction(FunctionNode current) {
+            return new FunctionSet.Key(alternativeFunctions.next(current.getFunction()), current.getFunction().getSignature());
          }
 
          @Override

@@ -27,7 +27,7 @@ import org.oakgp.util.FunctionSetBuilder;
 public class GreaterThanOrEqualTest extends AbstractFunctionTest {
    @Override
    protected GreaterThanOrEqual getFunction() {
-      return new GreaterThanOrEqual(integerType());
+      return new GreaterThanOrEqual();
    }
 
    @Override
@@ -59,6 +59,7 @@ public class GreaterThanOrEqualTest extends AbstractFunctionTest {
 
    @Override
    protected FunctionSet getFunctionSet() {
-      return new FunctionSetBuilder().add(getFunction()).add(new GreaterThanOrEqual(stringType())).add(LessThanOrEqual.create(integerType())).build();
+      GreaterThanOrEqual function = getFunction();
+      return new FunctionSetBuilder().add(function, integerType()).add(function, stringType()).add(LessThanOrEqual.getSingleton(), integerType()).build();
    }
 }

@@ -43,7 +43,6 @@ import org.oakgp.function.compare.GreaterThanOrEqual;
 import org.oakgp.function.compare.LessThan;
 import org.oakgp.function.compare.LessThanOrEqual;
 import org.oakgp.function.compare.NotEqual;
-import org.oakgp.function.hof.Filter;
 import org.oakgp.function.hof.Map;
 import org.oakgp.function.hof.Reduce;
 import org.oakgp.function.math.BigDecimalUtils;
@@ -61,15 +60,15 @@ public class FunctionSetTest {
       IsZero isZero = new IsZero();
       FunctionSet functionSet = new FunctionSetBuilder().add(ADD).add(SUBTRACT).add(MULTIPLY).add(isZero).build();
 
-      List<Function> integers = functionSet.getByType(integerType());
+      List<FunctionSet.Key> integers = functionSet.getByType(integerType());
       assertEquals(3, integers.size());
-      assertSame(ADD, integers.get(0));
-      assertSame(SUBTRACT, integers.get(1));
-      assertSame(MULTIPLY, integers.get(2));
+      assertSame(ADD, integers.get(0).getFunction());
+      assertSame(SUBTRACT, integers.get(1).getFunction());
+      assertSame(MULTIPLY, integers.get(2).getFunction());
 
-      List<Function> booleans = functionSet.getByType(booleanType());
+      List<FunctionSet.Key> booleans = functionSet.getByType(booleanType());
       assertEquals(1, booleans.size());
-      assertSame(isZero, booleans.get(0));
+      assertSame(isZero, booleans.get(0).getFunction());
 
       assertNull(functionSet.getByType(stringType()));
    }
@@ -77,31 +76,32 @@ public class FunctionSetTest {
    @Test
    public void assertGetByTypeUnmodifiable() {
       FunctionSet functionSet = createFunctionSet();
-      List<Function> integers = functionSet.getByType(integerType());
+      List<FunctionSet.Key> integers = functionSet.getByType(integerType());
       assertUnmodifiable(integers);
    }
 
    @Test
    public void testGetBySignature() {
-      Count countIntegerArray = new Count(integerType());
-      Count countBooleanArray = new Count(booleanType());
-      FunctionSet functionSet = new FunctionSetBuilder().add(ADD).add(SUBTRACT).add(countIntegerArray).add(countBooleanArray).build();
+      Count count = new Count();
+      FunctionSet functionSet = new FunctionSetBuilder().add(ADD).add(SUBTRACT).add(count, integerType()).add(count, booleanType()).build();
 
       // sanity check we have added 4 functions with a return type of integer
       assertEquals(4, functionSet.getByType(integerType()).size());
 
-      List<Function> integers = functionSet.getBySignature(createSignature(integerType(), integerType(), integerType()));
+      List<FunctionSet.Key> integers = functionSet.getBySignature(createSignature(integerType(), integerType(), integerType()));
       assertEquals(2, integers.size());
-      assertSame(ADD, integers.get(0));
-      assertSame(SUBTRACT, integers.get(1));
+      assertSame(ADD, integers.get(0).getFunction());
+      assertSame(SUBTRACT, integers.get(1).getFunction());
 
-      List<Function> integerArrays = functionSet.getBySignature(createSignature(integerType(), integerListType()));
+      List<FunctionSet.Key> integerArrays = functionSet.getBySignature(createSignature(integerType(), integerListType()));
       assertEquals(1, integerArrays.size());
-      assertSame(countIntegerArray, integerArrays.get(0));
+      assertSame(count, integerArrays.get(0).getFunction());
+      assertEquals(count.getSignature().create(integerType()), integerArrays.get(0).getSignature());
 
-      List<Function> booleanArrays = functionSet.getBySignature(createSignature(integerType(), booleanListType()));
+      List<FunctionSet.Key> booleanArrays = functionSet.getBySignature(createSignature(integerType(), booleanListType()));
       assertEquals(1, booleanArrays.size());
-      assertSame(countBooleanArray, booleanArrays.get(0));
+      assertSame(count, booleanArrays.get(0).getFunction());
+      assertEquals(count.getSignature().create(booleanType()), booleanArrays.get(0).getSignature());
 
       assertNull(functionSet.getBySignature(createSignature(stringType(), integerType(), integerType())));
    }
@@ -109,7 +109,7 @@ public class FunctionSetTest {
    @Test
    public void testGetBySignatureUnmodifiable() {
       FunctionSet functionSet = createFunctionSet();
-      List<Function> integers = functionSet.getBySignature(createSignature(integerType(), integerType(), integerType()));
+      List<FunctionSet.Key> integers = functionSet.getBySignature(createSignature(integerType(), integerType(), integerType()));
       assertUnmodifiable(integers);
    }
 
@@ -163,20 +163,22 @@ public class FunctionSetTest {
    }
 
    private static FunctionSet createFunctionSet() {
+      Count count = new Count();
+      If ifFunction = new If();
       return new FunctionSetBuilder()
             // arithmetic
             .add(ADD).add(SUBTRACT).add(MULTIPLY)
             // comparison
-            .add(LessThan.create(integerType())).add(LessThanOrEqual.create(integerType())).add(new GreaterThan(integerType()))
-            .add(new GreaterThanOrEqual(integerType())).add(new Equal(integerType())).add(new NotEqual(integerType()))
+            .add(LessThan.getSingleton(), integerType()).add(LessThanOrEqual.getSingleton(), integerType()).add(new GreaterThan(), integerType())
+            .add(new GreaterThanOrEqual(), integerType()).add(new Equal(), integerType()).add(new NotEqual(), integerType())
             // selection
-            .add(new If(integerType()))
+            .add(ifFunction, integerType())
             // higher-order functions
-            .add(new Reduce(integerType())).add(new Filter(integerType()))// .add(new org.oakgp.function.hof.Map(integerType(), booleanType()))
+            .add(new Reduce(integerType())) // TODO .add(new Filter(integerType()))// TODO .add(new org.oakgp.function.hof.Map(integerType(), booleanType()))
             // classify
             .add(new IsPositive()).add(new IsNegative()).add(new IsZero())
             // collections
-            .add(new Count(integerType())).add(new Count(booleanType()))
+            .add(count, integerType()).add(count, booleanType())
             // construct
             .build();
    }

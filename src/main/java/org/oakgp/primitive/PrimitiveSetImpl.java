@@ -17,8 +17,9 @@ package org.oakgp.primitive;
 
 import java.util.List;
 
-import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
+import org.oakgp.node.ChildNodes;
+import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.type.Types.Type;
 import org.oakgp.util.Random;
@@ -63,11 +64,6 @@ public final class PrimitiveSetImpl implements PrimitiveSet {
       return functionSet.getByType(type) != null;
    }
 
-   /**
-    * Returns a randomly selected terminal node.
-    *
-    * @return a randomly selected terminal node
-    */
    @Override
    public Node nextTerminal(Type type) {
       boolean doCreateVariable = doCreateVariable();
@@ -87,13 +83,6 @@ public final class PrimitiveSetImpl implements PrimitiveSet {
       return randomlySelectAlternative(null, possibilities);
    }
 
-   /**
-    * Returns a randomly selected terminal node that is not the same as the specified {@code Node}.
-    *
-    * @param current
-    *           the current {@code Node} that the returned result should be an alternative to (i.e. not the same as)
-    * @return a randomly selected terminal node that is not the same as the specified {@code Node}
-    */
    @Override
    public Node nextAlternativeTerminal(Node current) {
       boolean doCreateVariable = doCreateVariable();
@@ -115,16 +104,9 @@ public final class PrimitiveSetImpl implements PrimitiveSet {
       return randomlySelectAlternative(current, possibilities);
    }
 
-   /**
-    * Returns a randomly selected {@code Function} of the specified {@code Type}.
-    *
-    * @param type
-    *           the required return type of the {@code Function}
-    * @return a randomly selected {@code Function} with a return type of {@code type}
-    */
    @Override
-   public Function nextFunction(Type type) {
-      List<Function> typeFunctions = functionSet.getByType(type);
+   public FunctionSet.Key nextFunction(Type type) {
+      List<FunctionSet.Key> typeFunctions = functionSet.getByType(type);
       if (typeFunctions == null) {
          throw new IllegalArgumentException("No functions with return type: " + type);
       }
@@ -132,18 +114,16 @@ public final class PrimitiveSetImpl implements PrimitiveSet {
       return typeFunctions.get(index);
    }
 
-   /**
-    * Returns a randomly selected {@code Function} that is not the same as the specified {@code Function}.
-    *
-    * @param current
-    *           the current {@code Function} that the returned result should be an alternative to (i.e. not the same as)
-    * @return a randomly selected {@code Function} that is not the same as the specified {@code Function}
-    */
    @Override
-   public Function nextAlternativeFunction(Function current) {
-      Signature signature = current.getSignature();
-      List<Function> functions = functionSet.getBySignature(signature);
-      return randomlySelectAlternative(current, functions);
+   public FunctionSet.Key nextAlternativeFunction(FunctionNode current) {
+      ChildNodes children = current.getChildren();
+      Type[] types = new Type[children.size()];
+      for (int i = 0; i < children.size(); i++) {
+         types[i] = children.getNode(i).getType();
+      }
+      Signature signature = Signature.createSignature(current.getType(), types);
+      List<FunctionSet.Key> functions = functionSet.getBySignature(signature);
+      return randomlySelectAlternative(new FunctionSet.Key(current.getFunction(), signature), functions);
    }
 
    private <C, P extends C> C randomlySelectAlternative(C currentVersion, List<P> possibilities) {

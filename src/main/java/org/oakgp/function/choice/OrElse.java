@@ -27,6 +27,7 @@ import org.oakgp.function.Signature;
 import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
+import org.oakgp.type.Types;
 import org.oakgp.type.Types.Type;
 
 /** Returns the first argument if not {@code null}, else returns the second argument. */
@@ -34,7 +35,8 @@ public final class OrElse implements Function {
    private final Signature signature;
 
    /** Constructs a selection operator that returns values of the specified type. */
-   public OrElse(Type type) {
+   public OrElse() {
+      Type type = Types.generic("Type");
       signature = Signature.createSignature(type, nullableType(type), type);
    }
 

@@ -16,6 +16,7 @@
 package org.oakgp.function.coll;
 
 import static org.oakgp.node.NodeType.isFunction;
+import static org.oakgp.type.CommonTypes.comparableType;
 import static org.oakgp.type.CommonTypes.listType;
 
 import java.util.ArrayList;
@@ -27,13 +28,15 @@ import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
+import org.oakgp.type.Types;
 import org.oakgp.type.Types.Type;
 
 public class Sort implements Function {
    private final Signature signature;
 
-   public Sort(Type t) {
-      signature = Signature.createSignature(listType(t), listType(t));
+   public Sort() {
+      Type type = Types.generic("ElementType", comparableType());
+      signature = Signature.createSignature(listType(type), listType(type));
    }
 
    @Override

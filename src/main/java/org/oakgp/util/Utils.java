@@ -27,6 +27,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
@@ -99,7 +100,23 @@ public final class Utils {
     *           the classification function used to group values
     */
    public static <K, V> Map<K, List<V>> groupBy(V[] values, Function<V, K> valueToKey) {
-      Map<K, List<V>> nodesByType = Arrays.stream(values).collect(groupingBy(valueToKey));
+      return groupBy(Arrays.stream(values), valueToKey);
+   }
+
+   /**
+    * Returns a map grouping the specified values according to the specified classification function.
+    *
+    * @param values
+    *           the values to group
+    * @param valueToKey
+    *           the classification function used to group values
+    */
+   public static <K, V> Map<K, List<V>> groupBy(List<V> values, Function<V, K> valueToKey) {
+      return groupBy(values.stream(), valueToKey);
+   }
+
+   private static <K, V> Map<K, List<V>> groupBy(Stream<V> values, Function<V, K> valueToKey) {
+      Map<K, List<V>> nodesByType = values.collect(groupingBy(valueToKey));
       makeValuesImmutable(nodesByType);
       return nodesByType;
    }

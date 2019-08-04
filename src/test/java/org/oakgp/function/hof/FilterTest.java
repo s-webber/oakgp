@@ -28,7 +28,7 @@ import org.oakgp.util.FunctionSetBuilder;
 public class FilterTest extends AbstractFunctionTest {
    @Override
    protected Filter getFunction() {
-      return new Filter(integerType());
+      return new Filter();
    }
 
    @Override
@@ -49,6 +49,6 @@ public class FilterTest extends AbstractFunctionTest {
 
    @Override
    protected FunctionSet getFunctionSet() {
-      return new FunctionSetBuilder().add(getFunction()).add(new IsPositive()).add(new IsNegative()).add(new IsZero()).build();
+      return new FunctionSetBuilder().add(getFunction(), integerType()).add(new IsPositive()).add(new IsNegative()).add(new IsZero()).build();
    }
 }

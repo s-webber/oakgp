@@ -25,7 +25,6 @@ import static org.oakgp.type.CommonTypes.integerType;
 import static org.oakgp.util.Utils.createIntegerConstants;
 import static org.oakgp.util.Utils.createIntegerTypeArray;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -49,8 +48,10 @@ import org.oakgp.function.compare.NotEqual;
 import org.oakgp.function.hof.Filter;
 import org.oakgp.function.math.IntegerUtils;
 import org.oakgp.node.ConstantNode;
+import org.oakgp.primitive.FunctionSet;
 import org.oakgp.rank.fitness.FitnessFunction;
 import org.oakgp.type.Types.Type;
+import org.oakgp.util.FunctionSetBuilder;
 import org.oakgp.util.RunBuilder;
 
 /**
@@ -109,9 +110,11 @@ public class FitnessFunctionSystemTest {
    public void testTwoVariableBooleanLogicExpression() {
       List<ConstantNode> constants = createIntegerConstants(0, 5);
       Type[] variableTypes = createIntegerTypeArray(2);
-      Function[] functions = { IntegerUtils.INTEGER_UTILS.getAdd(), IntegerUtils.INTEGER_UTILS.getSubtract(), IntegerUtils.INTEGER_UTILS.getMultiply(),
-            LessThan.create(integerType()), LessThanOrEqual.create(integerType()), new GreaterThan(integerType()), new GreaterThanOrEqual(integerType()),
-            new Equal(integerType()), new NotEqual(integerType()), new If(integerType()) };
+      FunctionSet functionSet = new FunctionSetBuilder()
+            .addAll(IntegerUtils.INTEGER_UTILS.getAdd(), IntegerUtils.INTEGER_UTILS.getSubtract(), IntegerUtils.INTEGER_UTILS.getMultiply())
+            .add(LessThan.getSingleton(), integerType()).add(LessThanOrEqual.getSingleton(), integerType()).add(new GreaterThan(), integerType())
+            .add(new GreaterThanOrEqual(), integerType()).add(new Equal(), integerType()).add(new NotEqual(), integerType()).add(new If(), integerType())
+            .build();
 
       FitnessFunction fitnessFunction = createIntegerTestDataFitnessFunction(createTests(variableTypes.length, a -> {
          int x = (int) a.get(0);
@@ -119,7 +122,7 @@ public class FitnessFunctionSystemTest {
          return x > 20 ? x : y;
       }));
 
-      new RunBuilder().setReturnType(integerType()).setConstants(constants).setVariables(variableTypes).setFunctions(functions)
+      new RunBuilder().setReturnType(integerType()).setConstants(constants).setVariables(variableTypes).setFunctionSet(functionSet)
             .setFitnessFunction(fitnessFunction).setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_POPULATION_MAX_DEPTH)
             .setMaxGenerations(NUM_GENERATIONS).process();
    }
@@ -129,14 +132,15 @@ public class FitnessFunctionSystemTest {
       IsPositive isPositive = new IsPositive();
       IsNegative isNegative = new IsNegative();
       IsZero isZero = new IsZero();
+      Filter filter = new Filter();
+      Count count = new Count();
       ConstantNode[] constants = { new ConstantNode(Boolean.TRUE, booleanType()), new ConstantNode(Boolean.FALSE, booleanType()),
             new ConstantNode(isPositive, integerToBooleanFunctionType()), new ConstantNode(isNegative, integerToBooleanFunctionType()),
             new ConstantNode(isZero, integerToBooleanFunctionType()), new ConstantNode(Collections.emptyList(), integerListType()),
             new ConstantNode(0, integerType()) };
       Type[] variableTypes = { integerListType() };
-      List<Function> functions = new ArrayList<>();
-      Collections.addAll(functions, ARITHMETIC_FUNCTIONS);
-      Collections.addAll(functions, new Function[] { new Filter(integerType()), isPositive, isNegative, isZero, new Count(integerType()) });
+      FunctionSet functionSet = new FunctionSetBuilder().addAll(ARITHMETIC_FUNCTIONS).addAll(isPositive, isNegative, isZero).add(filter, integerType())
+            .add(count, integerType()).build();
 
       Map<Assignments, Integer> testData = new HashMap<>();
       testData.put(createAssignments(asList(0, 0, 0, 0, 0, 0, 0, 0)), 8);
@@ -149,7 +153,7 @@ public class FitnessFunctionSystemTest {
       testData.put(createAssignments(asList(0, 0, 0)), 3);
       FitnessFunction fitnessFunction = createIntegerTestDataFitnessFunction(testData);
 
-      new RunBuilder().setReturnType(integerType()).setConstants(constants).setVariables(variableTypes).setFunctions(functions)
+      new RunBuilder().setReturnType(integerType()).setConstants(constants).setVariables(variableTypes).setFunctionSet(functionSet)
             .setFitnessFunction(fitnessFunction).setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_POPULATION_MAX_DEPTH)
             .setMaxGenerations(NUM_GENERATIONS).process();
    }

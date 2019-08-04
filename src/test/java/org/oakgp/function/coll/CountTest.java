@@ -22,11 +22,13 @@ import java.util.Collections;
 
 import org.oakgp.function.AbstractFunctionTest;
 import org.oakgp.node.ConstantNode;
+import org.oakgp.primitive.FunctionSet;
+import org.oakgp.util.FunctionSetBuilder;
 
 public class CountTest extends AbstractFunctionTest {
    @Override
    protected Count getFunction() {
-      return new Count(integerType());
+      return new Count();
    }
 
    @Override
@@ -53,5 +55,10 @@ public class CountTest extends AbstractFunctionTest {
 
    @Override
    public void testCannotSimplify() {
+   }
+
+   @Override
+   protected FunctionSet getFunctionSet() {
+      return new FunctionSetBuilder().add(getFunction(), integerType()).build();
    }
 }

@@ -26,12 +26,16 @@ import org.oakgp.Arguments;
 import org.oakgp.function.Function;
 import org.oakgp.function.HigherOrderFunctionArguments;
 import org.oakgp.function.Signature;
+import org.oakgp.type.Types;
 import org.oakgp.type.Types.Type;
 
 public final class MapValues implements Function {
    private final Signature signature;
 
-   public MapValues(Type key, Type from, Type to) {
+   public MapValues() {
+      Type key = Types.generic("Key");
+      Type to = Types.generic("To");
+      Type from = Types.generic("From");
       this.signature = Signature.createSignature(mapType(key, to), functionType(to, from), mapType(key, from));
    }
 

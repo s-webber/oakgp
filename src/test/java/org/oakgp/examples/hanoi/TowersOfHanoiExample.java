@@ -23,7 +23,6 @@ import static org.oakgp.util.Utils.createEnumConstants;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.oakgp.function.Function;
 import org.oakgp.function.choice.If;
 import org.oakgp.function.choice.SwitchEnum;
 import org.oakgp.function.compare.Equal;
@@ -32,9 +31,11 @@ import org.oakgp.function.compare.LessThan;
 import org.oakgp.function.math.IntegerUtils;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
+import org.oakgp.primitive.FunctionSet;
 import org.oakgp.rank.RankedCandidates;
 import org.oakgp.rank.fitness.FitnessFunction;
 import org.oakgp.type.Types.Type;
+import org.oakgp.util.FunctionSetBuilder;
 import org.oakgp.util.RunBuilder;
 import org.oakgp.util.Utils;
 
@@ -49,13 +50,14 @@ public class TowersOfHanoiExample {
    private static final int INITIAL_POPULATION_MAX_DEPTH = 4;
 
    public static void main(String[] args) {
-      Function[] functions = { new If(MOVE_TYPE), new Equal(MOVE_TYPE), new IsValid(), new SwitchEnum(Move.class, nullableType(MOVE_TYPE), MOVE_TYPE),
-            new GreaterThan(integerType()), LessThan.create(integerType()), new Equal(integerType()), new Next() };
+      FunctionSet functionSet = new FunctionSetBuilder().addAll(new IsValid(), new SwitchEnum(Move.class, nullableType(MOVE_TYPE), MOVE_TYPE))
+            .add(new Equal(), MOVE_TYPE).add(new If(), MOVE_TYPE).add(new GreaterThan(), integerType()).add(LessThan.getSingleton(), integerType())
+            .add(new Equal(), integerType()).add(new Next()).build();
       List<ConstantNode> constants = createConstants();
       Type[] variables = { STATE_TYPE, nullableType(MOVE_TYPE) };
       FitnessFunction fitnessFunction = new TowersOfHanoiFitnessFunction(false);
 
-      RankedCandidates output = new RunBuilder().setReturnType(MOVE_TYPE).setConstants(constants).setVariables(variables).setFunctions(functions)
+      RankedCandidates output = new RunBuilder().setReturnType(MOVE_TYPE).setConstants(constants).setVariables(variables).setFunctionSet(functionSet)
             .setFitnessFunction(fitnessFunction).setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_POPULATION_MAX_DEPTH)
             .setTargetFitness(TARGET_FITNESS).setMaxGenerations(NUM_GENERATIONS).process();
       Node best = output.best().getNode();

@@ -29,13 +29,13 @@ public class ComparisonOperatorTest {
    @Test
    public void testGetSignature() {
       Type type = Types.declareType("ComparisonOperatorTest");
-      Function f = new ComparisonOperator(type, true) {
+      Function f = new ComparisonOperator(true) {
          @Override
          protected boolean evaluate(int diff) {
             throw new UnsupportedOperationException();
          }
       };
-      Signature signature = f.getSignature();
+      Signature signature = f.getSignature().create(type);
       assertSame(booleanType(), signature.getReturnType());
       assertEquals(2, signature.getArgumentTypesLength());
       assertSame(type, signature.getArgumentType(0));

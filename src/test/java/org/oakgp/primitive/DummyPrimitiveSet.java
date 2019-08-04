@@ -15,9 +15,8 @@
  */
 package org.oakgp.primitive;
 
-import org.oakgp.function.Function;
+import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
-import org.oakgp.primitive.PrimitiveSet;
 import org.oakgp.type.Types.Type;
 
 public class DummyPrimitiveSet implements PrimitiveSet {
@@ -42,12 +41,12 @@ public class DummyPrimitiveSet implements PrimitiveSet {
    }
 
    @Override
-   public Function nextFunction(Type type) {
+   public FunctionSet.Key nextFunction(Type type) {
       throw new UnsupportedOperationException();
    }
 
    @Override
-   public Function nextAlternativeFunction(Function current) {
+   public FunctionSet.Key nextAlternativeFunction(FunctionNode current) {
       throw new UnsupportedOperationException();
    }
 }

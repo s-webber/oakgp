@@ -21,16 +21,17 @@ import java.util.Collection;
 
 import org.junit.Test;
 import org.oakgp.Assignments;
-import org.oakgp.function.Function;
 import org.oakgp.function.choice.If;
 import org.oakgp.function.choice.OrElse;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
+import org.oakgp.primitive.FunctionSet;
 import org.oakgp.rank.fitness.FitnessFunction;
 import org.oakgp.rank.tournament.FirstPlayerAdvantageGame;
 import org.oakgp.rank.tournament.TwoPlayerGame;
 import org.oakgp.type.Types.Type;
 import org.oakgp.util.DummyNode;
+import org.oakgp.util.FunctionSetBuilder;
 import org.oakgp.util.RunBuilder;
 import org.oakgp.util.Utils;
 
@@ -46,32 +47,36 @@ public class TicTacToeSystemTest {
 
    @Test
    public void testHighLevel() {
-      Function[] functions = { new GetPossibleMove("corner", Board::getFreeCorner), new GetPossibleMove("centre", Board::getFreeCentre),
-            new GetPossibleMove("side", Board::getFreeSide), new GetWinningMove(), new GetAnyMove(), new OrElse(MOVE_TYPE) };
+      FunctionSet functionSet = new FunctionSetBuilder().addAll(new GetPossibleMove("corner", Board::getFreeCorner),
+            new GetPossibleMove("centre", Board::getFreeCentre), new GetPossibleMove("side", Board::getFreeSide), new GetWinningMove(), new GetAnyMove())
+            .add(new OrElse(), MOVE_TYPE).build();
       TwoPlayerGame game = createTicTacToeGame();
 
-      new RunBuilder().setReturnType(MOVE_TYPE).setConstants().setVariables(VARIABLE_TYPES).setFunctions(functions).setTwoPlayerGame(game)
+      new RunBuilder().setReturnType(MOVE_TYPE).setConstants().setVariables(VARIABLE_TYPES).setFunctionSet(functionSet).setTwoPlayerGame(game)
             .setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_POPULATION_MAX_DEPTH).setMaxGenerations(NUM_GENERATIONS).process();
    }
 
    @Test
    public void testLowLevelTournament() {
-      Function[] functions = { new IsFree(), new IsOccupied(), new GetAnyMove(), new IfValidMove(), new OrElse(MOVE_TYPE), new And(), new If(POSSIBLE_MOVE) };
+      FunctionSet functionSet = new FunctionSetBuilder().addAll(new IsFree(), new IsOccupied(), new GetAnyMove(), new IfValidMove(), new And())
+            .add(new OrElse(), MOVE_TYPE).add(new If(), POSSIBLE_MOVE).build();
       Collection<ConstantNode> constants = getMoveConstants();
       TwoPlayerGame game = createTicTacToeGame();
 
-      new RunBuilder().setReturnType(MOVE_TYPE).setConstants(constants).setVariables(VARIABLE_TYPES).setFunctions(functions).setTwoPlayerGame(game)
+      new RunBuilder().setReturnType(MOVE_TYPE).setConstants(constants).setVariables(VARIABLE_TYPES).setFunctionSet(functionSet).setTwoPlayerGame(game)
             .setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_POPULATION_MAX_DEPTH).setMaxGenerations(NUM_GENERATIONS).process();
    }
 
    @Test
    public void testLowLevelFitnessFunction() {
-      Function[] functions = { new IsFree(), new IsOccupied(), new GetAnyMove(), new IfValidMove(), new OrElse(MOVE_TYPE), new And(), new If(POSSIBLE_MOVE) };
+      FunctionSet functionSet = new FunctionSetBuilder().addAll(new IsFree(), new IsOccupied(), new GetAnyMove(), new IfValidMove(), new And())
+            .add(new OrElse(), MOVE_TYPE).add(new If(), POSSIBLE_MOVE).build();
       Collection<ConstantNode> constants = getMoveConstants();
       TicTacToeFitnessFunction fitnessFunction = new TicTacToeFitnessFunction();
 
-      new RunBuilder().setReturnType(MOVE_TYPE).setConstants(constants).setVariables(VARIABLE_TYPES).setFunctions(functions).setFitnessFunction(fitnessFunction)
-            .setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_POPULATION_MAX_DEPTH).setMaxGenerations(NUM_GENERATIONS).process();
+      new RunBuilder().setReturnType(MOVE_TYPE).setConstants(constants).setVariables(VARIABLE_TYPES).setFunctionSet(functionSet)
+            .setFitnessFunction(fitnessFunction).setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_POPULATION_MAX_DEPTH)
+            .setMaxGenerations(NUM_GENERATIONS).process();
    }
 
    private Collection<ConstantNode> getMoveConstants() {

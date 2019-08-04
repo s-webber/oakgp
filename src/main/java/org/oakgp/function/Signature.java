@@ -42,6 +42,9 @@ public final class Signature {
    }
 
    private Signature(Type returnType, Type[] userSuppliedArgumentTypes) {
+      if (userSuppliedArgumentTypes.length == 0) {
+         throw new IllegalArgumentException();
+      }
       this.returnType = returnType;
       this.argumentTypes = Utils.copyOf(userSuppliedArgumentTypes);
       this.hashCode = (returnType.hashCode() * 31) * Arrays.hashCode(argumentTypes);
@@ -130,7 +133,7 @@ public final class Signature {
          for (int i = 0; i < originalParameters.size(); i++) {
             Type originalParameter = originalParameters.get(i);
             Type newParameter = assignments.getOrDefault(originalParameter, originalParameter);
-            newParameters[i] = newParameter;
+            newParameters[i] = replace(newParameter, assignments);
          }
          return Types.type(original.getName(), newParameters);
       }

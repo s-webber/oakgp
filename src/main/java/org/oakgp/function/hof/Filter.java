@@ -28,6 +28,7 @@ import org.oakgp.Arguments;
 import org.oakgp.function.Function;
 import org.oakgp.function.HigherOrderFunctionArguments;
 import org.oakgp.function.Signature;
+import org.oakgp.type.Types;
 import org.oakgp.type.Types.Type;
 
 /**
@@ -47,7 +48,8 @@ public final class Filter implements Function {
     * @param type
     *           the type of the elements contained in the collection
     */
-   public Filter(Type type) {
+   public Filter() {
+      Type type = Types.generic("Type");
       signature = Signature.createSignature(listType(type), functionType(booleanType(), type), listType(type));
    }
 

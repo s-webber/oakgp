@@ -22,12 +22,10 @@ import org.oakgp.type.Types.Type;
 
 /** Determines if the object represented by the first argument is greater than or equal to the object represented by the second. */
 public final class GreaterThanOrEqual extends ComparisonOperator {
-   private final LessThanOrEqual lessThanOrEqual;
 
    /** Constructs a function that compares two arguments of the specified type. */
-   public GreaterThanOrEqual(Type type) {
-      super(type, true);
-      lessThanOrEqual = LessThanOrEqual.create(type);
+   public GreaterThanOrEqual() {
+      super(true);
    }
 
    @Override
@@ -41,7 +39,7 @@ public final class GreaterThanOrEqual extends ComparisonOperator {
       ChildNodes children = functionNode.getChildren();
       Node simplifiedVersion = simplifyToTrue(children);
       if (simplifiedVersion == null) {
-         return new FunctionNode(lessThanOrEqual, returnType, children.second(), children.first());
+         return new FunctionNode(LessThanOrEqual.getSingleton(), returnType, children.second(), children.first());
       } else {
          return simplifiedVersion;
       }

@@ -29,8 +29,8 @@ import org.oakgp.type.Types.Type;
  */
 public final class Equal extends ComparisonOperator {
    /** Constructs a function that compares two arguments of the specified type. */
-   public Equal(Type type) {
-      super(type, true);
+   public Equal() {
+      super(true);
    }
 
    @Override

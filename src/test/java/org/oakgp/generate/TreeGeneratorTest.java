@@ -32,6 +32,7 @@ import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
 import org.oakgp.primitive.ConstantSet;
 import org.oakgp.primitive.DummyPrimitiveSet;
+import org.oakgp.primitive.FunctionSet;
 import org.oakgp.primitive.PrimitiveSet;
 import org.oakgp.primitive.PrimitiveSetImpl;
 import org.oakgp.primitive.VariableSet;
@@ -83,8 +84,9 @@ public class TreeGeneratorTest {
          int terminalCtr = 1;
 
          @Override
-         public Function nextFunction(Type type) {
-            return INTEGER_UTILS.getAdd();
+         public FunctionSet.Key nextFunction(Type type) {
+            Function add = INTEGER_UTILS.getAdd();
+            return new FunctionSet.Key(add, add.getSignature());
          }
 
          @Override

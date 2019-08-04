@@ -18,10 +18,10 @@ package org.oakgp.evolve.mutate;
 import static org.oakgp.node.NodeType.isFunction;
 
 import org.oakgp.evolve.GeneticOperator;
-import org.oakgp.function.Function;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.node.walk.NodeWalk;
+import org.oakgp.primitive.FunctionSet;
 import org.oakgp.primitive.PrimitiveSet;
 import org.oakgp.select.NodeSelector;
 import org.oakgp.util.Random;
@@ -60,8 +60,12 @@ public final class PointMutation implements GeneticOperator {
       return NodeWalk.replaceAt(root, mutationPoint, node -> {
          if (isFunction(node)) {
             FunctionNode functionNode = (FunctionNode) node;
-            Function function = primitiveSet.nextAlternativeFunction(functionNode.getFunction());
-            return new FunctionNode(function, node.getType(), functionNode.getChildren());
+            FunctionSet.Key key = primitiveSet.nextAlternativeFunction(functionNode);
+            if (key.getReturnType() != node.getType()) {
+               // should never get here
+               throw new RuntimeException();
+            }
+            return new FunctionNode(key.getFunction(), node.getType(), functionNode.getChildren());
          } else {
             return primitiveSet.nextAlternativeTerminal(node);
          }

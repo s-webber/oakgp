@@ -20,7 +20,6 @@ import static org.oakgp.util.Utils.createIntegerTypeArray;
 
 import java.util.Collection;
 
-import org.oakgp.function.Function;
 import org.oakgp.function.choice.If;
 import org.oakgp.function.compare.Equal;
 import org.oakgp.function.compare.GreaterThan;
@@ -31,10 +30,12 @@ import org.oakgp.function.compare.NotEqual;
 import org.oakgp.function.math.IntegerUtils;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
+import org.oakgp.primitive.FunctionSet;
 import org.oakgp.rank.RankedCandidates;
 import org.oakgp.rank.tournament.FirstPlayerAdvantageGame;
 import org.oakgp.rank.tournament.TwoPlayerGame;
 import org.oakgp.type.Types.Type;
+import org.oakgp.util.FunctionSetBuilder;
 import org.oakgp.util.JavaUtilRandomAdapter;
 import org.oakgp.util.Random;
 import org.oakgp.util.RunBuilder;
@@ -47,16 +48,19 @@ public class GridWarExample {
    private static final int INITIAL_POPULATION_MAX_DEPTH = 4;
 
    public static void main(String[] args) {
-      Function[] functions = { IntegerUtils.INTEGER_UTILS.getAdd(), IntegerUtils.INTEGER_UTILS.getSubtract(), IntegerUtils.INTEGER_UTILS.getMultiply(),
-            LessThan.create(integerType()), LessThanOrEqual.create(integerType()), new GreaterThan(integerType()), new GreaterThanOrEqual(integerType()),
-            new Equal(integerType()), new NotEqual(integerType()), new If(integerType()) };
+      FunctionSet functionSet = new FunctionSetBuilder()
+            .addAll(IntegerUtils.INTEGER_UTILS.getAdd(), IntegerUtils.INTEGER_UTILS.getSubtract(), IntegerUtils.INTEGER_UTILS.getMultiply())
+            .add(LessThan.getSingleton(), integerType()).add(LessThanOrEqual.getSingleton(), integerType()).add(new GreaterThan(), integerType())
+            .add(new GreaterThanOrEqual(), integerType()).add(new Equal(), integerType()).add(new NotEqual(), integerType()).add(new If(), integerType())
+            .build();
+
       Collection<ConstantNode> constants = Utils.createIntegerConstants(0, 4);
       Type[] variables = createIntegerTypeArray(NUM_VARIABLES);
       Random random = new JavaUtilRandomAdapter();
       // wrap a GridWar object in a FirstPlayerAdvantageGame to avoid bias
       TwoPlayerGame game = new FirstPlayerAdvantageGame(new GridWar(random));
 
-      RankedCandidates output = new RunBuilder().setReturnType(integerType()).setConstants(constants).setVariables(variables).setFunctions(functions)
+      RankedCandidates output = new RunBuilder().setReturnType(integerType()).setConstants(constants).setVariables(variables).setFunctionSet(functionSet)
             .setTwoPlayerGame(game).setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_POPULATION_MAX_DEPTH)
             .setMaxGenerations(NUM_GENERATIONS).process();
       Node best = output.best().getNode();

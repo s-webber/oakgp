@@ -23,6 +23,7 @@ import java.util.Collection;
 import org.oakgp.Arguments;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
+import org.oakgp.type.Types;
 import org.oakgp.type.Types.Type;
 
 /** Determines the number of elements contained in a collection. */
@@ -30,8 +31,9 @@ public final class Count implements Function {
    private final Signature signature;
 
    /** Constructs a function to return the number of items in collections of the specified type. */
-   public Count(Type t) {
-      signature = Signature.createSignature(integerType(), listType(t));
+   public Count() {
+      Type type = Types.generic("ElementType");
+      signature = Signature.createSignature(integerType(), listType(type));
    }
 
    @Override

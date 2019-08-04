@@ -28,13 +28,16 @@ import org.oakgp.Arguments;
 import org.oakgp.function.Function;
 import org.oakgp.function.HigherOrderFunctionArguments;
 import org.oakgp.function.Signature;
+import org.oakgp.type.Types;
 import org.oakgp.type.Types.Type;
 
 /** Uses a function to group elements of a collection. */
 public final class GroupBy implements Function {
    private final Signature signature;
 
-   public GroupBy(Type input, Type key) {
+   public GroupBy() {
+      Type key = Types.generic("Key");
+      Type input = Types.generic("Input");
       signature = Signature.createSignature(mapType(key, listType(input)), functionType(key, input), listType(input));
    }
 

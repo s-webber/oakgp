@@ -24,12 +24,15 @@ import java.util.Map;
 import org.oakgp.Arguments;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
+import org.oakgp.type.Types;
 import org.oakgp.type.Types.Type;
 
 public class Values implements Function {
    private final Signature signature;
 
-   public Values(Type key, Type value) {
+   public Values() {
+      Type value = Types.generic("Value");
+      Type key = Types.generic("Key");
       signature = Signature.createSignature(listType(value), mapType(key, value));
    }
 
