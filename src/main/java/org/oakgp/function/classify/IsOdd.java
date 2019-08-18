@@ -36,9 +36,4 @@ public final class IsOdd implements Function {
    public Signature getSignature() {
       return SIGNATURE;
    }
-
-   @Override
-   public String getDisplayName() {
-      return "odd?";
-   }
 }

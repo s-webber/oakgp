@@ -13,27 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.oakgp.function.classify;
+package org.oakgp.function.coll;
 
-import static org.oakgp.type.CommonTypes.booleanType;
-import static org.oakgp.type.CommonTypes.integerType;
+import static org.oakgp.type.CommonTypes.listType;
+import static org.oakgp.type.CommonTypes.mapType;
+
+import java.util.ArrayList;
+import java.util.Map;
 
 import org.oakgp.Arguments;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
+import org.oakgp.type.Types;
+import org.oakgp.type.Types.Type;
 
-/** Determines if a number is even. */
-public final class IsEven implements Function {
-   private static final Signature SIGNATURE = Signature.createSignature(booleanType(), integerType());
+public class Keys implements Function {
+   private final Signature signature;
+
+   public Keys() {
+      Type value = Types.generic("Value");
+      Type key = Types.generic("Key");
+      signature = Signature.createSignature(listType(key), mapType(key, value));
+   }
 
    @Override
    public Object evaluate(Arguments arguments) {
-      int i = arguments.first();
-      return i % 2 == 0;
+      Map<?, ?> a = arguments.first();
+      return new ArrayList<>(a.keySet()); // TODO should we just return a.keySet() instead?
    }
 
    @Override
    public Signature getSignature() {
-      return SIGNATURE;
+      return signature;
    }
 }

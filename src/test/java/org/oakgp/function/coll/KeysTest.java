@@ -24,22 +24,22 @@ import org.oakgp.function.AbstractFunctionTest;
 import org.oakgp.primitive.FunctionSet;
 import org.oakgp.util.FunctionSetBuilder;
 
-public class ValuesTest extends AbstractFunctionTest {
+public class KeysTest extends AbstractFunctionTest {
    @Override
-   protected Values getFunction() {
-      return new Values();
+   protected Keys getFunction() {
+      return new Keys();
    }
 
    @Override
    public void testEvaluate() {
-      evaluate("(values {\"a\" 1})").to(Arrays.asList(1));
-      evaluate("(values {\"a\" 7 \"b\" 180 \"c\" 42})").to(Arrays.asList(7, 180, 42));
+      evaluate("(keys {\"a\" 1})").to(Arrays.asList("a"));
+      evaluate("(keys {\"a\" 7 \"b\" 180 \"c\" 42})").to(Arrays.asList("a", "b", "c"));
    }
 
    @Override
    public void testCanSimplify() {
-      simplify("(values {\"a\" 1})").to("[1]");
-      simplify("(values {\"a\" 7 \"b\" 180 \"c\" 42})").to("[7 180 42]");
+      simplify("(keys {\"a\" 1})").to("[\"a\"]");
+      simplify("(keys {\"a\" 7 \"b\" 180 \"c\" 42})").to("[\"a\" \"b\" \"c\"]");
    }
 
    @Override
@@ -48,6 +48,6 @@ public class ValuesTest extends AbstractFunctionTest {
 
    @Override
    protected FunctionSet getFunctionSet() {
-      return new FunctionSetBuilder().add(getFunction(), integerType(), stringType()).build();
+      return new FunctionSetBuilder().add(getFunction(), stringType(), integerType()).build();
    }
 }

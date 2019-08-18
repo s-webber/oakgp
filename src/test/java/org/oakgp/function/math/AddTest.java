@@ -82,6 +82,7 @@ public class AddTest extends AbstractFunctionTest {
 
       // anything plus itself is equal to itself multiplied by 2
       simplify("(+ v1 v1)").to("(* 2 v1)").verifyAll(assignedValues);
+      simplify("(+ (* v1 2) (+ v1 (+ v1 v1)))").to("(* 5 v1)").verifyAll(assignedValues);
 
       // convert addition of negative numbers to subtraction
       simplify("(+ v1 -7)").to("(- v1 7)").verifyAll(assignedValues);

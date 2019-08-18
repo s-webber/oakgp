@@ -16,24 +16,44 @@
 package org.oakgp.function.classify;
 
 import static org.oakgp.type.CommonTypes.booleanType;
-import static org.oakgp.type.CommonTypes.integerType;
 
 import org.oakgp.Arguments;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
+import org.oakgp.node.FunctionNode;
+import org.oakgp.node.Node;
+import org.oakgp.node.NodeType;
 
-/** Determines if a number is even. */
-public final class IsEven implements Function {
-   private static final Signature SIGNATURE = Signature.createSignature(booleanType(), integerType());
+public class IsFalse implements Function {
+   private static final Signature SIGNATURE = Signature.createSignature(booleanType(), booleanType());
 
    @Override
    public Object evaluate(Arguments arguments) {
-      int i = arguments.first();
-      return i % 2 == 0;
+      boolean b = arguments.first();
+      return !b;
    }
 
    @Override
    public Signature getSignature() {
       return SIGNATURE;
+   }
+
+   @Override
+   public Node simplify(FunctionNode functionNode) {
+      if (functionNode.getChildren().size() != 1) {
+         return null;
+      }
+
+      Node childNode = functionNode.getChildren().first();
+      if (childNode.getNodeType() != NodeType.FUNCTION) {
+         return null;
+      }
+
+      FunctionNode childFunctionNode = (FunctionNode) childNode;
+      if (childFunctionNode.getFunction() != this) {
+         return null;
+      }
+
+      return childFunctionNode.getChildren().first();
    }
 }
