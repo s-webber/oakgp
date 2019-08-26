@@ -13,45 +13,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.oakgp.function.coll;
+package org.oakgp.function.compare;
 
 import static org.oakgp.node.NodeType.isFunction;
 import static org.oakgp.type.CommonTypes.comparableType;
 import static org.oakgp.type.CommonTypes.listType;
+import static org.oakgp.type.CommonTypes.nullableType;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import org.oakgp.Arguments;
 import org.oakgp.function.Function;
-import org.oakgp.function.MapperFunction;
 import org.oakgp.function.Signature;
+import org.oakgp.function.coll.Sort;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.type.Types;
 import org.oakgp.type.Types.Type;
 
-public class Sort implements MapperFunction {
-   private static final Sort SINGLETON = new Sort();
-
-   public static Sort getSingleton() {
-      return SINGLETON;
-   }
-
+public class MinList implements Function {
    private final Signature signature;
 
-   private Sort() {
+   public MinList() {
       Type type = Types.generic("ElementType", comparableType());
-      signature = Signature.createSignature(listType(type), listType(type));
+      this.signature = Signature.createSignature(nullableType(type), listType(type));
    }
 
    @Override
-   public Object evaluate(Arguments arguments) {
-      Collection<Comparable<?>> input = arguments.first();
-      List<Comparable<?>> output = new ArrayList<>(input);
-      output.sort(null);
-      return output;
+   public Comparable evaluate(Arguments arguments) {
+      Collection<Comparable> input = arguments.first();
+      Comparable result = null;
+      for (Comparable i : input) {
+         if (result == null || i.compareTo(result) < 0) {
+            result = i;
+         }
+      }
+      return result;
    }
 
    @Override
@@ -60,18 +57,20 @@ public class Sort implements MapperFunction {
    }
 
    @Override
-   public Node simplify(FunctionNode functionNode) { // TODO copied from Set
+   public Node simplify(FunctionNode functionNode) {
       Node n = functionNode.getChildren().first();
       if (isFunction(n)) {
          FunctionNode fn = (FunctionNode) n;
          Function f = fn.getFunction();
-         if (f == this || f == SortedSet.getSingleton()) {
-            return n;
-         }
-         if (f == Set.getSingleton()) {
-            return new FunctionNode(SortedSet.getSingleton(), functionNode.getType(), fn.getChildren());
+         if (f == Sort.getSingleton()) {
+            return new FunctionNode(functionNode, fn.getChildren());
          }
       }
       return null;
+   }
+
+   @Override
+   public String getDisplayName() {
+      return "min";
    }
 }

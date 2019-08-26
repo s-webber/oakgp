@@ -19,39 +19,35 @@ import static org.oakgp.node.NodeType.isFunction;
 import static org.oakgp.type.CommonTypes.comparableType;
 import static org.oakgp.type.CommonTypes.listType;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.TreeSet;
 
 import org.oakgp.Arguments;
 import org.oakgp.function.Function;
-import org.oakgp.function.MapperFunction;
 import org.oakgp.function.Signature;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.type.Types;
 import org.oakgp.type.Types.Type;
 
-public class Sort implements MapperFunction {
-   private static final Sort SINGLETON = new Sort();
+public class SortedSet implements Function {
+   private static final SortedSet SINGLETON = new SortedSet();
 
-   public static Sort getSingleton() {
+   public static SortedSet getSingleton() {
       return SINGLETON;
    }
 
    private final Signature signature;
 
-   private Sort() {
+   private SortedSet() {
       Type type = Types.generic("ElementType", comparableType());
       signature = Signature.createSignature(listType(type), listType(type));
    }
 
    @Override
    public Object evaluate(Arguments arguments) {
-      Collection<Comparable<?>> input = arguments.first();
-      List<Comparable<?>> output = new ArrayList<>(input);
-      output.sort(null);
-      return output;
+      Collection<Integer> input = arguments.first();
+      return new TreeSet<>(input);
    }
 
    @Override
@@ -60,16 +56,16 @@ public class Sort implements MapperFunction {
    }
 
    @Override
-   public Node simplify(FunctionNode functionNode) { // TODO copied from Set
+   public Node simplify(FunctionNode functionNode) { // TODO copied from Sort
       Node n = functionNode.getChildren().first();
       if (isFunction(n)) {
          FunctionNode fn = (FunctionNode) n;
          Function f = fn.getFunction();
-         if (f == this || f == SortedSet.getSingleton()) {
+         if (f == this) {
             return n;
          }
-         if (f == Set.getSingleton()) {
-            return new FunctionNode(SortedSet.getSingleton(), functionNode.getType(), fn.getChildren());
+         if (f == Set.getSingleton() || f == Sort.getSingleton()) {
+            return new FunctionNode(functionNode, fn.getChildren());
          }
       }
       return null;

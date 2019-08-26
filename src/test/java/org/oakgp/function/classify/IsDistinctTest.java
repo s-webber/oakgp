@@ -13,40 +13,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.oakgp.function.coll;
+package org.oakgp.function.classify;
 
 import static org.oakgp.type.CommonTypes.integerType;
 import static org.oakgp.type.CommonTypes.listType;
 
-import java.util.Arrays;
 import java.util.Collections;
 
 import org.oakgp.function.AbstractFunctionTest;
+import org.oakgp.function.coll.Set;
+import org.oakgp.function.coll.SortedSet;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.primitive.FunctionSet;
 import org.oakgp.util.FunctionSetBuilder;
 
-public class SortTest extends AbstractFunctionTest {
+public class IsDistinctTest extends AbstractFunctionTest {
    @Override
-   protected Sort getFunction() {
-      return Sort.getSingleton();
+   protected IsDistinct getFunction() {
+      return new IsDistinct();
    }
 
    @Override
    public void testEvaluate() {
       ConstantNode emptyList = new ConstantNode(Collections.emptyList(), listType(integerType()));
-      evaluate("(sort v0)").assigned(emptyList).to(Collections.emptyList());
-      evaluate("(sort [2 5 3 6 9 8 2 7])").to(Arrays.asList(2, 2, 3, 5, 6, 7, 8, 9));
-      evaluate("(sort [2 2 3 5 6 7 8 9])").to(Arrays.asList(2, 2, 3, 5, 6, 7, 8, 9));
+      evaluate("(distinct? v0)").assigned(emptyList).to(true);
+      evaluate("(distinct? [7])").to(true);
+      evaluate("(distinct? [7 7])").to(false);
+      evaluate("(distinct? [8 4 7])").to(true);
+      evaluate("(distinct? [8 4 8])").to(false);
    }
 
    @Override
    public void testCanSimplify() {
-      simplify("(sort [7 8 6])").to("[6 7 8]");
-
-      simplify("(sort (sort v0))").with(listType(integerType())).to("(sort v0)");
-      simplify("(sort (sorted-set v0))").with(listType(integerType())).to("(sorted-set v0)");
-      simplify("(sort (set v0))").with(listType(integerType())).to("(sorted-set v0)");
+      simplify("(distinct? (set v0))").with(listType(integerType())).to("true");
+      simplify("(distinct? (sorted-set v0))").with(listType(integerType())).to("true");
    }
 
    @Override
@@ -55,7 +55,7 @@ public class SortTest extends AbstractFunctionTest {
 
    @Override
    protected FunctionSet getFunctionSet() {
-      return new FunctionSetBuilder().add(getFunction(), integerType()).add(SortedSet.getSingleton(), integerType()).add(Set.getSingleton(), integerType())
+      return new FunctionSetBuilder().add(getFunction(), integerType()).add(Set.getSingleton(), integerType()).add(SortedSet.getSingleton(), integerType())
             .build();
    }
 }

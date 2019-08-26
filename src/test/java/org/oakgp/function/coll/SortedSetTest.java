@@ -15,6 +15,7 @@
  */
 package org.oakgp.function.coll;
 
+import static org.oakgp.TestUtils.asSet;
 import static org.oakgp.type.CommonTypes.integerType;
 import static org.oakgp.type.CommonTypes.listType;
 
@@ -22,29 +23,38 @@ import java.util.Collections;
 
 import org.oakgp.function.AbstractFunctionTest;
 import org.oakgp.node.ConstantNode;
+import org.oakgp.primitive.FunctionSet;
+import org.oakgp.util.FunctionSetBuilder;
 
-public class SumTest extends AbstractFunctionTest {
+public class SortedSetTest extends AbstractFunctionTest {
    @Override
-   protected Sum getFunction() {
-      return new Sum();
+   protected SortedSet getFunction() {
+      return SortedSet.getSingleton();
    }
 
    @Override
    public void testEvaluate() {
       ConstantNode emptyList = new ConstantNode(Collections.emptyList(), listType(integerType()));
-      evaluate("(sum v0)").assigned(emptyList).to(0);
-      evaluate("(sum [7])").to(7);
-      evaluate("(sum [42 50])").to(92);
-      evaluate("(sum [8 4 7])").to(19);
-      evaluate("(sum [2 -12 8])").to(-2);
+      evaluate("(sorted-set v0)").assigned(emptyList).to(asSet());
+      evaluate("(sorted-set [7])").to(asSet(7));
+      evaluate("(sorted-set [7 7 7])").to(asSet(7));
+      evaluate("(sorted-set [8 4 7])").to(asSet(4, 7, 8));
+      evaluate("(sorted-set [2 5 3 6 9 8 2 7])").to(asSet(2, 3, 5, 6, 7, 8, 9));
    }
 
    @Override
    public void testCanSimplify() {
-      simplify("(sum [2 -12 8])").to("-2");
+      simplify("(sorted-set (sorted-set v0))").with(listType(integerType())).to("(sorted-set v0)");
+      simplify("(sorted-set (set v0))").with(listType(integerType())).to("(sorted-set v0)");
+      simplify("(sorted-set (sort v0))").with(listType(integerType())).to("(sorted-set v0)");
    }
 
    @Override
    public void testCannotSimplify() {
+   }
+
+   @Override
+   protected FunctionSet getFunctionSet() {
+      return new FunctionSetBuilder().add(getFunction(), integerType()).add(Set.getSingleton(), integerType()).add(Sort.getSingleton(), integerType()).build();
    }
 }

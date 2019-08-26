@@ -13,49 +13,58 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.oakgp.function.coll;
+package org.oakgp.function.compare;
 
 import static org.oakgp.type.CommonTypes.integerType;
 import static org.oakgp.type.CommonTypes.listType;
 
-import java.util.Arrays;
 import java.util.Collections;
 
 import org.oakgp.function.AbstractFunctionTest;
+import org.oakgp.function.coll.Set;
+import org.oakgp.function.coll.Sort;
+import org.oakgp.function.coll.SortedSet;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.primitive.FunctionSet;
 import org.oakgp.util.FunctionSetBuilder;
 
-public class SortTest extends AbstractFunctionTest {
+public class MaxListTest extends AbstractFunctionTest {
    @Override
-   protected Sort getFunction() {
-      return Sort.getSingleton();
+   protected MaxList getFunction() {
+      return new MaxList();
    }
 
    @Override
    public void testEvaluate() {
       ConstantNode emptyList = new ConstantNode(Collections.emptyList(), listType(integerType()));
-      evaluate("(sort v0)").assigned(emptyList).to(Collections.emptyList());
-      evaluate("(sort [2 5 3 6 9 8 2 7])").to(Arrays.asList(2, 2, 3, 5, 6, 7, 8, 9));
-      evaluate("(sort [2 2 3 5 6 7 8 9])").to(Arrays.asList(2, 2, 3, 5, 6, 7, 8, 9));
+      evaluate("(max v0)").assigned(emptyList).to(null);
+      evaluate("(max [7])").to(7);
+      evaluate("(max [42 50])").to(50);
+      evaluate("(max [8 4 7])").to(8);
+      evaluate("(max [2 -6 -56 42])").to(42);
    }
 
    @Override
    public void testCanSimplify() {
-      simplify("(sort [7 8 6])").to("[6 7 8]");
+      // TODO simplify("(max [2 -12 8])").to("8");
 
-      simplify("(sort (sort v0))").with(listType(integerType())).to("(sort v0)");
-      simplify("(sort (sorted-set v0))").with(listType(integerType())).to("(sorted-set v0)");
-      simplify("(sort (set v0))").with(listType(integerType())).to("(sorted-set v0)");
+      simplify("(max (sort v0))").with(listType(integerType())).to("(max v0)");
+
+      // TODO (max [v0 v1]) -> (max v0 v1)
+      // TODO (max [v0 v1 v1]) -> (max v0 v1)
+      // TODO (max [v2 v0 v1]) -> (max [v0 v1 v2])
+      // TODO (max [v0 v1 v2 v1]) -> (max [v0 v1 v2])
    }
 
    @Override
    public void testCannotSimplify() {
+      cannotSimplify("(max (set v0))", listType(integerType()));
+      cannotSimplify("(max (sorted-set v0))", listType(integerType()));
    }
 
    @Override
    protected FunctionSet getFunctionSet() {
-      return new FunctionSetBuilder().add(getFunction(), integerType()).add(SortedSet.getSingleton(), integerType()).add(Set.getSingleton(), integerType())
-            .build();
+      return new FunctionSetBuilder().add(getFunction(), integerType()).add(Sort.getSingleton(), integerType()).add(Set.getSingleton(), integerType())
+            .add(SortedSet.getSingleton(), integerType()).build();
    }
 }

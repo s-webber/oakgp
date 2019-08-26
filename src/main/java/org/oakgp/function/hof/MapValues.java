@@ -25,11 +25,12 @@ import java.util.Map;
 import org.oakgp.Arguments;
 import org.oakgp.function.Function;
 import org.oakgp.function.HigherOrderFunctionArguments;
+import org.oakgp.function.MapperFunction;
 import org.oakgp.function.Signature;
 import org.oakgp.type.Types;
 import org.oakgp.type.Types.Type;
 
-public final class MapValues implements Function {
+public final class MapValues implements MapperFunction {
    private final Signature signature;
 
    public MapValues() {

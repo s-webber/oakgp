@@ -42,6 +42,7 @@ abstract class NumberUtils<T extends Comparable<T>> {
    private final Subtract<T> subtract;
    private final Multiply<T> multiply;
    private final Divide<T> divide;
+   private final Sum<T> sum;
 
    /**
     * Creates a {@code NumberUtils} for the numeric values represented by instances of {@link #T}.
@@ -67,6 +68,7 @@ abstract class NumberUtils<T extends Comparable<T>> {
       this.subtract = new Subtract<>(this);
       this.multiply = new Multiply<>(this);
       this.divide = new Divide<>(this);
+      this.sum = new Sum<>(this);
    }
 
    /** Returns the {@code Type} associated with the numeric values this instance is concerned with. */
@@ -97,6 +99,12 @@ abstract class NumberUtils<T extends Comparable<T>> {
    /** Returns a division operator for the numeric type this instance is concerned with. */
    public final Divide<T> getDivide() {
       return divide;
+
+   }
+
+   /** Returns a sum operator for the numeric type this instance is concerned with. */
+   public final Sum<T> getSum() {
+      return sum;
    }
 
    /** Returns true if the given {@code Node} is a {@code ConstantNode} with the value {@code 0} of type {@link #T}. */
@@ -107,6 +115,11 @@ abstract class NumberUtils<T extends Comparable<T>> {
    /** Returns true if the given {@code Node} is a {@code ConstantNode} with the value {@code 1} of type {@link #T}. */
    public final boolean isOne(Node n) {
       return one.equals(n);
+   }
+
+   /** Returns the value {@code 0} of type {@link #T}. */
+   public final T rawZero() { // TODO rename
+      return rawZero;
    }
 
    /** Returns a {@code ConstantNode} with the value {@code 0} of type {@link #T}. */

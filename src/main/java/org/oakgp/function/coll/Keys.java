@@ -22,12 +22,12 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import org.oakgp.Arguments;
-import org.oakgp.function.Function;
+import org.oakgp.function.MapperFunction;
 import org.oakgp.function.Signature;
 import org.oakgp.type.Types;
 import org.oakgp.type.Types.Type;
 
-public class Keys implements Function {
+public class Keys implements MapperFunction {
    private final Signature signature;
 
    public Keys() {

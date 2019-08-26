@@ -13,45 +13,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.oakgp.function.coll;
+package org.oakgp.function.math;
 
 import static org.oakgp.node.NodeType.isFunction;
-import static org.oakgp.type.CommonTypes.comparableType;
 import static org.oakgp.type.CommonTypes.listType;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import org.oakgp.Arguments;
 import org.oakgp.function.Function;
-import org.oakgp.function.MapperFunction;
 import org.oakgp.function.Signature;
+import org.oakgp.function.coll.Set;
+import org.oakgp.function.coll.Sort;
+import org.oakgp.function.coll.SortedSet;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
-import org.oakgp.type.Types;
-import org.oakgp.type.Types.Type;
 
-public class Sort implements MapperFunction {
-   private static final Sort SINGLETON = new Sort();
-
-   public static Sort getSingleton() {
-      return SINGLETON;
-   }
-
+public class Sum<T extends Comparable<T>> implements Function {
    private final Signature signature;
+   private final NumberUtils<T> numberUtils;
 
-   private Sort() {
-      Type type = Types.generic("ElementType", comparableType());
-      signature = Signature.createSignature(listType(type), listType(type));
+   /** @see NumberUtils#getSum() */
+   Sum(NumberUtils<T> numberUtils) {
+      this.signature = Signature.createSignature(numberUtils.getType(), listType(numberUtils.getType()));
+      this.numberUtils = numberUtils;
    }
 
    @Override
-   public Object evaluate(Arguments arguments) {
-      Collection<Comparable<?>> input = arguments.first();
-      List<Comparable<?>> output = new ArrayList<>(input);
-      output.sort(null);
-      return output;
+   public T evaluate(Arguments arguments) {
+      Collection<T> input = arguments.first();
+      T result = numberUtils.rawZero();
+      for (T i : input) {
+         result = numberUtils.add(result, i);
+      }
+      return result;
    }
 
    @Override
@@ -60,16 +55,16 @@ public class Sort implements MapperFunction {
    }
 
    @Override
-   public Node simplify(FunctionNode functionNode) { // TODO copied from Set
+   public Node simplify(FunctionNode functionNode) {
       Node n = functionNode.getChildren().first();
       if (isFunction(n)) {
          FunctionNode fn = (FunctionNode) n;
          Function f = fn.getFunction();
-         if (f == this || f == SortedSet.getSingleton()) {
-            return n;
+         if (f == Sort.getSingleton()) {
+            return new FunctionNode(functionNode, fn.getChildren());
          }
-         if (f == Set.getSingleton()) {
-            return new FunctionNode(SortedSet.getSingleton(), functionNode.getType(), fn.getChildren());
+         if (f == SortedSet.getSingleton()) {
+            return new FunctionNode(this, functionNode.getType(), new FunctionNode(Set.getSingleton(), fn.getType(), fn.getChildren()));
          }
       }
       return null;

@@ -38,7 +38,7 @@ import org.oakgp.function.choice.If;
 import org.oakgp.function.classify.IsNegative;
 import org.oakgp.function.classify.IsPositive;
 import org.oakgp.function.classify.IsZero;
-import org.oakgp.function.coll.Count;
+import org.oakgp.function.coll.CountList;
 import org.oakgp.function.compare.Equal;
 import org.oakgp.function.compare.GreaterThan;
 import org.oakgp.function.compare.GreaterThanOrEqual;
@@ -133,7 +133,7 @@ public class FitnessFunctionSystemTest {
       IsNegative isNegative = new IsNegative();
       IsZero isZero = new IsZero();
       Filter filter = new Filter();
-      Count count = new Count();
+      CountList count = new CountList();
       ConstantNode[] constants = { new ConstantNode(Boolean.TRUE, booleanType()), new ConstantNode(Boolean.FALSE, booleanType()),
             new ConstantNode(isPositive, integerToBooleanFunctionType()), new ConstantNode(isNegative, integerToBooleanFunctionType()),
             new ConstantNode(isZero, integerToBooleanFunctionType()), new ConstantNode(Collections.emptyList(), integerListType()),

@@ -15,10 +15,10 @@
  */
 package org.oakgp.function.coll;
 
+import static org.oakgp.TestUtils.asSet;
 import static org.oakgp.type.CommonTypes.integerType;
 import static org.oakgp.type.CommonTypes.listType;
 
-import java.util.Arrays;
 import java.util.Collections;
 
 import org.oakgp.function.AbstractFunctionTest;
@@ -26,27 +26,25 @@ import org.oakgp.node.ConstantNode;
 import org.oakgp.primitive.FunctionSet;
 import org.oakgp.util.FunctionSetBuilder;
 
-public class SortTest extends AbstractFunctionTest {
+public class SetTest extends AbstractFunctionTest {
    @Override
-   protected Sort getFunction() {
-      return Sort.getSingleton();
+   protected Set getFunction() {
+      return new Set();
    }
 
    @Override
    public void testEvaluate() {
       ConstantNode emptyList = new ConstantNode(Collections.emptyList(), listType(integerType()));
-      evaluate("(sort v0)").assigned(emptyList).to(Collections.emptyList());
-      evaluate("(sort [2 5 3 6 9 8 2 7])").to(Arrays.asList(2, 2, 3, 5, 6, 7, 8, 9));
-      evaluate("(sort [2 2 3 5 6 7 8 9])").to(Arrays.asList(2, 2, 3, 5, 6, 7, 8, 9));
+      evaluate("(set v0)").assigned(emptyList).to(asSet());
+      evaluate("(set [7])").to(asSet(7));
+      evaluate("(set [8 4 7])").to(asSet(8, 4, 7));
    }
 
    @Override
    public void testCanSimplify() {
-      simplify("(sort [7 8 6])").to("[6 7 8]");
-
-      simplify("(sort (sort v0))").with(listType(integerType())).to("(sort v0)");
-      simplify("(sort (sorted-set v0))").with(listType(integerType())).to("(sorted-set v0)");
-      simplify("(sort (set v0))").with(listType(integerType())).to("(sorted-set v0)");
+      simplify("(set (set v0))").with(listType(integerType())).to("(set v0)");
+      simplify("(set (sorted-set v0))").with(listType(integerType())).to("(sorted-set v0)");
+      simplify("(set (sort v0))").with(listType(integerType())).to("(sorted-set v0)");
    }
 
    @Override
@@ -55,7 +53,7 @@ public class SortTest extends AbstractFunctionTest {
 
    @Override
    protected FunctionSet getFunctionSet() {
-      return new FunctionSetBuilder().add(getFunction(), integerType()).add(SortedSet.getSingleton(), integerType()).add(Set.getSingleton(), integerType())
+      return new FunctionSetBuilder().add(getFunction(), integerType()).add(SortedSet.getSingleton(), integerType()).add(Sort.getSingleton(), integerType())
             .build();
    }
 }

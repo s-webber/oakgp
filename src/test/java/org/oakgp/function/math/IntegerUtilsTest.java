@@ -16,11 +16,30 @@
 package org.oakgp.function.math;
 
 import static org.junit.Assert.assertEquals;
+import static org.oakgp.type.CommonTypes.integerType;
 
 import org.junit.Test;
+import org.oakgp.node.ConstantNode;
 
-public class IntegerUtilsTest {
+public class IntegerUtilsTest { // TODO add more tests of IntegerUtils and other NumberUtils sub-classes
    private static final NumberUtils<Integer> UTILS = IntegerUtils.INTEGER_UTILS;
+
+   @Test
+   public void testType() {
+      assertEquals(integerType(), UTILS.getType());
+   }
+
+   @Test
+   public void testRawZero() {
+      assertEquals(Integer.valueOf(0), UTILS.rawZero());
+   }
+
+   @Test
+   public void testZero() {
+      ConstantNode zero = UTILS.zero();
+      assertEquals(Integer.valueOf(0), zero.evaluate(null));
+      assertEquals(integerType(), zero.getType());
+   }
 
    @Test
    public void testAddPrimitive() {

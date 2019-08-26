@@ -36,7 +36,7 @@ import org.oakgp.function.choice.If;
 import org.oakgp.function.classify.IsNegative;
 import org.oakgp.function.classify.IsPositive;
 import org.oakgp.function.classify.IsZero;
-import org.oakgp.function.coll.Count;
+import org.oakgp.function.coll.CountList;
 import org.oakgp.function.compare.Equal;
 import org.oakgp.function.compare.GreaterThan;
 import org.oakgp.function.compare.GreaterThanOrEqual;
@@ -82,7 +82,7 @@ public class FunctionSetTest {
 
    @Test
    public void testGetBySignature() {
-      Count count = new Count();
+      CountList count = new CountList();
       FunctionSet functionSet = new FunctionSetBuilder().add(ADD).add(SUBTRACT).add(count, integerType()).add(count, booleanType()).build();
 
       // sanity check we have added 4 functions with a return type of integer
@@ -163,7 +163,7 @@ public class FunctionSetTest {
    }
 
    private static FunctionSet createFunctionSet() {
-      Count count = new Count();
+      CountList count = new CountList();
       If ifFunction = new If();
       return new FunctionSetBuilder()
             // arithmetic

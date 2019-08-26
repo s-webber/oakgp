@@ -13,45 +13,45 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.oakgp.function.coll;
+package org.oakgp.function.classify;
 
 import static org.oakgp.node.NodeType.isFunction;
+import static org.oakgp.type.CommonTypes.booleanType;
 import static org.oakgp.type.CommonTypes.comparableType;
 import static org.oakgp.type.CommonTypes.listType;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.HashSet;
 
 import org.oakgp.Arguments;
 import org.oakgp.function.Function;
-import org.oakgp.function.MapperFunction;
 import org.oakgp.function.Signature;
+import org.oakgp.function.coll.Set;
+import org.oakgp.function.coll.SortedSet;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.type.Types;
 import org.oakgp.type.Types.Type;
+import org.oakgp.util.Utils;
 
-public class Sort implements MapperFunction {
-   private static final Sort SINGLETON = new Sort();
-
-   public static Sort getSingleton() {
-      return SINGLETON;
-   }
-
+public class IsDistinct implements Function { // TODO what is the correct package for this?
    private final Signature signature;
 
-   private Sort() {
+   public IsDistinct() {
       Type type = Types.generic("ElementType", comparableType());
-      signature = Signature.createSignature(listType(type), listType(type));
+      signature = Signature.createSignature(booleanType(), listType(type));
    }
 
    @Override
    public Object evaluate(Arguments arguments) {
-      Collection<Comparable<?>> input = arguments.first();
-      List<Comparable<?>> output = new ArrayList<>(input);
-      output.sort(null);
-      return output;
+      Collection<Object> input = arguments.first();
+      HashSet<Object> previous = new HashSet<>();
+      for (Object e : input) {
+         if (!previous.add(e)) {
+            return false;
+         }
+      }
+      return true;
    }
 
    @Override
@@ -60,16 +60,13 @@ public class Sort implements MapperFunction {
    }
 
    @Override
-   public Node simplify(FunctionNode functionNode) { // TODO copied from Set
+   public Node simplify(FunctionNode functionNode) { // TODO copied from Sort
       Node n = functionNode.getChildren().first();
       if (isFunction(n)) {
          FunctionNode fn = (FunctionNode) n;
          Function f = fn.getFunction();
-         if (f == this || f == SortedSet.getSingleton()) {
-            return n;
-         }
-         if (f == Set.getSingleton()) {
-            return new FunctionNode(SortedSet.getSingleton(), functionNode.getType(), fn.getChildren());
+         if (f == Set.getSingleton() || f == SortedSet.getSingleton()) {
+            return Utils.TRUE_NODE;
          }
       }
       return null;

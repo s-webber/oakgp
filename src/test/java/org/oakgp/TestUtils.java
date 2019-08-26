@@ -35,7 +35,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
@@ -46,7 +46,7 @@ import org.oakgp.function.choice.OrElse;
 import org.oakgp.function.classify.IsNegative;
 import org.oakgp.function.classify.IsPositive;
 import org.oakgp.function.classify.IsZero;
-import org.oakgp.function.coll.Count;
+import org.oakgp.function.coll.CountList;
 import org.oakgp.function.compare.Equal;
 import org.oakgp.function.compare.GreaterThan;
 import org.oakgp.function.compare.GreaterThanOrEqual;
@@ -145,7 +145,7 @@ public class TestUtils {
       builder.add(new IsNegative());
       builder.add(new IsZero());
 
-      Count count = new Count();
+      CountList count = new CountList();
       builder.add(count, integerType());
       builder.add(count, booleanType());
 
@@ -213,7 +213,7 @@ public class TestUtils {
 
    @SafeVarargs
    public static <T> Set<T> asSet(T... values) { // TODO unit test
-      Set<T> result = new HashSet<>(Arrays.asList(values));
+      Set<T> result = new LinkedHashSet<>(Arrays.asList(values));
       if (result.size() != values.length) {
          throw new RuntimeException();
       }

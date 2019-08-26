@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 S. Webber
+ * Copyright 2019 S. Webber
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,38 +13,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.oakgp.function.hof;
+package org.oakgp.function.compare;
 
-import static java.util.Arrays.asList;
 import static org.oakgp.type.CommonTypes.integerType;
+import static org.oakgp.type.CommonTypes.stringType;
 
 import org.oakgp.function.AbstractFunctionTest;
-import org.oakgp.function.classify.IsNegative;
-import org.oakgp.function.classify.IsPositive;
-import org.oakgp.function.classify.IsZero;
 import org.oakgp.primitive.FunctionSet;
 import org.oakgp.util.FunctionSetBuilder;
 
-public class FilterTest extends AbstractFunctionTest {
+public class MaxTest extends AbstractFunctionTest {
    @Override
-   protected Filter getFunction() {
-      return new Filter();
+   protected Max getFunction() {
+      return new Max();
    }
 
    @Override
    public void testEvaluate() {
-      evaluate("(filter pos? [2 -12 8 -3 -7 6])").to(asList(2, 8, 6));
-      evaluate("(filter neg? [2 -12 8 -3 -7 6])").to(asList(-12, -3, -7));
-      evaluate("(filter zero? [2 -12 8 -3 -7 6])").to(asList());
+      evaluate("(max 7 8)").to(8);
+      evaluate("(max 8 8)").to(8);
+      evaluate("(max 9 8)").to(9);
+
+      evaluate("(max \"dog\" \"zebra\")").to("zebra");
+      evaluate("(max \"dog\" \"dog\")").to("dog");
+      evaluate("(max \"dog\" \"apple\")").to("dog");
    }
 
    @Override
    public void testCanSimplify() {
-      simplify("(filter pos? [2 -12 8])").to("[2 8]");
+      simplify("(max v0 v0)").to("v0");
 
-      // TODO (filter pos? (sort v0)) -> (sort (filter pos? v0))
-      // TODO (filter pos? (set v0)) -> (set (filter pos? v0))
-      // TODO (filter pos? (sorted-set v0)) -> (sorted-set (filter pos? v0))
+      // TODO (max v1 v0) -> (max v0 v1)
+      // TODO (max v0 (max 9 v0)) -> (max v0 9)
+      // TODO (max v0 (max v1 v2)) -> (max [v0 v1 v2])
    }
 
    @Override
@@ -53,6 +54,7 @@ public class FilterTest extends AbstractFunctionTest {
 
    @Override
    protected FunctionSet getFunctionSet() {
-      return new FunctionSetBuilder().add(getFunction(), integerType()).add(new IsPositive()).add(new IsNegative()).add(new IsZero()).build();
+      Max function = getFunction();
+      return new FunctionSetBuilder().add(function, integerType()).add(function, stringType()).build();
    }
 }

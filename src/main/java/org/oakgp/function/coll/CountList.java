@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 S. Webber
+ * Copyright 2019 S. Webber
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,16 +22,20 @@ import java.util.Collection;
 
 import org.oakgp.Arguments;
 import org.oakgp.function.Function;
+import org.oakgp.function.MapperFunction;
 import org.oakgp.function.Signature;
+import org.oakgp.node.ChildNodes;
+import org.oakgp.node.FunctionNode;
+import org.oakgp.node.Node;
 import org.oakgp.type.Types;
 import org.oakgp.type.Types.Type;
 
 /** Determines the number of elements contained in a collection. */
-public final class Count implements Function {
+public final class CountList implements Function {
    private final Signature signature;
 
    /** Constructs a function to return the number of items in collections of the specified type. */
-   public Count() {
+   public CountList() {
       Type type = Types.generic("ElementType");
       signature = Signature.createSignature(integerType(), listType(type));
    }
@@ -45,5 +49,28 @@ public final class Count implements Function {
    @Override
    public Signature getSignature() {
       return signature;
+   }
+
+   @Override
+   public Node simplify(FunctionNode functionNode) {
+      Node child = functionNode.getChildren().first();
+      if (child instanceof FunctionNode) {
+         FunctionNode fn = (FunctionNode) child;
+         if (fn.getFunction() instanceof MapperFunction) {
+            ChildNodes cn = fn.getChildren();
+            Node node = cn.getNode(cn.size() - 1);
+            if (node.getType().getName().equals("Map")) { // TODO
+               return new FunctionNode(CountMap.getSingleton(), integerType(), ChildNodes.createChildNodes(node));
+            } else {
+               return new FunctionNode(functionNode, ChildNodes.createChildNodes(node));
+            }
+         }
+      }
+      return null;
+   }
+
+   @Override
+   public String getDisplayName() {
+      return "count";
    }
 }

@@ -37,5 +37,4 @@ public final class LessThanOrEqual extends ComparisonOperator {
    public String getDisplayName() {
       return "<=";
    }
-
 }

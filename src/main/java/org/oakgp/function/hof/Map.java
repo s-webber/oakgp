@@ -26,6 +26,7 @@ import java.util.List;
 import org.oakgp.Arguments;
 import org.oakgp.function.Function;
 import org.oakgp.function.HigherOrderFunctionArguments;
+import org.oakgp.function.MapperFunction;
 import org.oakgp.function.Signature;
 import org.oakgp.type.Types;
 import org.oakgp.type.Types.Type;
@@ -38,7 +39,7 @@ import org.oakgp.type.Types.Type;
  *
  * @see <a href="http://en.wikipedia.org/wiki/Map_(higher-order_function)">Wikipedia</a>
  */
-public final class Map implements Function { // TODO rename to transform
+public final class Map implements MapperFunction { // TODO rename to transform
    private final Signature signature;
 
    /**
