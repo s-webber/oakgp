@@ -133,7 +133,6 @@ public final class NodeSimplifier {
       }
 
       // try to simplify using function specific logic
-      // TODO avoid creating function node
       Node simplifiedByFunctionVersion = input.getFunction().simplify(output);
       if (simplifiedByFunctionVersion == null) {
          return output;

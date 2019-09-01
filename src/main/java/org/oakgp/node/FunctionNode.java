@@ -144,6 +144,9 @@ public final class FunctionNode implements Node {
          FunctionNode fn = (FunctionNode) o;
          // NOTE if we often return false here then that indicates hashCode() could be improved
          // TODO replace "this.function.getClass() == fn.function.getClass()" with "this.function == fn.function"
+         // if (this.function != fn.function && this.function.getClass() == fn.function.getClass()) {
+         // throw new RuntimeException(function + " " + function.getClass());
+         // }
          return this.function == fn.function && this.arguments.equals(fn.arguments);
       } else {
          return false;

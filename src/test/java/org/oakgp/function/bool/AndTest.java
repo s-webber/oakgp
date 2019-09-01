@@ -1,0 +1,73 @@
+/*
+ * Copyright 2019 S. Webber
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.oakgp.function.bool;
+
+import static org.oakgp.type.CommonTypes.booleanType;
+
+import org.oakgp.function.AbstractFunctionTest;
+import org.oakgp.primitive.FunctionSet;
+import org.oakgp.type.Types.Type;
+import org.oakgp.util.FunctionSetBuilder;
+
+public class AndTest extends AbstractFunctionTest {
+   @Override
+   protected And getFunction() {
+      return new And();
+   }
+
+   @Override
+   public void testEvaluate() {
+      evaluate("(and true true)").to(true);
+      evaluate("(and true false)").to(false);
+      evaluate("(and false true)").to(false);
+      evaluate("(and false false)").to(false);
+
+      evaluate("(and true (and true true))").to(true);
+      evaluate("(and true (and true false))").to(false);
+      evaluate("(and true (and false true))").to(false);
+      evaluate("(and false (and true true))").to(false);
+      evaluate("(and true (and false false))").to(false);
+      evaluate("(and false (and false true))").to(false);
+      evaluate("(and false (and true false))").to(false);
+      evaluate("(and false (and false false))").to(false);
+   }
+
+   @Override
+   public void testCanSimplify() {
+      simplify("(and true v0)").with(booleanType()).to("v0");
+      simplify("(and v0 true)").with(booleanType()).to("v0");
+
+      simplify("(and false v0)").with(booleanType()).to("false");
+      simplify("(and v0 false)").with(booleanType()).to("false");
+
+      simplify("(and v0 v0)").with(booleanType()).to("v0");
+
+      Type[] types = { booleanType(), booleanType(), booleanType(), booleanType() };
+      simplify("(and v0 (and v1 (and v2 v3)))").with(types).to("(and v3 (and v2 (and v1 v0)))");
+      simplify("(and v3 (and v2 (and v1 v0)))").with(types).to("(and v3 (and v2 (and v1 v0)))");
+      simplify("(and v1 (and v0 (and v3 v2)))").with(types).to("(and v3 (and v2 (and v1 v0)))");
+      simplify("(and (and v1 v0) (and v3 v2)))").with(types).to("(and v3 (and v2 (and v1 v0)))");
+   }
+
+   @Override
+   public void testCannotSimplify() {
+   }
+
+   @Override
+   protected FunctionSet getFunctionSet() {
+      return new FunctionSetBuilder().add(getFunction()).build();
+   }
+}

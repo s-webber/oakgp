@@ -41,7 +41,7 @@ public final class CountMap implements Function {
    private final Signature signature;
 
    /** Constructs a function to return the number of items in collections of the specified type. */
-   public CountMap() {
+   private CountMap() {
       Type key = Types.generic("Key");
       Type value = Types.generic("Value");
       signature = Signature.createSignature(integerType(), mapType(key, value));

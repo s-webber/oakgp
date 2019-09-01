@@ -16,12 +16,16 @@
 package org.oakgp.function.hof;
 
 import static java.util.Arrays.asList;
+import static org.oakgp.type.CommonTypes.integerListType;
 import static org.oakgp.type.CommonTypes.integerType;
 
 import org.oakgp.function.AbstractFunctionTest;
 import org.oakgp.function.classify.IsNegative;
 import org.oakgp.function.classify.IsPositive;
 import org.oakgp.function.classify.IsZero;
+import org.oakgp.function.coll.Set;
+import org.oakgp.function.coll.Sort;
+import org.oakgp.function.coll.SortedSet;
 import org.oakgp.primitive.FunctionSet;
 import org.oakgp.util.FunctionSetBuilder;
 
@@ -42,17 +46,26 @@ public class FilterTest extends AbstractFunctionTest {
    public void testCanSimplify() {
       simplify("(filter pos? [2 -12 8])").to("[2 8]");
 
-      // TODO (filter pos? (sort v0)) -> (sort (filter pos? v0))
-      // TODO (filter pos? (set v0)) -> (set (filter pos? v0))
-      // TODO (filter pos? (sorted-set v0)) -> (sorted-set (filter pos? v0))
+      simplify("(filter pos? (sort v0))").with(integerListType()).to("(sort (filter pos? v0))");
+      simplify("(filter pos? (set v0))").with(integerListType()).to("(set (filter pos? v0))");
+      simplify("(filter pos? (sorted-set v0))").with(integerListType()).to("(sorted-set (filter pos? v0))");
+      simplify("(filter pos? (sort (set v0)))").with(integerListType()).to("(sorted-set (filter pos? v0))");
+      simplify("(filter pos? (set (sort v0)))").with(integerListType()).to("(sorted-set (filter pos? v0))");
+
+      simplify("(filter pos? (filter pos? v0))").with(integerListType()).to("(filter pos? v0)");
+      simplify("(filter pos? (filter zero? v0))").with(integerListType()).to("(filter zero? (filter pos? v0))");
+      simplify("(filter pos? (filter zero? (filter pos? v0)))").with(integerListType()).to("(filter zero? (filter pos? v0))");
+      simplify("(filter pos? (filter zero? (filter pos? (filter zero? v0))))").with(integerListType()).to("(filter zero? (filter pos? v0))");
    }
 
    @Override
    public void testCannotSimplify() {
+      cannotSimplify("(filter zero? (filter pos? v0))", integerListType());
    }
 
    @Override
    protected FunctionSet getFunctionSet() {
-      return new FunctionSetBuilder().add(getFunction(), integerType()).add(new IsPositive()).add(new IsNegative()).add(new IsZero()).build();
+      return new FunctionSetBuilder().add(getFunction(), integerType()).add(new IsPositive()).add(new IsNegative()).add(new IsZero())
+            .add(Set.getSingleton(), integerType()).add(Sort.getSingleton(), integerType()).add(SortedSet.getSingleton(), integerType()).build();
    }
 }

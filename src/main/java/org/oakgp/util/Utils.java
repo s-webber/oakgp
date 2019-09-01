@@ -19,17 +19,23 @@ import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.util.Collections.unmodifiableList;
 import static java.util.stream.Collectors.groupingBy;
+import static org.oakgp.node.NodeType.isFunction;
 import static org.oakgp.type.CommonTypes.booleanType;
 import static org.oakgp.type.CommonTypes.integerType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeSet;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
+import org.oakgp.node.ChildNodes;
 import org.oakgp.node.ConstantNode;
+import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.type.Types.Type;
 
@@ -79,7 +85,7 @@ public final class Utils {
    }
 
    /** Creates an array of the specified size and assigns the result of {@link Type#integerType()} to each element. */
-   public static Type[] createIntegerTypeArray(int size) {
+   public static Type[] createIntegerTypeArray(int size) { // TODO move to TestUtils
       Type[] array = new Type[size];
       Type type = integerType();
       Arrays.fill(array, type);
@@ -148,5 +154,40 @@ public final class Utils {
    /** Returns a copy of the specified array. */
    public static <T> T[] copyOf(T[] original) {
       return Arrays.copyOf(original, original.length);
+   }
+
+   // TODO this is tested via MinTest and MaxTest - add unit-tests to UtilsTest
+   public static Node toOrderedNode(FunctionNode input) {
+      Iterator<Node> itr = Utils.toOrderedList(input).iterator();
+      Node result = itr.next();
+      while (itr.hasNext()) {
+         result = new FunctionNode(input, ChildNodes.createChildNodes(itr.next(), result));
+      }
+
+      return result.equals(input) ? null : result;
+   }
+
+   private static Collection<Node> toOrderedList(FunctionNode input) {
+      Collection<Node> result = new TreeSet<>(NodeComparator.NODE_COMPARATOR);
+
+      org.oakgp.function.Function function = input.getFunction();
+      List<Node> queue = new ArrayList<>();
+      addChildrenToList(queue, input);
+      do {
+         Node next = queue.remove(queue.size() - 1);
+         if (isFunction(next) && ((FunctionNode) next).getFunction() == function) {
+            addChildrenToList(queue, (FunctionNode) next);
+         } else {
+            result.add(next);
+         }
+      } while (!queue.isEmpty());
+
+      return result;
+   }
+
+   private static void addChildrenToList(List<Node> queue, FunctionNode input) {
+      for (int i = 0; i < input.getChildren().size(); i++) {
+         queue.add(input.getChildren().getNode(i));
+      }
    }
 }

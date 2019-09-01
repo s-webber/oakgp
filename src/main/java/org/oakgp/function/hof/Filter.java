@@ -16,6 +16,7 @@
 package org.oakgp.function.hof;
 
 import static java.util.Collections.unmodifiableList;
+import static org.oakgp.node.NodeType.isFunction;
 import static org.oakgp.type.CommonTypes.booleanType;
 import static org.oakgp.type.CommonTypes.functionType;
 import static org.oakgp.type.CommonTypes.listType;
@@ -28,6 +29,12 @@ import org.oakgp.Arguments;
 import org.oakgp.function.Function;
 import org.oakgp.function.HigherOrderFunctionArguments;
 import org.oakgp.function.Signature;
+import org.oakgp.function.coll.Set;
+import org.oakgp.function.coll.Sort;
+import org.oakgp.function.coll.SortedSet;
+import org.oakgp.node.ChildNodes;
+import org.oakgp.node.FunctionNode;
+import org.oakgp.node.Node;
 import org.oakgp.type.Types;
 import org.oakgp.type.Types.Type;
 
@@ -64,6 +71,30 @@ public final class Filter implements Function {
          }
       }
       return unmodifiableList(result);
+   }
+
+   @Override
+   public Node simplify(FunctionNode functionNode) {
+      ChildNodes children = functionNode.getChildren();
+      Node input = children.second();
+      if (isFunction(input)) {
+         FunctionNode fn = (FunctionNode) input;
+         Function f = fn.getFunction();
+         if (f.getClass() == Filter.class) { // TODO use if (f==this)
+            if (fn.getChildren().first().equals(functionNode.getChildren().first())) {
+               return fn;
+            }
+            // TODO don't do toString for compare
+            if (fn.getChildren().first().toString().compareTo(functionNode.getChildren().first().toString()) > 0) {
+               FunctionNode newFilterNode = new FunctionNode(functionNode, children.replaceAt(1, fn.getChildren().second()));
+               return new FunctionNode(fn, fn.getChildren().replaceAt(1, newFilterNode));
+            }
+         } else if (f == Sort.getSingleton() || f == Set.getSingleton() || f == SortedSet.getSingleton()) {
+            FunctionNode newFilterNode = new FunctionNode(functionNode, children.replaceAt(1, fn.getChildren().first()));
+            return new FunctionNode(f, fn.getType(), ChildNodes.createChildNodes(newFilterNode));
+         }
+      }
+      return null;
    }
 
    @Override

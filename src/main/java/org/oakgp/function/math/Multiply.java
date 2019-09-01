@@ -78,8 +78,10 @@ final class Multiply<T extends Comparable<T>> extends ArithmeticOperator<T> {
             Node fnArg2 = args.second();
             if (isConstant(fnArg1)) {
                if (numberUtils.isAddOrSubtract(f)) {
+                  // (* 2 (+ 3 v0)) -> (+ 9 (* 2 v0))
                   return new FunctionNode(f, returnType, numberUtils.multiply(arg1, fnArg1), new FunctionNode(this, returnType, arg1, fnArg2));
                } else if (numberUtils.isMultiply(f)) {
+                  // (* 2 (* 3 v0)) -> (* 9 v0))
                   return new FunctionNode(this, returnType, numberUtils.multiply(arg1, fnArg1), fnArg2);
                } else if (numberUtils.isDivide(f)) {
                   return null;
@@ -88,6 +90,7 @@ final class Multiply<T extends Comparable<T>> extends ArithmeticOperator<T> {
                   throw new IllegalArgumentException();
                }
             } else if (numberUtils.isAddOrSubtract(f)) {
+               // (* 2 (+ v0 v1)) -> (+ (* 2 v0) (* 2 v1))
                return new FunctionNode(f, returnType, new FunctionNode(this, returnType, arg1, fnArg1), new FunctionNode(this, returnType, arg1, fnArg2));
             }
          }

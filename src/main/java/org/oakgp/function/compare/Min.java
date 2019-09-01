@@ -20,11 +20,11 @@ import static org.oakgp.type.CommonTypes.comparableType;
 import org.oakgp.Arguments;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
-import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.type.Types;
 import org.oakgp.type.Types.Type;
+import org.oakgp.util.Utils;
 
 public class Min implements Function {
    private final Signature signature;
@@ -48,13 +48,6 @@ public class Min implements Function {
 
    @Override
    public Node simplify(FunctionNode functionNode) {
-      ChildNodes children = functionNode.getChildren();
-      Node first = children.first();
-      Node second = children.second();
-      if (first.equals(second)) {
-         return first;
-      } else {
-         return null;
-      }
+      return Utils.toOrderedNode(functionNode);
    }
 }

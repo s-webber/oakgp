@@ -78,4 +78,13 @@ public class VariableSetTest {
       List<VariableNode> integers = s.getByType(integerType());
       assertUnmodifiable(integers);
    }
+
+   @Test
+   public void assertSize() {
+      assertEquals(0, VariableSet.createVariableSet().size());
+      assertEquals(1, VariableSet.createVariableSet(integerType()).size());
+      assertEquals(2, VariableSet.createVariableSet(integerType(), integerType()).size());
+      assertEquals(2, VariableSet.createVariableSet(integerType(), booleanType()).size());
+      assertEquals(3, VariableSet.createVariableSet(integerType(), booleanType(), integerType()).size());
+   }
 }

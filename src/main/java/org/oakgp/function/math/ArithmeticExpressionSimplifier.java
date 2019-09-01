@@ -111,6 +111,7 @@ final class ArithmeticExpressionSimplifier {
             }
          }
 
+         // TODO is this logic still required or is it provided by Add and Subtract?
          boolean isSubtract = numberUtils.isSubtract(f);
          if (numberUtils.isAdd(f) || isSubtract) {
             NodePair p = removeFromChildNodes(firstArg, nodeToRemove, isPos);

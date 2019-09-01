@@ -42,10 +42,16 @@ public class MinTest extends AbstractFunctionTest {
    @Override
    public void testCanSimplify() {
       simplify("(min v0 v0)").to("v0");
+      simplify("(min 1 v0)").to("(min v0 1)");
+      simplify("(min v0 (min 1 (min 7 (min 1 v0))))").to("(min v0 1)");
+      simplify("(min (min v0 1) (min 7 (min 1 v0))))").to("(min v0 1)");
+      simplify("(min (min v0 (min 1 7)) (min 1 v0))").to("(min v0 1)");
+      simplify("(min (min v0 v1) (min v2 (min v3 v4)))").to("(min v4 (min v3 (min v2 (min v1 v0))))");
    }
 
    @Override
    public void testCannotSimplify() {
+      cannotSimplify("(min v0 1)", integerType());
    }
 
    @Override

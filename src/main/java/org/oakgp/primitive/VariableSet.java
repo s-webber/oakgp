@@ -56,4 +56,8 @@ public final class VariableSet {
    public VariableNode getById(int id) {
       return variables[id];
    }
+
+   public int size() {
+      return variables.length;
+   }
 }
