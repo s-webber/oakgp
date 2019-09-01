@@ -21,6 +21,7 @@ import java.util.Collection;
 
 import org.junit.Test;
 import org.oakgp.Assignments;
+import org.oakgp.function.bool.And;
 import org.oakgp.function.choice.If;
 import org.oakgp.function.choice.OrElse;
 import org.oakgp.node.ConstantNode;
