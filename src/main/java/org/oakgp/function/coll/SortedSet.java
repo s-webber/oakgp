@@ -25,10 +25,12 @@ import java.util.TreeSet;
 import org.oakgp.Arguments;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
+import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.type.Types;
 import org.oakgp.type.Types.Type;
+import org.oakgp.util.Utils;
 
 public class SortedSet implements Function {
    private static final SortedSet SINGLETON = new SortedSet();
@@ -62,10 +64,17 @@ public class SortedSet implements Function {
          FunctionNode fn = (FunctionNode) n;
          Function f = fn.getFunction();
          if (f == this) {
+            // (sorted-set (sorted-set v0)) -> (sorted-set v0)
             return n;
-         }
-         if (f == Set.getSingleton() || f == Sort.getSingleton()) {
+         } else if (f == Set.getSingleton() || f == Sort.getSingleton()) {
+            // (sorted-set (set v0)) -> (sorted-set v0)
+            // (sorted-set (sort v0)) -> (sorted-set v0)
             return new FunctionNode(functionNode, fn.getChildren());
+         } else {
+            Node x = Utils.recursivelyRemoveSort(n);
+            if (x != n) {
+               return new FunctionNode(functionNode, ChildNodes.createChildNodes(x));
+            }
          }
       }
       return null;

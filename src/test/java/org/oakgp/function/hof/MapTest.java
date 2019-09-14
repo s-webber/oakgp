@@ -18,13 +18,21 @@ package org.oakgp.function.hof;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertTrue;
 import static org.oakgp.type.CommonTypes.booleanType;
+import static org.oakgp.type.CommonTypes.doubleType;
+import static org.oakgp.type.CommonTypes.integerListType;
 import static org.oakgp.type.CommonTypes.integerType;
+import static org.oakgp.type.CommonTypes.listType;
 
 import org.junit.Test;
 import org.oakgp.function.AbstractFunctionTest;
+import org.oakgp.function.classify.IsFalse;
 import org.oakgp.function.classify.IsNegative;
 import org.oakgp.function.classify.IsPositive;
 import org.oakgp.function.classify.IsZero;
+import org.oakgp.function.coll.Set;
+import org.oakgp.function.coll.Sort;
+import org.oakgp.function.coll.SortedSet;
+import org.oakgp.function.math.Logarithm;
 import org.oakgp.primitive.FunctionSet;
 import org.oakgp.util.FunctionSetBuilder;
 
@@ -44,15 +52,30 @@ public class MapTest extends AbstractFunctionTest {
    @Override
    public void testCanSimplify() {
       simplify("(map pos? [2 -12 8])").to("[true false true]");
+
+      simplify("(map log (sort (map log (sort v0))))").with(listType(doubleType())).to("(map log (sort (map log v0)))");
+      simplify("(map log (sort (map log (sorted-set v0))))").with(listType(doubleType())).to("(map log (sort (map log (set v0))))");
+      simplify("(map false? (sorted-set (map pos? (sorted-set v0))))").with(integerListType()).to("(map false? (sorted-set (map pos? (set v0))))");
    }
 
    @Override
    public void testCannotSimplify() {
+      cannotSimplify("(map pos? (set v0))", integerListType());
+      cannotSimplify("(map false? (map pos? (set v0)))", integerListType());
+      cannotSimplify("(map false? (set (map pos? (set v0))))", integerListType());
+      cannotSimplify("(map pos? (sorted-set v0))", integerListType());
+      cannotSimplify("(map false? (set (map pos? (sorted-set v0))))", integerListType());
+      cannotSimplify("(map false? (sorted-set (map pos? (set v0))))", integerListType());
    }
 
    @Override
    protected FunctionSet getFunctionSet() {
-      return new FunctionSetBuilder().add(getFunction(), booleanType(), integerType()).add(new IsPositive()).add(new IsNegative()).add(new IsZero()).build();
+      return new FunctionSetBuilder().add(getFunction(), booleanType(), integerType()).add(getFunction(), booleanType(), booleanType()).add(new IsFalse())
+            .add(getFunction(), doubleType(), doubleType()).add(new IsFalse()).add(new IsPositive()).add(new IsNegative()).add(new IsZero())
+            .add(Sort.getSingleton(), integerType()).add(Sort.getSingleton(), booleanType()).add(Set.getSingleton(), integerType())
+            .add(Set.getSingleton(), booleanType()).add(SortedSet.getSingleton(), booleanType()).add(SortedSet.getSingleton(), integerType())
+            .add(new Logarithm()).add(Sort.getSingleton(), doubleType()).add(Set.getSingleton(), doubleType()).add(SortedSet.getSingleton(), doubleType())
+            .add(Set.getSingleton(), integerType()).build();
    }
 
    @Test

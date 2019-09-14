@@ -52,6 +52,10 @@ public class FilterTest extends AbstractFunctionTest {
       simplify("(filter pos? (sort (set v0)))").with(integerListType()).to("(sorted-set (filter pos? v0))");
       simplify("(filter pos? (set (sort v0)))").with(integerListType()).to("(sorted-set (filter pos? v0))");
 
+      simplify("(filter zero? (filter pos? (set v0)))").with(integerListType()).to("(set (filter zero? (filter pos? v0)))");
+      simplify("(filter zero? (filter pos? (sort v0)))").with(integerListType()).to("(sort (filter zero? (filter pos? v0)))");
+      simplify("(filter zero? (filter pos? (sorted-set v0)))").with(integerListType()).to("(sorted-set (filter zero? (filter pos? v0)))");
+
       simplify("(filter pos? (filter pos? v0))").with(integerListType()).to("(filter pos? v0)");
       simplify("(filter pos? (filter zero? v0))").with(integerListType()).to("(filter zero? (filter pos? v0))");
       simplify("(filter pos? (filter zero? (filter pos? v0)))").with(integerListType()).to("(filter zero? (filter pos? v0))");

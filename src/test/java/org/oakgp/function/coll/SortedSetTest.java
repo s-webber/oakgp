@@ -16,12 +16,15 @@
 package org.oakgp.function.coll;
 
 import static org.oakgp.TestUtils.asSet;
+import static org.oakgp.type.CommonTypes.doubleType;
 import static org.oakgp.type.CommonTypes.integerType;
 import static org.oakgp.type.CommonTypes.listType;
 
 import java.util.Collections;
 
 import org.oakgp.function.AbstractFunctionTest;
+import org.oakgp.function.hof.Map;
+import org.oakgp.function.math.Logarithm;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.primitive.FunctionSet;
 import org.oakgp.util.FunctionSetBuilder;
@@ -47,6 +50,16 @@ public class SortedSetTest extends AbstractFunctionTest {
       simplify("(sorted-set (sorted-set v0))").with(listType(integerType())).to("(sorted-set v0)");
       simplify("(sorted-set (set v0))").with(listType(integerType())).to("(sorted-set v0)");
       simplify("(sorted-set (sort v0))").with(listType(integerType())).to("(sorted-set v0)");
+
+      simplify("(sorted-set (map log (sort v0)))").with(listType(doubleType())).to("(sorted-set (map log v0))");
+      simplify("(sorted-set (map log (sorted-set v0)))").with(listType(doubleType())).to("(sorted-set (map log (set v0)))");
+
+      simplify("(sorted-set (map log (sort (map log (sort v0)))))").with(listType(doubleType())).to("(sorted-set (map log (map log v0)))");
+      simplify("(sorted-set (map log (sorted-set (map log (sorted-set v0)))))").with(listType(doubleType()))
+            .to("(sorted-set (map log (set (map log (set v0)))))");
+
+      simplify("(sorted-set (map log (sort (map log v0))))").with(listType(doubleType())).to("(sorted-set (map log (map log v0)))");
+      simplify("(sorted-set (map log (sorted-set (map log v0))))").with(listType(doubleType())).to("(sorted-set (map log (set (map log v0))))");
    }
 
    @Override
@@ -55,6 +68,8 @@ public class SortedSetTest extends AbstractFunctionTest {
 
    @Override
    protected FunctionSet getFunctionSet() {
-      return new FunctionSetBuilder().add(getFunction(), integerType()).add(Set.getSingleton(), integerType()).add(Sort.getSingleton(), integerType()).build();
+      return new FunctionSetBuilder().add(getFunction(), integerType()).add(Set.getSingleton(), integerType()).add(Sort.getSingleton(), integerType())
+            .add(SortedSet.getSingleton(), doubleType()).add(Set.getSingleton(), doubleType()).add(Sort.getSingleton(), doubleType())
+            .add(new Map(), doubleType(), doubleType()).add(new Logarithm()).build();
    }
 }

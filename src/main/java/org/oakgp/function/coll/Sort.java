@@ -27,10 +27,12 @@ import org.oakgp.Arguments;
 import org.oakgp.function.Function;
 import org.oakgp.function.MapperFunction;
 import org.oakgp.function.Signature;
+import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.type.Types;
 import org.oakgp.type.Types.Type;
+import org.oakgp.util.Utils;
 
 public class Sort implements MapperFunction {
    private static final Sort SINGLETON = new Sort();
@@ -66,10 +68,17 @@ public class Sort implements MapperFunction {
          FunctionNode fn = (FunctionNode) n;
          Function f = fn.getFunction();
          if (f == this || f == SortedSet.getSingleton()) {
+            // (sort (sort v0)) -> (sort v0)
+            // (sort (sorted-set v0)) -> (sorted-set v0)
             return n;
-         }
-         if (f == Set.getSingleton()) {
+         } else if (f == Set.getSingleton()) {
+            // (sort (set v0)) -> (sorted-set v0)
             return new FunctionNode(SortedSet.getSingleton(), functionNode.getType(), fn.getChildren());
+         } else {
+            Node x = Utils.recursivelyRemoveSort(n);
+            if (x != n) {
+               return new FunctionNode(functionNode, ChildNodes.createChildNodes(x));
+            }
          }
       }
       return null;

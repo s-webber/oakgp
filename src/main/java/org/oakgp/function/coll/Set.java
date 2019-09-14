@@ -62,9 +62,11 @@ public class Set implements Function {
          FunctionNode fn = (FunctionNode) n;
          Function f = fn.getFunction();
          if (f == this || f == SortedSet.getSingleton()) {
+            // (set (set v0)) -> (set v0)
+            // (set (sorted-set v0)) -> (sorted-set v0)
             return n;
-         }
-         if (f == Sort.getSingleton()) {
+         } else if (f == Sort.getSingleton()) {
+            // (set (sort v0)) -> (sorted-set v0)
             return new FunctionNode(SortedSet.getSingleton(), functionNode.getType(), fn.getChildren());
          }
       }

@@ -33,6 +33,9 @@ import java.util.TreeSet;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
+import org.oakgp.function.coll.Set;
+import org.oakgp.function.coll.Sort;
+import org.oakgp.function.coll.SortedSet;
 import org.oakgp.node.ChildNodes;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
@@ -189,5 +192,37 @@ public final class Utils {
       for (int i = 0; i < input.getChildren().size(); i++) {
          queue.add(input.getChildren().getNode(i));
       }
+   }
+
+   // TODO this is tested via Sort, SortedSet and Sum - add unit-tests to UtilsTest
+   public static Node recursivelyRemoveSort(Node n) {
+      if (isFunction(n)) {
+         FunctionNode fn = (FunctionNode) n;
+         org.oakgp.function.Function f = fn.getFunction();
+         if (f.getClass() == org.oakgp.function.hof.Map.class) { // TODO
+            // (map f (sort v0)) -> (map f v0)
+            // (map f (sorted-set v0)) -> (map f (set v0))
+            Node input = fn.getChildren().second();
+            Node newInput = recursivelyRemoveSort(input);
+            if (newInput != input) {
+               return new FunctionNode(fn, fn.getChildren().replaceAt(1, newInput));
+            }
+         } else if (f == SortedSet.getSingleton()) {
+            // (sorted-set v0) -> (set v0)
+            return new FunctionNode(Set.getSingleton(), fn.getType(), fn.getChildren());
+         } else if (f.getClass() == Sort.class) {
+            // (sort v0) -> v0
+            return fn.getChildren().first();
+         } else if (f == Set.getSingleton()) {
+            // (set (map f (sort v0))) -> (set (map f v0))
+            Node input = fn.getChildren().first();
+            Node newInput = recursivelyRemoveSort(input);
+            if (newInput != input) {
+               return new FunctionNode(fn, ChildNodes.createChildNodes(newInput));
+            }
+         }
+      }
+
+      return n;
    }
 }

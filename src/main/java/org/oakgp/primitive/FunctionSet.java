@@ -98,5 +98,10 @@ public final class FunctionSet {
       public Signature getSignature() {
          return signature;
       }
+
+      @Override
+      public String toString() {
+         return "Key [function=" + function.getDisplayName() + ", signature=" + signature + "]";
+      }
    }
 }

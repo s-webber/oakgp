@@ -16,6 +16,7 @@
 package org.oakgp.function.coll;
 
 import static org.oakgp.type.CommonTypes.booleanType;
+import static org.oakgp.type.CommonTypes.integerListType;
 import static org.oakgp.type.CommonTypes.integerType;
 import static org.oakgp.type.CommonTypes.listType;
 import static org.oakgp.type.CommonTypes.mapType;
@@ -54,9 +55,12 @@ public class CountListTest extends AbstractFunctionTest {
       // with mapper functions
       simplify("(count (map zero? v0))").with(listType(integerType())).to("(count v0)");
       simplify("(count (sort v0))").with(listType(integerType())).to("(count v0)");
+      simplify("(count (map zero? (set v0)))").with(listType(integerType())).to("(count (set v0))");
 
       // nested mapper functions
       simplify("(count (map false? (map zero? v0)))").with(listType(integerType())).to("(count v0)");
+      simplify("(count (sort (map false? (map zero? v0))))").with(listType(integerType())).to("(count v0)");
+      simplify("(count (map false? (sort (map zero? v0))))").with(listType(integerType())).to("(count v0)");
       simplify("(count (map false? (map zero? (sort v0))))").with(listType(integerType())).to("(count v0)");
 
       // nested mapper functions with variable of type Map rather than List
@@ -66,13 +70,14 @@ public class CountListTest extends AbstractFunctionTest {
 
    @Override
    public void testCannotSimplify() {
+      cannotSimplify("(count (set v0))", integerListType());
    }
 
    @Override
    protected FunctionSet getFunctionSet() {
       return new FunctionSetBuilder().add(getFunction(), integerType()).add(getFunction(), booleanType()).add(new Map(), booleanType(), integerType())
-            .add(Sort.getSingleton(), integerType()).add(new MapValues(), integerType(), booleanType(), integerType())
-            .add(new Map(), booleanType(), booleanType()).add(CountMap.getSingleton(), integerType(), integerType())
+            .add(Sort.getSingleton(), integerType()).add(new MapValues(), integerType(), booleanType(), integerType()).add(Sort.getSingleton(), booleanType())
+            .add(new Map(), booleanType(), booleanType()).add(CountMap.getSingleton(), integerType(), integerType()).add(Set.getSingleton(), integerType())
             .add(new Values(), booleanType(), integerType()).add(new Keys(), integerType(), booleanType()).add(new IsZero()).add(new IsFalse()).build();
    }
 }

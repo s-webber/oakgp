@@ -15,7 +15,6 @@
  */
 package org.oakgp.function.math;
 
-import static org.oakgp.node.NodeType.isFunction;
 import static org.oakgp.type.CommonTypes.listType;
 
 import java.util.Collection;
@@ -23,11 +22,10 @@ import java.util.Collection;
 import org.oakgp.Arguments;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
-import org.oakgp.function.coll.Set;
-import org.oakgp.function.coll.Sort;
-import org.oakgp.function.coll.SortedSet;
+import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
+import org.oakgp.util.Utils;
 
 public class Sum<T extends Comparable<T>> implements Function {
    private final Signature signature;
@@ -57,16 +55,11 @@ public class Sum<T extends Comparable<T>> implements Function {
    @Override
    public Node simplify(FunctionNode functionNode) {
       Node n = functionNode.getChildren().first();
-      if (isFunction(n)) {
-         FunctionNode fn = (FunctionNode) n;
-         Function f = fn.getFunction();
-         if (f == Sort.getSingleton()) {
-            return new FunctionNode(functionNode, fn.getChildren());
-         }
-         if (f == SortedSet.getSingleton()) {
-            return new FunctionNode(this, functionNode.getType(), new FunctionNode(Set.getSingleton(), fn.getType(), fn.getChildren()));
-         }
+      Node x = Utils.recursivelyRemoveSort(n);
+      if (x != n) {
+         return new FunctionNode(functionNode, ChildNodes.createChildNodes(x));
       }
+
       return null;
    }
 }

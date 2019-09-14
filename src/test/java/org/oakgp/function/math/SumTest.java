@@ -15,15 +15,19 @@
  */
 package org.oakgp.function.math;
 
+import static org.oakgp.type.CommonTypes.doubleType;
 import static org.oakgp.type.CommonTypes.integerType;
 import static org.oakgp.type.CommonTypes.listType;
 
 import java.util.Collections;
 
 import org.oakgp.function.AbstractFunctionTest;
+import org.oakgp.function.classify.IsPositive;
 import org.oakgp.function.coll.Set;
 import org.oakgp.function.coll.Sort;
 import org.oakgp.function.coll.SortedSet;
+import org.oakgp.function.hof.Filter;
+import org.oakgp.function.hof.Map;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.primitive.FunctionSet;
 import org.oakgp.util.FunctionSetBuilder;
@@ -51,16 +55,37 @@ public class SumTest extends AbstractFunctionTest {
       simplify("(sum (sort v0))").with(listType(integerType())).to("(sum v0)");
 
       simplify("(sum (sorted-set v0))").with(listType(integerType())).to("(sum (set v0))");
+
+      simplify("(sum (filter pos? (sort v0)))").with(listType(integerType())).to("(sum (filter pos? v0))");
+      simplify("(sum (filter pos? (sorted-set v0)))").with(listType(integerType())).to("(sum (set (filter pos? v0)))");
+      simplify("(sum (filter pos? (set v0)))").with(listType(integerType())).to("(sum (set (filter pos? v0)))");
+
+      simplify("(sum (map log (sort v0)))").with(listType(doubleType())).to("(sum (map log v0))");
+      simplify("(sum (map log (map log (sort v0))))").with(listType(doubleType())).to("(sum (map log (map log v0)))");
+      simplify("(sum (map log (map log (map log (map log (map log (sort v0)))))))").with(listType(doubleType()))
+            .to("(sum (map log (map log (map log (map log (map log v0))))))");
+      simplify("(sum (map log (map log (map log (sort (map log (sort (map log (sort v0)))))))))").with(listType(doubleType()))
+            .to("(sum (map log (map log (map log (map log (map log v0))))))");
+      simplify("(sum (sort (map log (sort (map log (sort (map log (sort (map log (sort (map log (sort v0))))))))))))").with(listType(doubleType()))
+            .to("(sum (map log (map log (map log (map log (map log v0))))))");
+
+      simplify("(sum (map log (sorted-set v0)))").with(listType(doubleType())).to("(sum (map log (set v0)))");
+      simplify("(sum (map log (map log (sorted-set v0))))").with(listType(doubleType())).to("(sum (map log (map log (set v0))))");
+
+      simplify("(sum (map log (sorted-set (map log (sorted-set v0)))))").with(listType(doubleType())).to("(sum (map log (set (map log (set v0)))))");
    }
 
    @Override
    public void testCannotSimplify() {
       cannotSimplify("(sum (set v0))", listType(integerType()));
+      cannotSimplify("(sum (map log (set v0)))", listType(doubleType()));
    }
 
    @Override
    protected FunctionSet getFunctionSet() {
-      return new FunctionSetBuilder().add(getFunction()).add(Sort.getSingleton(), integerType()).add(Set.getSingleton(), integerType())
-            .add(SortedSet.getSingleton(), integerType()).build();
+      return new FunctionSetBuilder().add(getFunction()).add(DoubleUtils.DOUBLE_UTILS.getSum()).add(Sort.getSingleton(), integerType())
+            .add(Sort.getSingleton(), doubleType()).add(Set.getSingleton(), integerType()).add(Set.getSingleton(), doubleType())
+            .add(SortedSet.getSingleton(), integerType()).add(SortedSet.getSingleton(), doubleType()).add(new Filter(), integerType()).add(new IsPositive())
+            .add(new Map(), doubleType(), integerType()).add(new Map(), doubleType(), doubleType()).add(new Logarithm()).build();
    }
 }

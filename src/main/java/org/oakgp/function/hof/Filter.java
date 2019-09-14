@@ -82,10 +82,12 @@ public final class Filter implements Function {
          Function f = fn.getFunction();
          if (f.getClass() == Filter.class) { // TODO use if (f==this)
             if (fn.getChildren().first().equals(functionNode.getChildren().first())) {
+               // (filter pos? (filter pos? v0)) -> (filter pos? v0)
                return fn;
             }
             // TODO don't do toString for compare
             if (fn.getChildren().first().toString().compareTo(functionNode.getChildren().first().toString()) > 0) {
+               // make ordering consistent (filter pos? (filter zero? v0)) -> (filter zero? (filter pos? v0))
                FunctionNode newFilterNode = new FunctionNode(functionNode, children.replaceAt(1, fn.getChildren().second()));
                return new FunctionNode(fn, fn.getChildren().replaceAt(1, newFilterNode));
             }
