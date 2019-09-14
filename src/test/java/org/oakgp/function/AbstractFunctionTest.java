@@ -26,7 +26,10 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.concurrent.atomic.AtomicInteger;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.oakgp.Assignments;
 import org.oakgp.NodeSimplifier;
@@ -42,6 +45,12 @@ import org.oakgp.type.Types.Type;
 public abstract class AbstractFunctionTest {
    private static final Type[] DEFAULT_VARIABLE_TYPES = createIntegerTypeArray(100);
 
+   /**
+    * Used to check that every call to 'evaluate' and 'simplify' has a corresponding call to 'to'.
+    * <p>
+    * Makes it possible to spot when someone accidently writes code like {@code simplify("(min v0 v0)");} or {@code evaluate("(min 7 8)");}.
+    */
+   private final AtomicInteger unfinishedExpectationsCtr = new AtomicInteger();
    private final FunctionSet functionSet;
 
    /**
@@ -62,6 +71,18 @@ public abstract class AbstractFunctionTest {
    }
 
    protected abstract Function getFunction();
+
+   @Before
+   public void before() {
+      unfinishedExpectationsCtr.set(0);
+   }
+
+   @After
+   public void after() {
+      if (unfinishedExpectationsCtr.get() != 0) {
+         throw new RuntimeException("Some expectations were never finished. Check that each 'evaluate' and 'simplify' has a corresponding 'to'.");
+      }
+   }
 
    @Test
    public abstract void testEvaluate();
@@ -121,10 +142,12 @@ public abstract class AbstractFunctionTest {
    }
 
    protected class EvaluateExpectation {
+      private final int id;
       private final String input;
       private ConstantNode[] assignedValues = {};
 
       private EvaluateExpectation(String input) {
+         this.id = unfinishedExpectationsCtr.incrementAndGet();
          this.input = input;
       }
 
@@ -134,6 +157,10 @@ public abstract class AbstractFunctionTest {
       }
 
       public void to(Object expectedResult) {
+         if (id != unfinishedExpectationsCtr.getAndDecrement()) {
+            throw new RuntimeException("'to' called more than once for a 'evaluate'.");
+         }
+
          Type[] variableTypes = toVariableTypes(assignedValues);
          FunctionNode functionNode = readFunctionNode(input, variableTypes);
          Assignments assignments = toAssignments(assignedValues);
@@ -177,12 +204,14 @@ public abstract class AbstractFunctionTest {
    }
 
    protected class SimplifyExpectation {
+      private int id;
       private final String input;
       private Type[] variableTypes = DEFAULT_VARIABLE_TYPES;
       private FunctionNode inputNode;
       private Node simplifiedNode;
 
       public SimplifyExpectation(String input) {
+         this.id = unfinishedExpectationsCtr.incrementAndGet();
          this.input = input;
       }
 
@@ -192,6 +221,10 @@ public abstract class AbstractFunctionTest {
       }
 
       public SimplifyExpectation to(String expected) {
+         if (id != unfinishedExpectationsCtr.getAndDecrement()) {
+            throw new RuntimeException("'to' called more than once for a 'simplify'.");
+         }
+
          VariableSet variableSet = VariableSet.createVariableSet(variableTypes);
 
          Node expectedNode = readNode(expected, variableSet);
