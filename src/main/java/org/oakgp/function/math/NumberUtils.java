@@ -22,6 +22,7 @@ import org.oakgp.function.Function;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
+import org.oakgp.type.CommonTypes;
 import org.oakgp.type.Types.Type;
 
 /**
@@ -57,6 +58,10 @@ abstract class NumberUtils<T extends Comparable<T>> {
     *           the value {@code 2} of type {@link #T}
     */
    protected NumberUtils(Type type, T zero, T one, T two) {
+      if (!type.getParents().contains(CommonTypes.numberType())) { // sanity check
+         throw new IllegalStateException(type + " does not extend " + CommonTypes.numberType());
+      }
+
       this.type = type;
       this.rawZero = zero;
       this.rawOne = one;

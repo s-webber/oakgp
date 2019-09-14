@@ -166,7 +166,7 @@ public final class Types {
          return name;
       }
 
-      Set<Type> getParents() {
+      public Set<Type> getParents() {
          return parents;
       }
 
@@ -174,7 +174,7 @@ public final class Types {
          return Arrays.asList(parameters);
       }
 
-      private Set<Type> getHierarchy() {
+      private Set<Type> getHierarchy() { // TODO calculate in constructor and cache
          Set<Type> result = new HashSet<>();
          if (!template) {
             result.add(this);

@@ -74,8 +74,8 @@ public class MapTest extends AbstractFunctionTest {
             .add(getFunction(), doubleType(), doubleType()).add(new IsFalse()).add(new IsPositive()).add(new IsNegative()).add(new IsZero())
             .add(Sort.getSingleton(), integerType()).add(Sort.getSingleton(), booleanType()).add(Set.getSingleton(), integerType())
             .add(Set.getSingleton(), booleanType()).add(SortedSet.getSingleton(), booleanType()).add(SortedSet.getSingleton(), integerType())
-            .add(new Logarithm()).add(Sort.getSingleton(), doubleType()).add(Set.getSingleton(), doubleType()).add(SortedSet.getSingleton(), doubleType())
-            .add(Set.getSingleton(), integerType()).build();
+            .add(new Logarithm(), doubleType()).add(Sort.getSingleton(), doubleType()).add(Set.getSingleton(), doubleType())
+            .add(SortedSet.getSingleton(), doubleType()).add(Set.getSingleton(), integerType()).build();
    }
 
    @Test

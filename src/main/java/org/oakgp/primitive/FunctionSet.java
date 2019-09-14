@@ -75,7 +75,7 @@ public final class FunctionSet {
       return functionsBySignature.toString();
    }
 
-   public static class Key {
+   public static class Key { // TODO move to separate file and add KeyTest
       private final Function function;
       private final Signature signature;
 

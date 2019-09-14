@@ -86,6 +86,6 @@ public class SumTest extends AbstractFunctionTest {
       return new FunctionSetBuilder().add(getFunction()).add(DoubleUtils.DOUBLE_UTILS.getSum()).add(Sort.getSingleton(), integerType())
             .add(Sort.getSingleton(), doubleType()).add(Set.getSingleton(), integerType()).add(Set.getSingleton(), doubleType())
             .add(SortedSet.getSingleton(), integerType()).add(SortedSet.getSingleton(), doubleType()).add(new Filter(), integerType()).add(new IsPositive())
-            .add(new Map(), doubleType(), integerType()).add(new Map(), doubleType(), doubleType()).add(new Logarithm()).build();
+            .add(new Map(), doubleType(), integerType()).add(new Map(), doubleType(), doubleType()).add(new Logarithm(), doubleType()).build();
    }
 }

@@ -16,17 +16,25 @@
 package org.oakgp.function.math;
 
 import static org.oakgp.type.CommonTypes.doubleType;
+import static org.oakgp.type.CommonTypes.numberType;
 
 import org.oakgp.Arguments;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
+import org.oakgp.type.Types;
+import org.oakgp.type.Types.Type;
 
+/**
+ * Calculates the natural logarithm of a number.
+ *
+ * @see java.lang.Math#log(double)
+ */
 public class Logarithm implements Function {
    private final Signature signature;
 
    public Logarithm() {
-      // TODO make second argument a generic type that extends Number
-      signature = Signature.createSignature(doubleType(), doubleType());
+      Type element = Types.generic("Element", numberType());
+      signature = Signature.createSignature(doubleType(), element);
    }
 
    @Override

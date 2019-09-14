@@ -30,13 +30,14 @@ import org.oakgp.type.Types.Type;
 
 public class CommonTypes {
    private static final Type COMPARABLE = name(Comparable.class).build();
+   private static final Type NUMBER = name(Number.class).parents(COMPARABLE).build();
    private static final Type STRING = name(String.class).parents(COMPARABLE).build();
    private static final Type BOOLEAN = name(Boolean.class).parents(COMPARABLE).build();
-   private static final Type INTEGER = name(Integer.class).parents(COMPARABLE).build();
-   private static final Type LONG = name(Long.class).parents(COMPARABLE).build();
-   private static final Type DOUBLE = name(Double.class).parents(COMPARABLE).build();
-   private static final Type BIG_INTEGER = name(BigInteger.class).parents(COMPARABLE).build();
-   private static final Type BIG_DECIMAL = name(BigDecimal.class).parents(COMPARABLE).build();
+   private static final Type INTEGER = name(Integer.class).parents(NUMBER).build();
+   private static final Type LONG = name(Long.class).parents(NUMBER).build();
+   private static final Type DOUBLE = name(Double.class).parents(NUMBER).build();
+   private static final Type BIG_INTEGER = name(BigInteger.class).parents(NUMBER).build();
+   private static final Type BIG_DECIMAL = name(BigDecimal.class).parents(NUMBER).build();
    private static final Type LIST = name(List.class).parameters(generic("T")).build();
    private static final Type MAP = name(Map.class).parameters(generic("K"), generic("V")).build();
    private static final Type FUNCTION = name(Function.class).parameters(generic("R"), generic("I")).build();
@@ -46,6 +47,11 @@ public class CommonTypes {
    /** Returns the type associated with implementations of {@code java.lang.Comparable}. */
    public static Type comparableType() {
       return COMPARABLE;
+   }
+
+   /** Returns the type associated with implementations of {@code java.lang.Number}. */
+   public static Type numberType() {
+      return NUMBER;
    }
 
    /** Returns the type associated with instances of {@code java.lang.String}. */

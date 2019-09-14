@@ -69,6 +69,6 @@ public class SortTest extends AbstractFunctionTest {
    protected FunctionSet getFunctionSet() {
       return new FunctionSetBuilder().add(getFunction(), integerType()).add(SortedSet.getSingleton(), integerType()).add(Set.getSingleton(), integerType())
             .add(SortedSet.getSingleton(), doubleType()).add(Set.getSingleton(), doubleType()).add(Sort.getSingleton(), doubleType())
-            .add(new Map(), doubleType(), doubleType()).add(new Logarithm()).build();
+            .add(new Map(), doubleType(), doubleType()).add(new Logarithm(), doubleType()).build();
    }
 }

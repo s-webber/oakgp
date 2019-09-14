@@ -30,33 +30,43 @@ import org.oakgp.type.Types.Type;
 
 public class CommonTypesTest {
    @Test
+   public void testComparable() {
+      assertType(CommonTypes.comparableType(), "Comparable");
+   }
+
+   @Test
+   public void testNumber() {
+      assertType(CommonTypes.numberType(), "Number", CommonTypes.comparableType());
+   }
+
+   @Test
    public void testString() {
       assertType(CommonTypes.stringType(), "String", CommonTypes.comparableType());
    }
 
    @Test
    public void testInteger() {
-      assertType(CommonTypes.integerType(), "Integer", CommonTypes.comparableType());
+      assertType(CommonTypes.integerType(), "Integer", CommonTypes.numberType());
    }
 
    @Test
    public void testLong() {
-      assertType(CommonTypes.longType(), "Long", CommonTypes.comparableType());
+      assertType(CommonTypes.longType(), "Long", CommonTypes.numberType());
    }
 
    @Test
    public void testDouble() {
-      assertType(CommonTypes.doubleType(), "Double", CommonTypes.comparableType());
+      assertType(CommonTypes.doubleType(), "Double", CommonTypes.numberType());
    }
 
    @Test
    public void testBigInteger() {
-      assertType(CommonTypes.bigIntegerType(), "BigInteger", CommonTypes.comparableType());
+      assertType(CommonTypes.bigIntegerType(), "BigInteger", CommonTypes.numberType());
    }
 
    @Test
    public void testBigDecimal() {
-      assertType(CommonTypes.bigDecimalType(), "BigDecimal", CommonTypes.comparableType());
+      assertType(CommonTypes.bigDecimalType(), "BigDecimal", CommonTypes.numberType());
    }
 
    @Test

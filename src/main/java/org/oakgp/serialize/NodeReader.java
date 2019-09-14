@@ -50,6 +50,7 @@ import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.node.VariableNode;
 import org.oakgp.primitive.FunctionSet;
+import org.oakgp.primitive.FunctionSet.Key;
 import org.oakgp.primitive.VariableSet;
 import org.oakgp.type.Types;
 import org.oakgp.type.Types.Type;
@@ -93,6 +94,7 @@ public final class NodeReader implements Closeable {
    private final ConstantNode[] constants;
    private final VariableSet variableSet;
 
+   // TODO remove this constructor
    public NodeReader(String input, Function[] functions, ConstantNode[] constants, VariableSet variableSet) {
       this(input, new FunctionSetBuilder().addAll(functions).build(), constants, variableSet);
    }
@@ -333,14 +335,14 @@ public final class NodeReader implements Closeable {
    }
 
    private ConstantNode createFunctionConstant(String token) {
-      Function function = getFunction(token);
-      return new ConstantNode(function, getFunctionType(function));
+      Key key = getFunctionKey(token);
+      return new ConstantNode(key.getFunction(), getFunctionType(key));
    }
 
-   private Function getFunction(String token) {
+   private Key getFunctionKey(String token) {
       for (FunctionSet.Key key : functionSet.getFunctions()) {
          if (token.equals(key.getFunction().getDisplayName())) {
-            return key.getFunction();
+            return key;
          }
       }
       throw new IllegalArgumentException("Could not find version of function: " + token + " in: " + functionSet);
@@ -362,8 +364,8 @@ public final class NodeReader implements Closeable {
       return cr.isEndOfStream();
    }
 
-   private static Type getFunctionType(Function function) {
-      Signature signature = function.getSignature();
+   private static Type getFunctionType(Key key) {
+      Signature signature = key.getSignature();
       // TODO call signature.getArgumentTypes instead
       Type[] types = new Type[signature.getArgumentTypesLength() + 1];
       types[0] = signature.getReturnType();
@@ -412,6 +414,8 @@ public final class NodeReader implements Closeable {
     * A {@code String} is considered suitable as a display name for a {@code Function} - as returned from {@link Function#getDisplayName()} - if it can be
     * successfully parsed by a {@code NodeReader}. Suitable function names do not start with a number or contain any of the special characters used to represent
     * the start or end of functions (i.e. '(' and ')'), lists (i.e. '[' and ']'), maps (i.e. '{' and '}') or strings (i.e. '"').
+    *
+    * TODO move to Utils class as is not used in this class
     */
    public static boolean isValidDisplayName(String displayName) {
       if (displayName == null || displayName.length() == 0 || isNumber(displayName)) {

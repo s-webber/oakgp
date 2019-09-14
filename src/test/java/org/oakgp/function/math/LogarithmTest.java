@@ -15,8 +15,12 @@
  */
 package org.oakgp.function.math;
 
+import static org.oakgp.type.CommonTypes.doubleType;
+
 import org.oakgp.function.AbstractFunctionTest;
 import org.oakgp.function.Function;
+import org.oakgp.primitive.FunctionSet;
+import org.oakgp.util.FunctionSetBuilder;
 
 public class LogarithmTest extends AbstractFunctionTest {
    @Override
@@ -35,5 +39,10 @@ public class LogarithmTest extends AbstractFunctionTest {
 
    @Override
    public void testCannotSimplify() {
+   }
+
+   @Override
+   protected FunctionSet getFunctionSet() {
+      return new FunctionSetBuilder().add(new Logarithm(), doubleType()).build();
    }
 }
