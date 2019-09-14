@@ -161,16 +161,22 @@ public final class Utils {
 
    // TODO this is tested via MinTest and MaxTest - add unit-tests to UtilsTest
    public static Node toOrderedNode(FunctionNode input) {
-      Iterator<Node> itr = Utils.toOrderedList(input).iterator();
-      Node result = itr.next();
-      while (itr.hasNext()) {
-         result = new FunctionNode(input, ChildNodes.createChildNodes(itr.next(), result));
-      }
-
+      Node result = toNode(input.getFunction(), input.getType(), toOrderedList(input));
       return result.equals(input) ? null : result;
    }
 
-   private static Collection<Node> toOrderedList(FunctionNode input) {
+   // TODO this is tested via toOrderedNode and Min - add unit-tests to UtilsTest
+   public static Node toNode(org.oakgp.function.Function function, Type returnType, Collection<Node> children) {
+      Iterator<Node> itr = children.iterator();
+      Node node = itr.next();
+      while (itr.hasNext()) {
+         node = new FunctionNode(function, returnType, ChildNodes.createChildNodes(itr.next(), node));
+      }
+      return node;
+   }
+
+   // TODO this is tested via toOrderedNode and Min - add unit-tests to UtilsTest
+   public static Collection<Node> toOrderedList(FunctionNode input) {
       Collection<Node> result = new TreeSet<>(NodeComparator.NODE_COMPARATOR);
 
       org.oakgp.function.Function function = input.getFunction();

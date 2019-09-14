@@ -25,7 +25,7 @@ import org.oakgp.util.FunctionSetBuilder;
 public class MinTest extends AbstractFunctionTest {
    @Override
    protected Min getFunction() {
-      return new Min();
+      return Min.getSingleton();
    }
 
    @Override
@@ -42,21 +42,35 @@ public class MinTest extends AbstractFunctionTest {
    @Override
    public void testCanSimplify() {
       simplify("(min v0 v0)").to("v0");
+      simplify("(min (max v0 1) (max v0 1))").to("(max v0 1)");
       simplify("(min 1 v0)").to("(min v0 1)");
       simplify("(min v0 (min 1 (min 7 (min 1 v0))))").to("(min v0 1)");
       simplify("(min (min v0 1) (min 7 (min 1 v0))))").to("(min v0 1)");
       simplify("(min (min v0 (min 1 7)) (min 1 v0))").to("(min v0 1)");
       simplify("(min (min v0 v1) (min v2 (min v3 v4)))").to("(min v4 (min v3 (min v2 (min v1 v0))))");
+
+      simplify("(min (max v0 1) v0)").to("v0");
+      simplify("(min (max v1 (max v0 1)) v0)").to("v0");
+      simplify("(min (max v1 (max v0 1)) 1)").to("1");
+      simplify("(min (max v2 (max v1 (max v0 1))) v0)").to("v0");
    }
 
    @Override
    public void testCannotSimplify() {
       cannotSimplify("(min v0 1)", integerType());
+      cannotSimplify("(min v1 v0)", integerType(), integerType());
+      cannotSimplify("(min v2 (min v1 v0))", integerType(), integerType(), integerType());
+      cannotSimplify("(min v2 (min v1 (min v0 1)))", integerType(), integerType(), integerType());
+
+      cannotSimplify("(min (max v0 1) (max v0 2))", integerType(), integerType());
+      cannotSimplify("(min (max v0 1) (max v1 1))", integerType(), integerType());
+      cannotSimplify("(min (max v2 v1) (max v0 1))", integerType(), integerType(), integerType());
+      cannotSimplify("(min (max v2 v1) (max v3 (max v0 1)))", integerType(), integerType(), integerType(), integerType());
    }
 
    @Override
    protected FunctionSet getFunctionSet() {
       Min function = getFunction();
-      return new FunctionSetBuilder().add(function, integerType()).add(function, stringType()).build();
+      return new FunctionSetBuilder().add(function, integerType()).add(function, stringType()).add(Max.getSingleton(), integerType()).build();
    }
 }

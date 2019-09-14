@@ -24,12 +24,17 @@ import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.type.Types;
 import org.oakgp.type.Types.Type;
-import org.oakgp.util.Utils;
 
 public class Max implements Function {
+   private static final Max SINGLETON = new Max();
+
+   public static Max getSingleton() {
+      return SINGLETON;
+   }
+
    private final Signature signature;
 
-   public Max() {
+   private Max() {
       Type type = Types.generic("ElementType", comparableType());
       this.signature = Signature.createSignature(type, type, type);
    }
@@ -48,6 +53,6 @@ public class Max implements Function {
 
    @Override
    public Node simplify(FunctionNode functionNode) {
-      return Utils.toOrderedNode(functionNode);
+      return Min.simplifyMinMax(functionNode, this, Min.getSingleton());
    }
 }

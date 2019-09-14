@@ -25,7 +25,7 @@ import org.oakgp.util.FunctionSetBuilder;
 public class MaxTest extends AbstractFunctionTest {
    @Override
    protected Max getFunction() {
-      return new Max();
+      return Max.getSingleton();
    }
 
    @Override
@@ -42,24 +42,35 @@ public class MaxTest extends AbstractFunctionTest {
    @Override
    public void testCanSimplify() {
       simplify("(max v0 v0)").to("v0");
+      simplify("(max (min v0 1) (min v0 1))").to("(min v0 1)");
       simplify("(max 1 v0)").to("(max v0 1)");
       simplify("(max v0 (max 1 (max 7 (max 1 v0))))").to("(max v0 7)");
       simplify("(max (max v0 1) (max 7 (max 1 v0))))").to("(max v0 7)");
       simplify("(max (max v0 (max 1 7)) (max 1 v0))").to("(max v0 7)");
       simplify("(max (max v0 v1) (max v2 (max v3 v4)))").to("(max v4 (max v3 (max v2 (max v1 v0))))");
-      // TODO add example included embedded "min" function (and add to MinTest as well)
-      // TODO (max v1 (min v1 3)) -> (max v1 3)
-      // TODO (max v1 (min v1 v2)) -> v1
+
+      simplify("(max (min v0 1) v0)").to("v0");
+      simplify("(max (min v1 (min v0 1)) v0)").to("v0");
+      simplify("(max (min v1 (min v0 1)) 1)").to("1");
+      simplify("(max (min v2 (min v1 (min v0 1))) v0)").to("v0");
    }
 
    @Override
    public void testCannotSimplify() {
       cannotSimplify("(max v0 1)", integerType());
+      cannotSimplify("(max v1 v0)", integerType(), integerType());
+      cannotSimplify("(max v2 (max v1 v0))", integerType(), integerType(), integerType());
+      cannotSimplify("(max v2 (max v1 (max v0 1)))", integerType(), integerType(), integerType());
+
+      cannotSimplify("(max (min v0 1) (min v0 2))", integerType(), integerType());
+      cannotSimplify("(max (min v0 1) (min v1 1))", integerType(), integerType());
+      cannotSimplify("(max (min v2 v1) (min v0 1))", integerType(), integerType(), integerType());
+      cannotSimplify("(max (min v3 (min v0 1)) (min v2 v1))", integerType(), integerType(), integerType(), integerType());
    }
 
    @Override
    protected FunctionSet getFunctionSet() {
       Max function = getFunction();
-      return new FunctionSetBuilder().add(function, integerType()).add(function, stringType()).build();
+      return new FunctionSetBuilder().add(function, integerType()).add(function, stringType()).add(Min.getSingleton(), integerType()).build();
    }
 }
