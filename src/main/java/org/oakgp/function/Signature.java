@@ -101,7 +101,8 @@ public final class Signature {
       return getGenerics().length > 0;
    }
 
-   private Type[] getGenerics() {
+   // TODO Is already tested via create but add specific unit-tests of it. Consider caching this in the constructor.
+   public Type[] getGenerics() {
       LinkedHashSet<Type> generics = new LinkedHashSet<>();
       getGenerics(returnType, generics);
       for (Type argumentType : argumentTypes) {

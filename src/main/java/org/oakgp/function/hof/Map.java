@@ -40,6 +40,12 @@ import org.oakgp.type.Types.Type;
  * @see <a href="http://en.wikipedia.org/wiki/Map_(higher-order_function)">Wikipedia</a>
  */
 public final class Map implements MapperFunction { // TODO rename to transform
+   private static final Map SINGLETON = new Map();
+
+   public static Map getSingleton() {
+      return SINGLETON;
+   }
+
    private final Signature signature;
 
    /**
@@ -50,7 +56,7 @@ public final class Map implements MapperFunction { // TODO rename to transform
     * @param to
     *           the type of the elements contained in the collection returned by the function
     */
-   public Map() {
+   private Map() {
       Type from = Types.generic("From");
       Type to = Types.generic("To");
       signature = Signature.createSignature(listType(to), functionType(to, from), listType(from));

@@ -30,9 +30,15 @@ import org.oakgp.type.Types.Type;
  * @see java.lang.Math#log(double)
  */
 public class Logarithm implements Function {
+   private static final Logarithm SINGLETON = new Logarithm();
+
+   public static Logarithm getSingleton() {
+      return SINGLETON;
+   }
+
    private final Signature signature;
 
-   public Logarithm() {
+   private Logarithm() {
       Type element = Types.generic("Element", numberType());
       signature = Signature.createSignature(doubleType(), element);
    }

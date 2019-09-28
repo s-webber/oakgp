@@ -21,12 +21,7 @@ import static org.oakgp.type.CommonTypes.listType;
 import java.util.Collections;
 
 import org.oakgp.function.AbstractFunctionTest;
-import org.oakgp.function.coll.Set;
-import org.oakgp.function.coll.Sort;
-import org.oakgp.function.coll.SortedSet;
 import org.oakgp.node.ConstantNode;
-import org.oakgp.primitive.FunctionSet;
-import org.oakgp.util.FunctionSetBuilder;
 
 public class MaxListTest extends AbstractFunctionTest {
    @Override
@@ -60,11 +55,5 @@ public class MaxListTest extends AbstractFunctionTest {
    public void testCannotSimplify() {
       cannotSimplify("(max (set v0))", listType(integerType()));
       cannotSimplify("(max (sorted-set v0))", listType(integerType()));
-   }
-
-   @Override
-   protected FunctionSet getFunctionSet() {
-      return new FunctionSetBuilder().add(getFunction(), integerType()).add(Sort.getSingleton(), integerType()).add(Set.getSingleton(), integerType())
-            .add(SortedSet.getSingleton(), integerType()).build();
    }
 }

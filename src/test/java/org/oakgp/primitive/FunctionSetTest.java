@@ -148,7 +148,7 @@ public class FunctionSetTest {
 
    @Test
    public void testGetFunctions_sameFunctionDifferentSignatures() {
-      Map function = new Map();
+      Map function = Map.getSingleton();
       Signature signature1 = function.getSignature().create(integerType(), booleanType());
       Signature signature2 = function.getSignature().create(stringType(), doubleType());
       FunctionSet functionSet = new FunctionSetBuilder().add(function, integerType(), booleanType()).add(function, stringType(), doubleType()).build();

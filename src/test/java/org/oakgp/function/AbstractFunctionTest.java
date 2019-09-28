@@ -19,13 +19,21 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
-import static org.oakgp.TestUtils.createFunctionSet;
+import static org.oakgp.TestUtils.asSet;
+import static org.oakgp.type.CommonTypes.booleanListType;
+import static org.oakgp.type.CommonTypes.booleanType;
+import static org.oakgp.type.CommonTypes.doubleType;
+import static org.oakgp.type.CommonTypes.integerListType;
+import static org.oakgp.type.CommonTypes.integerType;
+import static org.oakgp.type.CommonTypes.listType;
+import static org.oakgp.type.CommonTypes.stringType;
 import static org.oakgp.util.Utils.createIntegerTypeArray;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.After;
@@ -51,7 +59,7 @@ public abstract class AbstractFunctionTest {
     * Makes it possible to spot when someone accidently writes code like {@code simplify("(min v0 v0)");} or {@code evaluate("(min 7 8)");}.
     */
    private final AtomicInteger unfinishedExpectationsCtr = new AtomicInteger();
-   private final FunctionSet functionSet;
+   private static FunctionSet functionSet;
 
    /**
     * Observable allows other objects to be notified of the tests that are run.
@@ -65,10 +73,6 @@ public abstract class AbstractFunctionTest {
          super.notifyObservers(arg);
       }
    };
-
-   protected AbstractFunctionTest() {
-      functionSet = getFunctionSet();
-   }
 
    protected abstract Function getFunction();
 
@@ -106,8 +110,16 @@ public abstract class AbstractFunctionTest {
       assertTrue(NodeReader.isValidDisplayName(displayName));
    }
 
-   protected FunctionSet getFunctionSet() {
-      return createFunctionSet(getFunction());
+   protected FunctionSet getFunctionSet() { // TODO make private
+      if (functionSet == null) {
+         functionSet = createFunctionSet();
+      }
+      return functionSet;
+   }
+
+   private FunctionSet createFunctionSet() {
+      Set<Type> types = asSet(integerType(), doubleType(), stringType(), booleanType(), integerListType(), booleanListType(), listType(doubleType()));
+      return FunctionsTest.autowire(FunctionsTest.getTestFunctions(), types);
    }
 
    protected void cannotSimplify(String input, Type... variableTypes) {
@@ -130,7 +142,7 @@ public abstract class AbstractFunctionTest {
    }
 
    private Node readNode(String input, VariableSet variableSet) {
-      try (NodeReader nodeReader = new NodeReader(input, functionSet, new ConstantNode[0], variableSet)) {
+      try (NodeReader nodeReader = new NodeReader(input, getFunctionSet(), new ConstantNode[0], variableSet)) {
          return nodeReader.readNode();
       } catch (IOException e) {
          throw new UncheckedIOException(e);

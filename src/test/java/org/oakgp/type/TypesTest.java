@@ -252,7 +252,7 @@ public class TypesTest {
    }
 
    @Test
-   public void test() {
+   public void test() { // TODO
       Type z = Types.generic("Z");
       Type y = Types.generic("Y");
       Type x = Types.generic("X");
@@ -278,7 +278,7 @@ public class TypesTest {
    }
 
    @Test
-   public void test1() {
+   public void test1() { // TODO
       Type type = Types.declareType(uniqueTypeName(), new Type[0], new Type[] { CommonTypes.stringType() });
       try {
          Types.type(type.getName(), Types.generic("X", CommonTypes.bigIntegerType()));

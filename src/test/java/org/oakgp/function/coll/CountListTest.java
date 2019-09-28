@@ -15,7 +15,6 @@
  */
 package org.oakgp.function.coll;
 
-import static org.oakgp.type.CommonTypes.booleanType;
 import static org.oakgp.type.CommonTypes.integerListType;
 import static org.oakgp.type.CommonTypes.integerType;
 import static org.oakgp.type.CommonTypes.listType;
@@ -24,13 +23,7 @@ import static org.oakgp.type.CommonTypes.mapType;
 import java.util.Collections;
 
 import org.oakgp.function.AbstractFunctionTest;
-import org.oakgp.function.classify.IsFalse;
-import org.oakgp.function.classify.IsZero;
-import org.oakgp.function.hof.Map;
-import org.oakgp.function.hof.MapValues;
 import org.oakgp.node.ConstantNode;
-import org.oakgp.primitive.FunctionSet;
-import org.oakgp.util.FunctionSetBuilder;
 
 public class CountListTest extends AbstractFunctionTest {
    private static final CountList count = new CountList();
@@ -71,13 +64,5 @@ public class CountListTest extends AbstractFunctionTest {
    @Override
    public void testCannotSimplify() {
       cannotSimplify("(count (set v0))", integerListType());
-   }
-
-   @Override
-   protected FunctionSet getFunctionSet() {
-      return new FunctionSetBuilder().add(getFunction(), integerType()).add(getFunction(), booleanType()).add(new Map(), booleanType(), integerType())
-            .add(Sort.getSingleton(), integerType()).add(new MapValues(), integerType(), booleanType(), integerType()).add(Sort.getSingleton(), booleanType())
-            .add(new Map(), booleanType(), booleanType()).add(CountMap.getSingleton(), integerType(), integerType()).add(Set.getSingleton(), integerType())
-            .add(new Values(), booleanType(), integerType()).add(new Keys(), integerType(), booleanType()).add(new IsZero()).add(new IsFalse()).build();
    }
 }

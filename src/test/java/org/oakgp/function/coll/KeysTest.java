@@ -15,14 +15,9 @@
  */
 package org.oakgp.function.coll;
 
-import static org.oakgp.type.CommonTypes.integerType;
-import static org.oakgp.type.CommonTypes.stringType;
-
 import java.util.Arrays;
 
 import org.oakgp.function.AbstractFunctionTest;
-import org.oakgp.primitive.FunctionSet;
-import org.oakgp.util.FunctionSetBuilder;
 
 public class KeysTest extends AbstractFunctionTest {
    @Override
@@ -44,10 +39,5 @@ public class KeysTest extends AbstractFunctionTest {
 
    @Override
    public void testCannotSimplify() {
-   }
-
-   @Override
-   protected FunctionSet getFunctionSet() {
-      return new FunctionSetBuilder().add(getFunction(), stringType(), integerType()).build();
    }
 }

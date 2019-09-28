@@ -17,12 +17,8 @@ package org.oakgp.function.compare;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
-import static org.oakgp.type.CommonTypes.integerType;
-import static org.oakgp.type.CommonTypes.stringType;
 
 import org.oakgp.function.AbstractFunctionTest;
-import org.oakgp.primitive.FunctionSet;
-import org.oakgp.util.FunctionSetBuilder;
 
 public class GreaterThanTest extends AbstractFunctionTest {
    @Override
@@ -54,11 +50,5 @@ public class GreaterThanTest extends AbstractFunctionTest {
 
    @Override
    public void testCannotSimplify() {
-   }
-
-   @Override
-   protected FunctionSet getFunctionSet() {
-      GreaterThan function = getFunction();
-      return new FunctionSetBuilder().add(function, integerType()).add(function, stringType()).add(LessThan.getSingleton(), integerType()).build();
    }
 }

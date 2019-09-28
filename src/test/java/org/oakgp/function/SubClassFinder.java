@@ -19,6 +19,7 @@ import static java.nio.file.FileVisitResult.CONTINUE;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.lang.reflect.Modifier;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -34,10 +35,14 @@ class SubClassFinder extends SimpleFileVisitor<Path> {
    private final Class<?> parentClass;
    private final List<Class<?>> result = new ArrayList<>();
 
-   static List<Class<?>> find(Class<?> parentClass, String directoryName) throws IOException {
-      SubClassFinder w = new SubClassFinder(parentClass);
-      Files.walkFileTree(new File(directoryName).toPath(), w);
-      return w.result;
+   static List<Class<?>> find(Class<?> parentClass, String directoryName) {
+      try {
+         SubClassFinder w = new SubClassFinder(parentClass);
+         Files.walkFileTree(new File(directoryName).toPath(), w);
+         return w.result;
+      } catch (IOException e) {
+         throw new UncheckedIOException(e);
+      }
    }
 
    SubClassFinder(Class<?> parentClass) {

@@ -74,6 +74,6 @@ public class SwitchEnumTest extends AbstractFunctionTest {
 
    @Override
    protected FunctionSet getFunctionSet() {
-      return new FunctionSetBuilder().add(getFunction()).add(SWITCH_ENUM).add(SWITCH_NULLABLE_ENUM).build();
+      return new FunctionSetBuilder().add(SWITCH_ENUM).add(SWITCH_NULLABLE_ENUM).build();
    }
 }

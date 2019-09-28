@@ -18,11 +18,8 @@ package org.oakgp.function.compare;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static org.oakgp.type.CommonTypes.integerType;
-import static org.oakgp.type.CommonTypes.stringType;
 
 import org.oakgp.function.AbstractFunctionTest;
-import org.oakgp.primitive.FunctionSet;
-import org.oakgp.util.FunctionSetBuilder;
 
 public class NotEqualTest extends AbstractFunctionTest {
    @Override
@@ -55,11 +52,5 @@ public class NotEqualTest extends AbstractFunctionTest {
    public void testCannotSimplify() {
       cannotSimplify("(!= 8 v0)", integerType());
       cannotSimplify("(!= v0 v1)", integerType(), integerType());
-   }
-
-   @Override
-   protected FunctionSet getFunctionSet() {
-      NotEqual function = getFunction();
-      return new FunctionSetBuilder().add(function, integerType()).add(function, stringType()).build();
    }
 }

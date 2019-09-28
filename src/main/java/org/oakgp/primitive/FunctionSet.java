@@ -19,6 +19,7 @@ import static java.util.Collections.unmodifiableList;
 import static org.oakgp.util.Utils.groupBy;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -33,7 +34,7 @@ public final class FunctionSet {
    private final Map<Type, List<Key>> functionsByType;
 
    /** Constructs a function set containing the specified functions. */
-   public FunctionSet(List<FunctionSet.Key> functions) {
+   public FunctionSet(Collection<FunctionSet.Key> functions) {
       // TODO validate display names using NodeReader.isValidDisplayName
       this.functions = unmodifiableList(new ArrayList<>(functions)); // TODO add immutableCopy(List) method to Utils
       this.functionsBySignature = groupBy(functions, Key::getSignature);

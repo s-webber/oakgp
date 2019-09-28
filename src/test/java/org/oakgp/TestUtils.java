@@ -138,7 +138,7 @@ public class TestUtils {
       Filter filter = new Filter();
       builder.add(filter, integerType());
 
-      org.oakgp.function.hof.Map transform = new org.oakgp.function.hof.Map();
+      org.oakgp.function.hof.Map transform = org.oakgp.function.hof.Map.getSingleton();
       builder.add(transform, integerType(), booleanType());
 
       builder.add(new IsPositive());

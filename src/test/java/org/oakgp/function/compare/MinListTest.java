@@ -21,12 +21,7 @@ import static org.oakgp.type.CommonTypes.listType;
 import java.util.Collections;
 
 import org.oakgp.function.AbstractFunctionTest;
-import org.oakgp.function.coll.Set;
-import org.oakgp.function.coll.Sort;
-import org.oakgp.function.coll.SortedSet;
 import org.oakgp.node.ConstantNode;
-import org.oakgp.primitive.FunctionSet;
-import org.oakgp.util.FunctionSetBuilder;
 
 public class MinListTest extends AbstractFunctionTest {
    @Override
@@ -55,11 +50,5 @@ public class MinListTest extends AbstractFunctionTest {
    public void testCannotSimplify() {
       cannotSimplify("(min (set v0))", listType(integerType()));
       cannotSimplify("(min (sorted-set v0))", listType(integerType()));
-   }
-
-   @Override
-   protected FunctionSet getFunctionSet() {
-      return new FunctionSetBuilder().add(getFunction(), integerType()).add(Sort.getSingleton(), integerType()).add(Set.getSingleton(), integerType())
-            .add(SortedSet.getSingleton(), integerType()).build();
    }
 }

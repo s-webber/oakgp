@@ -120,7 +120,7 @@ public final class Utils {
     * @param valueToKey
     *           the classification function used to group values
     */
-   public static <K, V> Map<K, List<V>> groupBy(List<V> values, Function<V, K> valueToKey) {
+   public static <K, V> Map<K, List<V>> groupBy(Collection<V> values, Function<V, K> valueToKey) {
       return groupBy(values.stream(), valueToKey);
    }
 

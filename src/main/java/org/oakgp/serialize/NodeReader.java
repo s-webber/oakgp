@@ -340,12 +340,23 @@ public final class NodeReader implements Closeable {
    }
 
    private Key getFunctionKey(String token) {
+      FunctionSet.Key match = null;
+
       for (FunctionSet.Key key : functionSet.getFunctions()) {
          if (token.equals(key.getFunction().getDisplayName())) {
-            return key;
+            if (match == null) {
+               match = key;
+            } else {
+               throw new IllegalArgumentException("Multiple versions of function: " + token + " in: " + functionSet);
+            }
          }
       }
-      throw new IllegalArgumentException("Could not find version of function: " + token + " in: " + functionSet);
+
+      if (match != null) {
+         return match;
+      } else {
+         throw new IllegalArgumentException("Could not find version of function: " + token + " in: " + functionSet);
+      }
    }
 
    private static void assertNotEndOfStream(int c) {

@@ -15,19 +15,13 @@
  */
 package org.oakgp.function.coll;
 
-import static org.oakgp.type.CommonTypes.booleanType;
 import static org.oakgp.type.CommonTypes.integerType;
 import static org.oakgp.type.CommonTypes.mapType;
 
 import java.util.Collections;
 
 import org.oakgp.function.AbstractFunctionTest;
-import org.oakgp.function.classify.IsFalse;
-import org.oakgp.function.classify.IsZero;
-import org.oakgp.function.hof.MapValues;
 import org.oakgp.node.ConstantNode;
-import org.oakgp.primitive.FunctionSet;
-import org.oakgp.util.FunctionSetBuilder;
 
 public class CountMapTest extends AbstractFunctionTest {
    @Override
@@ -56,12 +50,5 @@ public class CountMapTest extends AbstractFunctionTest {
 
    @Override
    public void testCannotSimplify() {
-   }
-
-   @Override
-   protected FunctionSet getFunctionSet() {
-      return new FunctionSetBuilder().add(getFunction(), integerType(), integerType()).add(getFunction(), integerType(), booleanType())
-            .add(new MapValues(), integerType(), booleanType(), integerType()).add(new MapValues(), integerType(), booleanType(), booleanType())
-            .add(new IsZero()).add(new IsFalse()).build();
    }
 }

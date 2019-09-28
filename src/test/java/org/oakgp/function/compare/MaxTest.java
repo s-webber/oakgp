@@ -16,11 +16,8 @@
 package org.oakgp.function.compare;
 
 import static org.oakgp.type.CommonTypes.integerType;
-import static org.oakgp.type.CommonTypes.stringType;
 
 import org.oakgp.function.AbstractFunctionTest;
-import org.oakgp.primitive.FunctionSet;
-import org.oakgp.util.FunctionSetBuilder;
 
 public class MaxTest extends AbstractFunctionTest {
    @Override
@@ -66,11 +63,5 @@ public class MaxTest extends AbstractFunctionTest {
       cannotSimplify("(max (min v0 1) (min v1 1))", integerType(), integerType());
       cannotSimplify("(max (min v2 v1) (min v0 1))", integerType(), integerType(), integerType());
       cannotSimplify("(max (min v3 (min v0 1)) (min v2 v1))", integerType(), integerType(), integerType(), integerType());
-   }
-
-   @Override
-   protected FunctionSet getFunctionSet() {
-      Max function = getFunction();
-      return new FunctionSetBuilder().add(function, integerType()).add(function, stringType()).add(Min.getSingleton(), integerType()).build();
    }
 }

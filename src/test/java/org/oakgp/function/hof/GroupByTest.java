@@ -15,19 +15,11 @@
  */
 package org.oakgp.function.hof;
 
-import static org.oakgp.type.CommonTypes.booleanType;
-import static org.oakgp.type.CommonTypes.integerType;
-
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.oakgp.function.AbstractFunctionTest;
-import org.oakgp.function.classify.IsNegative;
-import org.oakgp.function.classify.IsPositive;
-import org.oakgp.function.classify.IsZero;
-import org.oakgp.primitive.FunctionSet;
-import org.oakgp.util.FunctionSetBuilder;
 
 public class GroupByTest extends AbstractFunctionTest {
    @Override
@@ -58,10 +50,5 @@ public class GroupByTest extends AbstractFunctionTest {
 
    @Override
    public void testCannotSimplify() {
-   }
-
-   @Override
-   protected FunctionSet getFunctionSet() {
-      return new FunctionSetBuilder().add(getFunction(), booleanType(), integerType()).add(new IsPositive()).add(new IsNegative()).add(new IsZero()).build();
    }
 }

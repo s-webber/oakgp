@@ -16,14 +16,13 @@
 package org.oakgp.examples.tictactoe;
 
 import static org.oakgp.function.Signature.createSignature;
-import static org.oakgp.type.Types.type;
 
 import org.oakgp.Arguments;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
 
 public class GetAnyMove implements Function {
-   private static final Signature SIGNATURE = createSignature(type("tictactoemove"), type("board"));
+   private static final Signature SIGNATURE = createSignature(TicTacToeSystemTest.MOVE_TYPE, TicTacToeSystemTest.BOARD_TYPE);
 
    @Override
    public Object evaluate(Arguments arguments) {

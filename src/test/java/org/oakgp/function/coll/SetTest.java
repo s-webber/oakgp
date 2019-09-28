@@ -23,13 +23,11 @@ import java.util.Collections;
 
 import org.oakgp.function.AbstractFunctionTest;
 import org.oakgp.node.ConstantNode;
-import org.oakgp.primitive.FunctionSet;
-import org.oakgp.util.FunctionSetBuilder;
 
 public class SetTest extends AbstractFunctionTest {
    @Override
    protected Set getFunction() {
-      return new Set();
+      return Set.getSingleton();
    }
 
    @Override
@@ -49,11 +47,5 @@ public class SetTest extends AbstractFunctionTest {
 
    @Override
    public void testCannotSimplify() {
-   }
-
-   @Override
-   protected FunctionSet getFunctionSet() {
-      return new FunctionSetBuilder().add(getFunction(), integerType()).add(SortedSet.getSingleton(), integerType()).add(Sort.getSingleton(), integerType())
-            .build();
    }
 }

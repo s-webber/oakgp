@@ -19,8 +19,6 @@ import static org.oakgp.type.CommonTypes.integerType;
 
 import org.oakgp.function.AbstractFunctionTest;
 import org.oakgp.node.ConstantNode;
-import org.oakgp.primitive.FunctionSet;
-import org.oakgp.util.FunctionSetBuilder;
 
 public class IsFalseTest extends AbstractFunctionTest {
    @Override
@@ -49,10 +47,5 @@ public class IsFalseTest extends AbstractFunctionTest {
    @Override
    public void testCannotSimplify() {
       cannotSimplify("(false? (zero? v0))", integerType());
-   }
-
-   @Override
-   protected FunctionSet getFunctionSet() {
-      return new FunctionSetBuilder().add(getFunction()).add(new IsZero()).build();
    }
 }

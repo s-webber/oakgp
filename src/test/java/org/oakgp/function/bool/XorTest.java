@@ -18,8 +18,6 @@ package org.oakgp.function.bool;
 import static org.oakgp.type.CommonTypes.booleanType;
 
 import org.oakgp.function.AbstractFunctionTest;
-import org.oakgp.primitive.FunctionSet;
-import org.oakgp.util.FunctionSetBuilder;
 
 public class XorTest extends AbstractFunctionTest {
    @Override
@@ -57,10 +55,5 @@ public class XorTest extends AbstractFunctionTest {
 
    @Override
    public void testCannotSimplify() {
-   }
-
-   @Override
-   protected FunctionSet getFunctionSet() {
-      return new FunctionSetBuilder().add(getFunction()).build();
    }
 }

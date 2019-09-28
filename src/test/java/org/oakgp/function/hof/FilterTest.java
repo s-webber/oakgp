@@ -17,17 +17,8 @@ package org.oakgp.function.hof;
 
 import static java.util.Arrays.asList;
 import static org.oakgp.type.CommonTypes.integerListType;
-import static org.oakgp.type.CommonTypes.integerType;
 
 import org.oakgp.function.AbstractFunctionTest;
-import org.oakgp.function.classify.IsNegative;
-import org.oakgp.function.classify.IsPositive;
-import org.oakgp.function.classify.IsZero;
-import org.oakgp.function.coll.Set;
-import org.oakgp.function.coll.Sort;
-import org.oakgp.function.coll.SortedSet;
-import org.oakgp.primitive.FunctionSet;
-import org.oakgp.util.FunctionSetBuilder;
 
 public class FilterTest extends AbstractFunctionTest {
    @Override
@@ -65,11 +56,5 @@ public class FilterTest extends AbstractFunctionTest {
    @Override
    public void testCannotSimplify() {
       cannotSimplify("(filter zero? (filter pos? v0))", integerListType());
-   }
-
-   @Override
-   protected FunctionSet getFunctionSet() {
-      return new FunctionSetBuilder().add(getFunction(), integerType()).add(new IsPositive()).add(new IsNegative()).add(new IsZero())
-            .add(Set.getSingleton(), integerType()).add(Sort.getSingleton(), integerType()).add(SortedSet.getSingleton(), integerType()).build();
    }
 }

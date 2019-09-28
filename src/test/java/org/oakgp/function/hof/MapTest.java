@@ -37,9 +37,11 @@ import org.oakgp.primitive.FunctionSet;
 import org.oakgp.util.FunctionSetBuilder;
 
 public class MapTest extends AbstractFunctionTest {
+   private FunctionSet functionSet;
+
    @Override
    protected Map getFunction() {
-      return new Map();
+      return Map.getSingleton();
    }
 
    @Override
@@ -68,18 +70,22 @@ public class MapTest extends AbstractFunctionTest {
       cannotSimplify("(map false? (sorted-set (map pos? (set v0))))", integerListType());
    }
 
-   @Override
-   protected FunctionSet getFunctionSet() {
-      return new FunctionSetBuilder().add(getFunction(), booleanType(), integerType()).add(getFunction(), booleanType(), booleanType()).add(new IsFalse())
-            .add(getFunction(), doubleType(), doubleType()).add(new IsFalse()).add(new IsPositive()).add(new IsNegative()).add(new IsZero())
-            .add(Sort.getSingleton(), integerType()).add(Sort.getSingleton(), booleanType()).add(Set.getSingleton(), integerType())
-            .add(Set.getSingleton(), booleanType()).add(SortedSet.getSingleton(), booleanType()).add(SortedSet.getSingleton(), integerType())
-            .add(new Logarithm(), doubleType()).add(Sort.getSingleton(), doubleType()).add(Set.getSingleton(), doubleType())
-            .add(SortedSet.getSingleton(), doubleType()).add(Set.getSingleton(), integerType()).build();
+   @Test
+   public void testIsTemplate() { // TODO add this test to all template functions or remove from here
+      assertTrue(getFunction().getSignature().isTemplate());
    }
 
-   @Test
-   public void testIsTemplate() {
-      assertTrue(new Map().getSignature().isTemplate());
+   @Override
+   protected FunctionSet getFunctionSet() {
+      if (functionSet == null) {
+         functionSet = new FunctionSetBuilder().add(getFunction(), booleanType(), integerType()).add(getFunction(), booleanType(), booleanType())
+               .add(getFunction(), doubleType(), doubleType()).add(new IsFalse()).add(new IsPositive()).add(new IsNegative()).add(new IsZero())
+               .add(Sort.getSingleton(), integerType()).add(Sort.getSingleton(), booleanType()).add(Set.getSingleton(), integerType())
+               .add(Set.getSingleton(), booleanType()).add(SortedSet.getSingleton(), booleanType()).add(SortedSet.getSingleton(), integerType())
+               .add(Logarithm.getSingleton(), doubleType()).add(Sort.getSingleton(), doubleType()).add(Set.getSingleton(), doubleType())
+               .add(SortedSet.getSingleton(), doubleType()).add(Set.getSingleton(), integerType()).build();
+      }
+
+      return functionSet;
    }
 }

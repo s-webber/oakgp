@@ -25,8 +25,6 @@ import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.node.VariableNode;
-import org.oakgp.primitive.FunctionSet;
-import org.oakgp.util.FunctionSetBuilder;
 
 public class OrElseTest extends AbstractFunctionTest {
    private static final OrElse OR_ELSE = new OrElse();
@@ -74,10 +72,5 @@ public class OrElseTest extends AbstractFunctionTest {
    @Override
    public void testCannotSimplify() {
       cannotSimplify("(or-else v0 v1)", nullableType(stringType()), stringType());
-   }
-
-   @Override
-   protected FunctionSet getFunctionSet() {
-      return new FunctionSetBuilder().add(getFunction(), stringType()).build();
    }
 }

@@ -33,6 +33,10 @@ import org.oakgp.primitive.FunctionSet;
 import org.oakgp.util.FunctionSetBuilder;
 
 public class SumTest extends AbstractFunctionTest {
+   private static final Filter FILTER = new Filter();
+   private static final Map MAP = Map.getSingleton();
+   private static final IsPositive IS_POSITIVE = new IsPositive();
+
    @Override
    protected Sum<Integer> getFunction() {
       return IntegerUtils.INTEGER_UTILS.getSum();
@@ -85,7 +89,7 @@ public class SumTest extends AbstractFunctionTest {
    protected FunctionSet getFunctionSet() {
       return new FunctionSetBuilder().add(getFunction()).add(DoubleUtils.DOUBLE_UTILS.getSum()).add(Sort.getSingleton(), integerType())
             .add(Sort.getSingleton(), doubleType()).add(Set.getSingleton(), integerType()).add(Set.getSingleton(), doubleType())
-            .add(SortedSet.getSingleton(), integerType()).add(SortedSet.getSingleton(), doubleType()).add(new Filter(), integerType()).add(new IsPositive())
-            .add(new Map(), doubleType(), integerType()).add(new Map(), doubleType(), doubleType()).add(new Logarithm(), doubleType()).build();
+            .add(SortedSet.getSingleton(), integerType()).add(SortedSet.getSingleton(), doubleType()).add(FILTER, integerType()).add(IS_POSITIVE)
+            .add(MAP, doubleType(), integerType()).add(MAP, doubleType(), doubleType()).add(Logarithm.getSingleton(), doubleType()).build();
    }
 }

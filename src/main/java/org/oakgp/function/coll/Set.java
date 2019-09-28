@@ -39,7 +39,7 @@ public class Set implements Function {
 
    private final Signature signature;
 
-   public Set() {
+   private Set() {
       Type type = Types.generic("ElementType", comparableType());
       signature = Signature.createSignature(listType(type), listType(type));
    }

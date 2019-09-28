@@ -23,11 +23,6 @@ import static org.oakgp.type.CommonTypes.integerType;
 import org.junit.Test;
 import org.oakgp.function.AbstractFunctionTest;
 import org.oakgp.function.Signature;
-import org.oakgp.function.compare.GreaterThan;
-import org.oakgp.function.compare.LessThan;
-import org.oakgp.function.math.IntegerUtils;
-import org.oakgp.primitive.FunctionSet;
-import org.oakgp.util.FunctionSetBuilder;
 
 public class IfTest extends AbstractFunctionTest {
    private static final If IF = new If();
@@ -75,11 +70,5 @@ public class IfTest extends AbstractFunctionTest {
       assertSame(booleanType(), signature.getArgumentType(0));
       assertSame(integerType(), signature.getArgumentType(1));
       assertSame(integerType(), signature.getArgumentType(2));
-   }
-
-   @Override
-   protected FunctionSet getFunctionSet() {
-      return new FunctionSetBuilder().add(getFunction(), integerType()).add(IntegerUtils.INTEGER_UTILS.getAdd()).add(IntegerUtils.INTEGER_UTILS.getMultiply())
-            .add(LessThan.getSingleton(), integerType()).add(new GreaterThan(), integerType()).build();
    }
 }
