@@ -49,14 +49,9 @@ import org.oakgp.type.Types.Type;
 public final class Filter implements Function {
    private final Signature signature;
 
-   /**
-    * Creates a higher order functions that filters the elements of a collection.
-    *
-    * @param type
-    *           the type of the elements contained in the collection
-    */
+   /** Creates a higher order functions that filters the elements of a collection. */
    public Filter() {
-      Type type = Types.generic("Type");
+      Type type = Types.generic("Type"); // the type of the elements contained in the collection
       signature = Signature.createSignature(listType(type), functionType(booleanType(), type), listType(type));
    }
 
@@ -80,7 +75,7 @@ public final class Filter implements Function {
       if (isFunction(input)) {
          FunctionNode fn = (FunctionNode) input;
          Function f = fn.getFunction();
-         if (f.getClass() == Filter.class) { // TODO use if (f==this)
+         if (f == this) {
             if (fn.getChildren().first().equals(functionNode.getChildren().first())) {
                // (filter pos? (filter pos? v0)) -> (filter pos? v0)
                return fn;

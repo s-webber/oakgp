@@ -29,7 +29,7 @@ import org.oakgp.type.Types.Type;
  *
  * @see java.lang.Math#log(double)
  */
-public class Logarithm implements Function {
+public final class Logarithm implements Function {
    private static final Logarithm SINGLETON = new Logarithm();
 
    public static Logarithm getSingleton() {

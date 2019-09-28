@@ -26,7 +26,12 @@ import org.oakgp.function.Signature;
 import org.oakgp.type.Types;
 import org.oakgp.type.Types.Type;
 
-public class Contains implements Function {
+/**
+ * Determines if a value is contained in a collection.
+ * <p>
+ * Returns true if the value specified by the first argument is contained in the collection specified by the second argument.
+ */
+public final class Contains implements Function {
    private final Signature signature;
 
    public Contains() {

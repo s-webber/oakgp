@@ -24,7 +24,8 @@ import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.util.Utils;
 
-public class And implements Function {
+/** Determines if two boolean expressions both evaluate to {@code true}. */
+public final class And implements Function {
    private static final Signature SIGNATURE = Signature.createSignature(booleanType(), booleanType(), booleanType());
 
    @Override

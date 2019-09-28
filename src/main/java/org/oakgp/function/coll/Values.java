@@ -27,7 +27,8 @@ import org.oakgp.function.Signature;
 import org.oakgp.type.Types;
 import org.oakgp.type.Types.Type;
 
-public class Values implements MapperFunction {
+/** Returns the values contained in the given map. */
+public final class Values implements MapperFunction {
    private final Signature signature;
 
    public Values() {
@@ -39,7 +40,7 @@ public class Values implements MapperFunction {
    @Override
    public Object evaluate(Arguments arguments) {
       Map<?, ?> a = arguments.first();
-      return new ArrayList<>(a.values()); // TODO should we just return a.values() instead?
+      return new ArrayList<>(a.values());
    }
 
    @Override

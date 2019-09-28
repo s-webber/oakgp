@@ -40,6 +40,7 @@ import org.oakgp.node.ChildNodes;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
+import org.oakgp.type.CommonTypes;
 import org.oakgp.type.Types.Type;
 
 /** Utility methods that support the functionality provided by the rest of the framework. */
@@ -87,7 +88,7 @@ public final class Utils {
       return constants;
    }
 
-   /** Creates an array of the specified size and assigns the result of {@link Type#integerType()} to each element. */
+   /** Creates an array of the specified size and assigns the result of {@link CommonTypes#integerType()} to each element. */
    public static Type[] createIntegerTypeArray(int size) { // TODO move to TestUtils
       Type[] array = new Type[size];
       Type type = integerType();

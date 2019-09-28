@@ -20,7 +20,7 @@ import java.util.Arrays;
 import org.oakgp.type.Types.Type;
 
 /** Used as keys for the caching of {@link Types.Type} instances. */
-class TypeKey {
+final class TypeKey {
    private final String name;
    private final Type[] parameters;
    private final int hashCode;

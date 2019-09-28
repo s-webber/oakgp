@@ -62,7 +62,7 @@ public final class NodeSimplifier {
     * @param input
     *           the node to attempt to simplify.
     * @return the result of attempting to simplify {@code input}.
-    * @see org.oakgp.function.Function#simplify(Arguments)
+    * @see org.oakgp.function.Function#simplify(FunctionNode)
     */
    public static Node simplify(Node input) {
       int ctr = 0;

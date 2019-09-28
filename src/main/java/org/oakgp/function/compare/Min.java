@@ -32,7 +32,8 @@ import org.oakgp.type.Types;
 import org.oakgp.type.Types.Type;
 import org.oakgp.util.Utils;
 
-public class Min implements Function {
+/** Compares two arguments and returns the minimum. */
+public final class Min implements Function {
    private static final Min SINGLETON = new Min();
 
    public static Min getSingleton() {
@@ -46,6 +47,7 @@ public class Min implements Function {
       this.signature = Signature.createSignature(type, type, type);
    }
 
+   @SuppressWarnings({ "rawtypes", "unchecked" })
    @Override
    public Comparable evaluate(Arguments arguments) {
       Comparable first = arguments.first();

@@ -33,6 +33,7 @@ public final class HigherOrderFunctionArguments implements Arguments {
       this.args = new Object[] { arg1, arg2 };
    }
 
+   @SuppressWarnings("unchecked")
    @Override
    public <T> T getArg(int index) {
       return (T) args[index];

@@ -30,6 +30,7 @@ import org.oakgp.function.Signature;
 import org.oakgp.type.Types;
 import org.oakgp.type.Types.Type;
 
+/** Transforms the given map of values to another map with the same keys but with the given function applied to the values. */
 public final class MapValues implements MapperFunction {
    private final Signature signature;
 

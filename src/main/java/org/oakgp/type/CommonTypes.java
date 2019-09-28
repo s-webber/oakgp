@@ -28,7 +28,7 @@ import java.util.function.BiFunction;
 import org.oakgp.function.Function;
 import org.oakgp.type.Types.Type;
 
-public class CommonTypes {
+public final class CommonTypes {
    private static final Type COMPARABLE = name(Comparable.class).build();
    private static final Type NUMBER = name(Number.class).parents(COMPARABLE).build();
    private static final Type STRING = name(String.class).parents(COMPARABLE).build();

@@ -30,7 +30,8 @@ import org.oakgp.node.Node;
 import org.oakgp.type.Types;
 import org.oakgp.type.Types.Type;
 
-public class Set implements Function {
+/** Returns the distinct values contained in the given collection. */
+public final class Set implements Function {
    private static final Set SINGLETON = new Set();
 
    public static Set getSingleton() {

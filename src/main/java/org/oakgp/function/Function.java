@@ -36,12 +36,12 @@ public interface Function {
    Signature getSignature();
 
    /**
-    * Attempts to find a simplified alternative to applying this function to the specified arguments.
+    * Attempts to find a simplified alternative to applying this function to the specified arguments. TODO javadoc
     * <p>
     * Simplification can occur by replacing expressions with constant values (e.g. replacing {@code (+ 1 1)} with {@code 2}) or removing redundant branches
     * (e.g. replacing {@code (if (< 2 3) (+ v0 v1) (* v0 v1))} with {@code (+ v0 v1)}.
     *
-    * @param arguments
+    * @param functionNode
     *           the arguments to be applied to (i.e. evaluated by) this function
     * @return a simplified version of applying this function to the specified arguments, or {@code null} if unable to simplify.
     * @see org.oakgp.NodeSimplifier

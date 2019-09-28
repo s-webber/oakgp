@@ -32,7 +32,8 @@ import org.oakgp.type.Types;
 import org.oakgp.type.Types.Type;
 import org.oakgp.util.Utils;
 
-public class SortedSet implements Function {
+/** Returns the distinct values contained in the given collection sorted into ascending order. */
+public final class SortedSet implements Function {
    private static final SortedSet SINGLETON = new SortedSet();
 
    public static SortedSet getSingleton() {

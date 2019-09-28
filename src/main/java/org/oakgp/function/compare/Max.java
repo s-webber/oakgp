@@ -25,7 +25,8 @@ import org.oakgp.node.Node;
 import org.oakgp.type.Types;
 import org.oakgp.type.Types.Type;
 
-public class Max implements Function {
+/** Compares two arguments and returns the maximum. */
+public final class Max implements Function {
    private static final Max SINGLETON = new Max();
 
    public static Max getSingleton() {
@@ -39,6 +40,7 @@ public class Max implements Function {
       this.signature = Signature.createSignature(type, type, type);
    }
 
+   @SuppressWarnings({ "rawtypes", "unchecked" })
    @Override
    public Comparable evaluate(Arguments arguments) {
       Comparable first = arguments.first();

@@ -27,7 +27,8 @@ import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.util.Utils;
 
-public class Sum<T extends Comparable<T>> implements Function {
+/** Returns the sum of the numbers contained in the given collection. */
+final class Sum<T extends Comparable<T>> implements Function {
    private final Signature signature;
    private final NumberUtils<T> numberUtils;
 

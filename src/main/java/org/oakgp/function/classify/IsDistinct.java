@@ -34,7 +34,8 @@ import org.oakgp.type.Types;
 import org.oakgp.type.Types.Type;
 import org.oakgp.util.Utils;
 
-public class IsDistinct implements Function { // TODO what is the correct package for this?
+/** Determines if all the elements in a collection are distinct. */
+public final class IsDistinct implements Function { // TODO what is the correct package for this?
    private final Signature signature;
 
    public IsDistinct() {

@@ -34,7 +34,8 @@ import org.oakgp.type.Types;
 import org.oakgp.type.Types.Type;
 import org.oakgp.util.Utils;
 
-public class Sort implements MapperFunction {
+/** Returns the elements in the given collection sorted into ascending order. */
+public final class Sort implements MapperFunction {
    private static final Sort SINGLETON = new Sort();
 
    public static Sort getSingleton() {

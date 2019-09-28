@@ -132,6 +132,11 @@ abstract class NumberUtils<T extends Comparable<T>> {
       return zero;
    }
 
+   /** Returns the value {@code 1} of type {@link #T}. */
+   public final T rawOne() { // TODO rename
+      return rawOne;
+   }
+
    /** Returns a {@code ConstantNode} with the value {@code 1} of type {@link #T}. */
    public final ConstantNode one() {
       return one;
@@ -185,7 +190,7 @@ abstract class NumberUtils<T extends Comparable<T>> {
    /**
     * Returns the result of negating the numeric value represented by the given node.
     *
-    * @param n
+    * @param arg
     *           the expression to negate (may be a {@code ConstantNode}, {@code VariableNode} or a {@code FunctionNode})
     */
    public final Node negate(Node arg) {
@@ -213,6 +218,7 @@ abstract class NumberUtils<T extends Comparable<T>> {
     *           a {@code ConstantNode} with a value of type {@link #T}
     * @param n2
     *           a {@code ConstantNode} with a value of type {@link #T}
+    * @return {@code n1} * {@code n2}
     */
    public final ConstantNode multiply(Node n1, Node n2) {
       return createConstant(multiply(evaluate(n1), evaluate(n2)));

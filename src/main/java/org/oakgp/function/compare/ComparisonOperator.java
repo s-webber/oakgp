@@ -37,6 +37,7 @@ abstract class ComparisonOperator implements Function {
       this.equalsIsTrue = equalsIsTrue;
    }
 
+   @SuppressWarnings({ "rawtypes", "unchecked" })
    @Override
    public final Object evaluate(Arguments arguments) {
       Comparable o1 = arguments.first();

@@ -31,7 +31,8 @@ import org.oakgp.node.Node;
 import org.oakgp.type.Types;
 import org.oakgp.type.Types.Type;
 
-public class MaxList implements Function {
+/** Compares the values of a given collection and returns the maximum. */
+public final class MaxList implements Function {
    private final Signature signature;
 
    public MaxList() {
@@ -39,6 +40,7 @@ public class MaxList implements Function {
       this.signature = Signature.createSignature(nullableType(type), listType(type));
    }
 
+   @SuppressWarnings({ "rawtypes", "unchecked" })
    @Override
    public Comparable evaluate(Arguments arguments) {
       Collection<Comparable> input = arguments.first();

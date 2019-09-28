@@ -28,7 +28,8 @@ import org.oakgp.function.Signature;
 import org.oakgp.type.Types;
 import org.oakgp.type.Types.Type;
 
-public class IsEvery implements Function {
+/** Returns {@code true} if the given function returns {@code true} for every element in the given collection. */
+public final class IsEvery implements Function {
    private final Signature signature;
 
    public IsEvery() {

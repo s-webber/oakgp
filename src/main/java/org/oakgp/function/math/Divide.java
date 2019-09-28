@@ -35,7 +35,7 @@ final class Divide<T extends Comparable<T>> extends ArithmeticOperator<T> {
    @Override
    protected T evaluate(T arg1, T arg2) {
       if (numberUtils.rawZero().equals(arg2)) { /// TODO have isRawZero method?
-         return (T) numberUtils.one().evaluate(null);
+         return numberUtils.rawOne();
       } else {
          return numberUtils.divide(arg1, arg2);
       }

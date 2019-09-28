@@ -26,7 +26,8 @@ import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.util.Utils;
 
-public class Xor implements Function {
+/** Determines if exactly one of two boolean expressions evaluate to {@code true}. */
+public final class Xor implements Function {
    private static final Signature SIGNATURE = Signature.createSignature(booleanType(), booleanType(), booleanType());
 
    @Override

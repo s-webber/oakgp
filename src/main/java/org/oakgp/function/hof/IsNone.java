@@ -28,7 +28,8 @@ import org.oakgp.function.Signature;
 import org.oakgp.type.Types;
 import org.oakgp.type.Types.Type;
 
-public class IsNone implements Function {
+/** Returns {@code true} if the given function returns {@code false} for every element in the given collection. */
+public final class IsNone implements Function {
    private final Signature signature;
 
    public IsNone() {

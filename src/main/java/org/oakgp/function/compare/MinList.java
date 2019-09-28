@@ -31,7 +31,8 @@ import org.oakgp.node.Node;
 import org.oakgp.type.Types;
 import org.oakgp.type.Types.Type;
 
-public class MinList implements Function {
+/** Compares the values of a given collection and returns the minimum. */
+public final class MinList implements Function {
    private final Signature signature;
 
    public MinList() {
@@ -39,6 +40,7 @@ public class MinList implements Function {
       this.signature = Signature.createSignature(nullableType(type), listType(type));
    }
 
+   @SuppressWarnings({ "rawtypes", "unchecked" })
    @Override
    public Comparable evaluate(Arguments arguments) {
       Collection<Comparable> input = arguments.first();

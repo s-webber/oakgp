@@ -24,7 +24,8 @@ import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.node.NodeType;
 
-public class IsFalse implements Function {
+/** Determines if a boolean expression evaluates to {@code false}. */
+public final class IsFalse implements Function {
    private static final Signature SIGNATURE = Signature.createSignature(booleanType(), booleanType());
 
    @Override

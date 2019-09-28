@@ -23,7 +23,7 @@ import org.oakgp.function.Signature;
 import org.oakgp.primitive.FunctionSet;
 import org.oakgp.type.Types.Type;
 
-public class FunctionSetBuilder {
+public final class FunctionSetBuilder {
    private final List<FunctionSet.Key> functions = new ArrayList<>();
 
    public FunctionSetBuilder addAll(Function... values) {
