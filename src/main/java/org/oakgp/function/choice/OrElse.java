@@ -36,7 +36,7 @@ public final class OrElse implements Function {
 
    /** Constructs a selection operator that returns values of the specified type. */
    public OrElse() {
-      Type type = Types.generic("Type");
+      Type type = Types.generic("OrElseReturnType");
       signature = Signature.createSignature(type, nullableType(type), type);
    }
 

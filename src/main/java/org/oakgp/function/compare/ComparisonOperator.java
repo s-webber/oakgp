@@ -16,6 +16,7 @@
 package org.oakgp.function.compare;
 
 import static org.oakgp.type.CommonTypes.booleanType;
+import static org.oakgp.type.CommonTypes.comparableType;
 
 import org.oakgp.Arguments;
 import org.oakgp.function.Function;
@@ -32,7 +33,7 @@ abstract class ComparisonOperator implements Function {
    private final boolean equalsIsTrue;
 
    protected ComparisonOperator(boolean equalsIsTrue) {
-      Type type = Types.generic("Type");
+      Type type = Types.generic("ComparableType", comparableType());
       this.signature = Signature.createSignature(booleanType(), type, type);
       this.equalsIsTrue = equalsIsTrue;
    }

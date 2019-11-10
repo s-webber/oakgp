@@ -15,8 +15,6 @@
  */
 package org.oakgp.function;
 
-import org.oakgp.NodeSimplifier;
-
 /**
  * Represents an impure function.
  * <p>
@@ -33,7 +31,7 @@ public interface ImpureFunction extends Function {
     * Returns {@code false} so that the node simplification process can recognise that this is an impure function and therefore function nodes that use it
     * cannot be replaced with their value.
     *
-    * @see NodeSimplifier
+    * @see org.oakgp.NodeSimplifier
     */
    @Override
    default boolean isPure() {

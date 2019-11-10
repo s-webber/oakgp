@@ -29,7 +29,7 @@ import java.util.Set;
  * Used to facilitate strongly typed genetic programming (STGP).
  */
 public final class Types {
-   private static final Map<String, Type> TEMPLATE_CACHE = new HashMap<>();
+   private static final Map<TemplateKey, Type> TEMPLATE_CACHE = new HashMap<>();
    private static final Map<TypeKey, Type> TYPE_CACHE = new HashMap<>();
    private static final Type[] EMPTY_ARRAY = new Type[0];
 
@@ -38,12 +38,13 @@ public final class Types {
    }
 
    public synchronized static Type declareType(String name, Type[] parents, Type[] parameters) {
-      if (TEMPLATE_CACHE.containsKey(name)) {
-         throw new IllegalStateException("Type already declared: " + name);
+      TemplateKey templateKey = new TemplateKey(name, parameters.length);
+      if (TEMPLATE_CACHE.containsKey(templateKey)) {
+         throw new IllegalStateException("Type already declared: " + name + " with " + parameters.length + " parameters");
       }
 
       Type type = new Type(name, getParents(parents), parameters);
-      TEMPLATE_CACHE.put(name, type);
+      TEMPLATE_CACHE.put(templateKey, type);
       TYPE_CACHE.put(new TypeKey(name, parameters), type);
       return type;
    }
@@ -67,9 +68,9 @@ public final class Types {
    }
 
    private static Set<Type> getParameterisedType(String name, Type[] parameters) {
-      Type template = TEMPLATE_CACHE.get(name);
+      Type template = TEMPLATE_CACHE.get(new TemplateKey(name, parameters.length));
       if (template == null) {
-         throw new IllegalArgumentException("Unknown type: " + name);
+         throw new IllegalArgumentException("Unknown type: " + name + " with " + parameters.length + " parameters");
       }
 
       if (template.parameters.length != parameters.length) {
@@ -92,16 +93,16 @@ public final class Types {
    public static void match(Type template, Type actual, Map<Type, Type> assignments) {
       template = assignments.getOrDefault(template, template);
       if (template.template) {
-         if (!actual.getHierarchy().containsAll(template.getHierarchy())) {
-            throw new IllegalArgumentException(actual.name + " not of types " + template.getHierarchy());
+         if (!actual.hierarchy.containsAll(template.hierarchy)) {
+            throw new IllegalArgumentException(actual.name + " not of types " + template.hierarchy);
          }
          assignments.put(template, actual);
          return;
       }
 
       if (actual.template) {
-         if (!template.getHierarchy().containsAll(actual.getHierarchy())) {
-            throw new RuntimeException(actual.name + " " + actual.getHierarchy() + " " + template.name + " " + template.getHierarchy());
+         if (!template.hierarchy.containsAll(actual.hierarchy)) {
+            throw new RuntimeException(actual.name + " " + actual.hierarchy + " " + template.name + " " + template.hierarchy);
          }
          assignments.put(actual, template);
          actual = template;
@@ -136,6 +137,27 @@ public final class Types {
       return new Type(name, new HashSet<>(Arrays.asList(parents)), true);
    }
 
+   private static class TemplateKey {
+      private final String name;
+      private final int arity;
+
+      private TemplateKey(String name, int arity) {
+         this.name = name;
+         this.arity = arity;
+      }
+
+      @Override
+      public boolean equals(Object o) {
+         TemplateKey k = (TemplateKey) o;
+         return name.equals(k.name) && arity == k.arity;
+      }
+
+      @Override
+      public int hashCode() {
+         return name.hashCode();
+      }
+   }
+
    /**
     * Represents a data type.
     * <p>
@@ -145,7 +167,8 @@ public final class Types {
       private final String name;
       private final Set<Type> parents;
       private final Type[] parameters;
-      private boolean template;
+      private final boolean template;
+      private final Set<Type> hierarchy;
 
       private Type(String name, Set<Type> parents, Type... parameters) {
          this(name, parents, parameters, false);
@@ -160,6 +183,7 @@ public final class Types {
          this.parents = Collections.unmodifiableSet(parents);
          this.parameters = Arrays.copyOf(parameters, parameters.length);
          this.template = template;
+         this.hierarchy = Collections.unmodifiableSet(buildHierarchy());
       }
 
       public String getName() {
@@ -174,15 +198,20 @@ public final class Types {
          return Arrays.asList(parameters);
       }
 
-      private Set<Type> getHierarchy() { // TODO calculate in constructor and cache
+      private Set<Type> buildHierarchy() { // TODO calculate in constructor and cache
          Set<Type> result = new HashSet<>();
          if (!template) {
             result.add(this);
          }
          for (Type p : parents) {
-            result.addAll(p.getHierarchy());
+            result.addAll(p.buildHierarchy());
          }
          return result;
+      }
+
+      /** Is this instance assignable to the given {@code type}? */
+      public boolean isAssignable(Type type) {
+         return this == type || hierarchy.containsAll(type.hierarchy);
       }
 
       public boolean isGeneric() {

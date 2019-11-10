@@ -49,7 +49,7 @@ public final class If implements Function {
 
    /** Constructs a selection operator that returns values of the specified type. */
    public If() {
-      Type type = Types.generic("Type");
+      Type type = Types.generic("IfReturnType");
       signature = Signature.createSignature(type, booleanType(), type, type);
    }
 

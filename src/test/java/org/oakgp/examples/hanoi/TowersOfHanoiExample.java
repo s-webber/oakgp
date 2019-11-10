@@ -34,6 +34,8 @@ import org.oakgp.node.Node;
 import org.oakgp.primitive.FunctionSet;
 import org.oakgp.rank.RankedCandidates;
 import org.oakgp.rank.fitness.FitnessFunction;
+import org.oakgp.type.CommonTypes;
+import org.oakgp.type.TypeBuilder;
 import org.oakgp.type.Types.Type;
 import org.oakgp.util.FunctionSetBuilder;
 import org.oakgp.util.RunBuilder;
@@ -41,7 +43,7 @@ import org.oakgp.util.Utils;
 
 public class TowersOfHanoiExample {
    static final Type STATE_TYPE = declareType("gameState");
-   static final Type MOVE_TYPE = declareType("move");
+   static final Type MOVE_TYPE = TypeBuilder.name("move").parents(CommonTypes.comparableType()).build();
    static final Type POLE_TYPE = declareType("pole");
 
    private static final int TARGET_FITNESS = 0;

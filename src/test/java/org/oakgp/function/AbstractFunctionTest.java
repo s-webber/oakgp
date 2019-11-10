@@ -31,6 +31,8 @@ import static org.oakgp.util.Utils.createIntegerTypeArray;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Set;
@@ -118,8 +120,13 @@ public abstract class AbstractFunctionTest {
    }
 
    private FunctionSet createFunctionSet() {
+      List<FunctionSet.Key> keys = new ArrayList<>();
       Set<Type> types = asSet(integerType(), doubleType(), stringType(), booleanType(), integerListType(), booleanListType(), listType(doubleType()));
-      return FunctionsTest.autowire(FunctionsTest.getTestFunctions(), types);
+      for (Function f : FunctionsTest.getTestFunctions()) {
+         keys.addAll(FunctionKeyFactory.createKeys(f, types));
+      }
+
+      return new FunctionSet(keys);
    }
 
    protected void cannotSimplify(String input, Type... variableTypes) {

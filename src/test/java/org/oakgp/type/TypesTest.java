@@ -16,6 +16,7 @@
 package org.oakgp.type;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
@@ -47,19 +48,28 @@ public class TypesTest {
          Types.declareType(name);
          fail();
       } catch (IllegalStateException e) {
-         assertEquals("Type already declared: " + name, e.getMessage());
+         assertEquals("Type already declared: " + name + " with 0 parameters", e.getMessage());
       }
       try {
-         name(name).parameters(stringType()).build();
+         Types.declareType(name);
          fail();
       } catch (IllegalStateException e) {
-         assertEquals("Type already declared: " + name, e.getMessage());
+         assertEquals("Type already declared: " + name + " with 0 parameters", e.getMessage());
       }
       try {
          name(name).parents(stringType()).build();
          fail();
       } catch (IllegalStateException e) {
-         assertEquals("Type already declared: " + name, e.getMessage());
+         assertEquals("Type already declared: " + name + " with 0 parameters", e.getMessage());
+      }
+
+      // can declare type with same name as an existing type if they have a different number of parameters
+      name(name).parameters(stringType()).build();
+      try {
+         name(name).parameters(stringType()).build();
+         fail();
+      } catch (IllegalStateException e) {
+         assertEquals("Type already declared: " + name + " with 1 parameters", e.getMessage());
       }
    }
 
@@ -224,12 +234,28 @@ public class TypesTest {
       }
    }
 
+   @Test
+   public void isAssignable() {
+      String name = uniqueTypeName();
+      Type type = Types.declareType(name);
+      assertTrue(type.isAssignable(type));
+      assertTrue(type.isAssignable(type));
+
+      Type superType = CommonTypes.comparableType();
+      Type parameter = Types.generic("X", superType);
+
+      assertFalse(parameter.isAssignable(type));
+      Type subType = TypeBuilder.name(uniqueTypeName()).parents(superType).build();
+      assertFalse(parameter.isAssignable(subType));
+      assertTrue(subType.isAssignable(parameter));
+   }
+
    private void assertParameterLengthMismatch(String name, Type... parameters) {
       try {
          Types.type(name, parameters);
          fail();
       } catch (IllegalArgumentException e) {
-         assertEquals("Parameter length mismatch", e.getMessage());
+         assertEquals("Unknown type: " + name + " with " + parameters.length + " parameters", e.getMessage());
       }
    }
 

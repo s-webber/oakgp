@@ -23,7 +23,6 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
-import java.util.function.BiFunction;
 
 import org.oakgp.function.Function;
 import org.oakgp.type.Types.Type;
@@ -41,7 +40,7 @@ public final class CommonTypes {
    private static final Type LIST = name(List.class).parameters(generic("T")).build();
    private static final Type MAP = name(Map.class).parameters(generic("K"), generic("V")).build();
    private static final Type FUNCTION = name(Function.class).parameters(generic("R"), generic("I")).build();
-   private static final Type BI_FUNCTION = name(BiFunction.class).parameters(generic("R"), generic("A"), generic("B")).build();
+   private static final Type BI_FUNCTION = name(Function.class).parameters(generic("R"), generic("A"), generic("B")).build();
    private static final Type NULLABLE = name("Nullable").parameters(generic("T")).build();
 
    /** Returns the type associated with implementations of {@code java.lang.Comparable}. */

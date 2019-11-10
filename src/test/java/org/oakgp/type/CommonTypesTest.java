@@ -128,7 +128,7 @@ public class CommonTypesTest {
       Type inputType2 = uniqueType();
       Type function = CommonTypes.biFunctionType(returnType, inputType1, inputType2);
 
-      assertSame(function, Types.type("BiFunction", returnType, inputType1, inputType2));
+      assertSame(function, Types.type("Function", returnType, inputType1, inputType2));
       assertParameters(function, returnType, inputType1, inputType2);
       assertNoParents(function);
    }

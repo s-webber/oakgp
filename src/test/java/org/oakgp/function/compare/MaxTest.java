@@ -38,6 +38,8 @@ public class MaxTest extends AbstractFunctionTest {
 
    @Override
    public void testCanSimplify() {
+      simplify("(max 7 8)").to("8");
+
       simplify("(max v0 v0)").to("v0");
       simplify("(max (min v0 1) (min v0 1))").to("(min v0 1)");
       simplify("(max 1 v0)").to("(max v0 1)");
