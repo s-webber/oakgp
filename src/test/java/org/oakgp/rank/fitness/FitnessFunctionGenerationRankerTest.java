@@ -47,7 +47,7 @@ public class FitnessFunctionGenerationRankerTest {
       given(mockFitnessFunction.evaluate(c)).willReturn(cFitness);
 
       // invoke rank method
-      GenerationRanker generationRanker = new FitnessFunctionGenerationRanker(mockFitnessFunction);
+      GenerationRanker generationRanker = new FitnessFunctionGenerationRanker(mockFitnessFunction, true);
       RankedCandidates output = generationRanker.rank(input);
 
       // assert output

@@ -44,7 +44,7 @@ public class RoundRobinTournamentTest {
       given(mockGame.evaluate(b, c)).willReturn(2d);
 
       // invoke rank method
-      GenerationRanker tournament = new RoundRobinTournament(mockGame);
+      GenerationRanker tournament = new RoundRobinTournament(mockGame, true);
       RankedCandidates output = tournament.rank(input);
 
       // assert output

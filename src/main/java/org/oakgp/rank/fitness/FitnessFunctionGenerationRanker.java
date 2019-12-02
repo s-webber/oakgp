@@ -16,6 +16,7 @@
 package org.oakgp.rank.fitness;
 
 import java.util.Collection;
+import java.util.stream.Stream;
 
 import org.oakgp.node.Node;
 import org.oakgp.rank.GenerationRanker;
@@ -25,15 +26,19 @@ import org.oakgp.rank.RankedCandidates;
 /** Ranks and sorts the fitness of {@code Node} instances using a {@code FitnessFunction}. */
 public final class FitnessFunctionGenerationRanker implements GenerationRanker {
    private final FitnessFunction fitnessFunction;
+   private final boolean parallel;
 
    /**
     * Constructs a {@code GenerationRanker} with the specified {@code FitnessFunction}.
     *
     * @param fitnessFunction
     *           the {@code FitnessFunction} to use when determining the fitness of candidates
+    * @param parallel
+    *           {@code true} if a parallel stream should be used for ranking candidates
     */
-   public FitnessFunctionGenerationRanker(FitnessFunction fitnessFunction) {
+   public FitnessFunctionGenerationRanker(FitnessFunction fitnessFunction, boolean parallel) {
       this.fitnessFunction = fitnessFunction;
+      this.parallel = parallel;
    }
 
    /**
@@ -45,13 +50,12 @@ public final class FitnessFunctionGenerationRanker implements GenerationRanker {
     */
    @Override
    public RankedCandidates rank(Collection<Node> input) {
-      RankedCandidate[] output = new RankedCandidate[input.size()];
-      int ctr = 0;
-      for (Node n : input) {
-         RankedCandidate rankedCandidate = rankCandidate(n);
-         output[ctr++] = rankedCandidate;
-      }
+      RankedCandidate[] output = stream(input).map(this::rankCandidate).toArray(RankedCandidate[]::new);
       return new RankedCandidates(output);
+   }
+
+   private Stream<Node> stream(Collection<Node> input) {
+      return parallel ? input.parallelStream() : input.stream();
    }
 
    private RankedCandidate rankCandidate(Node n) {
