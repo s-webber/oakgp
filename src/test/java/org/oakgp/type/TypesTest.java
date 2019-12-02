@@ -119,8 +119,8 @@ public class TypesTest {
 
       assertNoParents(a);
       assertParents(b, a);
-      assertParents(c, b);
-      assertParents(d, c);
+      assertParents(c, b, a);
+      assertParents(d, c, b, a);
    }
 
    @Test
@@ -136,10 +136,7 @@ public class TypesTest {
       Type c = name(uniqueTypeName()).parents(Types.type(b.getName(), stringType)).build();
       assertNoParents(a);
       assertParents(b, Types.type(a.getName(), z, z));
-      assertParents(c, Types.type(b.getName(), stringType));
-
-      assertSame(getSingleParent(c), Types.type(b.getName(), stringType));
-      assertSame(getSingleParent(getSingleParent(c)), Types.type(a.getName(), stringType, stringType));
+      assertParents(c, Types.type(a.getName(), stringType, stringType), Types.type(b.getName(), stringType));
    }
 
    @Test

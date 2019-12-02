@@ -18,6 +18,7 @@ package org.oakgp.util;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.util.Collections.unmodifiableList;
+import static java.util.Collections.unmodifiableMap;
 import static java.util.stream.Collectors.groupingBy;
 import static org.oakgp.node.NodeType.isFunction;
 import static org.oakgp.type.CommonTypes.booleanType;
@@ -26,6 +27,7 @@ import static org.oakgp.type.CommonTypes.integerType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -85,7 +87,7 @@ public final class Utils {
       for (int i = minInclusive; i <= maxInclusive; i++) {
          constants.add(new ConstantNode(i, integerType()));
       }
-      return constants;
+      return constants; // TODO make immutable?
    }
 
    /** Creates an array of the specified size and assigns the result of {@link CommonTypes#integerType()} to each element. */
@@ -99,6 +101,32 @@ public final class Utils {
    /** Returns a map grouping the specified nodes by their {@code Type}. */
    public static <T extends Node> Map<Type, List<T>> groupByType(T[] nodes) {
       return groupBy(nodes, Node::getType);
+   }
+
+   /**
+    * For each key add its associated values to all super-types of the key.
+    *
+    * e.g. If the given map contains an entry mapping the "Integer" type to the values [1,2,3] then add a mapping for the "Number" and "Comparable" types to the
+    * values [1,2,3] (as "Number" and "Comparable" are super-types of "Integer").
+    *
+    * TODO add a better explanation
+    *
+    * TODO think of better method name
+    */
+   public static <T> Map<Type, List<T>> expand(Map<Type, List<T>> input) {
+      Map<Type, List<T>> output = new HashMap<>();
+
+      for (Type key : new ArrayList<>(input.keySet())) {
+         List<T> inputValues = input.get(key);
+
+         output.computeIfAbsent(key, k -> new ArrayList<>()).addAll(inputValues);
+
+         for (Type subType : key.getParents()) {
+            output.computeIfAbsent(subType, k -> new ArrayList<>()).addAll(inputValues);
+         }
+      }
+
+      return unmodifiableMapOfLists(output);
    }
 
    /**
@@ -127,15 +155,16 @@ public final class Utils {
 
    private static <K, V> Map<K, List<V>> groupBy(Stream<V> values, Function<V, K> valueToKey) {
       Map<K, List<V>> nodesByType = values.collect(groupingBy(valueToKey));
-      makeValuesImmutable(nodesByType);
-      return nodesByType;
+      return unmodifiableMapOfLists(nodesByType);
    }
 
    /** Replaces each {@code List} stored as a value in the specified {@code Map} with an immutable version. */
-   private static <K, V> void makeValuesImmutable(Map<K, List<V>> map) {
-      for (Map.Entry<K, List<V>> e : map.entrySet()) {
-         map.put(e.getKey(), unmodifiableList(e.getValue()));
+   private static <K, V> Map<K, List<V>> unmodifiableMapOfLists(Map<K, List<V>> input) {
+      Map<K, List<V>> output = new HashMap<>();
+      for (Map.Entry<K, List<V>> e : input.entrySet()) {
+         output.put(e.getKey(), unmodifiableList(e.getValue()));
       }
+      return unmodifiableMap(output);
    }
 
    /** Returns randomly selected index of a node from the specified tree. */

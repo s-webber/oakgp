@@ -16,7 +16,6 @@
 package org.oakgp.primitive;
 
 import static java.util.Collections.unmodifiableList;
-import static org.oakgp.util.Utils.groupBy;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -26,6 +25,7 @@ import java.util.Map;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
 import org.oakgp.type.Types.Type;
+import org.oakgp.util.Utils;
 
 /** Represents the set of possible {@code Function} implementations to use during a genetic programming run. */
 public final class FunctionSet {
@@ -37,8 +37,8 @@ public final class FunctionSet {
    public FunctionSet(Collection<FunctionSet.Key> functions) {
       // TODO validate display names using NodeReader.isValidDisplayName
       this.functions = unmodifiableList(new ArrayList<>(functions)); // TODO add immutableCopy(List) method to Utils
-      this.functionsBySignature = groupBy(functions, Key::getSignature);
-      this.functionsByType = groupBy(functions, Key::getReturnType);
+      this.functionsBySignature = Utils.groupBy(functions, Key::getSignature);
+      this.functionsByType = Utils.expand(Utils.groupBy(functions, Key::getReturnType));
    }
 
    /**

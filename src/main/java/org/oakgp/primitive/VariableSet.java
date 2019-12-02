@@ -37,7 +37,7 @@ public final class VariableSet {
       for (int i = 0; i < variableTypes.length; i++) {
          this.variables[i] = new VariableNode(i, variableTypes[i]);
       }
-      this.variablesByType = Utils.groupByType(this.variables);
+      this.variablesByType = Utils.expand(Utils.groupByType(this.variables));
    }
 
    /**

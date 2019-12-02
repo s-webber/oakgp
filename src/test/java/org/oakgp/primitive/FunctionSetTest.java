@@ -22,14 +22,18 @@ import static org.oakgp.TestUtils.assertUnmodifiable;
 import static org.oakgp.function.Signature.createSignature;
 import static org.oakgp.type.CommonTypes.booleanListType;
 import static org.oakgp.type.CommonTypes.booleanType;
+import static org.oakgp.type.CommonTypes.comparableType;
 import static org.oakgp.type.CommonTypes.doubleType;
 import static org.oakgp.type.CommonTypes.integerListType;
 import static org.oakgp.type.CommonTypes.integerType;
+import static org.oakgp.type.CommonTypes.numberType;
 import static org.oakgp.type.CommonTypes.stringType;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.junit.Test;
+import org.oakgp.TestUtils;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
 import org.oakgp.function.choice.If;
@@ -60,15 +64,10 @@ public class FunctionSetTest {
       IsZero isZero = new IsZero();
       FunctionSet functionSet = new FunctionSetBuilder().add(ADD).add(SUBTRACT).add(MULTIPLY).add(isZero).build();
 
-      List<FunctionSet.Key> integers = functionSet.getByType(integerType());
-      assertEquals(3, integers.size());
-      assertSame(ADD, integers.get(0).getFunction());
-      assertSame(SUBTRACT, integers.get(1).getFunction());
-      assertSame(MULTIPLY, integers.get(2).getFunction());
-
-      List<FunctionSet.Key> booleans = functionSet.getByType(booleanType());
-      assertEquals(1, booleans.size());
-      assertSame(isZero, booleans.get(0).getFunction());
+      assertContains(functionSet.getByType(booleanType()), isZero);
+      assertContains(functionSet.getByType(integerType()), ADD, MULTIPLY, SUBTRACT);
+      assertContains(functionSet.getByType(numberType()), ADD, MULTIPLY, SUBTRACT);
+      assertContains(functionSet.getByType(comparableType()), ADD, MULTIPLY, SUBTRACT, isZero);
 
       assertNull(functionSet.getByType(stringType()));
    }
@@ -89,9 +88,7 @@ public class FunctionSetTest {
       assertEquals(4, functionSet.getByType(integerType()).size());
 
       List<FunctionSet.Key> integers = functionSet.getBySignature(createSignature(integerType(), integerType(), integerType()));
-      assertEquals(2, integers.size());
-      assertSame(ADD, integers.get(0).getFunction());
-      assertSame(SUBTRACT, integers.get(1).getFunction());
+      assertContains(integers, ADD, SUBTRACT);
 
       List<FunctionSet.Key> integerArrays = functionSet.getBySignature(createSignature(integerType(), integerListType()));
       assertEquals(1, integerArrays.size());
@@ -181,5 +178,9 @@ public class FunctionSetTest {
             .add(count, integerType()).add(count, booleanType())
             // construct
             .build();
+   }
+
+   private static void assertContains(Collection<FunctionSet.Key> expected, Function... actual) {
+      TestUtils.assertContains(expected, FunctionSet.Key::getFunction, actual);
    }
 }

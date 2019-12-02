@@ -180,17 +180,34 @@ public final class Types {
 
       private Type(String name, Set<Type> parents, Type[] parameters, boolean template) {
          this.name = name;
-         this.parents = Collections.unmodifiableSet(parents);
+         this.parents = Collections.unmodifiableSet(buildParents(parents));
          this.parameters = Arrays.copyOf(parameters, parameters.length);
          this.template = template;
-         this.hierarchy = Collections.unmodifiableSet(buildHierarchy());
+         this.hierarchy = Collections.unmodifiableSet(buildHierarchy(parents));
+      }
+
+      private Set<Type> buildHierarchy(Set<Type> parents) {
+         Set<Type> result = new HashSet<>();
+         if (!template) {
+            result.add(this);
+         }
+         result.addAll(buildParents(parents));
+         return result;
+      }
+
+      private Set<Type> buildParents(Set<Type> parents) {
+         Set<Type> result = new HashSet<>();
+         for (Type p : parents) {
+            result.addAll(p.hierarchy);
+         }
+         return result;
       }
 
       public String getName() {
          return name;
       }
 
-      public Set<Type> getParents() {
+      public Set<Type> getParents() { // TODO remove "parents" and always use "hierarchy"
          return parents;
       }
 
@@ -198,19 +215,8 @@ public final class Types {
          return Arrays.asList(parameters);
       }
 
-      private Set<Type> buildHierarchy() { // TODO calculate in constructor and cache
-         Set<Type> result = new HashSet<>();
-         if (!template) {
-            result.add(this);
-         }
-         for (Type p : parents) {
-            result.addAll(p.buildHierarchy());
-         }
-         return result;
-      }
-
       /** Is this instance assignable to the given {@code type}? */
-      public boolean isAssignable(Type type) {
+      public boolean isAssignable(Type type) { // TODO use or remove
          return this == type || hierarchy.containsAll(type.hierarchy);
       }
 

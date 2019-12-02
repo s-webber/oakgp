@@ -15,8 +15,10 @@
  */
 package org.oakgp;
 
+import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
@@ -34,6 +36,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -74,6 +77,19 @@ public class TestUtils {
    public static final VariableSet VARIABLE_SET = VariableSet.createVariableSet(createIntegerTypeArray(100));
    private static final FunctionSet FUNCTION_SET = createDefaultFunctions();
    private static final AtomicLong TYPE_CTR = new AtomicLong();
+
+   @SafeVarargs
+   public static <I, T> void assertContains(Collection<I> collection, java.util.function.Function<I, T> mapper, T... values) {
+      assertContains(collection.stream().map(mapper).collect(toList()), values);
+   }
+
+   @SafeVarargs
+   public static <T> void assertContains(Collection<T> collection, T... values) {
+      assertEquals("Expected " + values.length + " elements but got: " + collection, collection.size(), values.length);
+      for (T value : values) {
+         assertTrue(value + " not in " + collection, collection.contains(value));
+      }
+   }
 
    @SuppressWarnings({ "unchecked", "rawtypes" })
    public static void assertUnmodifiable(List list) {

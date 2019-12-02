@@ -16,14 +16,17 @@
 package org.oakgp.primitive;
 
 import static java.lang.Boolean.TRUE;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
+import static org.oakgp.TestUtils.assertContains;
 import static org.oakgp.TestUtils.assertUnmodifiable;
 import static org.oakgp.TestUtils.booleanConstant;
+import static org.oakgp.TestUtils.doubleConstant;
 import static org.oakgp.TestUtils.integerConstant;
 import static org.oakgp.type.CommonTypes.booleanType;
+import static org.oakgp.type.CommonTypes.comparableType;
+import static org.oakgp.type.CommonTypes.doubleType;
 import static org.oakgp.type.CommonTypes.integerType;
+import static org.oakgp.type.CommonTypes.numberType;
 import static org.oakgp.type.CommonTypes.stringType;
 
 import java.util.List;
@@ -37,17 +40,15 @@ public class ConstantSetTest {
       ConstantNode c0 = integerConstant(7);
       ConstantNode c1 = booleanConstant(TRUE);
       ConstantNode c2 = integerConstant(5);
+      ConstantNode c3 = doubleConstant(5);
 
-      ConstantSet s = new ConstantSet(c0, c1, c2);
+      ConstantSet s = new ConstantSet(c0, c1, c2, c3);
 
-      List<ConstantNode> integers = s.getByType(integerType());
-      assertEquals(2, integers.size());
-      assertSame(c0, integers.get(0));
-      assertSame(c2, integers.get(1));
-
-      List<ConstantNode> booleans = s.getByType(booleanType());
-      assertEquals(1, booleans.size());
-      assertSame(c1, booleans.get(0));
+      assertContains(s.getByType(booleanType()), c1);
+      assertContains(s.getByType(integerType()), c0, c2);
+      assertContains(s.getByType(doubleType()), c3);
+      assertContains(s.getByType(numberType()), c0, c2, c3);
+      assertContains(s.getByType(comparableType()), c0, c1, c2, c3);
 
       assertNull(s.getByType(stringType()));
    }

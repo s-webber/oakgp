@@ -46,27 +46,27 @@ public class CommonTypesTest {
 
    @Test
    public void testInteger() {
-      assertType(CommonTypes.integerType(), "Integer", CommonTypes.numberType());
+      assertType(CommonTypes.integerType(), "Integer", CommonTypes.numberType(), CommonTypes.comparableType());
    }
 
    @Test
    public void testLong() {
-      assertType(CommonTypes.longType(), "Long", CommonTypes.numberType());
+      assertType(CommonTypes.longType(), "Long", CommonTypes.numberType(), CommonTypes.comparableType());
    }
 
    @Test
    public void testDouble() {
-      assertType(CommonTypes.doubleType(), "Double", CommonTypes.numberType());
+      assertType(CommonTypes.doubleType(), "Double", CommonTypes.numberType(), CommonTypes.comparableType());
    }
 
    @Test
    public void testBigInteger() {
-      assertType(CommonTypes.bigIntegerType(), "BigInteger", CommonTypes.numberType());
+      assertType(CommonTypes.bigIntegerType(), "BigInteger", CommonTypes.numberType(), CommonTypes.comparableType());
    }
 
    @Test
    public void testBigDecimal() {
-      assertType(CommonTypes.bigDecimalType(), "BigDecimal", CommonTypes.numberType());
+      assertType(CommonTypes.bigDecimalType(), "BigDecimal", CommonTypes.numberType(), CommonTypes.comparableType());
    }
 
    @Test

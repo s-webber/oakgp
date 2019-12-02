@@ -28,7 +28,7 @@ public final class ConstantSet {
 
    /** Constructs a constant set containing the specified constants. */
    public ConstantSet(ConstantNode... constants) {
-      constantsByType = Utils.groupByType(constants);
+      constantsByType = Utils.expand(Utils.groupByType(constants));
    }
 
    /**

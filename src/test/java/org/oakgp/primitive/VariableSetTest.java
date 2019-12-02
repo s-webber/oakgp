@@ -19,9 +19,13 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
+import static org.oakgp.TestUtils.assertContains;
 import static org.oakgp.TestUtils.assertUnmodifiable;
 import static org.oakgp.type.CommonTypes.booleanType;
+import static org.oakgp.type.CommonTypes.comparableType;
+import static org.oakgp.type.CommonTypes.doubleType;
 import static org.oakgp.type.CommonTypes.integerType;
+import static org.oakgp.type.CommonTypes.numberType;
 import static org.oakgp.type.CommonTypes.stringType;
 
 import java.util.List;
@@ -54,20 +58,18 @@ public class VariableSetTest {
 
    @Test
    public void assertGetByType() {
-      VariableSet s = VariableSet.createVariableSet(integerType(), booleanType(), integerType());
+      VariableSet s = VariableSet.createVariableSet(integerType(), booleanType(), doubleType(), integerType());
 
       VariableNode v0 = s.getById(0);
       VariableNode v1 = s.getById(1);
       VariableNode v2 = s.getById(2);
+      VariableNode v3 = s.getById(3);
 
-      List<VariableNode> integers = s.getByType(integerType());
-      assertEquals(2, integers.size());
-      assertSame(v0, integers.get(0));
-      assertSame(v2, integers.get(1));
-
-      List<VariableNode> booleans = s.getByType(booleanType());
-      assertEquals(1, booleans.size());
-      assertSame(v1, booleans.get(0));
+      assertContains(s.getByType(booleanType()), v1);
+      assertContains(s.getByType(integerType()), v0, v3);
+      assertContains(s.getByType(doubleType()), v2);
+      assertContains(s.getByType(numberType()), v0, v2, v3);
+      assertContains(s.getByType(comparableType()), v0, v1, v2, v3);
 
       assertNull(s.getByType(stringType()));
    }
