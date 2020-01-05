@@ -20,7 +20,7 @@ import org.oakgp.function.AbstractFunctionTest;
 public class IsEvenTest extends AbstractFunctionTest {
    @Override
    protected IsEven getFunction() {
-      return new IsEven();
+      return IsEven.getSingleton();
    }
 
    @Override

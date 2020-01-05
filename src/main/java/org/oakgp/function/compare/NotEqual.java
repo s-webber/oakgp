@@ -17,6 +17,7 @@ package org.oakgp.function.compare;
 
 import static org.oakgp.util.NodeComparator.NODE_COMPARATOR;
 
+import org.oakgp.function.RulesEngine;
 import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
@@ -28,8 +29,14 @@ import org.oakgp.type.Types.Type;
  * <b>Note:</b> Equality is checked using {@code Comparable#compareTo(Object)} rather than {@code Object#equals(Object)}.
  */
 public final class NotEqual extends ComparisonOperator {
+   private static final NotEqual SINGLETON = new NotEqual();
+
+   public static NotEqual getSingleton() {
+      return SINGLETON;
+   }
+
    /** Constructs a function that compares two arguments of the specified type. */
-   public NotEqual() {
+   private NotEqual() {
       super(false);
    }
 
@@ -49,6 +56,35 @@ public final class NotEqual extends ComparisonOperator {
       } else {
          return simplifiedVersion;
       }
+   }
+
+   @Override
+   public RulesEngine getEngine(FunctionNode fn) {
+      RulesEngine e = new RulesEngine();
+
+      e.addRule(fn, (_e, fact, value) -> {
+         _e.addFact(new FunctionNode(Equal.getSingleton(), fn.getType(), fn.getChildren()), !value);
+
+         ChildNodes swappedArgs = fn.getChildren().swap(0, 1);
+
+         if (!value) {
+            _e.addFact(new FunctionNode(GreaterThan.getSingleton(), fn.getType(), fn.getChildren()), false);
+            _e.addFact(new FunctionNode(GreaterThan.getSingleton(), fn.getType(), swappedArgs), false);
+         } else {
+            _e.addRule(new FunctionNode(GreaterThanOrEqual.getSingleton(), fn.getType(), fn.getChildren()), (__e, __fact, __value) -> {
+               if (__value) {
+                  _e.addFact(new FunctionNode(GreaterThan.getSingleton(), fn.getType(), fn.getChildren()), true);
+               }
+            });
+            _e.addRule(new FunctionNode(GreaterThanOrEqual.getSingleton(), fn.getType(), fn.getChildren().swap(0, 1)), (__e, __fact, __value) -> {
+               if (__value) {
+                  _e.addFact(new FunctionNode(GreaterThan.getSingleton(), fn.getType(), fn.getChildren().swap(0, 1)), true);
+               }
+            });
+         }
+      });
+
+      return e;
    }
 
    @Override

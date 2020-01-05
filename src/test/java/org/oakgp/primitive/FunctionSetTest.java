@@ -18,6 +18,7 @@ package org.oakgp.primitive;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
+import static org.oakgp.TestUtils.assertEmpty;
 import static org.oakgp.TestUtils.assertUnmodifiable;
 import static org.oakgp.function.Signature.createSignature;
 import static org.oakgp.type.CommonTypes.booleanListType;
@@ -44,8 +45,6 @@ import org.oakgp.function.coll.CountList;
 import org.oakgp.function.compare.Equal;
 import org.oakgp.function.compare.GreaterThan;
 import org.oakgp.function.compare.GreaterThanOrEqual;
-import org.oakgp.function.compare.LessThan;
-import org.oakgp.function.compare.LessThanOrEqual;
 import org.oakgp.function.compare.NotEqual;
 import org.oakgp.function.hof.Map;
 import org.oakgp.function.hof.Reduce;
@@ -61,7 +60,7 @@ public class FunctionSetTest {
 
    @Test
    public void testGetByType() {
-      IsZero isZero = new IsZero();
+      IsZero isZero = IsZero.getSingleton();
       FunctionSet functionSet = new FunctionSetBuilder().add(ADD).add(SUBTRACT).add(MULTIPLY).add(isZero).build();
 
       assertContains(functionSet.getByType(booleanType()), isZero);
@@ -69,7 +68,7 @@ public class FunctionSetTest {
       assertContains(functionSet.getByType(numberType()), ADD, MULTIPLY, SUBTRACT);
       assertContains(functionSet.getByType(comparableType()), ADD, MULTIPLY, SUBTRACT, isZero);
 
-      assertNull(functionSet.getByType(stringType()));
+      assertEmpty(functionSet.getByType(stringType()));
    }
 
    @Test
@@ -131,7 +130,7 @@ public class FunctionSetTest {
    @Test
    public void testGetFunctions_sameReturnTypeDifferentSignatures() {
       Function addIntegers = IntegerUtils.INTEGER_UTILS.getAdd();
-      IsZero isZero = new IsZero();
+      IsZero isZero = IsZero.getSingleton();
       FunctionSet functionSet = new FunctionSetBuilder().add(addIntegers).add(isZero).build();
 
       List<FunctionSet.Key> functions = functionSet.getFunctions();
@@ -166,14 +165,14 @@ public class FunctionSetTest {
             // arithmetic
             .add(ADD).add(SUBTRACT).add(MULTIPLY)
             // comparison
-            .add(LessThan.getSingleton(), integerType()).add(LessThanOrEqual.getSingleton(), integerType()).add(new GreaterThan(), integerType())
-            .add(new GreaterThanOrEqual(), integerType()).add(new Equal(), integerType()).add(new NotEqual(), integerType())
+            .add(GreaterThan.getSingleton(), integerType()).add(GreaterThanOrEqual.getSingleton(), integerType()).add(Equal.getSingleton(), integerType())
+            .add(NotEqual.getSingleton(), integerType())
             // selection
             .add(ifFunction, integerType())
             // higher-order functions
             .add(new Reduce(integerType())) // TODO .add(new Filter(integerType()))// TODO .add(new org.oakgp.function.hof.Map(integerType(), booleanType()))
             // classify
-            .add(new IsPositive()).add(new IsNegative()).add(new IsZero())
+            .add(IsPositive.getSingleton()).add(IsNegative.getSingleton()).add(IsZero.getSingleton())
             // collections
             .add(count, integerType()).add(count, booleanType())
             // construct

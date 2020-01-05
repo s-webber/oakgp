@@ -148,7 +148,7 @@ public abstract class AbstractFunctionTest {
       return functionNode;
    }
 
-   private Node readNode(String input, VariableSet variableSet) {
+   protected Node readNode(String input, VariableSet variableSet) { // TODO private
       try (NodeReader nodeReader = new NodeReader(input, getFunctionSet(), new ConstantNode[0], variableSet)) {
          return nodeReader.readNode();
       } catch (IOException e) {

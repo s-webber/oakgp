@@ -18,22 +18,17 @@ package org.oakgp.util;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.oakgp.TestUtils.integerConstant;
 import static org.oakgp.TestUtils.mockNode;
 import static org.oakgp.TestUtils.readNode;
 import static org.oakgp.type.CommonTypes.booleanType;
-import static org.oakgp.type.CommonTypes.comparableType;
-import static org.oakgp.type.CommonTypes.doubleType;
 import static org.oakgp.type.CommonTypes.integerType;
-import static org.oakgp.type.CommonTypes.numberType;
 import static org.oakgp.type.CommonTypes.stringType;
 import static org.oakgp.util.DummyRandom.GetIntExpectation.nextInt;
 
 import java.util.Arrays;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -67,23 +62,6 @@ public class UtilsTest {
       assertEquals(asList("aardvark", "apple"), groups.get('a'));
       assertEquals(asList("bag"), groups.get('b'));
       assertEquals(asList("cat", "cake", "caterpillar"), groups.get('c'));
-   }
-
-   @Test
-   public void testExpand() {
-      Map<Type, List<String>> input = new LinkedHashMap<>();
-      input.put(stringType(), asList("a", "b", "c"));
-      input.put(integerType(), asList("q", "w", "e", "r", "t", "y"));
-      input.put(doubleType(), asList("x", "y", "z"));
-
-      Map<Type, List<String>> output = Utils.expand(input);
-      assertEquals(5, output.size());
-      assertEquals(asList("a", "b", "c"), output.get(stringType()));
-      assertEquals(asList("q", "w", "e", "r", "t", "y"), output.get(integerType()));
-      assertEquals(asList("x", "y", "z"), output.get(doubleType()));
-      assertEquals(asList("q", "w", "e", "r", "t", "y", "x", "y", "z"), output.get(numberType()));
-      assertEquals(asList("a", "b", "c", "q", "w", "e", "r", "t", "y", "x", "y", "z"), output.get(comparableType()));
-      assertNull(output.get(booleanType()));
    }
 
    @Test

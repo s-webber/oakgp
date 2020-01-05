@@ -25,20 +25,21 @@ import java.util.Map;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
 import org.oakgp.type.Types.Type;
+import org.oakgp.util.TypeMap;
 import org.oakgp.util.Utils;
 
 /** Represents the set of possible {@code Function} implementations to use during a genetic programming run. */
 public final class FunctionSet {
    private final List<Key> functions;
    private final Map<Signature, List<Key>> functionsBySignature;
-   private final Map<Type, List<Key>> functionsByType;
+   private final TypeMap<Key> functionsByType;
 
    /** Constructs a function set containing the specified functions. */
    public FunctionSet(Collection<FunctionSet.Key> functions) {
       // TODO validate display names using NodeReader.isValidDisplayName
       this.functions = unmodifiableList(new ArrayList<>(functions)); // TODO add immutableCopy(List) method to Utils
       this.functionsBySignature = Utils.groupBy(functions, Key::getSignature);
-      this.functionsByType = Utils.expand(Utils.groupBy(functions, Key::getReturnType));
+      this.functionsByType = new TypeMap<>(functions, Key::getReturnType);
    }
 
    /**
@@ -46,12 +47,11 @@ public final class FunctionSet {
     *
     * @param type
     *           the type to find matching functions of
-    * @return a list of all functions in this set that have the specified return type, or {@code null} if there are no functions with the required return type
+    * @return a list of all functions in this set that have the specified return type, or an empty list if there are no functions with the required return type
     *         in this set
     */
    public List<Key> getByType(Type type) {
-      // TODO should this return an empty list, rather than null, if no match found?
-      return functionsByType.get(type);
+      return functionsByType.getByType(type);
    }
 
    /**

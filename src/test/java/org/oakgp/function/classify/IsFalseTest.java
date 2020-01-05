@@ -15,6 +15,7 @@
  */
 package org.oakgp.function.classify;
 
+import static org.oakgp.type.CommonTypes.booleanType;
 import static org.oakgp.type.CommonTypes.integerType;
 
 import org.oakgp.function.AbstractFunctionTest;
@@ -23,7 +24,7 @@ import org.oakgp.node.ConstantNode;
 public class IsFalseTest extends AbstractFunctionTest {
    @Override
    protected IsFalse getFunction() {
-      return new IsFalse();
+      return IsFalse.getSingleton();
    }
 
    @Override
@@ -42,6 +43,11 @@ public class IsFalseTest extends AbstractFunctionTest {
       simplify("(false? (false? (false? false)))").to("true");
       simplify("(false? (false? (zero? v0)))").with(integerType()).to("(zero? v0)");
       simplify("(false? (false? (false? (zero? v0))))").with(integerType()).to("(false? (zero? v0))");
+
+      simplify("(false? (or v0 v1))").with(booleanType(), booleanType()).to("(and (false? v0) (false? v1))");
+      simplify("(false? (or v0 (or v1 v2)))").with(booleanType(), booleanType(), booleanType()).to("(and (false? v0) (and (false? v2) (false? v1)))");
+
+      simplify("(false? (odd? v0))").to("(even? v0)");
    }
 
    @Override

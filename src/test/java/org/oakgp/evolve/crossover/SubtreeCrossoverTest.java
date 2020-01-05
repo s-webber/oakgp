@@ -66,7 +66,7 @@ public class SubtreeCrossoverTest {
    @Test
    public void testMixedTypes() {
       String input = "(+ 4 5)";
-      String output = "(if (< 6 7) 8 9)";
+      String output = "(if (> 6 7) 8 9)";
 
       DummyRandom dummyRandom = random().nextInt(2).returns(0, 1, 1, 1, 1, 1).nextInt(5).returns(0, 0, 1, 2, 3, 4).build();
       DummyNodeSelector dummySelector = new DummyNodeSelector(input, output, input, output, input, output, input, output, input, output, input, output);
@@ -87,7 +87,7 @@ public class SubtreeCrossoverTest {
    /** Test attempted crossover when selected node in first parent has a type that is not present in the second parent */
    @Test
    public void testNoMatchingTypes() {
-      String input = "(+ (if (< 6 7) 8 9) 5)";
+      String input = "(+ (if (> 6 7) 8 9) 5)";
       String output = "(+ 1 2)";
 
       DummyRandom dummyRandom = nextInt(7).returns(2);

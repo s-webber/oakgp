@@ -19,12 +19,22 @@ import static org.oakgp.type.CommonTypes.booleanType;
 import static org.oakgp.type.CommonTypes.integerType;
 
 import org.oakgp.Arguments;
-import org.oakgp.function.Function;
+import org.oakgp.function.BooleanFunction;
+import org.oakgp.function.RulesEngine;
 import org.oakgp.function.Signature;
+import org.oakgp.node.FunctionNode;
 
 /** Determines if a number is odd. */
-public final class IsOdd implements Function {
+public final class IsOdd implements BooleanFunction {
    private static final Signature SIGNATURE = Signature.createSignature(booleanType(), integerType());
+   private static final IsOdd SINGLETON = new IsOdd();
+
+   public static IsOdd getSingleton() {
+      return SINGLETON;
+   }
+
+   private IsOdd() {
+   }
 
    @Override
    public Object evaluate(Arguments arguments) {
@@ -35,5 +45,17 @@ public final class IsOdd implements Function {
    @Override
    public Signature getSignature() {
       return SIGNATURE;
+   }
+
+   @Override
+   public RulesEngine getEngine(FunctionNode fn) {
+      RulesEngine e = new RulesEngine();
+      e.addRule(fn, (_e, f, v) -> {
+         _e.addFact(new FunctionNode(IsEven.getSingleton(), fn.getType(), fn.getChildren()), !v);
+         if (v) {
+            _e.addFact(new FunctionNode(IsZero.getSingleton(), fn.getType(), fn.getChildren()), false);
+         }
+      });
+      return e;
    }
 }

@@ -35,6 +35,17 @@ public final class FunctionNode implements Node {
    private final ChildNodes arguments;
    private final int nodeCount;
    private final int hashCode;
+   private boolean simplified;
+
+   @Override
+   public void setSimplified() {
+      simplified = true;
+   }
+
+   @Override
+   public boolean isSimplified() {
+      return simplified;
+   }
 
    // TODO have a constructor that takes a FunctionSet.Key
 

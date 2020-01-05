@@ -24,7 +24,7 @@ import org.oakgp.function.AbstractFunctionTest;
 public class EqualTest extends AbstractFunctionTest {
    @Override
    protected Equal getFunction() {
-      return new Equal();
+      return Equal.getSingleton();
    }
 
    @Override

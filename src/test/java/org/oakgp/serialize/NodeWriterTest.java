@@ -134,7 +134,7 @@ public class NodeWriterTest {
 
    @Test
    public void testFunctionAsArgument() {
-      ConstantNode criteria = new ConstantNode(new IsPositive(), integerToBooleanFunctionType());
+      ConstantNode criteria = new ConstantNode(IsPositive.getSingleton(), integerToBooleanFunctionType());
       ConstantNode args = new ConstantNode(Arrays.asList(integerConstant(6), integerConstant(-2), integerConstant(17)), listType(integerType()));
       FunctionNode input = new FunctionNode(new Filter(), integerType(), criteria, args);
 

@@ -24,8 +24,6 @@ import org.oakgp.function.choice.If;
 import org.oakgp.function.compare.Equal;
 import org.oakgp.function.compare.GreaterThan;
 import org.oakgp.function.compare.GreaterThanOrEqual;
-import org.oakgp.function.compare.LessThan;
-import org.oakgp.function.compare.LessThanOrEqual;
 import org.oakgp.function.compare.NotEqual;
 import org.oakgp.function.math.IntegerUtils;
 import org.oakgp.node.ConstantNode;
@@ -50,9 +48,8 @@ public class GridWarExample {
    public static void main(String[] args) {
       FunctionSet functionSet = new FunctionSetBuilder()
             .addAll(IntegerUtils.INTEGER_UTILS.getAdd(), IntegerUtils.INTEGER_UTILS.getSubtract(), IntegerUtils.INTEGER_UTILS.getMultiply())
-            .add(LessThan.getSingleton(), integerType()).add(LessThanOrEqual.getSingleton(), integerType()).add(new GreaterThan(), integerType())
-            .add(new GreaterThanOrEqual(), integerType()).add(new Equal(), integerType()).add(new NotEqual(), integerType()).add(new If(), integerType())
-            .build();
+            .add(GreaterThan.getSingleton(), integerType()).add(GreaterThanOrEqual.getSingleton(), integerType()).add(Equal.getSingleton(), integerType())
+            .add(NotEqual.getSingleton(), integerType()).add(new If(), integerType()).build();
 
       Collection<ConstantNode> constants = Utils.createIntegerConstants(0, 4);
       Type[] variables = createIntegerTypeArray(NUM_VARIABLES);

@@ -35,7 +35,7 @@ import org.oakgp.util.FunctionSetBuilder;
 public class SumTest extends AbstractFunctionTest {
    private static final Filter FILTER = new Filter();
    private static final Map MAP = Map.getSingleton();
-   private static final IsPositive IS_POSITIVE = new IsPositive();
+   private static final IsPositive IS_POSITIVE = IsPositive.getSingleton();
 
    @Override
    protected Sum<Integer> getFunction() {

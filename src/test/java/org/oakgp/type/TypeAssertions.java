@@ -17,7 +17,9 @@ package org.oakgp.type;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
-import static org.oakgp.TestUtils.asSet;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import org.oakgp.type.Types.Type;
 
@@ -39,6 +41,9 @@ class TypeAssertions {
    }
 
    static void assertParents(Type t, Type... expected) {
-      assertEquals(asSet(expected), t.getParents());
+      Set<Type> expectedSet = new HashSet<>();
+      expectedSet.addAll(asList(expected));
+      expectedSet.add(Types.type("Object")); // Object is a parent of all other types
+      assertEquals(expectedSet, t.getParents());
    }
 }

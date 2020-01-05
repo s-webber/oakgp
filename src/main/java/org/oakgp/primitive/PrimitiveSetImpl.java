@@ -56,12 +56,12 @@ public final class PrimitiveSetImpl implements PrimitiveSet {
 
    @Override
    public boolean hasTerminals(Type type) {
-      return variableSet.getByType(type) != null || constantSet.getByType(type) != null;
+      return !variableSet.getByType(type).isEmpty() || !constantSet.getByType(type).isEmpty();
    }
 
    @Override
    public boolean hasFunctions(Type type) {
-      return functionSet.getByType(type) != null;
+      return !functionSet.getByType(type).isEmpty();
    }
 
    @Override
@@ -127,7 +127,7 @@ public final class PrimitiveSetImpl implements PrimitiveSet {
    }
 
    private <C, P extends C> C randomlySelectAlternative(C currentVersion, List<P> possibilities) {
-      if (possibilities == null) {
+      if (possibilities.isEmpty()) {
          return currentVersion;
       }
 

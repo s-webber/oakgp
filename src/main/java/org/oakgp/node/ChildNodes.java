@@ -18,7 +18,7 @@ package org.oakgp.node;
 import static org.oakgp.util.Utils.copyOf;
 
 import java.util.Arrays;
-import java.util.Collection;
+import java.util.List;
 
 /**
  * Represents the children of a {@code FunctionNode}.
@@ -38,7 +38,7 @@ public final class ChildNodes {
     *           the values to be stored in the {@code ChildNodes}
     * @return a new {@code ChildNodes} which contains the values specified by {@code args}
     */
-   public static ChildNodes createChildNodes(Collection<? extends Node> args) {
+   public static ChildNodes createChildNodes(List<? extends Node> args) {
       return new ChildNodes(args.toArray(new Node[args.size()]));
    }
 

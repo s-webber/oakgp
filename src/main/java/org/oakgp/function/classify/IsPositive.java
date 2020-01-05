@@ -19,12 +19,22 @@ import static org.oakgp.type.CommonTypes.booleanType;
 import static org.oakgp.type.CommonTypes.integerType;
 
 import org.oakgp.Arguments;
-import org.oakgp.function.Function;
+import org.oakgp.function.BooleanFunction;
+import org.oakgp.function.RulesEngine;
 import org.oakgp.function.Signature;
+import org.oakgp.node.FunctionNode;
 
 /** Determines if a number is positive. */
-public final class IsPositive implements Function {
+public final class IsPositive implements BooleanFunction {
    private static final Signature SIGNATURE = Signature.createSignature(booleanType(), integerType());
+   private static final IsPositive SINGLETON = new IsPositive();
+
+   public static IsPositive getSingleton() {
+      return SINGLETON;
+   }
+
+   private IsPositive() {
+   }
 
    @Override
    public Object evaluate(Arguments arguments) {
@@ -35,6 +45,27 @@ public final class IsPositive implements Function {
    @Override
    public Signature getSignature() {
       return SIGNATURE;
+   }
+
+   @Override
+   public RulesEngine getEngine(FunctionNode fn) {
+      RulesEngine e = new RulesEngine();
+      e.addRule(fn, (_e, f, v) -> {
+         FunctionNode zero = new FunctionNode(IsZero.getSingleton(), fn.getType(), fn.getChildren());
+         FunctionNode negative = new FunctionNode(IsNegative.getSingleton(), fn.getType(), fn.getChildren());
+         if (v) {
+            _e.addFact(zero, false);
+            _e.addFact(negative, false);
+         } else {
+            if (_e.hasFact(zero)) {
+               _e.addFact(negative, !_e.getFact(zero));
+            }
+            if (_e.hasFact(negative)) {
+               _e.addFact(zero, !_e.getFact(negative));
+            }
+         }
+      });
+      return e;
    }
 
    @Override

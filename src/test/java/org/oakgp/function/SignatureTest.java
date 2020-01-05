@@ -192,7 +192,7 @@ public class SignatureTest {
       try {
          template.create(booleanType());
       } catch (IllegalArgumentException e) {
-         assertEquals("Boolean not of types [" + superType.getName() + "]", e.getMessage());
+         assertEquals("Boolean not of types [Object, " + superType.getName() + "]", e.getMessage());
       }
    }
 

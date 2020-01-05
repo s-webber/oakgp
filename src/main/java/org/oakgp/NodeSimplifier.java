@@ -65,24 +65,37 @@ public final class NodeSimplifier {
     * @see org.oakgp.function.Function#simplify(FunctionNode)
     */
    public static Node simplify(Node input) {
+      if (input.isSimplified()) {
+         return input;
+      }
+
       int ctr = 0;
       Set<Node> s = new HashSet<>();
       Node previous;
       Node output = input;
+
+      // long start = System.currentTimeMillis();
       do {
          previous = output;
          output = simplifyOnce(output);
 
          // To avoid getting stuck in an infinite loop:
          // 1. exit if the result of an attempt to simplify equals the result of an earlier simplify
-         if (!output.equals(previous) && !s.add(output)) {
-            return output;
+         if (!output.equals(previous) && !s.add(output)) { // TODO just "if (!s.add(output))"?
+            break;
          }
          // 2. if the number of simplifies exceeds a defined limit then throw an exception
          if (ctr++ > MAX_RETRIES) {
             throw new IllegalArgumentException(input.toString());
          }
       } while (isFunction(output) && !output.equals(previous));
+      // long took = System.currentTimeMillis() - start;
+      // if (took > 2000) {
+      // System.out.println(">>> " + input.getNodeCount() + " " + input);
+      // System.out.println("<<< " + output.getNodeCount() + " " + output);
+      // System.exit(1);
+      // }
+      output.setSimplified();
       return output;
    }
 
@@ -94,9 +107,11 @@ public final class NodeSimplifier {
       }
    }
 
-   private static Node simplifyFunctionNode(final FunctionNode input) {
-      // TODO it may be beneficial to add a "isSimplified" flag to FunctionNode to indicate that if it has already been simplified (to avoid trying again here)
+   static Object evaluate(Node n, Assignments assignments) {
+      return n.evaluate(assignments);
+   }
 
+   public static Node simplifyFunctionNode(final FunctionNode input) {
       // try to simplify each of the arguments
       ChildNodes inputChildren = input.getChildren();
       Node[] simplifiedArgs = new Node[inputChildren.size()];
@@ -104,7 +119,7 @@ public final class NodeSimplifier {
       boolean areAllArgumentsConstants = true;
       for (int i = 0; i < simplifiedArgs.length; i++) {
          Node originalArg = inputChildren.getNode(i);
-         simplifiedArgs[i] = simplifyOnce(originalArg);
+         simplifiedArgs[i] = simplify(originalArg);
          if (originalArg != simplifiedArgs[i]) {
             haveAnyArgumentsBeenSimplified = true;
          }
@@ -114,13 +129,10 @@ public final class NodeSimplifier {
       }
 
       // if could simplify arguments then use simplified version to create new FunctionNode
-      ChildNodes arguments;
       FunctionNode output;
       if (haveAnyArgumentsBeenSimplified) {
-         arguments = createChildNodes(simplifiedArgs);
-         output = new FunctionNode(input, arguments);
+         output = new FunctionNode(input, createChildNodes(simplifiedArgs));
       } else {
-         arguments = inputChildren;
          output = input;
       }
 

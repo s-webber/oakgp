@@ -17,7 +17,6 @@ package org.oakgp.generate;
 
 import java.util.Objects;
 import java.util.function.IntPredicate;
-import java.util.logging.Logger;
 
 import org.oakgp.function.Signature;
 import org.oakgp.node.FunctionNode;
@@ -100,7 +99,7 @@ public final class TreeGeneratorImpl implements TreeGenerator {
 
    private boolean shouldCreateFunction(Type type, int depth) {
       if (!primitiveSet.hasTerminals(type)) {
-         Logger.getGlobal().info("no type " + type + " depth " + depth + " " + strategy.test(depth)); // TODO
+         // TODO Logger.getGlobal().info("no type " + type + " depth " + depth + " " + strategy.test(depth)); // TODO
          return true;
       } else if (!primitiveSet.hasFunctions(type)) {
          return false;

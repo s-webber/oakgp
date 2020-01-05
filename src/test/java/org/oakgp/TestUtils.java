@@ -44,17 +44,20 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.oakgp.function.Function;
+import org.oakgp.function.bool.And;
+import org.oakgp.function.bool.Or;
+import org.oakgp.function.bool.Xor;
 import org.oakgp.function.choice.If;
 import org.oakgp.function.choice.OrElse;
+import org.oakgp.function.classify.IsEven;
 import org.oakgp.function.classify.IsNegative;
+import org.oakgp.function.classify.IsOdd;
 import org.oakgp.function.classify.IsPositive;
 import org.oakgp.function.classify.IsZero;
 import org.oakgp.function.coll.CountList;
 import org.oakgp.function.compare.Equal;
 import org.oakgp.function.compare.GreaterThan;
 import org.oakgp.function.compare.GreaterThanOrEqual;
-import org.oakgp.function.compare.LessThan;
-import org.oakgp.function.compare.LessThanOrEqual;
 import org.oakgp.function.compare.NotEqual;
 import org.oakgp.function.hof.Filter;
 import org.oakgp.function.hof.Reduce;
@@ -77,6 +80,10 @@ public class TestUtils {
    public static final VariableSet VARIABLE_SET = VariableSet.createVariableSet(createIntegerTypeArray(100));
    private static final FunctionSet FUNCTION_SET = createDefaultFunctions();
    private static final AtomicLong TYPE_CTR = new AtomicLong();
+
+   public static void assertEmpty(Collection<?> collection) {
+      assertTrue("Expected empty collection but got: " + collection, collection.isEmpty());
+   }
 
    @SafeVarargs
    public static <I, T> void assertContains(Collection<I> collection, java.util.function.Function<I, T> mapper, T... values) {
@@ -111,14 +118,22 @@ public class TestUtils {
    }
 
    public static Node readNode(String input) {
-      List<Node> outputs = readNodes(input);
+      return readNode(input, VARIABLE_SET);
+   }
+
+   public static Node readNode(String input, VariableSet variableSet) {
+      List<Node> outputs = readNodes(input, variableSet);
       assertEquals(1, outputs.size());
       return outputs.get(0);
    }
 
    public static List<Node> readNodes(String input) {
+      return readNodes(input, VARIABLE_SET);
+   }
+
+   private static List<Node> readNodes(String input, VariableSet variableSet) {
       List<Node> outputs = new ArrayList<>();
-      try (NodeReader nr = new NodeReader(input, FUNCTION_SET, new ConstantNode[0], VARIABLE_SET)) {
+      try (NodeReader nr = new NodeReader(input, FUNCTION_SET, new ConstantNode[0], variableSet)) {
          while (!nr.isEndOfStream()) {
             outputs.add(nr.readNode());
          }
@@ -136,14 +151,15 @@ public class TestUtils {
       builder.add(IntegerUtils.INTEGER_UTILS.getMultiply());
       builder.add(IntegerUtils.INTEGER_UTILS.getDivide());
 
-      builder.add(LessThan.getSingleton(), integerType());
-      builder.add(LessThanOrEqual.getSingleton(), integerType());
-      builder.add(new GreaterThan(), integerType());
-      builder.add(new GreaterThanOrEqual(), integerType());
-      builder.add(new Equal(), integerType());
-      builder.add(new NotEqual(), integerType());
+      builder.add(GreaterThan.getSingleton(), integerType());
+      builder.add(GreaterThanOrEqual.getSingleton(), integerType());
+      builder.add(Equal.getSingleton(), integerType());
+      builder.add(NotEqual.getSingleton(), integerType());
 
       builder.add(new If(), integerType());
+      builder.add(And.getSingleton());
+      builder.add(Or.getSingleton());
+      builder.add(Xor.getSingleton());
 
       Function orElse = new OrElse();
       builder.add(orElse, stringType());
@@ -157,9 +173,11 @@ public class TestUtils {
       org.oakgp.function.hof.Map transform = org.oakgp.function.hof.Map.getSingleton();
       builder.add(transform, integerType(), booleanType());
 
-      builder.add(new IsPositive());
-      builder.add(new IsNegative());
-      builder.add(new IsZero());
+      builder.add(IsPositive.getSingleton());
+      builder.add(IsNegative.getSingleton());
+      builder.add(IsOdd.getSingleton());
+      builder.add(IsEven.getSingleton());
+      builder.add(IsZero.getSingleton());
 
       CountList count = new CountList();
       builder.add(count, integerType());

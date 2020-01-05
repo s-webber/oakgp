@@ -19,7 +19,7 @@ import static org.oakgp.type.CommonTypes.booleanType;
 import static org.oakgp.type.CommonTypes.comparableType;
 
 import org.oakgp.Arguments;
-import org.oakgp.function.Function;
+import org.oakgp.function.BooleanFunction;
 import org.oakgp.function.Signature;
 import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
@@ -28,7 +28,7 @@ import org.oakgp.type.Types;
 import org.oakgp.type.Types.Type;
 import org.oakgp.util.Utils;
 
-abstract class ComparisonOperator implements Function {
+abstract class ComparisonOperator implements BooleanFunction {
    private final Signature signature;
    private final boolean equalsIsTrue;
 

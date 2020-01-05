@@ -15,18 +15,18 @@
  */
 package org.oakgp.function.choice;
 
+import static org.oakgp.function.RulesEngineUtils.buildEngine;
+import static org.oakgp.function.RulesEngineUtils.replace;
 import static org.oakgp.node.NodeType.isConstant;
 import static org.oakgp.type.CommonTypes.booleanType;
-
-import java.util.function.Predicate;
 
 import org.oakgp.Arguments;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
+import org.oakgp.function.classify.IsFalse;
 import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
-import org.oakgp.node.walk.NodeWalk;
 import org.oakgp.type.Types;
 import org.oakgp.type.Types.Type;
 import org.oakgp.util.Utils;
@@ -66,28 +66,40 @@ public final class If implements Function {
 
    @Override
    public Node simplify(FunctionNode functionNode) {
-      Type returnType = functionNode.getType();
       ChildNodes children = functionNode.getChildren();
+      Node condition = children.first();
       Node trueBranch = children.second();
       Node falseBranch = children.third();
+
+      // (if v0 v1 v1) -> v1
       if (trueBranch.equals(falseBranch)) {
          return trueBranch;
       }
 
-      Node condition = children.first();
+      // (if true v0 v1) -> v0
+      // (if false v0 v1) -> v1
       if (isConstant(condition)) {
-         int index = getOutcomeArgumentIndex(children.first().evaluate(null));
+         int index = getOutcomeArgumentIndex(condition.evaluate(null));
          return index == TRUE_IDX ? trueBranch : falseBranch;
       }
 
-      Predicate<Node> criteria = n -> n.equals(condition);
-      Node simplifiedTrueBranch = NodeWalk.replaceAll(trueBranch, criteria, n -> Utils.TRUE_NODE);
-      Node simplifiedFalseBranch = NodeWalk.replaceAll(falseBranch, criteria, n -> Utils.FALSE_NODE);
-      if (trueBranch != simplifiedTrueBranch || falseBranch != simplifiedFalseBranch) {
-         return new FunctionNode(this, returnType, condition, simplifiedTrueBranch, simplifiedFalseBranch);
-      } else {
-         return null;
+      // (if v0 true false) -> v0
+      if (trueBranch.equals(Utils.TRUE_NODE) && falseBranch.equals(Utils.FALSE_NODE)) {
+         return condition;
       }
+
+      // (if v0 false true) -> (false? v0)
+      if (trueBranch.equals(Utils.FALSE_NODE) && falseBranch.equals(Utils.TRUE_NODE)) {
+         return IsFalse.negate(condition);
+      }
+
+      Node simplifiedTrueBranch = replace(buildEngine(condition, true), trueBranch);
+      Node simplifiedFalseBranch = replace(buildEngine(condition, false), falseBranch);
+      if (trueBranch != simplifiedTrueBranch || falseBranch != simplifiedFalseBranch) {
+         return new FunctionNode(functionNode, ChildNodes.createChildNodes(condition, simplifiedTrueBranch, simplifiedFalseBranch));
+      }
+
+      return null;
    }
 
    private int getOutcomeArgumentIndex(boolean result) {

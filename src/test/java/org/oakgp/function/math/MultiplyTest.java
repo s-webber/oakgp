@@ -68,7 +68,7 @@ public class MultiplyTest extends AbstractFunctionTest {
       simplify("(* 1 v1)").to("v1");
 
       // (* 3 (- 0 (+ 1 v0))) = 3*(0-(1+x)) = -3-3x
-      simplify("(* 3 (- 0 (+ 1 v0)))").to("(- (* -3 v0) 3)");
+      simplify("(* 3 (- 0 (+ 1 v0)))").to("(- -3 (* 3 v0))");
 
       simplify("(* 3 (+ 9 v0))").to("(+ 27 (* 3 v0))");
       simplify("(* 3 (* 9 v0))").to("(* 27 v0)");

@@ -104,32 +104,6 @@ public final class Utils {
    }
 
    /**
-    * For each key add its associated values to all super-types of the key.
-    *
-    * e.g. If the given map contains an entry mapping the "Integer" type to the values [1,2,3] then add a mapping for the "Number" and "Comparable" types to the
-    * values [1,2,3] (as "Number" and "Comparable" are super-types of "Integer").
-    *
-    * TODO add a better explanation
-    *
-    * TODO think of better method name
-    */
-   public static <T> Map<Type, List<T>> expand(Map<Type, List<T>> input) {
-      Map<Type, List<T>> output = new HashMap<>();
-
-      for (Type key : new ArrayList<>(input.keySet())) {
-         List<T> inputValues = input.get(key);
-
-         output.computeIfAbsent(key, k -> new ArrayList<>()).addAll(inputValues);
-
-         for (Type subType : key.getParents()) {
-            output.computeIfAbsent(subType, k -> new ArrayList<>()).addAll(inputValues);
-         }
-      }
-
-      return unmodifiableMapOfLists(output);
-   }
-
-   /**
     * Returns a map grouping the specified values according to the specified classification function.
     *
     * @param values

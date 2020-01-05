@@ -17,19 +17,23 @@ package org.oakgp.examples.tictactoe;
 
 import static org.oakgp.type.Types.declareType;
 
+import java.io.IOException;
 import java.util.Collection;
 
 import org.junit.Test;
 import org.oakgp.Assignments;
+import org.oakgp.NodeSimplifier;
 import org.oakgp.function.bool.And;
 import org.oakgp.function.choice.If;
 import org.oakgp.function.choice.OrElse;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
 import org.oakgp.primitive.FunctionSet;
+import org.oakgp.primitive.VariableSet;
 import org.oakgp.rank.fitness.FitnessFunction;
 import org.oakgp.rank.tournament.FirstPlayerAdvantageGame;
 import org.oakgp.rank.tournament.TwoPlayerGame;
+import org.oakgp.serialize.NodeReader;
 import org.oakgp.type.Types.Type;
 import org.oakgp.util.DummyNode;
 import org.oakgp.util.FunctionSetBuilder;
@@ -59,7 +63,7 @@ public class TicTacToeSystemTest {
 
    @Test
    public void testLowLevelTournament() {
-      FunctionSet functionSet = new FunctionSetBuilder().addAll(new IsFree(), new IsOccupied(), new GetAnyMove(), new IfValidMove(), new And())
+      FunctionSet functionSet = new FunctionSetBuilder().addAll(new IsFree(), new IsOccupied(), new GetAnyMove(), new IfValidMove(), And.getSingleton())
             .add(new OrElse(), MOVE_TYPE).add(new If(), POSSIBLE_MOVE).build();
       Collection<ConstantNode> constants = getMoveConstants();
       TwoPlayerGame game = createTicTacToeGame();
@@ -69,8 +73,27 @@ public class TicTacToeSystemTest {
    }
 
    @Test
+   public void temp() throws IOException { // TODO remove
+      FunctionSet functionSet = new FunctionSetBuilder().addAll(new IsFree(), new IsOccupied(), new GetAnyMove(), new IfValidMove(), And.getSingleton())
+            .add(new OrElse(), MOVE_TYPE).add(new If(), POSSIBLE_MOVE).build();
+      Collection<ConstantNode> constants = getMoveConstants();
+
+      String y = "(or-else (if-valid-move v0 (if (occupied? v0 BOTTOM_CENTRE v2) (if (and (and (occupied? v0 MIDDLE_LEFT v1) (and (free? v0 TOP_CENTRE) (free? v0 BOTTOM_LEFT))) (and (occupied? v0 TOP_LEFT v2) (and (and (free? v0 TOP_RIGHT) (and (and (and (and (and (and (and (occupied? v0 MIDDLE_LEFT v1) (occupied? v0 BOTTOM_LEFT v2)) (occupied? v0 BOTTOM_LEFT v1)) (free? v0 MIDDLE_RIGHT)) (occupied? v0 TOP_LEFT v2)) (and (free? v0 BOTTOM_RIGHT) (and (and (free? v0 BOTTOM_LEFT) (and (occupied? v0 TOP_LEFT v1) (occupied? v0 BOTTOM_CENTRE v1))) (and (free? v0 TOP_LEFT) (and (occupied? v0 TOP_RIGHT v1) (free? v0 TOP_LEFT)))))) (occupied? v0 MIDDLE_LEFT v1)) (free? v0 BOTTOM_LEFT))) (occupied? v0 BOTTOM_RIGHT v2)))) CENTRE TOP_CENTRE) TOP_CENTRE)) (any v0))";
+      String x = "(and (occupied? v0 MIDDLE_LEFT v1) (and (occupied? v0 BOTTOM_LEFT v2) (and (occupied? v0 BOTTOM_RIGHT v2) (and (free? v0 BOTTOM_LEFT) (and (occupied? v0 TOP_LEFT v2) (and (free? v0 TOP_LEFT) (and (free? v0 TOP_CENTRE) (and (free? v0 TOP_RIGHT) (and (free? v0 MIDDLE_RIGHT) (and (occupied? v0 BOTTOM_LEFT v1) (and (occupied? v0 TOP_LEFT v1) (and (free? v0 BOTTOM_RIGHT) (and (occupied? v0 BOTTOM_CENTRE v1) (occupied? v0 TOP_RIGHT v1))))))))))))))";
+      String z = "(if (and (and (occupied? v0 MIDDLE_LEFT v1) (and (free? v0 TOP_CENTRE) (free? v0 BOTTOM_LEFT))) (and (occupied? v0 TOP_LEFT v2) (and (and (free? v0 TOP_RIGHT) (and (and (and (and (and (and (and (occupied? v0 MIDDLE_LEFT v1) (occupied? v0 BOTTOM_LEFT v2)) (occupied? v0 BOTTOM_LEFT v1)) (free? v0 MIDDLE_RIGHT)) (occupied? v0 TOP_LEFT v2)) (and (free? v0 BOTTOM_RIGHT) (and (and (free? v0 BOTTOM_LEFT) (and (occupied? v0 TOP_LEFT v1) (occupied? v0 BOTTOM_CENTRE v1))) (and (free? v0 TOP_LEFT) (and (occupied? v0 TOP_RIGHT v1) (free? v0 TOP_LEFT)))))) (occupied? v0 MIDDLE_LEFT v1)) (free? v0 BOTTOM_LEFT))) (occupied? v0 BOTTOM_RIGHT v2)))) CENTRE TOP_CENTRE)";
+      String w = "(and (occupied? v0 TOP_LEFT v2) (and (occupied? v0 BOTTOM_LEFT v2) (and (free? v0 TOP_CENTRE) (and (free? v0 TOP_LEFT) (and (free? v0 TOP_RIGHT) (and (free? v0 BOTTOM_LEFT) (and (occupied? v0 BOTTOM_RIGHT v2) (and (free? v0 MIDDLE_RIGHT) (and (free? v0 BOTTOM_RIGHT) (and (occupied? v0 TOP_LEFT v1) (and (occupied? v0 BOTTOM_LEFT v1) (and (occupied? v0 BOTTOM_CENTRE v1) (and (occupied? v0 TOP_RIGHT v1) (occupied? v0 MIDDLE_LEFT v1))))))))))))))";
+      NodeReader r = new NodeReader(z, functionSet, constants.toArray(new ConstantNode[0]), VariableSet.createVariableSet(VARIABLE_TYPES));
+      Node in = r.readNode();
+      long now = System.currentTimeMillis();
+      Node out = NodeSimplifier.simplify(in);
+      System.out.println("took " + (System.currentTimeMillis() - now));
+      System.out.println(">> " + in.getNodeCount() + " " + in);
+      System.out.println("<< " + out.getNodeCount() + " " + out);
+   }
+
+   @Test
    public void testLowLevelFitnessFunction() {
-      FunctionSet functionSet = new FunctionSetBuilder().addAll(new IsFree(), new IsOccupied(), new GetAnyMove(), new IfValidMove(), new And())
+      FunctionSet functionSet = new FunctionSetBuilder().addAll(new IsFree(), new IsOccupied(), new GetAnyMove(), new IfValidMove(), And.getSingleton())
             .add(new OrElse(), MOVE_TYPE).add(new If(), POSSIBLE_MOVE).build();
       Collection<ConstantNode> constants = getMoveConstants();
       TicTacToeFitnessFunction fitnessFunction = new TicTacToeFitnessFunction();

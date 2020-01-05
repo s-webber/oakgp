@@ -15,20 +15,20 @@
  */
 package org.oakgp.primitive;
 
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import org.oakgp.node.ConstantNode;
 import org.oakgp.type.Types.Type;
-import org.oakgp.util.Utils;
+import org.oakgp.util.TypeMap;
 
 /** Represents the range of possible constants to use during a genetic programming run. */
 public final class ConstantSet {
-   private final Map<Type, List<ConstantNode>> constantsByType;
+   private final TypeMap<ConstantNode> constantsByType;
 
    /** Constructs a constant set containing the specified constants. */
    public ConstantSet(ConstantNode... constants) {
-      constantsByType = Utils.expand(Utils.groupByType(constants));
+      constantsByType = new TypeMap<>(Arrays.asList(constants), ConstantNode::getType);
    }
 
    /**
@@ -36,10 +36,9 @@ public final class ConstantSet {
     *
     * @param type
     *           the type to find matching constants of
-    * @return a list of all constants in this set that are the specified type, or {@code null} if there are no constants of the required type in this set
+    * @return a list of all constants in this set that are the specified type, or an empty list if there are no constants of the required type in this set
     */
    public List<ConstantNode> getByType(Type type) {
-      // TODO should this return an empty list, rather than null, if no match found?
-      return constantsByType.get(type);
+      return constantsByType.getByType(type);
    }
 }

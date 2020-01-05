@@ -18,7 +18,7 @@ package org.oakgp.type;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -32,6 +32,7 @@ public final class Types {
    private static final Map<TemplateKey, Type> TEMPLATE_CACHE = new HashMap<>();
    private static final Map<TypeKey, Type> TYPE_CACHE = new HashMap<>();
    private static final Type[] EMPTY_ARRAY = new Type[0];
+   private static final Type OBJECT = declareType("Object");
 
    public static Type declareType(String name) {
       return declareType(name, EMPTY_ARRAY, EMPTY_ARRAY);
@@ -49,8 +50,15 @@ public final class Types {
       return type;
    }
 
-   private static Set<Type> getParents(Type[] parents) {
-      return parents.length == 0 ? Collections.emptySet() : new HashSet<>(Arrays.asList(parents));
+   private static LinkedHashSet<Type> getParents(Type[] parents) {
+      LinkedHashSet<Type> result = new LinkedHashSet<>();
+      if (OBJECT != null) { // Until OBJECT is declared then OBJECT will be null
+         result.add(OBJECT);
+      }
+      for (Type p : parents) {
+         result.add(p);
+      }
+      return result;
    }
 
    public synchronized static Type type(String name, Type... parameters) {
@@ -67,7 +75,7 @@ public final class Types {
       return type;
    }
 
-   private static Set<Type> getParameterisedType(String name, Type[] parameters) {
+   private static LinkedHashSet<Type> getParameterisedType(String name, Type[] parameters) {
       Type template = TEMPLATE_CACHE.get(new TemplateKey(name, parameters.length));
       if (template == null) {
          throw new IllegalArgumentException("Unknown type: " + name + " with " + parameters.length + " parameters");
@@ -82,7 +90,7 @@ public final class Types {
          match(template.parameters[i], parameters[i], assignments);
       }
 
-      Set<Type> parents = new HashSet<>();
+      LinkedHashSet<Type> parents = new LinkedHashSet<>();
       for (Type child : template.parents) {
          parents.add(replace(child, assignments));
       }
@@ -93,8 +101,8 @@ public final class Types {
    public static void match(Type template, Type actual, Map<Type, Type> assignments) {
       template = assignments.getOrDefault(template, template);
       if (template.template) {
-         if (!actual.hierarchy.containsAll(template.hierarchy)) {
-            throw new IllegalArgumentException(actual.name + " not of types " + template.hierarchy);
+         if (!actual.isAssignable(template)) {
+            throw new IllegalArgumentException(actual + " not of types " + template.hierarchy);
          }
          assignments.put(template, actual);
          return;
@@ -134,7 +142,7 @@ public final class Types {
    }
 
    public static Type generic(String name, Type... parents) {
-      return new Type(name, new HashSet<>(Arrays.asList(parents)), true);
+      return new Type(name, getParents(parents), true);
    }
 
    private static class TemplateKey {
@@ -165,21 +173,29 @@ public final class Types {
     */
    public static class Type {
       private final String name;
+      private final Set<Type> rename; // TODO
       private final Set<Type> parents;
       private final Type[] parameters;
       private final boolean template;
       private final Set<Type> hierarchy;
 
-      private Type(String name, Set<Type> parents, Type... parameters) {
+      // NOTE: only reason for using LinkedHashSet is so that order is predictable when comparing error messages in unit tests
+      private Type(String name, LinkedHashSet<Type> parents, Type... parameters) {
          this(name, parents, parameters, false);
       }
 
-      private Type(String name, Set<Type> parents, boolean template) {
+      private Type(String name, LinkedHashSet<Type> parents, boolean template) {
          this(name, parents, EMPTY_ARRAY, template);
       }
 
       private Type(String name, Set<Type> parents, Type[] parameters, boolean template) {
          this.name = name;
+         for (Type p : parents) {
+            if (p.template) {
+               throw new IllegalArgumentException();
+            }
+         }
+         this.rename = template ? Collections.unmodifiableSet(parents) : Collections.singleton(this);
          this.parents = Collections.unmodifiableSet(buildParents(parents));
          this.parameters = Arrays.copyOf(parameters, parameters.length);
          this.template = template;
@@ -187,7 +203,7 @@ public final class Types {
       }
 
       private Set<Type> buildHierarchy(Set<Type> parents) {
-         Set<Type> result = new HashSet<>();
+         Set<Type> result = new LinkedHashSet<>();
          if (!template) {
             result.add(this);
          }
@@ -196,7 +212,7 @@ public final class Types {
       }
 
       private Set<Type> buildParents(Set<Type> parents) {
-         Set<Type> result = new HashSet<>();
+         Set<Type> result = new LinkedHashSet<>();
          for (Type p : parents) {
             result.addAll(p.hierarchy);
          }
@@ -215,9 +231,44 @@ public final class Types {
          return Arrays.asList(parameters);
       }
 
+      public boolean _isAssignable(Type type) { // TODO use or remove
+         boolean b = this == type || hierarchy.containsAll(type.hierarchy);
+         if (b && b != _isAssignable(type)) {
+            throw new RuntimeException(b + " " + this + " " + type + " " + type.getParents());
+         }
+         return b;
+      }
+
       /** Is this instance assignable to the given {@code type}? */
-      public boolean isAssignable(Type type) { // TODO use or remove
-         return this == type || hierarchy.containsAll(type.hierarchy);
+      public boolean isAssignable(Type toAssignTo) { // TODO use or remove
+         for (Type toAssignToParent : toAssignTo.rename) {
+            if (!c(toAssignToParent)) {
+               return false;
+            }
+         }
+         return true;
+      }
+
+      private boolean c(Type toAssignToParent) {
+         for (Type toAssignHierarchy : hierarchy) {
+            if (isAssignable(toAssignHierarchy, toAssignToParent)) {
+               return true;
+            }
+         }
+         return false;
+      }
+
+      private static boolean isAssignable(Type toAssign, Type toAssignTo) {
+         // TODO use TemplateKey.equals()
+         if (!toAssign.getName().equals(toAssignTo.getName()) || toAssign.getParameters().size() != toAssignTo.getParameters().size()) {
+            return false;
+         }
+         for (int i = 0; i < toAssign.getParameters().size(); i++) {
+            if (!toAssign.getParameters().get(i).isAssignable(toAssignTo.getParameters().get(i))) {
+               return false;
+            }
+         }
+         return true;
       }
 
       public boolean isGeneric() {

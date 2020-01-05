@@ -17,9 +17,9 @@ package org.oakgp.primitive;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.oakgp.TestUtils.assertContains;
+import static org.oakgp.TestUtils.assertEmpty;
 import static org.oakgp.TestUtils.assertUnmodifiable;
 import static org.oakgp.type.CommonTypes.booleanType;
 import static org.oakgp.type.CommonTypes.comparableType;
@@ -71,7 +71,7 @@ public class VariableSetTest {
       assertContains(s.getByType(numberType()), v0, v2, v3);
       assertContains(s.getByType(comparableType()), v0, v1, v2, v3);
 
-      assertNull(s.getByType(stringType()));
+      assertEmpty(s.getByType(stringType()));
    }
 
    @Test

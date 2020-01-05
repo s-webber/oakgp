@@ -33,6 +33,26 @@ public final class NodeComparator implements Comparator<Node>, Serializable {
       // do nothing
    }
 
+   // TODO review this logic when NODE_COMPARATOR logic reviewed
+   // TODO may then be possible to just do "NodeComparator.NODE_COMPARATOR.compare(n1, n2) < 0 ? n1 : n2;"
+   public static Node pickBest(Node n1, Node n2) {
+      if (n1 == null) {
+         return n2;
+      }
+
+      int diff = Integer.compare(n1.getNodeCount(), n2.getNodeCount());
+      if (diff < 0) {
+         return n1;
+      }
+
+      if (diff > 0) {
+         return n2;
+      }
+
+      return NodeComparator.NODE_COMPARATOR.compare(n1, n2) < 0 ? n1 : n2;
+   }
+
+   // TODO add min(n1,n2) method that does: "NodeComparator.NODE_COMPARATOR.compare(n1, n2) < 0 ? n1 : n2"
    // TODO review this implementation
    @Override
    public int compare(Node o1, Node o2) {

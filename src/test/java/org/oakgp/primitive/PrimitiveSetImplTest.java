@@ -33,8 +33,8 @@ import org.oakgp.function.choice.If;
 import org.oakgp.function.compare.Equal;
 import org.oakgp.function.compare.GreaterThan;
 import org.oakgp.function.compare.GreaterThanOrEqual;
-import org.oakgp.function.compare.LessThan;
-import org.oakgp.function.compare.LessThanOrEqual;
+import org.oakgp.function.compare.Max;
+import org.oakgp.function.compare.Min;
 import org.oakgp.function.compare.NotEqual;
 import org.oakgp.function.math.IntegerUtils;
 import org.oakgp.node.ConstantNode;
@@ -53,9 +53,9 @@ public class PrimitiveSetImplTest {
    private static final Type[] VARIABLE_TYPES = createIntegerTypeArray(3);
    private static final FunctionSet FUNCTION_SET = new FunctionSetBuilder()
          .addAll(IntegerUtils.INTEGER_UTILS.getAdd(), IntegerUtils.INTEGER_UTILS.getSubtract(), IntegerUtils.INTEGER_UTILS.getMultiply())
-         .add(new If(), integerType()).add(LessThan.getSingleton(), integerType()).add(LessThanOrEqual.getSingleton(), integerType())
-         .add(new GreaterThan(), integerType()).add(new GreaterThanOrEqual(), integerType()).add(new Equal(), integerType()).add(new NotEqual(), integerType())
-         .build();
+         .add(new If(), integerType()).add(Max.getSingleton(), integerType()).add(Min.getSingleton(), integerType())
+         .add(GreaterThan.getSingleton(), integerType()).add(GreaterThanOrEqual.getSingleton(), integerType()).add(Equal.getSingleton(), integerType())
+         .add(NotEqual.getSingleton(), integerType()).build();
 
    @Test
    public void testHasFunctions() {
@@ -74,10 +74,10 @@ public class PrimitiveSetImplTest {
    @Test
    public void testNextFunction() {
       Random mockRandom = mock(Random.class);
-      // mock randomly selecting one of the 4 functions in OPERATORS with an integer return type
-      given(mockRandom.nextInt(4)).willReturn(1, 0, 2, 1, 2, 0, 3);
-      // mock randomly selecting one of the 6 functions in OPERATORS with a boolean return type
-      given(mockRandom.nextInt(6)).willReturn(1, 0, 5, 4);
+      // mock randomly selecting one of the 6 functions in OPERATORS with an integer return type
+      given(mockRandom.nextInt(6)).willReturn(1, 0, 2, 1, 2, 0, 3, 5);
+      // mock randomly selecting one of the 4 functions in OPERATORS with a boolean return type
+      given(mockRandom.nextInt(4)).willReturn(1, 0, 3, 3, 2);
 
       PrimitiveSetImpl primitiveSet = createWithFunctions(mockRandom);
 
@@ -90,9 +90,11 @@ public class PrimitiveSetImplTest {
       assertSame(functions[2], primitiveSet.nextFunction(integerType()));
       assertSame(functions[0], primitiveSet.nextFunction(integerType()));
       assertSame(functions[3], primitiveSet.nextFunction(integerType()));
+      assertSame(functions[5], primitiveSet.nextFunction(integerType()));
 
-      assertSame(functions[5], primitiveSet.nextFunction(booleanType()));
-      assertSame(functions[4], primitiveSet.nextFunction(booleanType()));
+      assertSame(functions[7], primitiveSet.nextFunction(booleanType()));
+      assertSame(functions[6], primitiveSet.nextFunction(booleanType()));
+      assertSame(functions[9], primitiveSet.nextFunction(booleanType()));
       assertSame(functions[9], primitiveSet.nextFunction(booleanType()));
       assertSame(functions[8], primitiveSet.nextFunction(booleanType()));
    }

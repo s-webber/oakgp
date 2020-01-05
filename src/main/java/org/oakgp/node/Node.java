@@ -52,4 +52,11 @@ public interface Node {
     * This can be used to determine if the node is a function, constant or variable node.
     */
    NodeType getNodeType();
+
+   default void setSimplified() {
+   }
+
+   default boolean isSimplified() {
+      return true;
+   }
 }

@@ -15,15 +15,21 @@
  */
 package org.oakgp.function.compare;
 
+import org.oakgp.function.RulesEngine;
 import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
-import org.oakgp.node.Node;
-import org.oakgp.type.Types.Type;
+import org.oakgp.util.NodeComparator;
 
 /** Determines if the object represented by the first argument is greater than the object represented by the second. */
 public final class GreaterThan extends ComparisonOperator {
+   private static final GreaterThan SINGLETON = new GreaterThan();
+
+   public static GreaterThan getSingleton() {
+      return SINGLETON;
+   }
+
    /** Constructs a function that compares two arguments of the specified type. */
-   public GreaterThan() {
+   private GreaterThan() {
       super(false);
    }
 
@@ -33,15 +39,31 @@ public final class GreaterThan extends ComparisonOperator {
    }
 
    @Override
-   public Node simplify(FunctionNode functionNode) {
-      Type returnType = functionNode.getType();
-      ChildNodes children = functionNode.getChildren();
-      Node simplifiedVersion = simplifyToTrue(children);
-      if (simplifiedVersion == null) {
-         return new FunctionNode(LessThan.getSingleton(), returnType, children.second(), children.first());
-      } else {
-         return simplifiedVersion;
-      }
+   public RulesEngine getEngine(FunctionNode fn) {
+      RulesEngine e = new RulesEngine();
+
+      e.addRule(fn, (_e, fact, value) -> {
+         ChildNodes swappedArgs = fn.getChildren().swap(0, 1);
+         ChildNodes orderedArgs = NodeComparator.NODE_COMPARATOR.compare(fn.getChildren().first(), swappedArgs.first()) < 0 ? fn.getChildren() : swappedArgs;
+
+         _e.addFact(new FunctionNode(GreaterThanOrEqual.getSingleton(), fn.getType(), swappedArgs), !value);
+
+         if (value) {
+            _e.addFact(new FunctionNode(GreaterThanOrEqual.getSingleton(), fn.getType(), fn.getChildren()), true);
+            _e.addFact(new FunctionNode(GreaterThan.getSingleton(), fn.getType(), swappedArgs), false);
+            _e.addFact(new FunctionNode(NotEqual.getSingleton(), fn.getType(), orderedArgs), true);
+            _e.addFact(new FunctionNode(Equal.getSingleton(), fn.getType(), orderedArgs), false);
+         } else {
+            _e.addRule(new FunctionNode(GreaterThan.getSingleton(), fn.getType(), swappedArgs), (__e, __fact, __value) -> {
+               if (!__value) {
+                  __e.addFact(new FunctionNode(NotEqual.getSingleton(), fn.getType(), orderedArgs), false);
+                  __e.addFact(new FunctionNode(Equal.getSingleton(), fn.getType(), orderedArgs), true);
+               }
+            });
+         }
+      });
+
+      return e;
    }
 
    @Override

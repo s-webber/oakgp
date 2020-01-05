@@ -20,7 +20,7 @@ import org.oakgp.function.AbstractFunctionTest;
 public class IsOddTest extends AbstractFunctionTest {
    @Override
    protected IsOdd getFunction() {
-      return new IsOdd();
+      return IsOdd.getSingleton();
    }
 
    @Override

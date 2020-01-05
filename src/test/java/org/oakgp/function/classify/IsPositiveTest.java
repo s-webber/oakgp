@@ -20,7 +20,7 @@ import org.oakgp.function.AbstractFunctionTest;
 public class IsPositiveTest extends AbstractFunctionTest {
    @Override
    protected IsPositive getFunction() {
-      return new IsPositive();
+      return IsPositive.getSingleton();
    }
 
    @Override

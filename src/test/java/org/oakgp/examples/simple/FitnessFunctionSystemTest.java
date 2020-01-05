@@ -42,8 +42,6 @@ import org.oakgp.function.coll.CountList;
 import org.oakgp.function.compare.Equal;
 import org.oakgp.function.compare.GreaterThan;
 import org.oakgp.function.compare.GreaterThanOrEqual;
-import org.oakgp.function.compare.LessThan;
-import org.oakgp.function.compare.LessThanOrEqual;
 import org.oakgp.function.compare.NotEqual;
 import org.oakgp.function.hof.Filter;
 import org.oakgp.function.math.IntegerUtils;
@@ -112,9 +110,8 @@ public class FitnessFunctionSystemTest {
       Type[] variableTypes = createIntegerTypeArray(2);
       FunctionSet functionSet = new FunctionSetBuilder()
             .addAll(IntegerUtils.INTEGER_UTILS.getAdd(), IntegerUtils.INTEGER_UTILS.getSubtract(), IntegerUtils.INTEGER_UTILS.getMultiply())
-            .add(LessThan.getSingleton(), integerType()).add(LessThanOrEqual.getSingleton(), integerType()).add(new GreaterThan(), integerType())
-            .add(new GreaterThanOrEqual(), integerType()).add(new Equal(), integerType()).add(new NotEqual(), integerType()).add(new If(), integerType())
-            .build();
+            .add(GreaterThan.getSingleton(), integerType()).add(GreaterThanOrEqual.getSingleton(), integerType()).add(Equal.getSingleton(), integerType())
+            .add(NotEqual.getSingleton(), integerType()).add(new If(), integerType()).build();
 
       FitnessFunction fitnessFunction = createIntegerTestDataFitnessFunction(createTests(variableTypes.length, a -> {
          int x = (int) a.get(0);
@@ -129,9 +126,9 @@ public class FitnessFunctionSystemTest {
 
    @Test
    public void testIsCountOfZerosGreater() {
-      IsPositive isPositive = new IsPositive();
-      IsNegative isNegative = new IsNegative();
-      IsZero isZero = new IsZero();
+      IsPositive isPositive = IsPositive.getSingleton();
+      IsNegative isNegative = IsNegative.getSingleton();
+      IsZero isZero = IsZero.getSingleton();
       Filter filter = new Filter();
       CountList count = new CountList();
       ConstantNode[] constants = { new ConstantNode(Boolean.TRUE, booleanType()), new ConstantNode(Boolean.FALSE, booleanType()),

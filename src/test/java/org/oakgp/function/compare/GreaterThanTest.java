@@ -17,13 +17,14 @@ package org.oakgp.function.compare;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
+import static org.oakgp.type.CommonTypes.integerType;
 
 import org.oakgp.function.AbstractFunctionTest;
 
 public class GreaterThanTest extends AbstractFunctionTest {
    @Override
    protected GreaterThan getFunction() {
-      return new GreaterThan();
+      return GreaterThan.getSingleton();
    }
 
    @Override
@@ -43,12 +44,12 @@ public class GreaterThanTest extends AbstractFunctionTest {
       simplify("(> 8 7)").to("true");
       simplify("(> 8 8)").to("false");
       simplify("(> 8 9)").to("false");
-      simplify("(> v0 8)").to("(< 8 v0)");
-      simplify("(> 8 v0)").to("(< v0 8)");
-      simplify("(> v0 v1)").to("(< v1 v0)");
    }
 
    @Override
    public void testCannotSimplify() {
+      cannotSimplify("(> v0 8)", integerType());
+      cannotSimplify("(> 8 v0)", integerType());
+      cannotSimplify("(> v0 v1)", integerType(), integerType());
    }
 }

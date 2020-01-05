@@ -27,7 +27,6 @@ import org.oakgp.function.choice.If;
 import org.oakgp.function.choice.SwitchEnum;
 import org.oakgp.function.compare.Equal;
 import org.oakgp.function.compare.GreaterThan;
-import org.oakgp.function.compare.LessThan;
 import org.oakgp.function.math.IntegerUtils;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
@@ -53,8 +52,8 @@ public class TowersOfHanoiExample {
 
    public static void main(String[] args) {
       FunctionSet functionSet = new FunctionSetBuilder().addAll(new IsValid(), new SwitchEnum(Move.class, nullableType(MOVE_TYPE), MOVE_TYPE))
-            .add(new Equal(), MOVE_TYPE).add(new If(), MOVE_TYPE).add(new GreaterThan(), integerType()).add(LessThan.getSingleton(), integerType())
-            .add(new Equal(), integerType()).add(new Next()).build();
+            .add(Equal.getSingleton(), MOVE_TYPE).add(new If(), MOVE_TYPE).add(GreaterThan.getSingleton(), integerType())
+            .add(Equal.getSingleton(), integerType()).add(new Next()).build();
       List<ConstantNode> constants = createConstants();
       Type[] variables = { STATE_TYPE, nullableType(MOVE_TYPE) };
       FitnessFunction fitnessFunction = new TowersOfHanoiFitnessFunction(false);

@@ -79,11 +79,11 @@ public class MapTest extends AbstractFunctionTest {
    protected FunctionSet getFunctionSet() {
       if (functionSet == null) {
          functionSet = new FunctionSetBuilder().add(getFunction(), booleanType(), integerType()).add(getFunction(), booleanType(), booleanType())
-               .add(getFunction(), doubleType(), doubleType()).add(new IsFalse()).add(new IsPositive()).add(new IsNegative()).add(new IsZero())
-               .add(Sort.getSingleton(), integerType()).add(Sort.getSingleton(), booleanType()).add(Set.getSingleton(), integerType())
-               .add(Set.getSingleton(), booleanType()).add(SortedSet.getSingleton(), booleanType()).add(SortedSet.getSingleton(), integerType())
-               .add(Logarithm.getSingleton(), doubleType()).add(Sort.getSingleton(), doubleType()).add(Set.getSingleton(), doubleType())
-               .add(SortedSet.getSingleton(), doubleType()).add(Set.getSingleton(), integerType()).build();
+               .add(getFunction(), doubleType(), doubleType()).add(IsFalse.getSingleton()).add(IsPositive.getSingleton()).add(IsNegative.getSingleton())
+               .add(IsZero.getSingleton()).add(Sort.getSingleton(), integerType()).add(Sort.getSingleton(), booleanType())
+               .add(Set.getSingleton(), integerType()).add(Set.getSingleton(), booleanType()).add(SortedSet.getSingleton(), booleanType())
+               .add(SortedSet.getSingleton(), integerType()).add(Logarithm.getSingleton(), doubleType()).add(Sort.getSingleton(), doubleType())
+               .add(Set.getSingleton(), doubleType()).add(SortedSet.getSingleton(), doubleType()).add(Set.getSingleton(), integerType()).build();
       }
 
       return functionSet;
