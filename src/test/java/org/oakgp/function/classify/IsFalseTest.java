@@ -31,6 +31,8 @@ public class IsFalseTest extends AbstractFunctionTest {
    public void testEvaluate() {
       evaluate("(false? true)").to(false);
       evaluate("(false? false)").to(true);
+      evaluate("(false? v0)").assigned(new ConstantNode(true, booleanType())).to(false);
+      evaluate("(false? v0)").assigned(new ConstantNode(false, booleanType())).to(true);
       evaluate("(false? (zero? v0))").assigned(new ConstantNode(0, integerType())).to(false);
       evaluate("(false? (zero? v0))").assigned(new ConstantNode(1, integerType())).to(true);
    }
@@ -52,6 +54,13 @@ public class IsFalseTest extends AbstractFunctionTest {
 
    @Override
    public void testCannotSimplify() {
+      cannotSimplify("(false? v0)", booleanType());
       cannotSimplify("(false? (zero? v0))", integerType());
+   }
+
+   @Override
+   protected BooleanFunctionExpectationsBuilder createBooleanFunctionExpectationsBuilder() {
+      return new BooleanFunctionExpectationsBuilder("(false? v0)", booleanType()) //
+            .opposite("v0");
    }
 }

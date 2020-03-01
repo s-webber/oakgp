@@ -15,14 +15,15 @@
  */
 package org.oakgp.function.choice;
 
-import static org.oakgp.function.RulesEngineUtils.buildEngine;
-import static org.oakgp.function.RulesEngineUtils.replace;
 import static org.oakgp.node.NodeType.isConstant;
 import static org.oakgp.type.CommonTypes.booleanType;
 
 import org.oakgp.Arguments;
+import org.oakgp.function.BooleanFunctionUtils;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
+import org.oakgp.function.bool.And;
+import org.oakgp.function.bool.Or;
 import org.oakgp.function.classify.IsFalse;
 import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
@@ -93,8 +94,28 @@ public final class If implements Function {
          return IsFalse.negate(condition);
       }
 
-      Node simplifiedTrueBranch = replace(buildEngine(condition, true), trueBranch);
-      Node simplifiedFalseBranch = replace(buildEngine(condition, false), falseBranch);
+      // (if v0 true v1) -> (or v0 v1)
+      if (trueBranch.equals(Utils.TRUE_NODE)) {
+         return new FunctionNode(Or.getSingleton(), functionNode.getType(), ChildNodes.createChildNodes(condition, falseBranch));
+      }
+
+      // (if v0 v1 false) -> (and v0 v1)
+      if (falseBranch.equals(Utils.FALSE_NODE)) {
+         return new FunctionNode(And.getSingleton(), functionNode.getType(), ChildNodes.createChildNodes(condition, trueBranch));
+      }
+
+      // (if v0 false v1) -> (or v0 v1)
+      if (trueBranch.equals(Utils.FALSE_NODE)) {
+         return new FunctionNode(And.getSingleton(), functionNode.getType(), ChildNodes.createChildNodes(IsFalse.negate(condition), falseBranch));
+      }
+
+      // (if v0 v1 true) -> (and v0 v1)
+      if (falseBranch.equals(Utils.TRUE_NODE)) {
+         return new FunctionNode(Or.getSingleton(), functionNode.getType(), ChildNodes.createChildNodes(IsFalse.negate(condition), trueBranch));
+      }
+
+      Node simplifiedTrueBranch = BooleanFunctionUtils.replace(BooleanFunctionUtils.getFactsWhenTrue(condition), trueBranch);
+      Node simplifiedFalseBranch = BooleanFunctionUtils.replace(BooleanFunctionUtils.getFactsWhenFalse(condition), falseBranch);
       if (trueBranch != simplifiedTrueBranch || falseBranch != simplifiedFalseBranch) {
          return new FunctionNode(functionNode, ChildNodes.createChildNodes(condition, simplifiedTrueBranch, simplifiedFalseBranch));
       }

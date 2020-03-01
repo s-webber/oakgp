@@ -18,6 +18,7 @@ package org.oakgp.function.bool;
 import static org.oakgp.type.CommonTypes.booleanType;
 import static org.oakgp.type.CommonTypes.integerType;
 
+import org.junit.Test;
 import org.oakgp.function.AbstractFunctionTest;
 import org.oakgp.type.Types.Type;
 
@@ -25,6 +26,11 @@ public class AndTest extends AbstractFunctionTest {
    @Override
    protected And getFunction() {
       return And.getSingleton();
+   }
+
+   @Test
+   public void test() {
+      simplify("(and (> v0 v1) (and (> v2 v3) (and (> v4 v5) (and (>= v0 v1) (and (>= v2 v3) (>= v4 v5))))))").to("(and (> v2 v3) (and (> v4 v5) (> v0 v1)))");
    }
 
    @Override
@@ -46,12 +52,6 @@ public class AndTest extends AbstractFunctionTest {
 
    @Override
    public void testCanSimplify() {
-      simplify("(and (xor (zero? v0) (even? v0)) (odd? v0))").with(integerType()).to("false");
-      simplify("(and (xor (> v0 v1) (> v1 v0)) (= v0 v1))").with(integerType(), integerType()).to("false");
-      simplify("(and (xor (> v0 v1) (>= v0 v1)) (= v0 v1))").with(integerType(), integerType()).to("false");
-      simplify("(and (xor (> v1 v0) (> v0 v1)) (!= v1 v0))").with(integerType(), integerType()).to("(!= v0 v1)");
-      simplify("(and (xor (> v2 v3) (>= v0 v1)) (= v0 v1))").with(integerType(), integerType(), integerType(), integerType()).to("(and (>= v3 v2) (= v0 v1))");
-
       simplify("(and v0 (false? v0))").with(booleanType()).to("false");
 
       simplify("(and true v0)").with(booleanType()).to("v0");
@@ -80,24 +80,47 @@ public class AndTest extends AbstractFunctionTest {
 
       simplify("(and (= v0 v1) (!= v0 v1))").with(types).to("false");
 
+      simplify("(and (>= v0 v1) (> v0 v1))").with(integerType(), integerType()).to("(> v0 v1)");
+      simplify("(and (!= v0 v1) (= v0 v1))").with(integerType(), integerType()).to("false");
       simplify("(and (= v0 v1) (!= v0 v1))").with(integerType(), integerType()).to("false");
       simplify("(and (> v0 v1) (> v1 v0))").with(integerType(), integerType()).to("false");
       simplify("(and (> v0 v1) (>= v1 v0))").with(integerType(), integerType()).to("false");
       simplify("(and (> v0 v1) (!= v0 v1))").with(integerType(), integerType()).to("(> v0 v1)");
       simplify("(and (> v0 v1) (>= v0 v1))").with(integerType(), integerType()).to("(> v0 v1)");
-
       simplify("(and (>= v1 v0) (>= v0 v1))").with(integerType(), integerType()).to("(= v0 v1)");
 
-      simplify("(and (false? (pos? v0)) (false? (neg? v0)))").with(integerType()).to("(zero? v0)");
-      simplify("(and (zero? v0) (or (pos? v0) (neg? v0)))").with(integerType()).to("false");
-      simplify("(and (false? (zero? v0)) (or (pos? v0) (neg? v0)))").with(integerType()).to("(false? (zero? v0))");
+      simplify("(and (odd? v0) (even? v0))").with(integerType(), integerType()).to("false");
+      simplify("(and (odd? v0) (zero? v0))").with(integerType(), integerType()).to("false");
+      simplify("(and (even? v0) (zero? v0))").with(integerType(), integerType()).to("(zero? v0)");
       simplify("(and (zero? v0) (or (even? v0) (odd? v0)))").with(integerType()).to("(zero? v0)");
+      simplify("(and (zero? v0) (or (pos? v0) (neg? v0)))").with(integerType()).to("false");
+
+      simplify("(and (or (= v0 9) (>= v0 v1)) (>= v0 v1))").with(integerType(), integerType()).to("(>= v0 v1)");
+
+      simplify("(and (xor (zero? v0) (even? v0)) (odd? v0))").with(integerType()).to("false");
+      simplify("(and (xor (> v0 v1) (> v1 v0)) (= v0 v1))").with(integerType(), integerType()).to("false");
+      simplify("(and (xor (> v0 v1) (>= v0 v1)) (= v0 v1))").with(integerType(), integerType()).to("(= v0 v1)");
+      simplify("(and (xor (> v2 v3) (>= v0 v1)) (= v0 v1))").with(integerType(), integerType(), integerType(), integerType()).to("(and (>= v3 v2) (= v0 v1))");
+
+      simplify("(and (or (> v0 v1) (> v1 v0)) (!= v0 v1))").with(integerType(), integerType()).to("(!= v0 v1)");
    }
 
    @Override
    public void testCannotSimplify() {
       cannotSimplify("(and (or (> v3 v2) (>= v0 v1)) (or (> v1 v0) (>= v2 v3)))", integerType(), integerType(), integerType(), integerType());
-      // TODO replace with: (!= v1 v0)
+      cannotSimplify("(and (> v1 v0) (>= v2 v3))", integerType(), integerType(), integerType(), integerType());
+      cannotSimplify("(and (> v3 v2) (>= v0 v1))", integerType(), integerType(), integerType(), integerType());
+
+      // TODO simplify to "(!= v1 v0)"
       cannotSimplify("(and (xor (>= v1 v0) (>= v0 v1)) (!= v0 v1))", integerType(), integerType());
+
+      // TODO simplify to "(!= v0 v1)"
+      cannotSimplify("(and (xor (> v1 v0) (> v0 v1)) (!= v0 v1))", integerType(), integerType());
+
+      // TODO simplify to "(zero? v0)"
+      cannotSimplify("(and (false? (pos? v0)) (false? (neg? v0)))", integerType());
+
+      // TODO simplify to "(false? (zero? v0))"
+      cannotSimplify("(and (or (neg? v0) (pos? v0)) (false? (zero? v0)))", integerType());
    }
 }

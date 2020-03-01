@@ -58,19 +58,27 @@ public class XorTest extends AbstractFunctionTest {
       simplify("(xor (= v0 v1) (or (> v0 v1) (> v1 v0)))").with(integerType(), integerType()).to("true");
       simplify("(xor (!= v0 v1) (or (> v1 v0) (> v0 v1)))").with(integerType(), integerType()).to("false");
 
-      simplify("(xor (> v1 v0) (> v0 v1))").with(integerType(), integerType()).to("(!= v0 v1)");
       simplify("(xor (even? v0) (odd? v0))").with(integerType()).to("true");
-      simplify("(xor (pos? v0) (neg? v0))").with(integerType()).to("(false? (zero? v0))");
-
-      simplify("(xor (> v0 v1) (>= v0 v1))").with(integerType(), integerType()).to("(!= v0 v1)");
-
-      // TODO add example of "(xor x y)" being simplified to "(or x y)"
    }
 
    @Override
    public void testCannotSimplify() {
+      // TODO simplify "(or x y)"
       cannotSimplify("(xor v1 v0)", booleanType(), booleanType());
+
       // TODO why not "(xor (!= v3 v2) (= v1 v0))" - is ordering consistent between "xor", "or", "!=" and "="?
       cannotSimplify("(xor (!= v2 v3) (= v0 v1))", integerType(), integerType(), integerType(), integerType());
+
+      // TODO simplify to "(xor (> v0 v1) (> v1 v0))"
+      cannotSimplify("(xor (>= v1 v0) (>= v0 v1))", integerType(), integerType());
+
+      // TODO simplify to "(!= v0 v1)"
+      cannotSimplify("(xor (> v1 v0) (> v0 v1))", integerType(), integerType());
+
+      // TODO simplify to "(= v0 v1)"
+      cannotSimplify("(xor (>= v0 v1) (> v0 v1))", integerType(), integerType());
+
+      // TODO simplify to "(false? (zero? v0))"
+      cannotSimplify("(xor (neg? v0) (pos? v0))", integerType());
    }
 }

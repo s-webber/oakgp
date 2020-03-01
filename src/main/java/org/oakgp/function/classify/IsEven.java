@@ -18,11 +18,14 @@ package org.oakgp.function.classify;
 import static org.oakgp.type.CommonTypes.booleanType;
 import static org.oakgp.type.CommonTypes.integerType;
 
+import java.util.Collections;
+import java.util.Set;
+
 import org.oakgp.Arguments;
 import org.oakgp.function.BooleanFunction;
-import org.oakgp.function.RulesEngine;
 import org.oakgp.function.Signature;
 import org.oakgp.node.FunctionNode;
+import org.oakgp.node.Node;
 
 /** Determines if a number is even. */
 public final class IsEven implements BooleanFunction {
@@ -43,16 +46,17 @@ public final class IsEven implements BooleanFunction {
    }
 
    @Override
-   public RulesEngine getEngine(FunctionNode fn) {
-      RulesEngine e = new RulesEngine();
-      e.addRule(fn, (_e, f, v) -> {
-         _e.addFact(new FunctionNode(IsOdd.getSingleton(), fn.getType(), fn.getChildren()), !v);
-      });
-      return e;
+   public Signature getSignature() {
+      return SIGNATURE;
    }
 
    @Override
-   public Signature getSignature() {
-      return SIGNATURE;
+   public Node getOpposite(FunctionNode fn) {
+      return new FunctionNode(IsOdd.getSingleton(), fn.getType(), fn.getChildren());
+   }
+
+   @Override
+   public Set<Node> getCauses(FunctionNode fn) {
+      return Collections.singleton(new FunctionNode(IsZero.getSingleton(), fn.getType(), fn.getChildren()));
    }
 }

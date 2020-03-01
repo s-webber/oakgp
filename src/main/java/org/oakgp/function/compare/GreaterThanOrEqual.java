@@ -15,10 +15,15 @@
  */
 package org.oakgp.function.compare;
 
-import org.oakgp.function.RulesEngine;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
+import org.oakgp.node.Node;
 import org.oakgp.util.NodeComparator;
+import org.oakgp.util.Utils;
 
 /** Determines if the object represented by the first argument is greater than or equal to the object represented by the second. */
 public final class GreaterThanOrEqual extends ComparisonOperator {
@@ -39,33 +44,52 @@ public final class GreaterThanOrEqual extends ComparisonOperator {
    }
 
    @Override
-   public RulesEngine getEngine(FunctionNode fn) {
-      RulesEngine e = new RulesEngine();
-
-      e.addRule(fn, (_e, fact, value) -> {
-         ChildNodes swappedArgs = fn.getChildren().swap(0, 1);
-         ChildNodes orderedArgs = NodeComparator.NODE_COMPARATOR.compare(fn.getChildren().first(), swappedArgs.first()) < 0 ? fn.getChildren() : swappedArgs;
-
-         _e.addFact(new FunctionNode(GreaterThan.getSingleton(), fn.getType(), swappedArgs), !value);
-
-         if (value) {
-            _e.addRule(new FunctionNode(GreaterThanOrEqual.getSingleton(), fn.getType(), swappedArgs), (__e, __fact, __value) -> {
-               __e.addFact(new FunctionNode(Equal.getSingleton(), fn.getType(), orderedArgs), __value);
-               __e.addFact(new FunctionNode(NotEqual.getSingleton(), fn.getType(), orderedArgs), !__value);
-               __e.addFact(new FunctionNode(GreaterThan.getSingleton(), fn.getType(), fn.getChildren()), !__value);
-            });
-         } else {
-            _e.addFact(new FunctionNode(NotEqual.getSingleton(), fn.getType(), orderedArgs), true);
-            _e.addFact(new FunctionNode(Equal.getSingleton(), fn.getType(), orderedArgs), false);
-            _e.addFact(new FunctionNode(GreaterThan.getSingleton(), fn.getType(), fn.getChildren()), false);
-         }
-      });
-
-      return e;
+   public String getDisplayName() {
+      return ">=";
    }
 
    @Override
-   public String getDisplayName() {
-      return ">=";
+   public Node getOpposite(FunctionNode fn) {
+      ChildNodes swappedArgs = fn.getChildren().swap(0, 1);
+      return new FunctionNode(GreaterThan.getSingleton(), fn.getType(), swappedArgs);
+   }
+
+   @Override
+   public Set<Node> getIncompatibles(FunctionNode fn) {
+      return Collections.emptySet();
+   }
+
+   @Override
+   public Set<Node> getCauses(FunctionNode fn) {
+      Set<Node> result = new HashSet<>();
+
+      result.add(new FunctionNode(GreaterThan.getSingleton(), fn.getType(), fn.getChildren()));
+
+      ChildNodes swappedArgs = fn.getChildren().swap(0, 1);
+      ChildNodes orderedArgs = NodeComparator.NODE_COMPARATOR.compare(fn.getChildren().first(), swappedArgs.first()) < 0 ? fn.getChildren() : swappedArgs;
+      result.add(new FunctionNode(Equal.getSingleton(), fn.getType(), orderedArgs));
+
+      return result;
+   }
+
+   @Override
+   public Node getIntersection(FunctionNode fn, Node n) {
+      ChildNodes swappedArgs = fn.getChildren().swap(0, 1);
+      if (n.equals(new FunctionNode(GreaterThanOrEqual.getSingleton(), fn.getType(), swappedArgs))) {
+         ChildNodes orderedArgs = NodeComparator.NODE_COMPARATOR.compare(fn.getChildren().first(), swappedArgs.first()) < 0 ? fn.getChildren() : swappedArgs;
+         return new FunctionNode(Equal.getSingleton(), fn.getType(), orderedArgs);
+      } else {
+         return null;
+      }
+   }
+
+   @Override
+   public Node getUnion(FunctionNode fn, Node n) {
+      ChildNodes swappedArgs = fn.getChildren().swap(0, 1);
+      if (n.equals(new FunctionNode(GreaterThanOrEqual.getSingleton(), fn.getType(), swappedArgs))) {
+         return Utils.TRUE_NODE;
+      } else {
+         return null;
+      }
    }
 }

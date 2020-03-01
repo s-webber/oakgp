@@ -32,6 +32,11 @@ public class IfTest extends AbstractFunctionTest {
       return IF;
    }
 
+   @Test
+   public void test() {
+      simplify("(if (> v0 v1) (>= v0 v1) (= v2 v2))").to("true");
+   }
+
    @Override
    public void testEvaluate() {
       evaluate("(if (> 9 8) (+ 1 2) (* 6 3))").to(3);
@@ -56,13 +61,18 @@ public class IfTest extends AbstractFunctionTest {
 
       simplify("(if (> v0 v1) true false)").to("(> v0 v1)");
       simplify("(if (> v0 v1) false true)").to("(>= v1 v0)");
+      simplify("(if (> v0 v1) true (= 9 v1))").to("(or (= 9 v1) (> v0 v1))");
+      simplify("(if (> v0 v1) (= 9 v1) false)").to("(and (= 9 v1) (> v0 v1))");
+      simplify("(if (> v0 v1) false (= 9 v1))").to("(and (= 9 v1) (>= v1 v0))");
+      simplify("(if (> v0 v1) (= 9 v1) true)").to("(or (= 9 v1) (>= v1 v0))");
+      simplify("(if (neg? v0) false (= 9 v1))").to("(and (false? (neg? v0)) (= 9 v1))");
+      simplify("(if (neg? v0) (= 9 v1) true)").to("(or (false? (neg? v0)) (= 9 v1))");
 
-      simplify("(if (>= v0 v1) (> v0 v1) (> v1 v0))").to("(if (>= v0 v1) (> v0 v1) true)");
-      simplify("(if (>= v0 v1) (> v0 9) (> v0 v1))").to("(if (>= v0 v1) (> v0 9) false)");
+      simplify("(if (>= v0 v1) (> v0 v1) (> v1 v0))").to("(!= v0 v1)");
 
-      simplify("(if (= v0 v1) (>= v0 v1) (> v1 v0))").to("(if (= v0 v1) true (> v1 v0))");
-      simplify("(if (> v0 v1) (>= v0 v1) (> v1 v0))").to("(if (> v0 v1) true (> v1 v0))");
-      simplify("(if (> v0 v1) (>= v1 v0) (>= v0 v1))").to("(if (> v0 v1) false (>= v0 v1))");
+      simplify("(if (= v0 v1) (>= v0 v1) (> v1 v0))").to("(or (> v1 v0) (= v0 v1))");
+      simplify("(if (> v0 v1) (>= v0 v1) (> v1 v0))").to("(!= v0 v1)");
+      simplify("(if (> v0 v1) (>= v1 v0) (>= v0 v1))").to("(= v0 v1)");
 
       simplify("(if (> v0 v1) (>= v0 v1) (>= v1 v0))").to("true");
       simplify("(if (>= v0 v1) (> v1 v0) (= v1 v0))").to("false");
@@ -71,6 +81,8 @@ public class IfTest extends AbstractFunctionTest {
       simplify("(if (!= v0 v1) (= v3 v2) (and (= v0 v1) (> v3 v2)))").to("(if (!= v0 v1) (= v2 v3) (> v3 v2))");
       simplify("(if (!= v0 v1) (and (!= v0 v1) (> v3 v2)) (= v2 v3))").to("(if (!= v0 v1) (> v3 v2) (= v2 v3))");
       simplify("(if (!= v0 v1) (and (!= v0 v1) (> v3 v2)) (and (= v0 v1) (> v3 v2)))").to("(> v3 v2)");
+
+      simplify("(if (>= v0 v1) (> v0 9) (> v0 v1))").to("(and (>= v0 v1) (> v0 9))");
    }
 
    @Override

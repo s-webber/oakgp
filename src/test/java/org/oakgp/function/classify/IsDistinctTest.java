@@ -47,5 +47,6 @@ public class IsDistinctTest extends AbstractFunctionTest {
 
    @Override
    public void testCannotSimplify() {
+      cannotSimplify("(distinct? v0)", listType(integerType()));
    }
 }

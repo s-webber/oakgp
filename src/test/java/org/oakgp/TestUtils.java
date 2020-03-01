@@ -49,7 +49,9 @@ import org.oakgp.function.bool.Or;
 import org.oakgp.function.bool.Xor;
 import org.oakgp.function.choice.If;
 import org.oakgp.function.choice.OrElse;
+import org.oakgp.function.classify.IsDistinct;
 import org.oakgp.function.classify.IsEven;
+import org.oakgp.function.classify.IsFalse;
 import org.oakgp.function.classify.IsNegative;
 import org.oakgp.function.classify.IsOdd;
 import org.oakgp.function.classify.IsPositive;
@@ -178,10 +180,13 @@ public class TestUtils {
       builder.add(IsOdd.getSingleton());
       builder.add(IsEven.getSingleton());
       builder.add(IsZero.getSingleton());
+      builder.add(IsFalse.getSingleton());
 
       CountList count = new CountList();
       builder.add(count, integerType());
       builder.add(count, booleanType());
+
+      builder.add(new IsDistinct(), integerType());
 
       return builder.build();
    }

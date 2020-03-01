@@ -15,6 +15,8 @@
  */
 package org.oakgp.function.classify;
 
+import static org.oakgp.type.CommonTypes.integerType;
+
 import org.oakgp.function.AbstractFunctionTest;
 
 public class IsNegativeTest extends AbstractFunctionTest {
@@ -39,5 +41,12 @@ public class IsNegativeTest extends AbstractFunctionTest {
 
    @Override
    public void testCannotSimplify() {
+      cannotSimplify("(neg? v0)", integerType());
+   }
+
+   @Override
+   protected BooleanFunctionExpectationsBuilder createBooleanFunctionExpectationsBuilder() {
+      return new BooleanFunctionExpectationsBuilder("(neg? v0)") //
+            .incompatibles("(pos? v0)", "(zero? v0)");
    }
 }

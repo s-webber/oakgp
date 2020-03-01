@@ -15,6 +15,8 @@
  */
 package org.oakgp.function.classify;
 
+import static org.oakgp.type.CommonTypes.integerType;
+
 import org.oakgp.function.AbstractFunctionTest;
 
 public class IsOddTest extends AbstractFunctionTest {
@@ -44,5 +46,13 @@ public class IsOddTest extends AbstractFunctionTest {
 
    @Override
    public void testCannotSimplify() {
+      cannotSimplify("(odd? v0)", integerType());
+   }
+
+   @Override
+   protected BooleanFunctionExpectationsBuilder createBooleanFunctionExpectationsBuilder() {
+      return new BooleanFunctionExpectationsBuilder("(odd? v0)") //
+            .opposite("(even? v0)") //
+            .incompatibles("(zero? v0)");
    }
 }

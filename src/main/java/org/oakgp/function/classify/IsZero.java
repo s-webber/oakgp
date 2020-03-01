@@ -18,11 +18,15 @@ package org.oakgp.function.classify;
 import static org.oakgp.type.CommonTypes.booleanType;
 import static org.oakgp.type.CommonTypes.integerType;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.oakgp.Arguments;
 import org.oakgp.function.BooleanFunction;
-import org.oakgp.function.RulesEngine;
 import org.oakgp.function.Signature;
 import org.oakgp.node.FunctionNode;
+import org.oakgp.node.Node;
 
 /** Determines if a number is zero. */
 public final class IsZero implements BooleanFunction {
@@ -43,31 +47,23 @@ public final class IsZero implements BooleanFunction {
    }
 
    @Override
-   public RulesEngine getEngine(FunctionNode fn) {
-      RulesEngine e = new RulesEngine();
-      e.addRule(fn, (_e, f, v) -> {
-         _e.addFact(new FunctionNode(IsEven.getSingleton(), fn.getType(), fn.getChildren()), v);
-         _e.addFact(new FunctionNode(IsOdd.getSingleton(), fn.getType(), fn.getChildren()), !v);
-
-         FunctionNode positive = new FunctionNode(IsPositive.getSingleton(), fn.getType(), fn.getChildren());
-         FunctionNode negative = new FunctionNode(IsNegative.getSingleton(), fn.getType(), fn.getChildren());
-         if (v) {
-            _e.addFact(positive, false);
-            _e.addFact(negative, false);
-         } else {
-            if (_e.hasFact(positive)) {
-               _e.addFact(negative, !_e.getFact(positive));
-            }
-            if (_e.hasFact(negative)) {
-               _e.addFact(positive, !_e.getFact(negative));
-            }
-         }
-      });
-      return e;
+   public Signature getSignature() {
+      return SIGNATURE;
    }
 
    @Override
-   public Signature getSignature() {
-      return SIGNATURE;
+   public Set<Node> getIncompatibles(FunctionNode fn) {
+      Set<Node> result = new HashSet<>();
+
+      result.add(new FunctionNode(IsOdd.getSingleton(), fn.getType(), fn.getChildren()));
+      result.add(new FunctionNode(IsPositive.getSingleton(), fn.getType(), fn.getChildren()));
+      result.add(new FunctionNode(IsNegative.getSingleton(), fn.getType(), fn.getChildren()));
+
+      return result;
+   }
+
+   @Override
+   public Set<Node> getConsequences(FunctionNode fn) {
+      return Collections.singleton(new FunctionNode(IsEven.getSingleton(), fn.getType(), fn.getChildren()));
    }
 }

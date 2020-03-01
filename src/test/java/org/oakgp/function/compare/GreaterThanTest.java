@@ -52,4 +52,13 @@ public class GreaterThanTest extends AbstractFunctionTest {
       cannotSimplify("(> 8 v0)", integerType());
       cannotSimplify("(> v0 v1)", integerType(), integerType());
    }
+
+   @Override
+   protected BooleanFunctionExpectationsBuilder createBooleanFunctionExpectationsBuilder() {
+      return new BooleanFunctionExpectationsBuilder("(> v0 v1)") //
+            .opposite("(>= v1 v0)") //
+            .incompatibles("(= v0 v1)", "(> v1 v0)") //
+            .consequences("(>= v0 v1)", "(!= v0 v1)") //
+            .union("(> v1 v0)", "(!= v0 v1)");
+   }
 }

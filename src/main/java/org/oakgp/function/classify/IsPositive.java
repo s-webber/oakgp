@@ -18,11 +18,14 @@ package org.oakgp.function.classify;
 import static org.oakgp.type.CommonTypes.booleanType;
 import static org.oakgp.type.CommonTypes.integerType;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.oakgp.Arguments;
 import org.oakgp.function.BooleanFunction;
-import org.oakgp.function.RulesEngine;
 import org.oakgp.function.Signature;
 import org.oakgp.node.FunctionNode;
+import org.oakgp.node.Node;
 
 /** Determines if a number is positive. */
 public final class IsPositive implements BooleanFunction {
@@ -48,28 +51,17 @@ public final class IsPositive implements BooleanFunction {
    }
 
    @Override
-   public RulesEngine getEngine(FunctionNode fn) {
-      RulesEngine e = new RulesEngine();
-      e.addRule(fn, (_e, f, v) -> {
-         FunctionNode zero = new FunctionNode(IsZero.getSingleton(), fn.getType(), fn.getChildren());
-         FunctionNode negative = new FunctionNode(IsNegative.getSingleton(), fn.getType(), fn.getChildren());
-         if (v) {
-            _e.addFact(zero, false);
-            _e.addFact(negative, false);
-         } else {
-            if (_e.hasFact(zero)) {
-               _e.addFact(negative, !_e.getFact(zero));
-            }
-            if (_e.hasFact(negative)) {
-               _e.addFact(zero, !_e.getFact(negative));
-            }
-         }
-      });
-      return e;
+   public String getDisplayName() {
+      return "pos?";
    }
 
    @Override
-   public String getDisplayName() {
-      return "pos?";
+   public Set<Node> getIncompatibles(FunctionNode fn) {
+      Set<Node> result = new HashSet<>();
+
+      result.add(new FunctionNode(IsNegative.getSingleton(), fn.getType(), fn.getChildren()));
+      result.add(new FunctionNode(IsZero.getSingleton(), fn.getType(), fn.getChildren()));
+
+      return result;
    }
 }

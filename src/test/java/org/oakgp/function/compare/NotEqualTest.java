@@ -17,6 +17,7 @@ package org.oakgp.function.compare;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
+import static org.oakgp.type.CommonTypes.booleanType;
 import static org.oakgp.type.CommonTypes.integerType;
 
 import org.oakgp.function.AbstractFunctionTest;
@@ -46,11 +47,22 @@ public class NotEqualTest extends AbstractFunctionTest {
       simplify("(!= 8 9)").to("true");
       simplify("(!= v0 8)").to("(!= 8 v0)");
       simplify("(!= v1 v0)").to("(!= v0 v1)");
+      simplify("(!= true v0)").with(booleanType()).to("(false? v0)");
+      simplify("(!= false v0)").with(booleanType()).to("v0");
+
+      simplify("(!= (if (> v0 v1) (>= v0 v1) (= v2 v2)) (neg? (if v3 v0 -4)))").with(integerType(), integerType(), booleanType(), booleanType())
+            .to("(false? (neg? (if v3 v0 -4)))");
    }
 
    @Override
    public void testCannotSimplify() {
       cannotSimplify("(!= 8 v0)", integerType());
       cannotSimplify("(!= v0 v1)", integerType(), integerType());
+   }
+
+   @Override
+   protected BooleanFunctionExpectationsBuilder createBooleanFunctionExpectationsBuilder() {
+      return new BooleanFunctionExpectationsBuilder("(!= v0 v1)") //
+            .opposite("(= v0 v1)");
    }
 }

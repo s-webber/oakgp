@@ -15,15 +15,14 @@
  */
 package org.oakgp.function.classify;
 
-import static org.oakgp.function.RulesEngineUtils.buildEngine;
 import static org.oakgp.type.CommonTypes.booleanType;
 
-import java.util.Map.Entry;
+import java.util.Collections;
+import java.util.Set;
 
 import org.oakgp.Arguments;
 import org.oakgp.function.BooleanFunction;
-import org.oakgp.function.RulesEngine;
-import org.oakgp.function.RulesEngineUtils;
+import org.oakgp.function.BooleanFunctionUtils;
 import org.oakgp.function.Signature;
 import org.oakgp.function.bool.And;
 import org.oakgp.function.bool.Or;
@@ -84,21 +83,26 @@ public final class IsFalse implements BooleanFunction {
       }
 
       // (false (odd? v0)) -> (even? v0)
-      for (Entry<Node, Boolean> entry : RulesEngineUtils.buildEngine(childNode, true).getFacts().entrySet()) {
-         if (!entry.getValue() && RulesEngineUtils.isEqual(functionNode, entry.getKey())) {
-            return entry.getKey();
-         }
-      }
-
-      return null;
+      Node opposite = BooleanFunctionUtils.getOpposite(childNode);
+      return opposite;
    }
 
    @Override
-   public RulesEngine getEngine(FunctionNode fn) {
-      Node childNode = fn.getChildren().first();
-      RulesEngine engine = buildEngine(childNode);
-      engine.addRule(fn, (e, fact, value) -> e.addFact(childNode, !value));
-      engine.addRule(childNode, (e, fact, value) -> e.addFact(fn, !value));
-      return engine;
+   public Node getOpposite(FunctionNode fn) {
+      return fn.getChildren().first();
+   }
+
+   @Override
+   public Set<Node> getIncompatibles(FunctionNode fn) {
+      if (fn.getFunction() instanceof BooleanFunction) {
+         return ((BooleanFunction) fn.getFunction()).getCauses(fn);
+      } else {
+         return Collections.emptySet();
+      }
+   }
+
+   @Override
+   public Set<Node> getCauses(FunctionNode fn) {
+      return Collections.emptySet();
    }
 }

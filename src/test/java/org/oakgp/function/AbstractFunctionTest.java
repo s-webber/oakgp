@@ -16,6 +16,7 @@
 package org.oakgp.function;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
@@ -32,6 +33,7 @@ import static org.oakgp.util.Utils.createIntegerTypeArray;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -148,7 +150,7 @@ public abstract class AbstractFunctionTest {
       return functionNode;
    }
 
-   protected Node readNode(String input, VariableSet variableSet) { // TODO private
+   private Node readNode(String input, VariableSet variableSet) {
       try (NodeReader nodeReader = new NodeReader(input, getFunctionSet(), new ConstantNode[0], variableSet)) {
          return nodeReader.readNode();
       } catch (IOException e) {
@@ -289,6 +291,116 @@ public abstract class AbstractFunctionTest {
          for (Object[] a : values) {
             verify(a);
          }
+      }
+   }
+
+   @Test
+   public final void testBooleanFunctionExpectationsBuilder() {
+      assertEquals(getFunction() instanceof BooleanFunction, createBooleanFunctionExpectationsBuilder() != null);
+   }
+
+   @Test
+   public final void testBooleanFunctionGetOpposite() {
+      BooleanFunctionExpectationsBuilder expectations = createBooleanFunctionExpectationsBuilder();
+      if (expectations == null) {
+         return;
+      }
+
+      FunctionNode input = readFunctionNode(expectations.input, expectations.variableSet);
+      Node expected = expectations.opposite == null ? null : readNode(expectations.opposite, expectations.variableSet);
+      assertEquals(expected, ((BooleanFunction) getFunction()).getOpposite(input));
+   }
+
+   @Test
+   public final void testBooleanFunctionGetIncompatibles() {
+      BooleanFunctionExpectationsBuilder expectations = createBooleanFunctionExpectationsBuilder();
+      if (expectations == null) {
+         return;
+      }
+
+      FunctionNode input = readFunctionNode(expectations.input, expectations.variableSet);
+      Set<Node> expectedIncompatibles = new HashSet<>();
+      for (String s : expectations.incompatibles) {
+         expectedIncompatibles.add(readNode(s, expectations.variableSet));
+      }
+      Set<Node> actualIncompatibles = ((BooleanFunction) getFunction()).getIncompatibles(input);
+      assertEquals(expectedIncompatibles, actualIncompatibles);
+      assertEquals(expectations.incompatibles.length, expectedIncompatibles.size());
+      if (expectations.opposite != null) {
+         assertFalse(actualIncompatibles.contains(readNode(expectations.opposite, expectations.variableSet)));
+      }
+   }
+
+   @Test
+   public final void testBooleanFunctionGetConsequences() {
+      BooleanFunctionExpectationsBuilder expectations = createBooleanFunctionExpectationsBuilder();
+      if (expectations == null) {
+         return;
+      }
+
+      FunctionNode input = readFunctionNode(expectations.input, expectations.variableSet);
+      Set<Node> expectedConsequences = new HashSet<>();
+      for (String s : expectations.consequences) {
+         expectedConsequences.add(readNode(s, expectations.variableSet));
+      }
+      assertEquals(expectedConsequences, ((BooleanFunction) getFunction()).getConsequences(input));
+      assertEquals(expectations.consequences.length, expectedConsequences.size());
+   }
+
+   @Test
+   public final void testBooleanFunctionGetUnion() {
+      BooleanFunctionExpectationsBuilder expectations = createBooleanFunctionExpectationsBuilder();
+      if (expectations == null || expectations.unionOther == null) {
+         return;
+      }
+
+      FunctionNode inputA = readFunctionNode(expectations.input, expectations.variableSet);
+      FunctionNode inputB = readFunctionNode(expectations.unionOther, expectations.variableSet);
+      Node expected = readNode(expectations.unionOutcome, expectations.variableSet);
+      assertEquals(expected, ((BooleanFunction) getFunction()).getUnion(inputA, inputB));
+   }
+
+   protected BooleanFunctionExpectationsBuilder createBooleanFunctionExpectationsBuilder() {
+      return null;
+   }
+
+   protected class BooleanFunctionExpectationsBuilder {
+      private final String input;
+      private final VariableSet variableSet;
+      private String opposite;
+      private String[] incompatibles = new String[0];
+      private String[] consequences = new String[0];
+      private String unionOther;
+      private String unionOutcome;
+
+      public BooleanFunctionExpectationsBuilder(String input) {
+         this(input, integerType(), integerType(), integerType());
+      }
+
+      public BooleanFunctionExpectationsBuilder(String input, Type... types) {
+         this.input = input;
+         this.variableSet = VariableSet.createVariableSet(types);
+      }
+
+      public BooleanFunctionExpectationsBuilder opposite(String opposite) {
+         this.opposite = opposite;
+         return this;
+      }
+
+      public BooleanFunctionExpectationsBuilder incompatibles(String... incompatibles) {
+         this.incompatibles = incompatibles;
+         return this;
+      }
+
+      public BooleanFunctionExpectationsBuilder consequences(String... consequences) {
+         this.consequences = consequences;
+         return this;
+      }
+
+      public BooleanFunctionExpectationsBuilder union(String unionOther, String unionOutcome) {
+         this.unionOther = unionOther;
+         this.unionOutcome = unionOutcome;
+         return this;
       }
    }
 }

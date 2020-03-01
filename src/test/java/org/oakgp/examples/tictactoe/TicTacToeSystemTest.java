@@ -82,16 +82,26 @@ public class TicTacToeSystemTest {
       String x = "(and (occupied? v0 MIDDLE_LEFT v1) (and (occupied? v0 BOTTOM_LEFT v2) (and (occupied? v0 BOTTOM_RIGHT v2) (and (free? v0 BOTTOM_LEFT) (and (occupied? v0 TOP_LEFT v2) (and (free? v0 TOP_LEFT) (and (free? v0 TOP_CENTRE) (and (free? v0 TOP_RIGHT) (and (free? v0 MIDDLE_RIGHT) (and (occupied? v0 BOTTOM_LEFT v1) (and (occupied? v0 TOP_LEFT v1) (and (free? v0 BOTTOM_RIGHT) (and (occupied? v0 BOTTOM_CENTRE v1) (occupied? v0 TOP_RIGHT v1))))))))))))))";
       String z = "(if (and (and (occupied? v0 MIDDLE_LEFT v1) (and (free? v0 TOP_CENTRE) (free? v0 BOTTOM_LEFT))) (and (occupied? v0 TOP_LEFT v2) (and (and (free? v0 TOP_RIGHT) (and (and (and (and (and (and (and (occupied? v0 MIDDLE_LEFT v1) (occupied? v0 BOTTOM_LEFT v2)) (occupied? v0 BOTTOM_LEFT v1)) (free? v0 MIDDLE_RIGHT)) (occupied? v0 TOP_LEFT v2)) (and (free? v0 BOTTOM_RIGHT) (and (and (free? v0 BOTTOM_LEFT) (and (occupied? v0 TOP_LEFT v1) (occupied? v0 BOTTOM_CENTRE v1))) (and (free? v0 TOP_LEFT) (and (occupied? v0 TOP_RIGHT v1) (free? v0 TOP_LEFT)))))) (occupied? v0 MIDDLE_LEFT v1)) (free? v0 BOTTOM_LEFT))) (occupied? v0 BOTTOM_RIGHT v2)))) CENTRE TOP_CENTRE)";
       String w = "(and (occupied? v0 TOP_LEFT v2) (and (occupied? v0 BOTTOM_LEFT v2) (and (free? v0 TOP_CENTRE) (and (free? v0 TOP_LEFT) (and (free? v0 TOP_RIGHT) (and (free? v0 BOTTOM_LEFT) (and (occupied? v0 BOTTOM_RIGHT v2) (and (free? v0 MIDDLE_RIGHT) (and (free? v0 BOTTOM_RIGHT) (and (occupied? v0 TOP_LEFT v1) (and (occupied? v0 BOTTOM_LEFT v1) (and (occupied? v0 BOTTOM_CENTRE v1) (and (occupied? v0 TOP_RIGHT v1) (occupied? v0 MIDDLE_LEFT v1))))))))))))))";
-      NodeReader r = new NodeReader(z, functionSet, constants.toArray(new ConstantNode[0]), VariableSet.createVariableSet(VARIABLE_TYPES));
+      String q = "(and (occupied? v0 CENTRE v2) (and (occupied? v0 MIDDLE_LEFT v2) (and (occupied? v0 TOP_LEFT v1) (and (free? v0 CENTRE) (and (occupied? v0 BOTTOM_RIGHT v1) (and (occupied? v0 BOTTOM_LEFT v2) (and (occupied? v0 MIDDLE_RIGHT v1) (and (free? v0 MIDDLE_LEFT) (and (occupied? v0 TOP_CENTRE v2) (and (free? v0 MIDDLE_RIGHT) (and (free? v0 BOTTOM_RIGHT) (and (free? v0 BOTTOM_LEFT) (and (free? v0 TOP_RIGHT) (and (free? v0 TOP_CENTRE) (and (occupied? v0 CENTRE v1) (and (occupied? v0 MIDDLE_LEFT v1) (occupied? v0 BOTTOM_CENTRE v2)))))))))))))))))";
+      String q2 = "(and (free? v0 CENTRE) (and (occupied? v0 MIDDLE_LEFT v1) (and (free? v0 MIDDLE_LEFT) (and (free? v0 BOTTOM_RIGHT) (and (occupied? v0 BOTTOM_LEFT v2) (and (occupied? v0 CENTRE v2) (and (free? v0 BOTTOM_LEFT) (and (occupied? v0 TOP_CENTRE v2) (and (occupied? v0 MIDDLE_LEFT v2) (and (free? v0 MIDDLE_RIGHT) (and (free? v0 TOP_CENTRE) (and (occupied? v0 BOTTOM_RIGHT v1) (and (occupied? v0 TOP_LEFT v1) (and (free? v0 TOP_RIGHT) (and (occupied? v0 CENTRE v1) (and (occupied? v0 BOTTOM_CENTRE v2) (occupied? v0 MIDDLE_RIGHT v1)))))))))))))))))";
+      NodeReader r = new NodeReader(q2, functionSet, constants.toArray(new ConstantNode[0]), VariableSet.createVariableSet(VARIABLE_TYPES));
       Node in = r.readNode();
       long now = System.currentTimeMillis();
       Node out = NodeSimplifier.simplify(in);
       System.out.println("took " + (System.currentTimeMillis() - now));
       System.out.println(">> " + in.getNodeCount() + " " + in);
       System.out.println("<< " + out.getNodeCount() + " " + out);
+      now = System.currentTimeMillis();
+      Node out2 = NodeSimplifier.simplify(out);
+      System.out.println("took " + (System.currentTimeMillis() - now));
+      System.out.println("<< " + out2.getNodeCount() + " " + out2);
+      now = System.currentTimeMillis();
+      Node out3 = NodeSimplifier.simplify(out);
+      System.out.println("took " + (System.currentTimeMillis() - now));
+      System.out.println("<< " + out3.getNodeCount() + " " + out3);
    }
 
-   @Test
+   @Test(timeout = 5000)
    public void testLowLevelFitnessFunction() {
       FunctionSet functionSet = new FunctionSetBuilder().addAll(new IsFree(), new IsOccupied(), new GetAnyMove(), new IfValidMove(), And.getSingleton())
             .add(new OrElse(), MOVE_TYPE).add(new If(), POSSIBLE_MOVE).build();

@@ -22,9 +22,7 @@ import static org.oakgp.type.CommonTypes.comparableType;
 
 import org.junit.Test;
 import org.oakgp.function.Function;
-import org.oakgp.function.RulesEngine;
 import org.oakgp.function.Signature;
-import org.oakgp.node.FunctionNode;
 import org.oakgp.type.TypeBuilder;
 import org.oakgp.type.Types.Type;
 
@@ -35,11 +33,6 @@ public class ComparisonOperatorTest {
       Function f = new ComparisonOperator(true) {
          @Override
          protected boolean evaluate(int diff) {
-            throw new UnsupportedOperationException();
-         }
-
-         @Override
-         public RulesEngine getEngine(FunctionNode fn) {
             throw new UnsupportedOperationException();
          }
       };

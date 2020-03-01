@@ -18,11 +18,14 @@ package org.oakgp.function.classify;
 import static org.oakgp.type.CommonTypes.booleanType;
 import static org.oakgp.type.CommonTypes.integerType;
 
+import java.util.Collections;
+import java.util.Set;
+
 import org.oakgp.Arguments;
 import org.oakgp.function.BooleanFunction;
-import org.oakgp.function.RulesEngine;
 import org.oakgp.function.Signature;
 import org.oakgp.node.FunctionNode;
+import org.oakgp.node.Node;
 
 /** Determines if a number is odd. */
 public final class IsOdd implements BooleanFunction {
@@ -48,14 +51,12 @@ public final class IsOdd implements BooleanFunction {
    }
 
    @Override
-   public RulesEngine getEngine(FunctionNode fn) {
-      RulesEngine e = new RulesEngine();
-      e.addRule(fn, (_e, f, v) -> {
-         _e.addFact(new FunctionNode(IsEven.getSingleton(), fn.getType(), fn.getChildren()), !v);
-         if (v) {
-            _e.addFact(new FunctionNode(IsZero.getSingleton(), fn.getType(), fn.getChildren()), false);
-         }
-      });
-      return e;
+   public Node getOpposite(FunctionNode fn) {
+      return new FunctionNode(IsEven.getSingleton(), fn.getType(), fn.getChildren());
+   }
+
+   @Override
+   public Set<Node> getIncompatibles(FunctionNode fn) {
+      return Collections.singleton(new FunctionNode(IsZero.getSingleton(), fn.getType(), fn.getChildren()));
    }
 }
