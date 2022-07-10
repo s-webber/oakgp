@@ -26,6 +26,8 @@ import static org.oakgp.type.CommonTypes.functionType;
 import static org.oakgp.type.CommonTypes.integerType;
 import static org.oakgp.type.CommonTypes.listType;
 import static org.oakgp.type.CommonTypes.mapType;
+import static org.oakgp.type.CommonTypes.entryType;
+import static org.oakgp.type.CommonTypes.stringType;
 
 import java.util.List;
 
@@ -72,8 +74,8 @@ public class SignatureTest {
 
    @Test
    public void testToString() {
-      Signature signature = Signature.createSignature(integerType(), booleanType(), integerType(), booleanType());
-      assertEquals("Integer [Boolean, Integer, Boolean]", signature.toString());
+      Signature signature = Signature.createSignature(integerType(), booleanType(), integerType(), entryType(stringType(), integerType()));
+      assertEquals("Integer [Boolean, Integer, Entry [String, Integer]]", signature.toString());
    }
 
    @Test

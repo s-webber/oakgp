@@ -20,10 +20,15 @@ import static org.oakgp.examples.tictactoe.Symbol.X;
 import org.oakgp.Assignments;
 import org.oakgp.node.Node;
 import org.oakgp.rank.tournament.TwoPlayerGame;
+import org.oakgp.rank.tournament.TwoPlayerGameResult;
 
 class TicTacToe implements TwoPlayerGame {
+   private static final TwoPlayerGameResult X_WINS = new TwoPlayerGameResult(1, -1);
+   private static final TwoPlayerGameResult O_WINS = new TwoPlayerGameResult(-1, 1);
+   private static final TwoPlayerGameResult DRAW = new TwoPlayerGameResult(0, 0);
+
    @Override
-   public double evaluate(Node player1, Node player2) {
+   public TwoPlayerGameResult evaluate(Node player1, Node player2) {
       Board board = new Board();
       Symbol next = X;
       while (true) {
@@ -32,9 +37,9 @@ class TicTacToe implements TwoPlayerGame {
          board = board.update(next, move);
 
          if (board.isDraw()) {
-            return 0;
+            return DRAW;
          } else if (board.isWinner(next)) {
-            return next == X ? 1 : -1;
+            return next == X ? X_WINS : O_WINS;
          }
 
          next = next.getOpponent();

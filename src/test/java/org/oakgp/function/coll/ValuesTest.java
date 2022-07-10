@@ -27,6 +27,7 @@ public class ValuesTest extends AbstractFunctionTest {
 
    @Override
    public void testEvaluate() {
+      evaluate("(values {1 \"a\"})").to(Arrays.asList("a"));
       evaluate("(values {\"a\" 1})").to(Arrays.asList(1));
       evaluate("(values {\"a\" 7 \"b\" 180 \"c\" 42})").to(Arrays.asList(7, 180, 42));
    }

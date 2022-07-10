@@ -36,9 +36,9 @@ public class TwoPlayerGameCacheTest {
       final TwoPlayerGame mockTwoPlayerGame = (player1, player2) -> {
          evaluateCtr.incrementAndGet();
          if (n1 == player1 && n2 == player2) {
-            return fitness1;
+            return new TwoPlayerGameResult(fitness1, -fitness1);
          } else if (n1 == player1 && n3 == player2) {
-            return fitness2;
+            return new TwoPlayerGameResult(fitness2, -fitness2);
          } else {
             throw new IllegalArgumentException();
          }
@@ -48,16 +48,18 @@ public class TwoPlayerGameCacheTest {
       final TwoPlayerGameCache cache = new TwoPlayerGameCache(3, mockTwoPlayerGame);
 
       // test evaluate is only called once per node-pair
-      assertEquals(fitness1, cache.evaluate(n1, n2), 0);
-      assertEquals(-fitness1, cache.evaluate(n2, n1), 0);
-      assertEquals(-fitness1, cache.evaluate(n2, n1), 0);
-      assertEquals(fitness1, cache.evaluate(n1, n2), 0);
+      assertEquals(new TwoPlayerGameResult(fitness1, -fitness1), cache.evaluate(n1, n2));
+      assertEquals(new TwoPlayerGameResult(-fitness1, fitness1), cache.evaluate(n2, n1));
+      assertEquals(new TwoPlayerGameResult(-fitness1, fitness1), cache.evaluate(n2, n1));
+      assertEquals(new TwoPlayerGameResult(fitness1, -fitness1), cache.evaluate(n1, n2));
       assertEquals(1, evaluateCtr.get());
 
-      assertEquals(fitness2, cache.evaluate(n1, n3), 0);
-      assertEquals(-fitness2, cache.evaluate(n3, n1), 0);
-      assertEquals(fitness2, cache.evaluate(n1, n3), 0);
-      assertEquals(-fitness2, cache.evaluate(n3, n1), 0);
+      assertEquals(new TwoPlayerGameResult(fitness2, -fitness2), cache.evaluate(n1, n3));
+      assertEquals(new TwoPlayerGameResult(-fitness2, fitness2), cache.evaluate(n3, n1));
+      assertEquals(new TwoPlayerGameResult(fitness2, -fitness2), cache.evaluate(n1, n3));
+      assertEquals(new TwoPlayerGameResult(-fitness2, fitness2), cache.evaluate(n3, n1));
       assertEquals(2, evaluateCtr.get());
+
+      // TODO test max size
    }
 }

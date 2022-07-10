@@ -90,8 +90,24 @@ public class CommonTypesTest {
    }
 
    @Test
-   public void testBooleanList() {
-      assertSame(CommonTypes.booleanListType(), CommonTypes.listType(CommonTypes.booleanType()));
+   public void testSameTypeEntry() {
+      Type argType = uniqueType();
+      Type entry = CommonTypes.entryType(argType);
+
+      assertSame(entry, Types.type("Entry", argType, argType));
+      assertParameters(entry, argType, argType);
+      assertNoParents(entry);
+   }
+
+   @Test
+   public void testMixedTypeEntry() {
+      Type keyType = uniqueType();
+      Type valueType = uniqueType();
+      Type entry = CommonTypes.entryType(keyType, valueType);
+
+      assertSame(entry, Types.type("Entry", keyType, valueType));
+      assertParameters(entry, keyType, valueType);
+      assertNoParents(entry);
    }
 
    @Test

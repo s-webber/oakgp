@@ -42,7 +42,7 @@ import org.oakgp.node.Node;
  * (+ 9 5)
  * </pre>
  */
-public final class NodeWriter {
+public final class NodeWriter { // TODO add format option with line breaks and indents
    private final Map<Class<?>, java.util.function.Function<Object, String>> writers = new HashMap<>();
 
    /** Creates a {@code NodeWriter} for the purpose of generating textual representations of {@code Node} instances. */

@@ -71,9 +71,9 @@ public final class RoundRobinTournament implements GenerationRanker {
    private void playGame(Pair<MutableRankedCandidate> pair) {
       MutableRankedCandidate player1 = pair.getLeft();
       MutableRankedCandidate player2 = pair.getRight();
-      double result = game.evaluate(player1.getNode(), player2.getNode());
-      player1.addFitness(result);
-      player2.addFitness(-result);
+      TwoPlayerGameResult result = game.evaluate(player1.getNode(), player2.getNode());
+      player1.addFitness(result.getFitness1());
+      player2.addFitness(result.getFitness2());
    }
 
    private RankedCandidates toRankedCandidates(MutableRankedCandidate[] input) {

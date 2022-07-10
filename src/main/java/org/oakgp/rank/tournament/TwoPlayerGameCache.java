@@ -23,7 +23,7 @@ import org.oakgp.util.CacheMap;
 /** Wraps a {@code TwoPlayerGame} to provide caching of results. */
 public final class TwoPlayerGameCache implements TwoPlayerGame {
    private final TwoPlayerGame twoPlayerGame;
-   private final Map<NodePair, Double> cache;
+   private final Map<NodePair, TwoPlayerGameResult> cache;
 
    /** Creates a cache of the given maximum size which will contain the results of evaluating the given {@code TwoPlayerGame}. */
    public TwoPlayerGameCache(int maxSize, TwoPlayerGame twoPlayerGame) {
@@ -32,12 +32,12 @@ public final class TwoPlayerGameCache implements TwoPlayerGame {
    }
 
    @Override
-   public double evaluate(Node player1, Node player2) {
+   public TwoPlayerGameResult evaluate(Node player1, Node player2) {
       NodePair pair = new NodePair(player1, player2);
-      Double result = cache.get(pair);
+      TwoPlayerGameResult result = cache.get(pair);
       if (result == null) {
          result = twoPlayerGame.evaluate(player1, player2);
-         cache.put(new NodePair(player2, player1), -result);
+         cache.put(new NodePair(player2, player1), result.flip());
          cache.put(pair, result);
       }
       return result;

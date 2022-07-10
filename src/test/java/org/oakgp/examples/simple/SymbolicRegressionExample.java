@@ -15,11 +15,10 @@
  */
 package org.oakgp.examples.simple;
 
+import static org.oakgp.rank.fitness.IntegerArrayBuilder.integers;
 import static org.oakgp.type.CommonTypes.integerType;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.oakgp.Assignments;
 import org.oakgp.function.Function;
@@ -27,9 +26,8 @@ import org.oakgp.function.math.IntegerUtils;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
 import org.oakgp.rank.RankedCandidates;
-import org.oakgp.rank.fitness.FitnessFunction;
+import org.oakgp.rank.fitness.TestDataBuilder;
 import org.oakgp.rank.fitness.TestDataFitnessFunction;
-import org.oakgp.type.Types.Type;
 import org.oakgp.util.RunBuilder;
 import org.oakgp.util.Utils;
 
@@ -41,36 +39,25 @@ public class SymbolicRegressionExample {
 
    public static void main(String[] args) {
       // the function set will be the addition, subtraction and multiplication arithmetic operators
-      Function[] functions = { IntegerUtils.INTEGER_UTILS.getAdd(), IntegerUtils.INTEGER_UTILS.getSubtract(), IntegerUtils.INTEGER_UTILS.getMultiply() };
       // the constant set will contain the integers in the range 0-10 inclusive
-      List<ConstantNode> constants = Utils.createIntegerConstants(0, 10);
       // the variable set will contain a single variable - representing the integer value input to the function
-      Type[] variableTypes = { integerType() };
       // the fitness function will compare candidates against a data set which maps inputs to their expected outputs
-      FitnessFunction fitnessFunction = TestDataFitnessFunction.createIntegerTestDataFitnessFunction(createDataSet());
 
-      RankedCandidates ouput = new RunBuilder().setReturnType(integerType()).setConstants(constants).setVariables(variableTypes).setFunctions(functions)
+      Function[] functions = { IntegerUtils.INTEGER_UTILS.getAdd(), IntegerUtils.INTEGER_UTILS.getSubtract(), IntegerUtils.INTEGER_UTILS.getMultiply() };
+      List<ConstantNode> constants = Utils.createIntegerConstants(0, 10);
+      TestDataFitnessFunction<?> fitnessFunction = new TestDataBuilder().values(integers().from(-10).to(10).build())
+            .rankCloseness(SymbolicRegressionExample::getExpectedOutput);
+
+      RankedCandidates output = new RunBuilder().setReturnType(integerType()).setConstants(constants).setVariables(integerType()).setFunctions(functions)
             .setFitnessFunction(fitnessFunction).setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_POPULATION_MAX_DEPTH)
             .setTargetFitness(TARGET_FITNESS).process();
-      Node best = ouput.best().getNode();
+      Node best = output.best().getNode();
       System.out.println(best);
+      fitnessFunction.evaluate(best, System.out::println);
    }
 
-   /**
-    * Returns the data set used to assess the fitness of candidates.
-    * <p>
-    * Creates a map of input values in the range [-10,+10] to the corresponding expected output value.
-    */
-   private static Map<Assignments, Integer> createDataSet() {
-      Map<Assignments, Integer> tests = new HashMap<>();
-      for (int i = -10; i < 11; i++) {
-         Assignments assignments = Assignments.createAssignments(i);
-         tests.put(assignments, getExpectedOutput(i));
-      }
-      return tests;
-   }
-
-   private static int getExpectedOutput(int x) {
+   private static int getExpectedOutput(Assignments a) {
+      int x = (int) a.get(0);
       return (x * x) + x + 1;
    }
 }

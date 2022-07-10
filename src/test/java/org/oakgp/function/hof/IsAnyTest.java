@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 S. Webber
+ * Copyright 2022 S. Webber
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,33 +23,32 @@ import java.util.Collections;
 import org.oakgp.function.AbstractFunctionTest;
 import org.oakgp.node.ConstantNode;
 
-public class IsNoneTest extends AbstractFunctionTest {
+public class IsAnyTest extends AbstractFunctionTest {
    @Override
-   protected IsNone getFunction() {
-      return new IsNone();
+   protected IsAny getFunction() {
+      return new IsAny();
    }
 
    @Override
    public void testEvaluate() {
       ConstantNode emptyList = new ConstantNode(Collections.emptyList(), listType(integerType()));
-      evaluate("(none? zero? v0)").assigned(emptyList).to(true);
-      evaluate("(none? zero? [0])").to(false);
-      evaluate("(none? zero? [1])").to(true);
-      evaluate("(none? zero? [0 0 0])").to(false);
-      evaluate("(none? zero? [1 0 0])").to(false);
-      evaluate("(none? zero? [0 1 0])").to(false);
-      evaluate("(none? zero? [0 0 1])").to(false);
-      evaluate("(none? zero? [1 1 0])").to(false);
-      evaluate("(none? zero? [1 0 1])").to(false);
-      evaluate("(none? zero? [0 1 1])").to(false);
-      evaluate("(none? zero? [1 1 1])").to(true);
+      evaluate("(any? zero? v0)").assigned(emptyList).to(false);
+      evaluate("(any? zero? [0])").to(true);
+      evaluate("(any? zero? [1])").to(false);
+      evaluate("(any? zero? [0 0 0])").to(true);
+      evaluate("(any? zero? [1 0 0])").to(true);
+      evaluate("(any? zero? [0 1 0])").to(true);
+      evaluate("(any? zero? [0 0 1])").to(true);
+      evaluate("(any? zero? [1 1 0])").to(true);
+      evaluate("(any? zero? [1 0 1])").to(true);
+      evaluate("(any? zero? [0 1 1])").to(true);
+      evaluate("(any? zero? [1 1 1])").to(false);
    }
 
    @Override
    public void testCanSimplify() {
-      simplify("(none? zero? [0])").to("false");
-      simplify("(none? zero? [1])").to("true");
-      // TODO (false? (none? v0)) -> (every? v0)
+      simplify("(any? zero? [0])").to("true");
+      simplify("(any? zero? [1])").to("false");
    }
 
    @Override

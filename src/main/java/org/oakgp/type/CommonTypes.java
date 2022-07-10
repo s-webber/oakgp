@@ -39,6 +39,7 @@ public final class CommonTypes {
    private static final Type BIG_DECIMAL = name(BigDecimal.class).parents(NUMBER).build();
    private static final Type LIST = name(List.class).parameters(generic("T")).build();
    private static final Type MAP = name(Map.class).parameters(generic("K"), generic("V")).build();
+   private static final Type ENTRY = name(Map.Entry.class).parameters(generic("K"), generic("V")).build();
    private static final Type FUNCTION = name(Function.class).parameters(generic("R"), generic("I")).build();
    private static final Type BI_FUNCTION = name(Function.class).parameters(generic("R"), generic("A"), generic("B")).build();
    private static final Type NULLABLE = name("Nullable").parameters(generic("T")).build();
@@ -106,6 +107,16 @@ public final class CommonTypes {
    /** Returns the type associated with a map collection containing entries of the specified key and value types. */
    public static Type mapType(Type key, Type value) {
       return type(MAP.getName(), key, value);
+   }
+
+   /** Returns the type associated with a key-value pair. */
+   public static Type entryType(Type type) {
+      return entryType(type, type);
+   }
+
+   /** Returns the type associated with a key-value pair. */
+   public static Type entryType(Type key, Type value) {
+      return type(ENTRY.getName(), key, value);
    }
 
    /**

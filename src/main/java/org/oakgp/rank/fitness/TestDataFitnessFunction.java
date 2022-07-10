@@ -15,7 +15,10 @@
  */
 package org.oakgp.rank.fitness;
 
+import static java.util.Objects.requireNonNull;
+
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.function.ToDoubleBiFunction;
 
 import org.oakgp.Assignments;
@@ -32,16 +35,6 @@ public final class TestDataFitnessFunction<T> implements FitnessFunction {
    private final ToDoubleBiFunction<T, T> rankingFunction;
 
    /**
-    * Returns a new {@code FitnessFunction} which uses the specified test data to assess the fitness of potential solutions.
-    *
-    * @param tests
-    *           test data which associates a collection of inputs with their expected outcomes
-    */
-   public static TestDataFitnessFunction<Integer> createIntegerTestDataFitnessFunction(Map<Assignments, Integer> tests) {
-      return new TestDataFitnessFunction<>(tests, (e, a) -> Math.abs(e - a));
-   }
-
-   /**
     * Creates a {@code TestDataFitnessFunction} which uses the given test cases and ranking function to determine the suitability of candidates.
     *
     * @param tests
@@ -52,8 +45,12 @@ public final class TestDataFitnessFunction<T> implements FitnessFunction {
     *           entry in {@code tests} and returns a fitness value
     */
    public TestDataFitnessFunction(Map<Assignments, T> tests, ToDoubleBiFunction<T, T> rankingFunction) {
-      this.tests = tests;
-      this.rankingFunction = rankingFunction;
+      this.tests = requireNonNull(tests);
+      this.rankingFunction = requireNonNull(rankingFunction);
+
+      if (tests.isEmpty()) { // TODO add requireNotEmpty static method
+         throw new IllegalArgumentException();
+      }
    }
 
    /**
@@ -65,13 +62,22 @@ public final class TestDataFitnessFunction<T> implements FitnessFunction {
     */
    @Override
    public double evaluate(Node node) {
+      return evaluate(node, null);
+   }
+
+   public double evaluate(Node node, Consumer<String> logger) {
       // TODO there is a possibility that the returned result may be 'Infinity' or '-Infinity' - is that OK or is BigDecimal required?
       double diff = 0;
       for (Map.Entry<Assignments, T> test : tests.entrySet()) {
          Assignments input = test.getKey();
          T expected = test.getValue();
          T actual = node.evaluate(input);
-         diff += rankingFunction.applyAsDouble(expected, actual);
+         double score = rankingFunction.applyAsDouble(expected, actual);
+         diff += score;
+
+         if (logger != null) {
+            logger.accept("Input: " + input + " Output: " + actual + " Expected: " + expected + " Score: " + score);
+         }
       }
       return diff;
    }

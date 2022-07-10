@@ -18,6 +18,7 @@ package org.oakgp.examples.gridwar;
 import org.oakgp.Assignments;
 import org.oakgp.node.Node;
 import org.oakgp.rank.tournament.TwoPlayerGame;
+import org.oakgp.rank.tournament.TwoPlayerGameResult;
 import org.oakgp.util.Random;
 
 /** Game engine for Grid War. */
@@ -27,12 +28,12 @@ class GridWar implements TwoPlayerGame {
    private static final int NUMBER_OF_POSSIBLE_DIRECTIONS = 4;
    /** The maximum number of moves without a winner before the game is considered a draw. */
    private static final int MAX_MOVES = 24;
-   /** The reward assigned to a winning player. */
-   private static final int WIN = 1;
-   /** The penalty assigned to a losing player. */
-   private static final int LOSE = -WIN;
+   /** The reward assigned when player 1 wins. */
+   private static final TwoPlayerGameResult PLAYER1_WINS = new TwoPlayerGameResult(1, -1);
+   /** The penalty assigned when player 2 wins. */
+   private static final TwoPlayerGameResult PLAYER2_WINS = new TwoPlayerGameResult(-1, 1);
    /** The reward assigned to both players of a drawn game. */
-   private static final int NO_WINNER = 0;
+   private static final TwoPlayerGameResult NO_WINNER = new TwoPlayerGameResult(0, 0);
    private final Random random;
 
    GridWar(Random random) {
@@ -40,22 +41,27 @@ class GridWar implements TwoPlayerGame {
    }
 
    @Override
-   public double evaluate(Node playerLogic1, Node playerLogic2) {
+   public TwoPlayerGameResult evaluate(Node playerLogic1, Node playerLogic2) {
       Player[] players = createPlayers(playerLogic1, playerLogic2);
       int moveCtr = 0;
       int currentPlayerIdx = 0;
       while (moveCtr++ < MAX_MOVES) {
          Player player = players[currentPlayerIdx];
          Player opponent = players[1 - currentPlayerIdx];
-         int moveOutcome = processNextMove(player, opponent);
-         if (moveOutcome != NO_WINNER) {
-            return currentPlayerIdx == 0 ? moveOutcome : -moveOutcome;
+         TwoPlayerGameResult moveOutcome = processNextMove(player, opponent);
+         if (moveOutcome == NO_WINNER) {
+            // continue
+         } else if (currentPlayerIdx == 0) {
+            return moveOutcome;
+         } else {
+            return moveOutcome == PLAYER1_WINS ? PLAYER2_WINS : PLAYER1_WINS;
          }
          // each player takes it in turn to move
          currentPlayerIdx = 1 - currentPlayerIdx;
       }
       // no winner within maximum number of moves - draw
       return NO_WINNER;
+
    }
 
    private Player[] createPlayers(Node playerLogic1, Node playerLogic2) {
@@ -70,17 +76,17 @@ class GridWar implements TwoPlayerGame {
       return new Player[] { player1, player2 };
    }
 
-   private static int processNextMove(Player player, Player opponent) {
+   private static TwoPlayerGameResult processNextMove(Player player, Player opponent) {
       Assignments assignments = createAssignments(player, opponent);
       int nextMove = getNextMove(player, assignments);
       if (isRepeatedMove(player, nextMove)) {
          // duplicate move - lose
-         return LOSE;
+         return PLAYER2_WINS; // TODO return LOSE
       }
       player.updateState(nextMove);
       if (isWon(player, opponent)) {
          // entered square already occupied by opponent - win
-         return WIN;
+         return PLAYER1_WINS; // TODO return WIN
       }
       return NO_WINNER;
    }

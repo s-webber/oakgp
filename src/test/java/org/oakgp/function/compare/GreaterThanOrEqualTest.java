@@ -17,6 +17,7 @@ package org.oakgp.function.compare;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
+import static org.oakgp.type.CommonTypes.integerListType;
 import static org.oakgp.type.CommonTypes.integerType;
 
 import org.oakgp.function.AbstractFunctionTest;
@@ -51,6 +52,7 @@ public class GreaterThanOrEqualTest extends AbstractFunctionTest {
       cannotSimplify("(>= v0 8)", integerType());
       cannotSimplify("(>= 8 v0)", integerType());
       cannotSimplify("(>= v0 v1)", integerType(), integerType());
+      cannotSimplify("(>= (count v0) 0)", integerListType()); // TODO simplify to true
    }
 
    @Override

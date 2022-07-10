@@ -38,6 +38,9 @@ public final class Assignments {
     * @return a new {@code Assignments} which contains the values specified by {@code values}
     */
    public static Assignments createAssignments(Object... values) {
+      if (values.length == 1 && values[0] instanceof Object[]) { // TODO
+         throw new IllegalArgumentException();
+      }
       return new Assignments(values);
    }
 

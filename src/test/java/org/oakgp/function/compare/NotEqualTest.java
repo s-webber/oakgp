@@ -49,6 +49,8 @@ public class NotEqualTest extends AbstractFunctionTest {
       simplify("(!= v1 v0)").to("(!= v0 v1)");
       simplify("(!= true v0)").with(booleanType()).to("(false? v0)");
       simplify("(!= false v0)").with(booleanType()).to("v0");
+      simplify("(!= (!= v0 v1) (= v0 v1))").with(integerType(), integerType()).to("true");
+      simplify("(!= (> v1 v0) (> v0 v1))").with(integerType(), integerType()).to("(= v0 v1)");
 
       simplify("(!= (if (> v0 v1) (>= v0 v1) (= v2 v2)) (neg? (if v3 v0 -4)))").with(integerType(), integerType(), booleanType(), booleanType())
             .to("(false? (neg? (if v3 v0 -4)))");

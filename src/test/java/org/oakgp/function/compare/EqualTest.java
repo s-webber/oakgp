@@ -19,6 +19,7 @@ import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static org.oakgp.type.CommonTypes.booleanType;
 import static org.oakgp.type.CommonTypes.integerType;
+import static org.oakgp.type.CommonTypes.listType;
 
 import org.oakgp.function.AbstractFunctionTest;
 
@@ -49,12 +50,16 @@ public class EqualTest extends AbstractFunctionTest {
       simplify("(= v1 v0)").to("(= v0 v1)");
       simplify("(= true v0)").with(booleanType()).to("v0");
       simplify("(= false v0)").with(booleanType()).to("(false? v0)");
+      simplify("(= (count v0) (count v0))").with(listType(integerType())).to("true");
+      simplify("(= (!= v0 v1) (= v0 v1))").with(integerType(), integerType()).to("false");
+      simplify("(= (> v0 v1) (> v1 v0))").with(integerType(), integerType()).to("(!= v0 v1)");
    }
 
    @Override
    public void testCannotSimplify() {
       cannotSimplify("(= 8 v0)", integerType());
       cannotSimplify("(= v0 v1)", integerType(), integerType());
+      cannotSimplify("(= (count v1) (count v0))", listType(integerType()), listType(integerType()));
    }
 
    @Override

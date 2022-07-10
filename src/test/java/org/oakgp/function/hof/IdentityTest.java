@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 S. Webber
+ * Copyright 2022 S. Webber
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,29 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.oakgp.function.coll;
-
-import java.util.Arrays;
+package org.oakgp.function.hof;
 
 import org.oakgp.function.AbstractFunctionTest;
 
-public class KeysTest extends AbstractFunctionTest {
+public class IdentityTest extends AbstractFunctionTest {
    @Override
-   protected Keys getFunction() {
-      return new Keys();
+   protected Identity getFunction() {
+      return new Identity();
    }
 
    @Override
    public void testEvaluate() {
-      evaluate("(keys {1 \"a\"})").to(Arrays.asList(1));
-      evaluate("(keys {\"a\" 1})").to(Arrays.asList("a"));
-      evaluate("(keys {\"a\" 7 \"b\" 180 \"c\" 42})").to(Arrays.asList("a", "b", "c"));
+      evaluate("(identity 7)").to(7);
    }
 
    @Override
    public void testCanSimplify() {
-      simplify("(keys {\"a\" 1})").to("[\"a\"]");
-      simplify("(keys {\"a\" 7 \"b\" 180 \"c\" 42})").to("[\"a\" \"b\" \"c\"]");
    }
 
    @Override

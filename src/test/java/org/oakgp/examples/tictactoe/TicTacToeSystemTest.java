@@ -194,7 +194,7 @@ public class TicTacToeSystemTest {
       public double evaluate(Node candidate) {
          int result = 0;
          for (Node ai : ais) {
-            result += ticTacToe.evaluate(ai, candidate);
+            result += ticTacToe.evaluate(ai, candidate).getFitness1();
          }
          return result;
       }

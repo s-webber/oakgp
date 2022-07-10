@@ -46,7 +46,7 @@ public class TestDataFitnessFunctionTest {
       given(mockNode.evaluate(assignments3)).willReturn(5);
 
       // invoke evaluate method
-      FitnessFunction fitnessFunction = TestDataFitnessFunction.createIntegerTestDataFitnessFunction(testData);
+      FitnessFunction fitnessFunction = new TestDataFitnessFunction<>(testData, (e, a) -> Math.abs(e - a));
       double result = fitnessFunction.evaluate(mockNode);
 
       // assert result
@@ -71,7 +71,7 @@ public class TestDataFitnessFunctionTest {
       given(mockNode.evaluate(assignments3)).willReturn("qwerty");
 
       // invoke evaluate method
-      FitnessFunction fitnessFunction = new TestDataFitnessFunction<String>(testData, (e, a) -> {
+      FitnessFunction fitnessFunction = new TestDataFitnessFunction<>(testData, (e, a) -> {
          int ctr = 0;
          for (int i = 0; i < e.length(); i++) {
             if (e.charAt(i) != a.charAt(i)) {

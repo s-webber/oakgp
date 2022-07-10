@@ -32,7 +32,9 @@ public final class FirstPlayerAdvantageGame implements TwoPlayerGame {
    }
 
    @Override
-   public double evaluate(Node player1, Node player2) {
-      return twoPlayerGame.evaluate(player1, player2) - twoPlayerGame.evaluate(player2, player1);
+   public TwoPlayerGameResult evaluate(Node player1, Node player2) {
+      TwoPlayerGameResult result1 = twoPlayerGame.evaluate(player1, player2);
+      TwoPlayerGameResult result2 = twoPlayerGame.evaluate(player2, player1);
+      return new TwoPlayerGameResult(result1.getFitness1() + result2.getFitness1(), result1.getFitness2() + result2.getFitness2());
    }
 }

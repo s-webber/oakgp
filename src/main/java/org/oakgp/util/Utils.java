@@ -51,6 +51,7 @@ public final class Utils {
    public static final ConstantNode TRUE_NODE = new ConstantNode(TRUE, booleanType());
    /** Represents the boolean value {@code false}. */
    public static final ConstantNode FALSE_NODE = new ConstantNode(FALSE, booleanType());
+   // TODO check using TRUE_NODE and FALSE_NODE in examples rather than create new ConstantNodes each time
 
    /** Private constructor as all methods are static. */
    private Utils() {

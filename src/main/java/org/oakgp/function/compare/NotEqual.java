@@ -20,6 +20,7 @@ import static org.oakgp.util.NodeComparator.NODE_COMPARATOR;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.oakgp.function.BooleanFunctionUtils;
 import org.oakgp.function.classify.IsFalse;
 import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
@@ -71,6 +72,15 @@ public final class NotEqual extends ComparisonOperator {
       }
       if (Utils.TRUE_NODE.equals(first)) {
          return IsFalse.negate(second);
+      }
+
+      if (BooleanFunctionUtils.isOpposite(first, second)) {
+         return Utils.TRUE_NODE;
+      }
+
+      Node union = BooleanFunctionUtils.getUnion(first, second);
+      if (union != null) {
+         return BooleanFunctionUtils.getOpposite(union);
       }
 
       return null;

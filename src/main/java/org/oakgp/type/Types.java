@@ -231,14 +231,6 @@ public final class Types {
          return Arrays.asList(parameters);
       }
 
-      public boolean _isAssignable(Type type) { // TODO use or remove
-         boolean b = this == type || hierarchy.containsAll(type.hierarchy);
-         if (b && b != _isAssignable(type)) {
-            throw new RuntimeException(b + " " + this + " " + type + " " + type.getParents());
-         }
-         return b;
-      }
-
       /** Is this instance assignable to the given {@code type}? */
       public boolean isAssignable(Type toAssignTo) { // TODO use or remove
          for (Type toAssignToParent : toAssignTo.rename) {

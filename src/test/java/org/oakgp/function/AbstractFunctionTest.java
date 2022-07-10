@@ -185,9 +185,20 @@ public abstract class AbstractFunctionTest {
          Type[] variableTypes = toVariableTypes(assignedValues);
          FunctionNode functionNode = readFunctionNode(input, variableTypes);
          Assignments assignments = toAssignments(assignedValues);
+
          // assert evaluate consistently returns the expected result
          assertEquals(expectedResult, functionNode.evaluate(assignments));
          assertEquals(expectedResult, functionNode.evaluate(assignments));
+
+         // assert simplified version of input matches the expected result
+         Node simplifiedNode = NodeSimplifier.simplify(functionNode);
+         assertEquals(expectedResult, simplifiedNode.evaluate(assignments));
+         // if no assigned values then assert simplifies to a terminal node (i.e. node count = 1)
+         if (assignedValues.length == 0) {
+            assertEquals(1, simplifiedNode.getNodeCount());
+            assertEquals(expectedResult, simplifiedNode.evaluate(null));
+         }
+
          observable.notifyObservers(new Notification(functionNode, assignedValues, expectedResult));
       }
 
@@ -246,25 +257,26 @@ public abstract class AbstractFunctionTest {
             throw new RuntimeException("'to' called more than once for a 'simplify'.");
          }
 
+         // parse input and expected String representations to create Node objects
          VariableSet variableSet = VariableSet.createVariableSet(variableTypes);
-
          Node expectedNode = readNode(expected, variableSet);
          inputNode = readFunctionNode(input, variableSet);
          simplifiedNode = NodeSimplifier.simplify(inputNode);
 
-         // assert actual matched expected
+         // assert simplified version of input matches expected
          assertEquals(expectedNode, simplifiedNode);
          assertSame(inputNode.getType(), simplifiedNode.getType());
 
-         // if (isFunction(simplifiedNode)) { TODO
-         // // assert that signature of function matches the
-         // // return type and argument types of the function node the function belongs to
-         // FunctionNode functionNode = (FunctionNode) simplifiedNode;
-         // Signature functionNodeSignature = functionNode.getFunction().getSignature();
-         //
-         // assertSame(functionNode.getType(), functionNodeSignature.getReturnType());
-         // assertSameArgumentTypes(functionNode.getChildren(), functionNodeSignature);
-         // }
+         // if the simplified version is a function then assert that:
+         // 1. its type is compatible with the return type of the function being tested
+         // 2. its arguments are compatible with the signature of the function being tested
+         if (simplifiedNode instanceof FunctionNode) {
+            FunctionNode functionNode = (FunctionNode) simplifiedNode;
+            Signature functionNodeSignature = functionNode.getFunction().getSignature();
+
+            assertTrue(functionNode.getType().isAssignable(functionNodeSignature.getReturnType()));
+            assertAssignableArgumentTypes(functionNode.getChildren(), functionNodeSignature);
+         }
 
          // assert multiple calls to simplify with the same argument produces results that are equal
          assertEquals(NodeSimplifier.simplify(inputNode), NodeSimplifier.simplify(inputNode));
@@ -272,10 +284,10 @@ public abstract class AbstractFunctionTest {
          return this;
       }
 
-      private void assertSameArgumentTypes(ChildNodes args, Signature signature) {
+      private void assertAssignableArgumentTypes(ChildNodes args, Signature signature) {
          assertEquals(args.size(), signature.getArgumentTypesLength());
          for (int i = 0; i < signature.getArgumentTypesLength(); i++) {
-            assertSame(args.getNode(i).getType(), signature.getArgumentType(i));
+            assertTrue(args.getNode(i).getType().isAssignable(signature.getArgumentType(i)));
          }
       }
 

@@ -29,12 +29,12 @@ public class FirstPlayerAdvantageGameTest {
       Node n1 = integerConstant(1);
       Node n2 = integerConstant(2);
       TwoPlayerGame mockTwoPlayerGame = mock(TwoPlayerGame.class);
-      given(mockTwoPlayerGame.evaluate(n1, n2)).willReturn(7d);
-      given(mockTwoPlayerGame.evaluate(n2, n1)).willReturn(4d);
+      given(mockTwoPlayerGame.evaluate(n1, n2)).willReturn(new TwoPlayerGameResult(7, -7));
+      given(mockTwoPlayerGame.evaluate(n2, n1)).willReturn(new TwoPlayerGameResult(-4, 4));
 
       FirstPlayerAdvantageGame g = new FirstPlayerAdvantageGame(mockTwoPlayerGame);
 
-      assertEquals(3d, g.evaluate(n1, n2), 0);
-      assertEquals(-3d, g.evaluate(n2, n1), 0);
+      assertEquals(new TwoPlayerGameResult(3, -3), g.evaluate(n1, n2));
+      assertEquals(new TwoPlayerGameResult(3, -3), g.evaluate(n2, n1));
    }
 }

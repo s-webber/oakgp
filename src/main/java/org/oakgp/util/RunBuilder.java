@@ -273,11 +273,14 @@ public final class RunBuilder {
       public GenerationEvolverSetter setTreeDepth(final int treeDepth) {
          requiresPositive(treeDepth);
 
-         // NOTE could use a NodeSet rather than an ArrayList - but then the resulting population may be < generationSize (due to duplicates)
+         // NOTE using a NodeSet rather than an ArrayList - means the resulting population may be < generationSize (due to duplicates)
+         // NOTE could instead do: Collection<Node> initialPopulation = new ArrayList<>();
          // NOTE could generate using a 50:50 split of TreeGeneratorImpl.grow and TreeGeneratorImpl.full
-         Collection<Node> initialPopulation = new ArrayList<>();
+         // TODO check for infinite loop
+         NodeSet initialPopulation = new NodeSet();
          TreeGenerator treeGenerator = TreeGeneratorImpl.grow(_primitiveSet, _random);
-         for (int i = 0; i < generationSize; i++) {
+         // for (int i = 0; i < generationSize; i++) {
+         while (initialPopulation.size() < generationSize) {
             Node n = treeGenerator.generate(_returnType, treeDepth);
             initialPopulation.add(n);
          }

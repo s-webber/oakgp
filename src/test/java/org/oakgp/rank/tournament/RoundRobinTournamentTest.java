@@ -39,9 +39,9 @@ public class RoundRobinTournamentTest {
 
       // mock
       TwoPlayerGame mockGame = mock(TwoPlayerGame.class);
-      given(mockGame.evaluate(a, b)).willReturn(5d);
-      given(mockGame.evaluate(a, c)).willReturn(-3d);
-      given(mockGame.evaluate(b, c)).willReturn(2d);
+      given(mockGame.evaluate(a, b)).willReturn(new TwoPlayerGameResult(7, -6));
+      given(mockGame.evaluate(a, c)).willReturn(new TwoPlayerGameResult(-5, 3));
+      given(mockGame.evaluate(b, c)).willReturn(new TwoPlayerGameResult(2, -2));
 
       // invoke rank method
       GenerationRanker tournament = new RoundRobinTournament(mockGame, true);
@@ -50,6 +50,6 @@ public class RoundRobinTournamentTest {
       // assert output
       assertRankedCandidate(output.get(0), a, 2);
       assertRankedCandidate(output.get(1), c, 1);
-      assertRankedCandidate(output.get(2), b, -3);
+      assertRankedCandidate(output.get(2), b, -4);
    }
 }

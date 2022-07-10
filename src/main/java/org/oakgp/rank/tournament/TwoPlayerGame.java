@@ -17,7 +17,8 @@ package org.oakgp.rank.tournament;
 
 import org.oakgp.node.Node;
 
-/** Represents a two-player zero-sum game. */
+/** Represents a two-player game. */
+@FunctionalInterface
 public interface TwoPlayerGame {
    /**
     * Determines the outcome of the two specified players competing against each other.
@@ -26,8 +27,7 @@ public interface TwoPlayerGame {
     *           represents the game-logic of a player participating in the game
     * @param player2
     *           represents the game-logic of the other player participating in the game
-    * @return the outcome of the game from the point-of-view of {@code player1}, as implementations of {@code TwoPlayerGame} represent zero-sum games then the
-    *         corresponding outcome for {@code player2} can be determined by negating this value
+    * @return the outcome of the game
     */
-   double evaluate(Node player1, Node player2);
+   TwoPlayerGameResult evaluate(Node player1, Node player2);
 }

@@ -107,7 +107,7 @@ public final class PrimitiveSetImpl implements PrimitiveSet {
    @Override
    public FunctionSet.Key nextFunction(Type type) {
       List<FunctionSet.Key> typeFunctions = functionSet.getByType(type);
-      if (typeFunctions == null) {
+      if (typeFunctions == null || typeFunctions.isEmpty()) {
          throw new IllegalArgumentException("No functions with return type: " + type);
       }
       int index = nextInt(typeFunctions.size());
@@ -123,6 +123,9 @@ public final class PrimitiveSetImpl implements PrimitiveSet {
       }
       Signature signature = Signature.createSignature(current.getType(), types);
       List<FunctionSet.Key> functions = functionSet.getBySignature(signature);
+      if (functions == null) {
+         throw new RuntimeException("No functions with signature: " + signature + " to be alternative to: " + current);
+      }
       return randomlySelectAlternative(new FunctionSet.Key(current.getFunction(), signature), functions);
    }
 

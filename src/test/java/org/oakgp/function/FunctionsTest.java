@@ -20,6 +20,7 @@ import static org.junit.Assert.assertTrue;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.junit.Test;
 
@@ -46,8 +47,9 @@ public class FunctionsTest {
       List<Class<?>> functionTestClasses = SubClassFinder.find(AbstractFunctionTest.class, "src/test/java");
       for (Class<?> functionTest : functionTestClasses) {
          AbstractFunctionTest t = (AbstractFunctionTest) newInstance(functionTest);
-         if (!result.add(t.getFunction())) {
-            throw new RuntimeException("Tested more than once: " + t.getFunction());
+         Function function = Objects.requireNonNull(t.getFunction(), functionTest + ".getFunction() returned null");
+         if (!result.add(function)) {
+            throw new RuntimeException("Tested more than once: " + function);
          }
       }
 
