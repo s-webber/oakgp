@@ -20,7 +20,7 @@ import static org.oakgp.util.Void.VOID_CONSTANT;
 import static org.oakgp.util.Void.VOID_TYPE;
 import static org.oakgp.util.Void.isVoid;
 
-import org.oakgp.Arguments;
+import org.oakgp.Assignments;
 import org.oakgp.function.ImpureFunction;
 import org.oakgp.function.Signature;
 import org.oakgp.node.ChildNodes;
@@ -41,7 +41,7 @@ class BiSequence implements ImpureFunction {
    }
 
    @Override
-   public Void evaluate(Arguments arguments) {
+   public Object evaluate(ChildNodes arguments, Assignments assignments) {
       arguments.first();
       arguments.second();
       return Void.VOID;

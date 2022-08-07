@@ -18,9 +18,10 @@ package org.oakgp.function.math;
 import static org.oakgp.type.CommonTypes.doubleType;
 import static org.oakgp.type.CommonTypes.numberType;
 
-import org.oakgp.Arguments;
+import org.oakgp.Assignments;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
+import org.oakgp.node.ChildNodes;
 import org.oakgp.type.Types;
 import org.oakgp.type.Types.Type;
 
@@ -44,8 +45,8 @@ public final class Logarithm implements Function {
    }
 
    @Override
-   public Double evaluate(Arguments arguments) {
-      Number a = arguments.first();
+   public Double evaluate(ChildNodes arguments, Assignments assignments) {
+      Number a = arguments.first().evaluate(assignments);
       return Math.log(a.doubleValue());
    }
 

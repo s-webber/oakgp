@@ -18,25 +18,46 @@ package org.oakgp.minimax;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Test;
 import org.oakgp.Assignments;
+import org.oakgp.function.Function;
+import org.oakgp.function.Signature;
+import org.oakgp.node.ChildNodes;
+import org.oakgp.node.FunctionNode;
 import org.oakgp.rank.tournament.TwoPlayerGameResult;
-import org.oakgp.util.DummyNode;
+import org.oakgp.type.CommonTypes;
 
 public class MinimaxTest {
-   public static void main(String[] args) {
-      TwoPlayerGameResult result = new MinimaxGame(TicTacToe::new, -1).evaluate(new DummyNode() {
+   @Test
+   public void test() {
+      Function f1 = new Function() { // TODO add dummy function that takes function in constructor
          @Override
-         public Integer evaluate(Assignments assignments) {
+         public Signature getSignature() {
+            throw new UnsupportedOperationException();
+         }
+
+         @Override
+         public Object evaluate(ChildNodes arguments, Assignments assignments) {
             TicTacToe state = (TicTacToe) assignments.get(0);
             return (int) state.getResult().getFitness1();
          }
-      }, new DummyNode() {
+      };
+      Function f2 = new Function() { // TODO add dummy function that takes function in constructor
          @Override
-         public Integer evaluate(Assignments assignments) {
+         public Signature getSignature() {
+            throw new UnsupportedOperationException();
+         }
+
+         @Override
+         public Object evaluate(ChildNodes arguments, Assignments assignments) {
             TicTacToe state = (TicTacToe) assignments.get(0);
             return (int) state.getResult().getFitness2();
          }
-      });
+      };
+      MinimaxFunction f = new MinimaxFunction(-1);
+
+      TwoPlayerGameResult result = new MinimaxGame(TicTacToe::new).evaluate(new FunctionNode(f, f.getSignature().getReturnType(), new FunctionNode(f1, CommonTypes.integerType())),
+                  new FunctionNode(f, f.getSignature().getReturnType(), new FunctionNode(f2, CommonTypes.integerType())));
       System.out.println(result);
    }
 }
@@ -47,7 +68,7 @@ class TicTacToe implements MinimaxGameState {
    private static final TwoPlayerGameResult NO_WINNER = new TwoPlayerGameResult(0, 0);
    private static final MinimaxGameState[] GAME_OVER = new MinimaxGameState[0];
    private static long BOARD = 0b111_111_111;
-   private static long[] LINES = { 0b111, 0b111_000, 0b111_000_000, 0b100_100_100, 0b10_010_010, 0b1_001_001, 0b100_010_001, 0b1_010_100 };
+   private static long[] LINES = {0b111, 0b111_000, 0b111_000_000, 0b100_100_100, 0b10_010_010, 0b1_001_001, 0b100_010_001, 0b1_010_100};
 
    private final long player1;
    private final long player2;

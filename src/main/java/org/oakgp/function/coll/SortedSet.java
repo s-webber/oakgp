@@ -22,7 +22,7 @@ import static org.oakgp.type.CommonTypes.listType;
 import java.util.Collection;
 import java.util.TreeSet;
 
-import org.oakgp.Arguments;
+import org.oakgp.Assignments;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
 import org.oakgp.node.ChildNodes;
@@ -48,8 +48,8 @@ public final class SortedSet implements Function {
    }
 
    @Override
-   public Object evaluate(Arguments arguments) {
-      Collection<Integer> input = arguments.first();
+   public Object evaluate(ChildNodes arguments, Assignments assignments) {
+      Collection<Integer> input = arguments.first().evaluate(assignments);
       return new TreeSet<>(input);
    }
 

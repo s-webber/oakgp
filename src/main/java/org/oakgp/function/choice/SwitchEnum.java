@@ -18,7 +18,7 @@ package org.oakgp.function.choice;
 import static org.oakgp.node.NodeType.isFunction;
 import static org.oakgp.type.CommonTypes.isNullable;
 
-import org.oakgp.Arguments;
+import org.oakgp.Assignments;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
 import org.oakgp.node.ChildNodes;
@@ -39,12 +39,9 @@ public final class SwitchEnum implements Function {
    /**
     * Constructs a selection operator that returns values of the specified type.
     *
-    * @param enumClass
-    *           the enum to compare the first argument against in order to determine which branch to evaluate
-    * @param enumType
-    *           the type associated with {@code enumClass}
-    * @param returnType
-    *           the type associated with values returned from the evaluation of this function
+    * @param enumClass the enum to compare the first argument against in order to determine which branch to evaluate
+    * @param enumType the type associated with {@code enumClass}
+    * @param returnType the type associated with values returned from the evaluation of this function
     */
    public SwitchEnum(Class<? extends Enum<?>> enumClass, Type enumType, Type returnType) {
       this.enumConstants = enumClass.getEnumConstants();
@@ -57,10 +54,10 @@ public final class SwitchEnum implements Function {
    }
 
    @Override
-   public Object evaluate(Arguments arguments) {
-      Enum<?> input = arguments.first();
+   public Object evaluate(ChildNodes arguments, Assignments assignments) {
+      Enum<?> input = arguments.first().evaluate(assignments);
       int index = (input == null ? enumConstants.length : input.ordinal()) + 1;
-      return arguments.getArg(index);
+      return arguments.getNode(index).evaluate(assignments);
    }
 
    @Override
@@ -75,8 +72,7 @@ public final class SwitchEnum implements Function {
       for (int i = 1; i < children.size(); i++) {
          Node arg = children.getNode(i);
          final int idx = i;
-         Node replacedArg = NodeWalk.replaceAll(arg, n -> isFunction(n) && ((FunctionNode) n).getFunction() == this,
-               n -> ((FunctionNode) n).getChildren().getNode(idx));
+         Node replacedArg = NodeWalk.replaceAll(arg, n -> isFunction(n) && ((FunctionNode) n).getFunction() == this, n -> ((FunctionNode) n).getChildren().getNode(idx));
          if (arg != replacedArg) {
             updated = true;
          }

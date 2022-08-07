@@ -21,7 +21,7 @@ import static org.oakgp.type.CommonTypes.nullableType;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.oakgp.Arguments;
+import org.oakgp.Assignments;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
 import org.oakgp.node.ChildNodes;
@@ -41,10 +41,10 @@ public final class OrElse implements Function {
    }
 
    @Override
-   public Object evaluate(Arguments arguments) {
-      Object result = arguments.first();
+   public Object evaluate(ChildNodes arguments, Assignments assignments) {
+      Object result = arguments.first().evaluate(assignments);
       if (result == null) {
-         return arguments.second();
+         return arguments.second().evaluate(assignments);
       } else {
          return result;
       }

@@ -42,7 +42,7 @@ final class Add<T extends Comparable<T>> extends ArithmeticOperator<T> {
     * @return the result of adding {@code arg1} and {@code arg2}
     */
    @Override
-   protected T evaluate(T arg1, T arg2) {
+   protected T calculate(T arg1, T arg2) {
       return numberUtils.add(arg1, arg2);
    }
 

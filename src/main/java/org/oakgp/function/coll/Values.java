@@ -21,9 +21,10 @@ import static org.oakgp.type.CommonTypes.mapType;
 import java.util.ArrayList;
 import java.util.Map;
 
-import org.oakgp.Arguments;
+import org.oakgp.Assignments;
 import org.oakgp.function.MapperFunction;
 import org.oakgp.function.Signature;
+import org.oakgp.node.ChildNodes;
 import org.oakgp.type.Types;
 import org.oakgp.type.Types.Type;
 
@@ -38,8 +39,8 @@ public final class Values implements MapperFunction {
    }
 
    @Override
-   public Object evaluate(Arguments arguments) {
-      Map<?, ?> a = arguments.first();
+   public Object evaluate(ChildNodes arguments, Assignments assignments) {
+      Map<?, ?> a = arguments.first().evaluate(assignments);
       return new ArrayList<>(a.values());
    }
 

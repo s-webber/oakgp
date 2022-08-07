@@ -20,7 +20,7 @@ import static org.oakgp.type.CommonTypes.booleanType;
 import java.util.Collections;
 import java.util.Set;
 
-import org.oakgp.Arguments;
+import org.oakgp.Assignments;
 import org.oakgp.function.BooleanFunction;
 import org.oakgp.function.BooleanFunctionUtils;
 import org.oakgp.function.Signature;
@@ -48,8 +48,8 @@ public final class IsFalse implements BooleanFunction {
    }
 
    @Override
-   public Object evaluate(Arguments arguments) {
-      boolean b = arguments.first();
+   public Object evaluate(ChildNodes arguments, Assignments assignments) {
+      boolean b = arguments.first().evaluate(assignments);
       return !b;
    }
 

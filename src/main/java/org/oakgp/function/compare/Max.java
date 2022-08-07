@@ -17,9 +17,10 @@ package org.oakgp.function.compare;
 
 import static org.oakgp.type.CommonTypes.comparableType;
 
-import org.oakgp.Arguments;
+import org.oakgp.Assignments;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
+import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.type.Types;
@@ -40,11 +41,11 @@ public final class Max implements Function {
       this.signature = Signature.createSignature(type, type, type);
    }
 
-   @SuppressWarnings({ "rawtypes", "unchecked" })
+   @SuppressWarnings({"rawtypes", "unchecked"})
    @Override
-   public Comparable evaluate(Arguments arguments) {
-      Comparable first = arguments.first();
-      Comparable second = arguments.second();
+   public Comparable evaluate(ChildNodes arguments, Assignments assignments) {
+      Comparable first = arguments.first().evaluate(assignments);
+      Comparable second = arguments.second().evaluate(assignments);
       return first.compareTo(second) > 0 ? first : second;
    }
 

@@ -21,9 +21,10 @@ import static org.oakgp.type.CommonTypes.integerType;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.oakgp.Arguments;
+import org.oakgp.Assignments;
 import org.oakgp.function.BooleanFunction;
 import org.oakgp.function.Signature;
+import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 
@@ -40,8 +41,8 @@ public final class IsPositive implements BooleanFunction {
    }
 
    @Override
-   public Object evaluate(Arguments arguments) {
-      int i = arguments.first();
+   public Object evaluate(ChildNodes arguments, Assignments assignments) {
+      int i = arguments.first().evaluate(assignments);
       return i > 0;
    }
 

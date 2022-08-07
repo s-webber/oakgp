@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.oakgp.Arguments;
+import org.oakgp.Assignments;
 import org.oakgp.function.Function;
 import org.oakgp.function.MapperFunction;
 import org.oakgp.function.Signature;
@@ -50,8 +50,8 @@ public final class Sort implements MapperFunction {
    }
 
    @Override
-   public Object evaluate(Arguments arguments) {
-      Collection<Comparable<?>> input = arguments.first();
+   public Object evaluate(ChildNodes arguments, Assignments assignments) {
+      Collection<Comparable<?>> input = arguments.first().evaluate(assignments);
       List<Comparable<?>> output = new ArrayList<>(input);
       output.sort(null);
       return output;

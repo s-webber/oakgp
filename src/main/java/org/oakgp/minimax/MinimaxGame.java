@@ -17,17 +17,16 @@ package org.oakgp.minimax;
 
 import java.util.function.Supplier;
 
+import org.oakgp.Assignments;
 import org.oakgp.node.Node;
 import org.oakgp.rank.tournament.TwoPlayerGame;
 import org.oakgp.rank.tournament.TwoPlayerGameResult;
 
 public final class MinimaxGame implements TwoPlayerGame {
    private final Supplier<MinimaxGameState> supplier;
-   private final int depth;
 
-   public MinimaxGame(Supplier<MinimaxGameState> supplier, int depth) {
+   public MinimaxGame(Supplier<MinimaxGameState> supplier) {
       this.supplier = supplier;
-      this.depth = depth;
    }
 
    @Override
@@ -35,7 +34,7 @@ public final class MinimaxGame implements TwoPlayerGame {
       MinimaxGameState state = supplier.get();
       Node nextPlayer = player1;
       MinimaxGameState nextState;
-      while ((nextState = MinimaxSearch.minimax(state, nextPlayer, depth)) != null) {
+      while ((nextState = nextPlayer.evaluate(Assignments.createAssignments(state))) != null) {
          state = nextState;
          nextPlayer = nextPlayer == player1 ? player2 : player1;
       }

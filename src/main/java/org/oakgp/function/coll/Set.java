@@ -22,9 +22,10 @@ import static org.oakgp.type.CommonTypes.listType;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 
-import org.oakgp.Arguments;
+import org.oakgp.Assignments;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
+import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.type.Types;
@@ -46,8 +47,8 @@ public final class Set implements Function {
    }
 
    @Override
-   public Object evaluate(Arguments arguments) {
-      Collection<Integer> input = arguments.first();
+   public Object evaluate(ChildNodes arguments, Assignments assignments) {
+      Collection<Integer> input = arguments.first().evaluate(assignments);
       return new LinkedHashSet<>(input);
    }
 

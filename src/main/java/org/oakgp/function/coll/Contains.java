@@ -20,16 +20,18 @@ import static org.oakgp.type.CommonTypes.listType;
 
 import java.util.Collection;
 
-import org.oakgp.Arguments;
+import org.oakgp.Assignments;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
+import org.oakgp.node.ChildNodes;
 import org.oakgp.type.Types;
 import org.oakgp.type.Types.Type;
 
 /**
  * Determines if a value is contained in a collection.
  * <p>
- * Returns true if the value specified by the first argument is contained in the collection specified by the second argument.
+ * Returns true if the value specified by the first argument is contained in the collection specified by the second
+ * argument.
  */
 public final class Contains implements Function {
    private final Signature signature;
@@ -40,9 +42,9 @@ public final class Contains implements Function {
    }
 
    @Override
-   public Object evaluate(Arguments arguments) {
-      Collection<?> collection = arguments.first();
-      return collection.contains(arguments.second());
+   public Object evaluate(ChildNodes arguments, Assignments assignments) {
+      Collection<?> collection = arguments.first().evaluate(assignments);
+      return collection.contains(arguments.second().evaluate(assignments));
    }
 
    @Override

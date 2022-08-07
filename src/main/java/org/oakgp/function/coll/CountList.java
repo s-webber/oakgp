@@ -20,7 +20,7 @@ import static org.oakgp.type.CommonTypes.listType;
 
 import java.util.Collection;
 
-import org.oakgp.Arguments;
+import org.oakgp.Assignments;
 import org.oakgp.function.Function;
 import org.oakgp.function.MapperFunction;
 import org.oakgp.function.Signature;
@@ -41,8 +41,8 @@ public final class CountList implements Function {
    }
 
    @Override
-   public Object evaluate(Arguments arguments) {
-      Collection<?> a = arguments.first();
+   public Object evaluate(ChildNodes arguments, Assignments assignments) {
+      Collection<?> a = arguments.first().evaluate(assignments);
       return a.size();
    }
 

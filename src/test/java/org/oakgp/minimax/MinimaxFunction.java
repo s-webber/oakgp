@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 S. Webber
+ * Copyright 2022 S. Webber
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,25 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.oakgp.examples.ant;
-
-import static org.oakgp.type.CommonTypes.booleanType;
+package org.oakgp.minimax;
 
 import org.oakgp.Assignments;
-import org.oakgp.function.ImpureFunction;
+import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
 import org.oakgp.node.ChildNodes;
+import org.oakgp.type.Types;
+import org.oakgp.type.Types.Type;
 
-/** Returns {@code true} if the square the ant is facing contains food, else {@code false}. */
-class IsFoodAhead implements ImpureFunction {
-   @Override
-   public Signature getSignature() {
-      return Signature.createSignature(booleanType(), MutableState.STATE_TYPE);
+public class MinimaxFunction implements Function { // TODO move from test to main
+   private static final Type MINIMAX_NODE_TYPE = Types.declareType("minimaxGameState");
+   private static final Signature SIGNATURE = Signature.createSignature(MINIMAX_NODE_TYPE, MINIMAX_NODE_TYPE);
+
+   private final int depth;
+
+   public MinimaxFunction(int depth) {
+      this.depth = depth;
    }
 
    @Override
    public Object evaluate(ChildNodes arguments, Assignments assignments) {
-      MutableState state = arguments.first().evaluate(assignments);
-      return state.isFoodAhead();
+      return MinimaxSearch.minimax((MinimaxGameState) assignments.get(0), arguments.first(), depth);
+   }
+
+   @Override
+   public Signature getSignature() {
+      return SIGNATURE;
    }
 }

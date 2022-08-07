@@ -18,7 +18,8 @@ package org.oakgp.function;
 import static org.junit.Assert.assertFalse;
 
 import org.junit.Test;
-import org.oakgp.Arguments;
+import org.oakgp.Assignments;
+import org.oakgp.node.ChildNodes;
 
 public class ImpureFunctionTest {
    @Test
@@ -30,7 +31,7 @@ public class ImpureFunctionTest {
          }
 
          @Override
-         public Object evaluate(Arguments arguments) {
+         public Object evaluate(ChildNodes arguments, Assignments assignments) {
             throw new UnsupportedOperationException();
          }
       };

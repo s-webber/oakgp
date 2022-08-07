@@ -19,17 +19,18 @@ import static org.oakgp.function.Signature.createSignature;
 import static org.oakgp.type.CommonTypes.nullableType;
 import static org.oakgp.type.Types.type;
 
-import org.oakgp.Arguments;
+import org.oakgp.Assignments;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
+import org.oakgp.node.ChildNodes;
 
 public class IfValidMove implements Function {
-   private static final Signature SIGNATURE = createSignature(nullableType(type("tictactoemove")), type("board"), type("possibleMove"));
+   private static final Signature SIGNATURE = null;
 
    @Override
-   public Object evaluate(Arguments arguments) {
-      Board board = arguments.first();
-      Move move = arguments.second();
+   public Object evaluate(ChildNodes arguments, Assignments assignments) {
+      Board board = arguments.first().evaluate(assignments);
+      Move move = arguments.second().evaluate(assignments);
       if (board.isFree(move)) {
          return move;
       } else {
@@ -39,6 +40,6 @@ public class IfValidMove implements Function {
 
    @Override
    public Signature getSignature() {
-      return SIGNATURE;
+      return createSignature(nullableType(type("tictactoemove")), type("board"), type("possibleMove"));
    }
 }

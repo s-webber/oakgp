@@ -24,10 +24,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 
-import org.oakgp.Arguments;
+import org.oakgp.Assignments;
 import org.oakgp.function.Function;
-import org.oakgp.function.HigherOrderFunctionArguments;
 import org.oakgp.function.Signature;
+import org.oakgp.node.ChildNodes;
+import org.oakgp.node.ConstantNode;
+import org.oakgp.node.Node;
 import org.oakgp.type.Types;
 import org.oakgp.type.Types.Type;
 
@@ -42,12 +44,15 @@ public final class GroupBy implements Function {
    }
 
    @Override
-   public Object evaluate(Arguments arguments) {
-      Function f = arguments.first();
-      Collection<Object> elements = arguments.second();
+   public Object evaluate(ChildNodes arguments, Assignments assignments) {
+      Function f = arguments.first().evaluate(assignments);
+      Node second = arguments.second();
+      Type type = second.getType().getParameter(0);
+      Collection<Object> elements = second.evaluate(assignments);
       LinkedHashMap<Object, ArrayList<Object>> result = new LinkedHashMap<>();
       for (Object element : elements) {
-         Object evaluateResult = f.evaluate(new HigherOrderFunctionArguments(element));
+         ChildNodes childNodes = ChildNodes.createChildNodes(new ConstantNode(element, type));
+         Object evaluateResult = f.evaluate(childNodes, assignments);
          result.computeIfAbsent(evaluateResult, k -> new ArrayList<>()).add(element);
       }
       return unmodifiableMap(result);

@@ -25,14 +25,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.oakgp.Arguments;
+import org.oakgp.Assignments;
 import org.oakgp.function.Function;
-import org.oakgp.function.HigherOrderFunctionArguments;
 import org.oakgp.function.Signature;
 import org.oakgp.function.coll.Set;
 import org.oakgp.function.coll.Sort;
 import org.oakgp.function.coll.SortedSet;
 import org.oakgp.node.ChildNodes;
+import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.type.Types;
@@ -41,8 +41,8 @@ import org.oakgp.type.Types.Type;
 /**
  * Uses a function to filter the elements of a collection.
  * <p>
- * Returns a new collection that exists of all the elements in the collection (specified by the second argument) for which the function (specified by the first
- * argument) returns {@code true}.
+ * Returns a new collection that exists of all the elements in the collection (specified by the second argument) for
+ * which the function (specified by the first argument) returns {@code true}.
  *
  * @see <a href="http://en.wikipedia.org/wiki/Filter_(higher-order_function)">Wikipedia</a>
  */
@@ -56,12 +56,15 @@ public final class Filter implements Function {
    }
 
    @Override
-   public Object evaluate(Arguments arguments) {
-      Function f = arguments.first();
-      Collection<Object> candidates = arguments.second();
+   public Object evaluate(ChildNodes arguments, Assignments assignments) {
+      Function f = arguments.first().evaluate(assignments);
+      Node second = arguments.second();
+      Type type = second.getType().getParameter(0);
+      Collection<Object> candidates = second.evaluate(assignments);
       List<Object> result = new ArrayList<>();
       for (Object candidate : candidates) {
-         if ((Boolean) f.evaluate(new HigherOrderFunctionArguments(candidate))) {
+         ChildNodes childNodes = ChildNodes.createChildNodes(new ConstantNode(candidate, type));
+         if ((Boolean) f.evaluate(childNodes, assignments)) {
             result.add(candidate);
          }
       }

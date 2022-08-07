@@ -19,9 +19,10 @@ import static org.oakgp.examples.hanoi.TowersOfHanoiExample.MOVE_TYPE;
 import static org.oakgp.examples.hanoi.TowersOfHanoiExample.STATE_TYPE;
 import static org.oakgp.type.CommonTypes.booleanType;
 
-import org.oakgp.Arguments;
+import org.oakgp.Assignments;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
+import org.oakgp.node.ChildNodes;
 
 /** Determines if a move is a valid move for a particular game state. */
 class IsValid implements Function {
@@ -33,16 +34,15 @@ class IsValid implements Function {
    }
 
    /**
-    * @param arguments
-    *           the first argument is a {@code TowersOfHanoi} representing a game state and the second argument is a {@code Move}
-    * @param assignments
-    *           the values assigned to each of member of the variable set
+    * @param arguments the first argument is a {@code TowersOfHanoi} representing a game state and the second argument
+    * is a {@code Move}
+    * @param assignments the values assigned to each of member of the variable set
     * @return {@code true} if the specified move is a valid move for the specified game state, else {@code false}
     */
    @Override
-   public Object evaluate(Arguments arguments) {
-      TowersOfHanoi gameState = arguments.first();
-      Move move = arguments.second();
+   public Object evaluate(ChildNodes arguments, Assignments assignments) {
+      TowersOfHanoi gameState = arguments.first().evaluate(assignments);
+      Move move = arguments.second().evaluate(assignments);
       return gameState.move(move) != null;
    }
 }

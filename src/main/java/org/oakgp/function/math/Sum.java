@@ -19,7 +19,7 @@ import static org.oakgp.type.CommonTypes.listType;
 
 import java.util.Collection;
 
-import org.oakgp.Arguments;
+import org.oakgp.Assignments;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
 import org.oakgp.node.ChildNodes;
@@ -39,8 +39,8 @@ final class Sum<T extends Comparable<T>> implements Function {
    }
 
    @Override
-   public T evaluate(Arguments arguments) {
-      Collection<T> input = arguments.first();
+   public T evaluate(ChildNodes arguments, Assignments assignments) {
+      Collection<T> input = arguments.first().evaluate(assignments);
       T result = numberUtils.rawZero();
       for (T i : input) {
          result = numberUtils.add(result, i);

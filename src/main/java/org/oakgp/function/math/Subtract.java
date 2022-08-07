@@ -42,7 +42,7 @@ final class Subtract<T extends Comparable<T>> extends ArithmeticOperator<T> {
     * @return the result of subtracting {@code arg2} from {@code arg1}
     */
    @Override
-   protected T evaluate(T arg1, T arg2) {
+   protected T calculate(T arg1, T arg2) {
       return numberUtils.subtract(arg1, arg2);
    }
 

@@ -21,10 +21,12 @@ import static org.oakgp.type.CommonTypes.listType;
 
 import java.util.Collection;
 
-import org.oakgp.Arguments;
+import org.oakgp.Assignments;
 import org.oakgp.function.Function;
-import org.oakgp.function.HigherOrderFunctionArguments;
 import org.oakgp.function.Signature;
+import org.oakgp.node.ChildNodes;
+import org.oakgp.node.ConstantNode;
+import org.oakgp.node.Node;
 import org.oakgp.type.Types;
 import org.oakgp.type.Types.Type;
 
@@ -38,11 +40,14 @@ public final class IsEvery implements Function {
    }
 
    @Override
-   public Object evaluate(Arguments arguments) {
-      Function f = arguments.first();
-      Collection<Object> candidates = arguments.second();
+   public Object evaluate(ChildNodes arguments, Assignments assignments) {
+      Function f = arguments.first().evaluate(assignments);
+      Node second = arguments.second();
+      Type type = second.getType().getParameters().get(0);
+      Collection<Object> candidates = second.evaluate(assignments);
       for (Object candidate : candidates) {
-         if (!(Boolean) f.evaluate(new HigherOrderFunctionArguments(candidate))) {
+         ChildNodes childNodes = ChildNodes.createChildNodes(new ConstantNode(candidate, type));
+         if (!(Boolean) f.evaluate(childNodes, assignments)) {
             return false;
          }
       }

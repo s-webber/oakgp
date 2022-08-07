@@ -18,7 +18,7 @@ package org.oakgp.function.choice;
 import static org.oakgp.node.NodeType.isConstant;
 import static org.oakgp.type.CommonTypes.booleanType;
 
-import org.oakgp.Arguments;
+import org.oakgp.Assignments;
 import org.oakgp.function.BooleanFunctionUtils;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
@@ -55,9 +55,9 @@ public final class If implements Function {
    }
 
    @Override
-   public Object evaluate(Arguments arguments) {
-      int index = getOutcomeArgumentIndex(arguments.first());
-      return arguments.getArg(index);
+   public Object evaluate(ChildNodes arguments, Assignments assignments) {
+      int index = getOutcomeArgumentIndex(arguments.first().evaluate(assignments));
+      return arguments.getNode(index).evaluate(assignments);
    }
 
    @Override

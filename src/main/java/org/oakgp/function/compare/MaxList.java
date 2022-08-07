@@ -22,10 +22,11 @@ import static org.oakgp.type.CommonTypes.nullableType;
 
 import java.util.Collection;
 
-import org.oakgp.Arguments;
+import org.oakgp.Assignments;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
 import org.oakgp.function.coll.Sort;
+import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.type.Types;
@@ -40,10 +41,10 @@ public final class MaxList implements Function {
       this.signature = Signature.createSignature(nullableType(type), listType(type));
    }
 
-   @SuppressWarnings({ "rawtypes", "unchecked" })
+   @SuppressWarnings({"rawtypes", "unchecked"})
    @Override
-   public Comparable evaluate(Arguments arguments) {
-      Collection<Comparable> input = arguments.first();
+   public Comparable evaluate(ChildNodes arguments, Assignments assignments) {
+      Collection<Comparable> input = arguments.first().evaluate(assignments);
       Comparable result = null;
       for (Comparable i : input) {
          if (result == null || i.compareTo(result) > 0) {

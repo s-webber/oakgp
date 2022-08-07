@@ -40,7 +40,7 @@ public class ArithmeticOperatorTest {
    public void testGetSignature() {
       Function f = new ArithmeticOperator<Integer>(integerType()) {
          @Override
-         protected Integer evaluate(Integer arg1, Integer arg2) {
+         protected Integer calculate(Integer arg1, Integer arg2) {
             throw new UnsupportedOperationException();
          }
       };

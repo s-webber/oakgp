@@ -29,7 +29,6 @@ import static org.oakgp.function.math.IntegerUtils.INTEGER_UTILS;
 import static org.oakgp.type.CommonTypes.integerType;
 
 import org.junit.Test;
-import org.oakgp.Arguments;
 import org.oakgp.Assignments;
 import org.oakgp.TestUtils;
 import org.oakgp.function.Function;
@@ -181,14 +180,14 @@ public class FunctionNodeTest {
    }
 
    /**
-    * Tests that for two {@code FunctionNode} instances to be considered equal they must share the same instance of {@code Function} (i.e. it is not enough for
-    * them to have separate instances of the same {@code Function} class).
+    * Tests that for two {@code FunctionNode} instances to be considered equal they must share the same instance of
+    * {@code Function} (i.e. it is not enough for them to have separate instances of the same {@code Function} class).
     */
    @Test
    public void testEqualityRequiresSameFunctionInstance() {
       class DummyFunction implements Function {
          @Override
-         public Object evaluate(Arguments arguments) {
+         public Object evaluate(ChildNodes arguments, Assignments assignments) {
             throw new UnsupportedOperationException();
          }
 
@@ -254,8 +253,7 @@ public class FunctionNodeTest {
 
    /** Returns representation of: {@code (x*y)+z+1} */
    private FunctionNode createFunctionNode() {
-      return new FunctionNode(INTEGER_UTILS.getAdd(), integerType(),
-            new FunctionNode(INTEGER_UTILS.getMultiply(), integerType(), createVariable(0), createVariable(1)),
-            new FunctionNode(INTEGER_UTILS.getAdd(), integerType(), createVariable(2), integerConstant(1)));
+      return new FunctionNode(INTEGER_UTILS.getAdd(), integerType(), new FunctionNode(INTEGER_UTILS.getMultiply(), integerType(), createVariable(0), createVariable(1)),
+                  new FunctionNode(INTEGER_UTILS.getAdd(), integerType(), createVariable(2), integerConstant(1)));
    }
 }

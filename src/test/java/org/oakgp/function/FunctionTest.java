@@ -22,7 +22,8 @@ import static org.oakgp.type.CommonTypes.booleanType;
 import static org.oakgp.type.CommonTypes.integerType;
 
 import org.junit.Test;
-import org.oakgp.Arguments;
+import org.oakgp.Assignments;
+import org.oakgp.node.ChildNodes;
 
 public class FunctionTest {
    @Test
@@ -34,7 +35,7 @@ public class FunctionTest {
          }
 
          @Override
-         public Object evaluate(Arguments arguments) {
+         public Object evaluate(ChildNodes arguments, Assignments assignments) {
             throw new UnsupportedOperationException();
          }
       };
@@ -64,7 +65,7 @@ class DummyFunction implements Function {
    }
 
    @Override
-   public Object evaluate(Arguments arguments) {
+   public Object evaluate(ChildNodes arguments, Assignments assignments) {
       throw new UnsupportedOperationException();
    }
 }
@@ -76,7 +77,7 @@ class IsBooleanDummyFunction implements Function {
    }
 
    @Override
-   public Object evaluate(Arguments arguments) {
+   public Object evaluate(ChildNodes arguments, Assignments assignments) {
       throw new UnsupportedOperationException();
    }
 }

@@ -19,18 +19,19 @@ import static org.oakgp.function.Signature.createSignature;
 import static org.oakgp.type.CommonTypes.booleanType;
 import static org.oakgp.type.Types.type;
 
-import org.oakgp.Arguments;
+import org.oakgp.Assignments;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
+import org.oakgp.node.ChildNodes;
 
 public class IsOccupied implements Function {
    private static final Signature SIGNATURE = createSignature(booleanType(), type("board"), type("possibleMove"), type("symbol"));
 
    @Override
-   public Object evaluate(Arguments arguments) {
-      Board board = arguments.first();
-      Move move = arguments.second();
-      Symbol symbol = arguments.third();
+   public Object evaluate(ChildNodes arguments, Assignments assignments) {
+      Board board = arguments.first().evaluate(assignments);
+      Move move = arguments.second().evaluate(assignments);
+      Symbol symbol = arguments.third().evaluate(assignments);
       return board.isOccupied(move, symbol);
    }
 

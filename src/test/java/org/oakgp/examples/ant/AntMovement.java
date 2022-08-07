@@ -17,10 +17,11 @@ package org.oakgp.examples.ant;
 
 import java.util.function.Consumer;
 
-import org.oakgp.Arguments;
+import org.oakgp.Assignments;
 import org.oakgp.function.Function;
 import org.oakgp.function.ImpureFunction;
 import org.oakgp.function.Signature;
+import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.node.NodeType;
@@ -49,8 +50,8 @@ final class AntMovement implements ImpureFunction {
    }
 
    @Override
-   public Void evaluate(Arguments arguments) {
-      MutableState state = arguments.first();
+   public Object evaluate(ChildNodes arguments, Assignments assignments) {
+      MutableState state = arguments.first().evaluate(assignments);
       movement.accept(state);
       return Void.VOID;
    }

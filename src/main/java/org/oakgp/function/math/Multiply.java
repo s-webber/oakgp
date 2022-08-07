@@ -40,7 +40,7 @@ final class Multiply<T extends Comparable<T>> extends ArithmeticOperator<T> {
     * @return the result of multiplying {@code arg1} and {@code arg2}
     */
    @Override
-   protected T evaluate(T arg1, T arg2) {
+   protected T calculate(T arg1, T arg2) {
       return numberUtils.multiply(arg1, arg2);
    }
 

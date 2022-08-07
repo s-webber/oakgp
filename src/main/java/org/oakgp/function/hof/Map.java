@@ -23,19 +23,21 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.oakgp.Arguments;
+import org.oakgp.Assignments;
 import org.oakgp.function.Function;
-import org.oakgp.function.HigherOrderFunctionArguments;
 import org.oakgp.function.MapperFunction;
 import org.oakgp.function.Signature;
+import org.oakgp.node.ChildNodes;
+import org.oakgp.node.ConstantNode;
+import org.oakgp.node.Node;
 import org.oakgp.type.Types;
 import org.oakgp.type.Types.Type;
 
 /**
  * Returns the result of applying a function to each element of a collection.
  * <p>
- * Returns a new collection that exists of the result of applying the function (specified by the first argument) to each element of the collection (specified by
- * the second argument).
+ * Returns a new collection that exists of the result of applying the function (specified by the first argument) to each
+ * element of the collection (specified by the second argument).
  *
  * @see <a href="http://en.wikipedia.org/wiki/Map_(higher-order_function)">Wikipedia</a>
  */
@@ -51,10 +53,8 @@ public final class Map implements MapperFunction { // TODO rename to transform
    /**
     * Creates a higher order functions that applies a function to each element of a collection.
     *
-    * @param from
-    *           the type of the elements contained in the collection provided as an argument to the function
-    * @param to
-    *           the type of the elements contained in the collection returned by the function
+    * @param from the type of the elements contained in the collection provided as an argument to the function
+    * @param to the type of the elements contained in the collection returned by the function
     */
    private Map() {
       Type from = Types.generic("From");
@@ -63,12 +63,15 @@ public final class Map implements MapperFunction { // TODO rename to transform
    }
 
    @Override
-   public Object evaluate(Arguments arguments) {
-      Function f = arguments.first();
-      Collection<Object> elements = arguments.second();
+   public Object evaluate(ChildNodes arguments, Assignments assignments) {
+      Function f = arguments.first().evaluate(assignments);
+      Node second = arguments.second();
+      Type type = second.getType().getParameter(0);
+      Collection<Object> elements = second.evaluate(assignments);
       List<Object> result = new ArrayList<>();
       for (Object element : elements) {
-         Object evaluateResult = f.evaluate(new HigherOrderFunctionArguments(element));
+         ChildNodes childNodes = ChildNodes.createChildNodes(new ConstantNode(element, type));
+         Object evaluateResult = f.evaluate(childNodes, assignments);
          result.add(evaluateResult);
       }
       return unmodifiableList(result);

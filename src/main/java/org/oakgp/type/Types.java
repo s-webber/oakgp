@@ -231,6 +231,10 @@ public final class Types {
          return Arrays.asList(parameters);
       }
 
+      public Type getParameter(int index) {
+         return parameters[index];
+      }
+
       /** Is this instance assignable to the given {@code type}? */
       public boolean isAssignable(Type toAssignTo) { // TODO use or remove
          for (Type toAssignToParent : toAssignTo.rename) {

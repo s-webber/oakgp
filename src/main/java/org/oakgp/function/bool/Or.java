@@ -20,7 +20,7 @@ import static org.oakgp.type.CommonTypes.booleanType;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.oakgp.Arguments;
+import org.oakgp.Assignments;
 import org.oakgp.function.BooleanFunctionUtils;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
@@ -42,8 +42,8 @@ public final class Or implements Function {
    }
 
    @Override
-   public Object evaluate(Arguments arguments) {
-      return (boolean) arguments.first() || (boolean) arguments.second();
+   public Object evaluate(ChildNodes arguments, Assignments assignments) {
+      return (boolean) arguments.first().evaluate(assignments) || (boolean) arguments.second().evaluate(assignments);
    }
 
    @Override

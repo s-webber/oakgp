@@ -25,10 +25,9 @@ final class MinimaxSearch {
    /**
     * Returns the best possible next move from the specified game state.
     *
-    * @param currentGameState
-    *           the current state of the game
-    * @param depth
-    *           the maximum depth of the game tree to search. A negative value indicates that there should be no depth limit.
+    * @param currentGameState the current state of the game
+    * @param depth the maximum depth of the game tree to search. A negative value indicates that there should be no
+    * depth limit.
     * @return the best possible next move
     */
    public static MinimaxGameState minimax(final MinimaxGameState currentGameState, Node fitnessFunction, final int depth) {

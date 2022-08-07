@@ -20,7 +20,7 @@ import static org.oakgp.type.CommonTypes.mapType;
 
 import java.util.Map;
 
-import org.oakgp.Arguments;
+import org.oakgp.Assignments;
 import org.oakgp.function.Function;
 import org.oakgp.function.MapperFunction;
 import org.oakgp.function.Signature;
@@ -48,8 +48,8 @@ public final class CountMap implements Function {
    }
 
    @Override
-   public Object evaluate(Arguments arguments) {
-      Map<?, ?> a = arguments.first();
+   public Object evaluate(ChildNodes arguments, Assignments assignments) {
+      Map<?, ?> a = arguments.first().evaluate(assignments);
       return a.size();
    }
 

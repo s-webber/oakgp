@@ -21,7 +21,8 @@ import static org.oakgp.TestUtils.readNode;
 import java.util.Collections;
 
 import org.junit.Test;
-import org.oakgp.Arguments;
+import org.oakgp.Assignments;
+import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 
@@ -36,7 +37,7 @@ public class BooleanFunctionTest {
          }
 
          @Override
-         public Object evaluate(Arguments arguments) {
+         public Object evaluate(ChildNodes arguments, Assignments assignments) {
             throw new UnsupportedOperationException();
          }
       };

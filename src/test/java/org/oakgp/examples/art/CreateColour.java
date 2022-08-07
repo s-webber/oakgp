@@ -19,19 +19,20 @@ import static org.oakgp.type.CommonTypes.integerType;
 
 import java.awt.Color;
 
-import org.oakgp.Arguments;
+import org.oakgp.Assignments;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
+import org.oakgp.node.ChildNodes;
 
 public class CreateColour implements Function {
    private static final int RANGE = 256;
    private static final Signature SIGNATURE = Signature.createSignature(ArtFactory.COLOUR_TYPE, integerType(), integerType(), integerType());
 
    @Override
-   public Object evaluate(Arguments arguments) {
-      int red = arguments.first();
-      int green = arguments.second();
-      int blue = arguments.third();
+   public Object evaluate(ChildNodes arguments, Assignments assignments) {
+      int red = arguments.first().evaluate(assignments);
+      int green = arguments.second().evaluate(assignments);
+      int blue = arguments.third().evaluate(assignments);
       return new Color(normalise(red), normalise(green), normalise(blue));
    }
 

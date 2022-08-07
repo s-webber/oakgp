@@ -18,7 +18,7 @@ package org.oakgp.function.bool;
 import static org.oakgp.type.CommonTypes.booleanType;
 import static org.oakgp.util.NodeComparator.NODE_COMPARATOR;
 
-import org.oakgp.Arguments;
+import org.oakgp.Assignments;
 import org.oakgp.function.BooleanFunctionUtils;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
@@ -41,9 +41,9 @@ public final class Xor implements Function {
    }
 
    @Override
-   public Object evaluate(Arguments arguments) {
-      boolean b1 = arguments.first();
-      boolean b2 = arguments.second();
+   public Object evaluate(ChildNodes arguments, Assignments assignments) {
+      boolean b1 = arguments.first().evaluate(assignments);
+      boolean b2 = arguments.second().evaluate(assignments);
       return (b1 || b2) && b1 != b2;
    }
 
