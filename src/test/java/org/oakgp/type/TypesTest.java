@@ -165,7 +165,7 @@ public class TypesTest {
    public void declareWithParametersThatHasParameter() {
       String name = uniqueTypeName();
 
-      Type type = Types.declareType(name, new Type[0], new Type[] { CommonTypes.listType(CommonTypes.stringType()) });
+      Type type = Types.declareType(name, new Type[0], new Type[] {CommonTypes.listType(CommonTypes.stringType())});
       assertEquals(name, type.getName());
       assertEquals(name + " [List [String]]", type.toString());
       assertNoParents(type);
@@ -200,7 +200,7 @@ public class TypesTest {
       assertParents(parameter, CommonTypes.comparableType());
 
       // string and integer both extend comparable
-      Type template = Types.declareType(name, new Type[0], new Type[] { parameter });
+      Type template = Types.declareType(name, new Type[0], new Type[] {parameter});
       Type type1 = Types.type(name, CommonTypes.stringType());
       assertSame(type1, Types.type(name, CommonTypes.stringType()));
       assertEquals(name + " [String]", type1.toString());
@@ -290,14 +290,14 @@ public class TypesTest {
       Type y = Types.generic("Y");
       Type x = Types.generic("X");
       Type string = CommonTypes.stringType();
-      Type xxx = Types.declareType("xxx", new Type[0], new Type[] { y, z });
-      Type zzz = Types.declareType("zzz", new Type[] { Types.type("xxx", x, x) }, new Type[] { x });
+      Type xxx = Types.declareType("xxx", new Type[0], new Type[] {y, z});
+      Type zzz = Types.declareType("zzz", new Type[] {Types.type("xxx", x, x)}, new Type[] {x});
       System.out.println("z4" + zzz + " " + zzz.getParents());
       Type listStrings = Types.type("zzz", string);
       System.out.println("z5" + listStrings + " " + listStrings.getParents());
       Type qqq = Types.type("xxx", CommonTypes.bigIntegerType(), CommonTypes.bigDecimalType());
       System.out.println("z6" + qqq + " " + qqq.getParents());
-      Type zzz2 = Types.declareType("zzz2", new Type[] { Types.type("xxx", CommonTypes.bigIntegerType(), CommonTypes.bigDecimalType()) }, new Type[0]);
+      Type zzz2 = Types.declareType("zzz2", new Type[] {Types.type("xxx", CommonTypes.bigIntegerType(), CommonTypes.bigDecimalType())}, new Type[0]);
       System.out.println("z7" + zzz2 + " " + zzz2.getParents());
 
       Type p1 = CommonTypes.listType(x);
@@ -312,7 +312,7 @@ public class TypesTest {
 
    @Test
    public void test1() { // TODO
-      Type type = Types.declareType(uniqueTypeName(), new Type[0], new Type[] { CommonTypes.stringType() });
+      Type type = Types.declareType(uniqueTypeName(), new Type[0], new Type[] {CommonTypes.stringType()});
       try {
          Types.type(type.getName(), Types.generic("X", CommonTypes.bigIntegerType()));
          Assert.fail();

@@ -46,20 +46,20 @@ public class EvenFourParityTest {
    @Test
    public void test() {
       FunctionSet functionSet = new FunctionSetBuilder().addAll(IsFalse.getSingleton(), And.getSingleton(), Or.getSingleton(), Xor.getSingleton()).build();
-      TestDataFitnessFunction<?> fitnessFunction = new TestDataBuilder().booleanValues().booleanValues().booleanValues().booleanValues()
-            .rankEquality(EvenFourParityTest::getExpectedOutput);
+      TestDataFitnessFunction<Boolean> fitnessFunction = new TestDataBuilder().booleanValues().booleanValues().booleanValues().booleanValues()
+                  .rankEquality(EvenFourParityTest::getExpectedOutput);
 
       RankedCandidates output = new RunBuilder(). //
-            setReturnType(booleanType()). //
-            setConstants(new ConstantNode(true, booleanType()), new ConstantNode(false, booleanType())). //
-            setVariables(booleanType(), booleanType(), booleanType(), booleanType()). //
-            setFunctionSet(functionSet). //
-            setFitnessFunction(fitnessFunction). //
-            setInitialPopulationSize(INITIAL_POPULATION_SIZE). //
-            setTreeDepth(INITIAL_POPULATION_MAX_DEPTH). //
-            setTargetFitness(TARGET_FITNESS). //
-            setMaxGenerations(NUM_GENERATIONS). //
-            process();
+                  setReturnType(booleanType()). //
+                  setConstants(new ConstantNode(true, booleanType()), new ConstantNode(false, booleanType())). //
+                  setVariables(booleanType(), booleanType(), booleanType(), booleanType()). //
+                  setFunctionSet(functionSet). //
+                  setFitnessFunction(fitnessFunction). //
+                  setInitialPopulationSize(INITIAL_POPULATION_SIZE). //
+                  setTreeDepth(INITIAL_POPULATION_MAX_DEPTH). //
+                  setTargetFitness(TARGET_FITNESS). //
+                  setMaxGenerations(NUM_GENERATIONS). //
+                  process();
       Node best = output.best().getNode();
       System.out.println(best);
       fitnessFunction.evaluate(best, System.out::println);

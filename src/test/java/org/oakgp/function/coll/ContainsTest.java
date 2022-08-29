@@ -48,6 +48,7 @@ public class ContainsTest extends AbstractFunctionTest {
    @Override
    public void testCanSimplify() {
       simplify("(contains [2 -12 8] -12)").to("true");
+      simplify("(contains [2 -12 8] 12)").to("false");
    }
 
    @Override

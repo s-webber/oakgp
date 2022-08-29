@@ -41,9 +41,9 @@ public class RankedCandidateTest {
    public void testCompareTo() {
       final double baseFitness = 500d;
       final int baseNodeCount = 3;
-      final double betterFitness = 5000d;
+      final double betterFitness = 250d;
       final int betterNodeCount = 1;
-      final double worseFitness = 250d;
+      final double worseFitness = 5000d;
       final int worseNodeCount = 5;
 
       RankedCandidate candidate = mockRankedCandidate(baseFitness, baseNodeCount);
@@ -70,8 +70,8 @@ public class RankedCandidateTest {
    }
 
    public void assertBetter(RankedCandidate a, RankedCandidate b) {
-      assertEquals(1, a.compareTo(b));
-      assertEquals(-1, b.compareTo(a));
+      assertEquals(-1, a.compareTo(b));
+      assertEquals(1, b.compareTo(a));
    }
 
    public void assertWorse(RankedCandidate a, RankedCandidate b) {

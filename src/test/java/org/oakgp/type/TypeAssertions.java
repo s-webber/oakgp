@@ -17,6 +17,8 @@ package org.oakgp.type;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertThrows;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -34,6 +36,10 @@ class TypeAssertions {
 
    static void assertParameters(Type t, Type... expected) {
       assertEquals(asList(expected), t.getParameters());
+      for (int i = 0; i < expected.length; i++) {
+         assertSame(expected[i], t.getParameter(i));
+      }
+      assertThrows(ArrayIndexOutOfBoundsException.class, () -> t.getParameter(expected.length));
    }
 
    static void assertNoParents(Type t) {

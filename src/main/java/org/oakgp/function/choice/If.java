@@ -42,7 +42,7 @@ import org.oakgp.util.Utils;
  * <li>Value to evaluate to if the conditional statement is {@code false}.</li>
  * </ol>
  */
-public final class If implements Function {
+public final class If implements Function { // TODO make singleton
    private static final int TRUE_IDX = 1;
    private static final int FALSE_IDX = 2;
 

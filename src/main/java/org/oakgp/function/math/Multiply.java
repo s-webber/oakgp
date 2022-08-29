@@ -22,6 +22,7 @@ import org.oakgp.function.Function;
 import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
+import org.oakgp.node.NodeType;
 import org.oakgp.type.Types.Type;
 
 /** Performs multiplication. */
@@ -69,6 +70,10 @@ final class Multiply<T extends Comparable<T>> extends ArithmeticOperator<T> {
       } else if (numberUtils.isOne(arg2)) {
          // the earlier ordering or arguments means we should never get here
          throw new IllegalArgumentException("arg1 " + arg1 + " arg2 " + arg2);
+      } else if (isCombinable(arg1, arg2)) {
+         // e.g. (* v0 (* 2 v0))) -> (* 3 v0)
+         FunctionNode fn = (FunctionNode) arg2;
+         return new FunctionNode(this, returnType, numberUtils.increment(fn.getChildren().first()), arg1);
       } else {
          if (isConstant(arg1) && numberUtils.isArithmeticExpression(arg2)) {
             FunctionNode fn = (FunctionNode) arg2;
@@ -97,6 +102,28 @@ final class Multiply<T extends Comparable<T>> extends ArithmeticOperator<T> {
 
          return null;
       }
+   }
+
+   private boolean isCombinable(Node arg1, Node arg2) { //TODO rename
+      if (arg2.getNodeType() != NodeType.FUNCTION) {
+         return false;
+      }
+
+      FunctionNode fn = (FunctionNode) arg2;
+      if (!numberUtils.isMultiply(fn)) {
+         return false;
+      }
+
+      ChildNodes children = fn.getChildren();
+      if (!isConstant(children.first())) {
+         return false;
+      }
+
+      if (!arg1.equals(children.second())) {
+         return false;
+      }
+
+      return true;
    }
 
    @Override

@@ -37,6 +37,10 @@ public final class TestDataBuilder {
       return values((Object[]) values);
    }
 
+   public TestDataBuilder values(Double[] values) {
+      return values((Object[]) values);
+   }
+
    public TestDataBuilder values(Object... values) {
       inputs.add(values);
       return this;
@@ -46,7 +50,8 @@ public final class TestDataBuilder {
       return values(values.toArray());
    }
 
-   public TestDataFitnessFunction<Integer> rankCloseness(Function<Assignments, Integer> f) {
+   // TODO have version that takes integer
+   public TestDataFitnessFunction<Double> rankCloseness(Function<Assignments, Double> f) {
       return rank(f, (e, a) -> Math.abs(e - a));
    }
 

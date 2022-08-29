@@ -36,6 +36,18 @@ public final class RankedCandidate implements Comparable<RankedCandidate> {
       return node;
    }
 
+   // TODO remove have 2 comparators - 1 for best fitness high, 1 for best fitness low
+   @Override
+   public int compareTo(RankedCandidate o) {
+      int result = Double.compare(fitness, o.fitness);
+      if (result == 0) {
+         // when two candidates have identical fitness values, compare them by node count and prefer shorter solutions
+         return Integer.compare(node.getNodeCount(), o.node.getNodeCount());
+      } else {
+         return result;
+      }
+   }
+
    @Override
    public boolean equals(Object o) {
       if (o instanceof RankedCandidate) {
@@ -49,17 +61,6 @@ public final class RankedCandidate implements Comparable<RankedCandidate> {
    @Override
    public int hashCode() {
       return node.hashCode();
-   }
-
-   @Override
-   public int compareTo(RankedCandidate o) {
-      int result = Double.compare(fitness, o.fitness);
-      if (result == 0) {
-         // when two candidates have identical fitness values, compare them by node count - favouring shorter solutions
-         return Integer.compare(o.node.getNodeCount(), node.getNodeCount());
-      } else {
-         return result;
-      }
    }
 
    @Override

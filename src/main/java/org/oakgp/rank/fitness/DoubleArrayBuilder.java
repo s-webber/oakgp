@@ -15,26 +15,29 @@
  */
 package org.oakgp.rank.fitness;
 
-public final class IntegerArrayBuilder {
-   private int start;
-   private int end;
-   private int step = 1;
+import java.util.ArrayList;
+import java.util.List;
 
-   public static IntegerArrayBuilder integers() {
-      return new IntegerArrayBuilder();
+public final class DoubleArrayBuilder {
+   private double start;
+   private double end;
+   private double step = 1; // TODO rename step to increment
+
+   public static DoubleArrayBuilder doubles() {
+      return new DoubleArrayBuilder();
    }
 
-   public IntegerArrayBuilder from(int start) {
+   public DoubleArrayBuilder from(double start) {
       this.start = start;
       return this;
    }
 
-   public IntegerArrayBuilder to(int end) {
+   public DoubleArrayBuilder to(double end) {
       this.end = end;
       return this;
    }
 
-   public IntegerArrayBuilder increment(int step) {
+   public DoubleArrayBuilder increment(double step) {
       if (step <= 0) {
          throw new IllegalArgumentException(step + " <= 0");
       }
@@ -43,14 +46,17 @@ public final class IntegerArrayBuilder {
       return this;
    }
 
-   public Integer[] build() {
+   // TODO use BigDecimal
+   public List<Double> build() {
       if (start > end) {
          throw new IllegalArgumentException(start + " > " + end);
       }
 
-      Integer[] result = new Integer[(end - start + 1) / step];
-      for (int i = 0, v = start; v <= end; i++, v += step) {
-         result[i] = v;
+      List<Double> result = new ArrayList<>();
+      double v = start;
+      while (v <= end) {
+         result.add(v);
+         v += step;
       }
       return result;
    }

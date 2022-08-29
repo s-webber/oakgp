@@ -31,19 +31,12 @@ import org.oakgp.node.Node;
  * Attempts to reduce the size of tree structures without altering their functionality.
  * <p>
  * This can be done by replacing expressions with constant values or removing redundant branches. e.g. The expression:
- *
  * <pre>
  * (+ 7 (* 3 6))
- * </pre>
- *
- * can be simplified to the value:
- *
- * <pre>
+ * </pre> can be simplified to the value: <pre>
  * 25
- * </pre>
- *
- * <b>Note:</b> relies on {@link org.oakgp.function.Function#isPure()} to identify if a function is referentially transparent and therefore suitable for
- * replacement with the result of evaluating it.
+ * </pre> <b>Note:</b> relies on {@link org.oakgp.function.Function#isPure()} to identify if a function is referentially
+ * transparent and therefore suitable for replacement with the result of evaluating it.
  */
 public final class NodeSimplifier {
    private static final int MAX_RETRIES = 100;
@@ -56,11 +49,11 @@ public final class NodeSimplifier {
    /**
     * Attempts to reduce the size of the specified tree structures without altering its functionality.
     * <p>
-    * Simplification can occur by replacing expressions with constant values (e.g. replacing {@code (+ 1 1)} with {@code 2}) or removing redundant branches
-    * (e.g. replacing {@code (if (< 2 3) (+ v0 v1) (* v0 v1))} with {@code (+ v0 v1)}.
+    * Simplification can occur by replacing expressions with constant values (e.g. replacing {@code (+ 1 1)} with
+    * {@code 2}) or removing redundant branches (e.g. replacing {@code (if (< 2 3) (+ v0 v1) (* v0 v1))} with
+    * {@code (+ v0 v1)}.
     *
-    * @param input
-    *           the node to attempt to simplify.
+    * @param input the node to attempt to simplify.
     * @return the result of attempting to simplify {@code input}.
     * @see org.oakgp.function.Function#simplify(FunctionNode)
     */

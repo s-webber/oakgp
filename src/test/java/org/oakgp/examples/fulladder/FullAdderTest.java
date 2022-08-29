@@ -50,22 +50,22 @@ public class FullAdderTest {
    @Test
    public void test() {
       FunctionSet functionSet = new FunctionSetBuilder().add(new CreatePair(), booleanType(), booleanType())
-            .addAll(IsFalse.getSingleton(), And.getSingleton(), Or.getSingleton(), Xor.getSingleton()).build();
+                  .addAll(IsFalse.getSingleton(), And.getSingleton(), Or.getSingleton(), Xor.getSingleton()).build();
       Type returnType = entryType(booleanType());
-      TestDataFitnessFunction<?> fitnessFunction = new TestDataBuilder().booleanValues().booleanValues().booleanValues()
-            .rankEquality(FullAdderTest::getExpectedOutput);
+      TestDataFitnessFunction<Pair<Boolean, Boolean>> fitnessFunction = new TestDataBuilder().booleanValues().booleanValues().booleanValues()
+                  .rankEquality(FullAdderTest::getExpectedOutput);
 
       RankedCandidates output = new RunBuilder(). //
-            setReturnType(returnType). //
-            setConstants(new ConstantNode(true, booleanType()), new ConstantNode(false, booleanType())). //
-            setVariables(booleanType(), booleanType(), booleanType()). //
-            setFunctionSet(functionSet). //
-            setFitnessFunction(fitnessFunction). //
-            setInitialPopulationSize(INITIAL_POPULATION_SIZE). //
-            setTreeDepth(INITIAL_POPULATION_MAX_DEPTH). //
-            setTargetFitness(TARGET_FITNESS). //
-            setMaxGenerations(NUM_GENERATIONS). //
-            process();
+                  setReturnType(returnType). //
+                  setConstants(new ConstantNode(true, booleanType()), new ConstantNode(false, booleanType())). //
+                  setVariables(booleanType(), booleanType(), booleanType()). //
+                  setFunctionSet(functionSet). //
+                  setFitnessFunction(fitnessFunction). //
+                  setInitialPopulationSize(INITIAL_POPULATION_SIZE). //
+                  setTreeDepth(INITIAL_POPULATION_MAX_DEPTH). //
+                  setTargetFitness(TARGET_FITNESS). //
+                  setMaxGenerations(NUM_GENERATIONS). //
+                  process();
       Node best = output.best().getNode();
       System.out.println(best);
       fitnessFunction.evaluate(best, System.out::println);

@@ -31,7 +31,10 @@ import org.oakgp.rank.fitness.TestDataFitnessFunction;
 import org.oakgp.util.RunBuilder;
 import org.oakgp.util.Utils;
 
-/** An example of using symbolic regression to evolve a program that best fits a given data set for the function {@code x2 + x + 1}. */
+/**
+ * An example of using symbolic regression to evolve a program that best fits a given data set for the function
+ * {@code x2 + x + 1}.
+ */
 public class SymbolicRegressionExample {
    private static final int TARGET_FITNESS = 0;
    private static final int INITIAL_POPULATION_SIZE = 50;
@@ -43,20 +46,20 @@ public class SymbolicRegressionExample {
       // the variable set will contain a single variable - representing the integer value input to the function
       // the fitness function will compare candidates against a data set which maps inputs to their expected outputs
 
-      Function[] functions = { IntegerUtils.INTEGER_UTILS.getAdd(), IntegerUtils.INTEGER_UTILS.getSubtract(), IntegerUtils.INTEGER_UTILS.getMultiply() };
+      Function[] functions = {IntegerUtils.INTEGER_UTILS.getAdd(), IntegerUtils.INTEGER_UTILS.getSubtract(), IntegerUtils.INTEGER_UTILS.getMultiply()};
       List<ConstantNode> constants = Utils.createIntegerConstants(0, 10);
-      TestDataFitnessFunction<?> fitnessFunction = new TestDataBuilder().values(integers().from(-10).to(10).build())
-            .rankCloseness(SymbolicRegressionExample::getExpectedOutput);
+      TestDataFitnessFunction<Double> fitnessFunction = new TestDataBuilder().values(integers().from(-10).to(10).build())
+                  .rankCloseness(SymbolicRegressionExample::getExpectedOutput);
 
       RankedCandidates output = new RunBuilder().setReturnType(integerType()).setConstants(constants).setVariables(integerType()).setFunctions(functions)
-            .setFitnessFunction(fitnessFunction).setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_POPULATION_MAX_DEPTH)
-            .setTargetFitness(TARGET_FITNESS).process();
+                  .setFitnessFunction(fitnessFunction).setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_POPULATION_MAX_DEPTH).setTargetFitness(TARGET_FITNESS)
+                  .process();
       Node best = output.best().getNode();
       System.out.println(best);
       fitnessFunction.evaluate(best, System.out::println);
    }
 
-   private static int getExpectedOutput(Assignments a) {
+   private static double getExpectedOutput(Assignments a) {
       int x = (int) a.get(0);
       return (x * x) + x + 1;
    }

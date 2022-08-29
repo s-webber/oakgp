@@ -38,10 +38,8 @@ public final class RoundRobinTournament implements GenerationRanker {
    /**
     * Creates a {@code RoundRobinTournament} for the given {@code TwoPlayerGame}.
     *
-    * @param game
-    *           logic for determining the winner of a two-player game
-    * @param parallel
-    *           {@code true} if a parallel stream should be used for ranking candidates
+    * @param game logic for determining the winner of a two-player game
+    * @param parallel {@code true} if a parallel stream should be used for ranking candidates
     */
    public RoundRobinTournament(TwoPlayerGame game, boolean parallel) {
       this.game = game;

@@ -76,6 +76,8 @@ public class MultiplyTest extends AbstractFunctionTest {
 
       simplify("(* 1 (* v0 (* v1 (* v3 2))))").to("(* v0 (* v1 (* 2 v3)))");
 
+      simplify("(* v0 (* 2 v0)))").to("(* 3 v0)");
+
       // TODO simplify (+ 3 (* v2 (* (* 81 v2) (* v2 (* 9 v2)))))
    }
 
@@ -90,7 +92,7 @@ public class MultiplyTest extends AbstractFunctionTest {
    @Override
    protected FunctionSet getFunctionSet() {
       return new FunctionSetBuilder().add(getFunction()).add(IntegerUtils.INTEGER_UTILS.getAdd()).add(IntegerUtils.INTEGER_UTILS.getSubtract())
-            .add(IntegerUtils.INTEGER_UTILS.getDivide()).add(LongUtils.LONG_UTILS.getMultiply()).add(DoubleUtils.DOUBLE_UTILS.getMultiply())
-            .add(BigIntegerUtils.BIG_INTEGER_UTILS.getMultiply()).add(BigDecimalUtils.BIG_DECIMAL_UTILS.getMultiply()).build();
+                  .add(IntegerUtils.INTEGER_UTILS.getDivide()).add(LongUtils.LONG_UTILS.getMultiply()).add(DoubleUtils.DOUBLE_UTILS.getMultiply())
+                  .add(BigIntegerUtils.BIG_INTEGER_UTILS.getMultiply()).add(BigDecimalUtils.BIG_DECIMAL_UTILS.getMultiply()).build();
    }
 }
