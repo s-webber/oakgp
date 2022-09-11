@@ -43,6 +43,7 @@ public final class CommonTypes {
    private static final Type FUNCTION = name(Function.class).parameters(generic("R"), generic("I")).build();
    private static final Type BI_FUNCTION = name(Function.class).parameters(generic("R"), generic("A"), generic("B")).build();
    private static final Type NULLABLE = name("Nullable").parameters(generic("T")).build();
+   private static final Type VOID = name(Void.class).build();
 
    /** Returns the type associated with implementations of {@code java.lang.Comparable}. */
    public static Type comparableType() {
@@ -122,16 +123,17 @@ public final class CommonTypes {
    /**
     * Returns the type associated with instances of {@code org.oakgp.function.Function} with the specified signature.
     *
-    * @param returnType
-    *           the type of the value returned by the function
-    * @param inputType
-    *           the type of the argument passed to the function
+    * @param returnType the type of the value returned by the function
+    * @param inputType the type of the argument passed to the function
     */
    public static Type functionType(Type returnType, Type inputType) {
       return type(FUNCTION.getName(), returnType, inputType);
    }
 
-   /** Returns the type associated with {@code org.oakgp.function.Function} instances that accept a {@link #integerType()} and return {@link #booleanType()}. */
+   /**
+    * Returns the type associated with {@code org.oakgp.function.Function} instances that accept a
+    * {@link #integerType()} and return {@link #booleanType()}.
+    */
    public static Type integerToBooleanFunctionType() {
       return functionType(booleanType(), integerType());
    }
@@ -139,12 +141,9 @@ public final class CommonTypes {
    /**
     * Returns the type associated with instances of {@code org.oakgp.function.BiFunction} with the specified signature.
     *
-    * @param returnType
-    *           the type of the value returned by the function
-    * @param inputType1
-    *           the type of the first argument passed to the function
-    * @param inputType2
-    *           the type of the second argument passed to the function
+    * @param returnType the type of the value returned by the function
+    * @param inputType1 the type of the first argument passed to the function
+    * @param inputType2 the type of the second argument passed to the function
     */
    public static Type biFunctionType(Type returnType, Type inputType1, Type inputType2) {
       return type(BI_FUNCTION.getName(), returnType, inputType1, inputType2);
@@ -153,8 +152,8 @@ public final class CommonTypes {
    /**
     * Returns a type that represents values that can be either the given {@code Type} or {@code null}.
     * <p>
-    * e.g. The result of calling {@code nullableType(stringType())} is a type that represents values that can be <i>either</i> a {@code java.lang.String}
-    * <i>or</i> {@code null}.
+    * e.g. The result of calling {@code nullableType(stringType())} is a type that represents values that can be
+    * <i>either</i> a {@code java.lang.String} <i>or</i> {@code null}.
     *
     * @see #isNullable(Type)
     */
@@ -169,5 +168,9 @@ public final class CommonTypes {
     */
    public static boolean isNullable(Type t) { // TODO move to utils
       return t.getName().equals(NULLABLE.getName()); // TODO and check parameters.length == 1
+   }
+
+   public static Type voidType() {
+      return VOID;
    }
 }

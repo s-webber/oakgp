@@ -25,7 +25,6 @@ import static org.junit.Assert.fail;
 import static org.oakgp.TestUtils.readNode;
 import static org.oakgp.TestUtils.readNodes;
 import static org.oakgp.type.CommonTypes.integerToBooleanFunctionType;
-import static org.oakgp.util.Void.VOID;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -43,6 +42,7 @@ import org.oakgp.node.Node;
 import org.oakgp.node.VariableNode;
 import org.oakgp.primitive.VariableSet;
 import org.oakgp.type.Types;
+import org.oakgp.util.Void;
 
 public class NodeReaderTest {
    @Test
@@ -152,7 +152,7 @@ public class NodeReaderTest {
 
    @Test
    public void testVoid() {
-      assertParseLiteral("void", VOID);
+      assertParseLiteral("void", Void.VOID_CONSTANT.evaluate(null));
    }
 
    @Test
@@ -237,7 +237,7 @@ public class NodeReaderTest {
    public void testConstantNode() throws IOException {
       String input = "TEST";
       ConstantNode expected = new ConstantNode(input, Types.declareType("testConstantNode"));
-      try (NodeReader r = new NodeReader(input, new Function[0], new ConstantNode[] { expected }, VariableSet.createVariableSet())) {
+      try (NodeReader r = new NodeReader(input, new Function[0], new ConstantNode[] {expected}, VariableSet.createVariableSet())) {
          Node actual = r.readNode();
          assertSame(expected, actual);
       }
@@ -282,7 +282,7 @@ public class NodeReaderTest {
 
    @Test
    public void testMulipleNodes() {
-      String[] inputs = { "6", "(+ v0 v1)", "42", "v0", "(+ 1 2)", "v98" };
+      String[] inputs = {"6", "(+ v0 v1)", "42", "v0", "(+ 1 2)", "v98"};
       String combinedInput = " " + inputs[0] + inputs[1] + inputs[2] + " " + inputs[3] + "\n\r\t\t\t" + inputs[4] + "       \n   " + inputs[5] + "\r\n";
       List<Node> outputs = readNodes(combinedInput);
       assertEquals(inputs.length, outputs.size());

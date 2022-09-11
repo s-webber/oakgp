@@ -53,7 +53,7 @@ final class AntMovement implements ImpureFunction {
    public Object evaluate(ChildNodes arguments, Assignments assignments) {
       MutableState state = arguments.first().evaluate(assignments);
       movement.accept(state);
-      return Void.VOID;
+      return null;
    }
 
    @Override

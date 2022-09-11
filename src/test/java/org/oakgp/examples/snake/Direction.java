@@ -1,21 +1,36 @@
 package org.oakgp.examples.snake;
 
 enum Direction {
-   NORTH,
-   EAST,
-   SOUTH,
-   WEST;
+   UP,
+   RIGHT,
+   DOWN,
+   LEFT;
 
-   Direction opposite() {
+   Direction turnRight() {
       switch (this) {
-         case NORTH:
-            return SOUTH;
-         case EAST:
-            return WEST;
-         case SOUTH:
-            return NORTH;
-         case WEST:
-            return EAST;
+         case UP:
+            return RIGHT;
+         case RIGHT:
+            return DOWN;
+         case DOWN:
+            return LEFT;
+         case LEFT:
+            return UP;
+         default:
+            throw new IllegalStateException();
+      }
+   }
+
+   Direction turnLeft() {
+      switch (this) {
+         case UP:
+            return LEFT;
+         case RIGHT:
+            return UP;
+         case DOWN:
+            return RIGHT;
+         case LEFT:
+            return DOWN;
          default:
             throw new IllegalStateException();
       }

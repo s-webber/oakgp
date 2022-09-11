@@ -21,5 +21,5 @@ import org.oakgp.node.Node;
 @FunctionalInterface
 public interface FitnessFunction {
    /** Returns the fitness of the solution represented by the given {@code Node}. */
-   double evaluate(Node n);
+   double evaluate(Node candidate);
 }

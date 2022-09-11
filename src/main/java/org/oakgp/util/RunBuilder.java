@@ -202,7 +202,7 @@ public final class RunBuilder {
       private SequentialSetter() {
       }
 
-      public GenerationRankerSetter sequential() {
+      public GenerationRankerSetter parallel() { // TODO have sequential() and set after fitnessfunction is set
          _parallel = true;
          return new GenerationRankerSetter();
       }
@@ -311,8 +311,8 @@ public final class RunBuilder {
    }
 
    /**
-    * Provides the option to configure how new generations evolve from existing ones, or to skip that option and
-    * instead configure the termination criteria.
+    * Provides the option to configure how new generations evolve from existing ones, or to skip that option and instead
+    * configure the termination criteria.
     * <p>
     * If you do not explicitly specify how generations evolve then a default strategy will be used. The default strategy
     * is sufficient for allowing people to quickly get started with OakGP
@@ -426,6 +426,8 @@ public final class RunBuilder {
 
       @Override
       public RankedCandidates process() {
+         // TODO check here, or earlier, that all constants, variables and functions
+         // are useable (i.e. their return types and args are types in use by other elements of the primitive set)
          if (_generationEvolver == null) {
             _generationEvolver = createDefaultGenerationEvolver();
          }
@@ -438,25 +440,23 @@ public final class RunBuilder {
       }
 
       private GenerationEvolver createDefaultGenerationEvolver() {
-         System.out.println("createDefaultGenerationEvolver");
          int populationSize = _initialPopulation.size();
          NodeSelectorFactory nodeSelectorFactory = new RankSelectionFactory(_random);
          Map<GeneticOperator, Integer> operators = createDefaultGeneticOperators(populationSize);
          int operatorsSize = operators.values().stream().mapToInt(Integer::intValue).sum();
          int elitismSize = populationSize - operatorsSize;
          Logger.getGlobal().info("total: " + populationSize + " elitism: " + elitismSize + " " + operators);
-         System.out.println("createDefaultGenerationEvolver");
          return new GenerationEvolverImpl(elitismSize, nodeSelectorFactory, operators);
       }
 
       private Map<GeneticOperator, Integer> createDefaultGeneticOperators(int populationSize) {
          Map<GeneticOperator, Integer> operators = new HashMap<>();
          TreeGenerator treeGenerator = TreeGeneratorImpl.grow(_primitiveSet, _random);
-         operators.put(t -> treeGenerator.generate(_returnType, 4), ratio(populationSize, .08));
-         operators.put(new SubtreeCrossover(_random, 5), ratio(populationSize, .4));
-         operators.put(new PointMutation(_random, _primitiveSet), ratio(populationSize, .4));
-         operators.put(new SubTreeMutation(_random, treeGenerator), ratio(populationSize, .04));
-         operators.put(new ConstantToFunctionMutation(_random, TreeGeneratorImpl.full(_primitiveSet)), ratio(populationSize, .04));
+         operators.put(t -> treeGenerator.generate(_returnType, 4), ratio(populationSize, .08)); //.08
+         operators.put(new SubtreeCrossover(_random, 5), ratio(populationSize, .4)); //.4
+         operators.put(new PointMutation(_random, _primitiveSet), ratio(populationSize, .4)); //.4
+         operators.put(new SubTreeMutation(_random, treeGenerator), ratio(populationSize, .04)); //.04
+         operators.put(new ConstantToFunctionMutation(_random, TreeGeneratorImpl.full(_primitiveSet)), ratio(populationSize, .04)); //.04
          return operators;
       }
 

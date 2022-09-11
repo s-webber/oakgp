@@ -28,7 +28,6 @@ import org.oakgp.function.Signature;
 import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
-import org.oakgp.util.Void;
 
 /** Executes three nodes in sequence. */
 class TriSequence implements ImpureFunction {
@@ -44,10 +43,10 @@ class TriSequence implements ImpureFunction {
 
    @Override
    public Object evaluate(ChildNodes arguments, Assignments assignments) {
-      arguments.first();
-      arguments.second();
-      arguments.third();
-      return Void.VOID;
+      arguments.first().evaluate(assignments);
+      arguments.second().evaluate(assignments);
+      arguments.third().evaluate(assignments);
+      return null;
    }
 
    @Override

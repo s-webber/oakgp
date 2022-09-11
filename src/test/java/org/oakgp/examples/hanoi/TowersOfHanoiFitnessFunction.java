@@ -33,8 +33,7 @@ class TowersOfHanoiFitnessFunction implements FitnessFunction {
    }
 
    /**
-    * @param n
-    *           a potential solution to the Towers of Hanoi puzzle
+    * @param n a potential solution to the Towers of Hanoi puzzle
     * @return the fitness of {@code n}
     */
    @Override
@@ -65,6 +64,9 @@ class TowersOfHanoiFitnessFunction implements FitnessFunction {
          previousFitness = Math.min(previousFitness, towersOfHanoi.getFitness());
          if (previousFitness == 0) {
             // the puzzle has been solved - no need to keep evaluating
+            if (doLog) {
+               System.out.println("solved");
+            }
             return previousFitness;
          }
       }

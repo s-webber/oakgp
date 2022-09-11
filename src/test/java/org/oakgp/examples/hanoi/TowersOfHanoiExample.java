@@ -41,26 +41,40 @@ import org.oakgp.util.RunBuilder;
 import org.oakgp.util.Utils;
 
 public class TowersOfHanoiExample {
-   static final Type STATE_TYPE = declareType("gameState");
-   static final Type MOVE_TYPE = TypeBuilder.name("move").parents(CommonTypes.comparableType()).build();
-   static final Type POLE_TYPE = declareType("pole");
+   static final Type STATE_TYPE = declareType(TowersOfHanoi.class.getSimpleName());
+   static final Type MOVE_TYPE = TypeBuilder.name(Move.class).parents(CommonTypes.comparableType()).build();
+   static final Type POLE_TYPE = declareType(Pole.class.getSimpleName());
 
    private static final int TARGET_FITNESS = 0;
-   private static final int NUM_GENERATIONS = 1000;
-   private static final int INITIAL_POPULATION_SIZE = 100;
+   private static final int NUM_GENERATIONS = 10000;
+   private static final int INITIAL_POPULATION_SIZE = 200;
    private static final int INITIAL_POPULATION_MAX_DEPTH = 4;
 
-   public static void main(String[] args) {
-      FunctionSet functionSet = new FunctionSetBuilder().addAll(new IsValid(), new SwitchEnum(Move.class, nullableType(MOVE_TYPE), MOVE_TYPE))
-            .add(Equal.getSingleton(), MOVE_TYPE).add(new If(), MOVE_TYPE).add(GreaterThan.getSingleton(), integerType())
-            .add(Equal.getSingleton(), integerType()).add(new Next()).build();
+   public static void main(String[] args) throws Exception {
+      FunctionSet functionSet = new FunctionSetBuilder() //
+                  .add(new SwitchEnum(Move.class, nullableType(MOVE_TYPE), MOVE_TYPE)) //
+                  .add(Equal.getSingleton(), MOVE_TYPE) //
+                  .add(new If(), MOVE_TYPE) //
+                  .add(GreaterThan.getSingleton(), integerType()) //
+                  .add(Equal.getSingleton(), integerType()) //
+                  .add(TowersOfHanoi.class, "upperDisc", Pole.class) //
+                  .add(TowersOfHanoi.class, "isValid", Move.class) //
+                  .build();
       List<ConstantNode> constants = createConstants();
-      Type[] variables = { STATE_TYPE, nullableType(MOVE_TYPE) };
+      Type[] variables = {STATE_TYPE, nullableType(MOVE_TYPE)};
       FitnessFunction fitnessFunction = new TowersOfHanoiFitnessFunction(false);
 
-      RankedCandidates output = new RunBuilder().setReturnType(MOVE_TYPE).setConstants(constants).setVariables(variables).setFunctionSet(functionSet)
-            .setFitnessFunction(fitnessFunction).setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_POPULATION_MAX_DEPTH)
-            .setTargetFitness(TARGET_FITNESS).setMaxGenerations(NUM_GENERATIONS).process();
+      RankedCandidates output = new RunBuilder() //
+                  .setReturnType(MOVE_TYPE) //
+                  .setConstants(constants) //
+                  .setVariables(variables) //
+                  .setFunctionSet(functionSet) //
+                  .setFitnessFunction(fitnessFunction) //
+                  .setInitialPopulationSize(INITIAL_POPULATION_SIZE) //
+                  .setTreeDepth(INITIAL_POPULATION_MAX_DEPTH) //
+                  .setTargetFitness(TARGET_FITNESS) //
+                  .setMaxGenerations(NUM_GENERATIONS) //
+                  .process();
       Node best = output.best().getNode();
       System.out.println(best);
       new TowersOfHanoiFitnessFunction(true).evaluate(best);

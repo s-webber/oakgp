@@ -15,6 +15,7 @@
  */
 package org.oakgp.util;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,8 +42,18 @@ public final class FunctionSetBuilder {
       return put(function, function.getSignature());
    }
 
+   public FunctionSetBuilder add(Class<?> target, String methodName, Class<?>... parameterTypes) throws NoSuchMethodException, SecurityException {
+      return add(target.getMethod(methodName, parameterTypes));
+   }
+
+   public FunctionSetBuilder add(Method method) {
+      Function f = MethodFunction.createFunction(method);
+      return put(f, f.getSignature());
+   }
+
    public FunctionSetBuilder put(Function function, Signature signature) {
       // TODO check for duplicates
+      // TODO rename from put to add?
       functions.add(new FunctionSet.Key(function, signature));
       return this;
    }

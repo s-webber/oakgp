@@ -18,25 +18,23 @@ package org.oakgp.util;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
 import org.oakgp.node.NodeType;
-import org.oakgp.type.Types;
+import org.oakgp.type.CommonTypes;
 import org.oakgp.type.Types.Type;
 
+// TODO remove this class
 /** Represents a dummy value to return from functions that do not produce a result. */
 public final class Void {
    /** Returns the type associated with instances of {@link #VOID}. */
-   public static final Type VOID_TYPE = Types.declareType("void");
-   /** Singleton representing a {@code void} value. */
-   public static final Void VOID = new Void();
+   public static final Type VOID_TYPE = CommonTypes.voidType();
    /** A constant node containing {@link #VOID}. */
-   public static final ConstantNode VOID_CONSTANT = new ConstantNode(VOID, VOID_TYPE);
+   public static final ConstantNode VOID_CONSTANT = new ConstantNode(new Void(), VOID_TYPE);
 
-   /** Private constructor to force use of {@link #VOID}. */
    private Void() {
    }
 
    /** Returns {@code true} if the given node is a constant node containing {@link #VOID}. */
    public static boolean isVoid(Node n) {
-      return NodeType.isConstant(n) && n.evaluate(null) == Void.VOID;
+      return NodeType.isConstant(n) && n.getType() == VOID_TYPE;
    }
 
    @Override

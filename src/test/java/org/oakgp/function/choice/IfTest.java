@@ -45,6 +45,7 @@ public class IfTest extends AbstractFunctionTest {
 
    @Override
    public void testCanSimplify() {
+      // TODO (if (= NORTH v2) v2 NORTH) -> v2
       simplify("(if (> 2 1) 4 7)").to("4");
       simplify("(if (> 1 2) 4 7)").to("7");
       simplify("(if (> v0 v1) v2 v2)").to("v2");

@@ -34,6 +34,27 @@ public final class Types {
    private static final Type[] EMPTY_ARRAY = new Type[0];
    private static final Type OBJECT = declareType("Object");
 
+   public static Type find(Class<?> clazz) {
+      if (clazz.isPrimitive()) {
+         if (clazz == int.class) {
+            clazz = Integer.class;
+         } else if (clazz == boolean.class) {
+            clazz = Boolean.class;
+         } else if (clazz == void.class) {
+            clazz = Void.class;
+         } else {
+            throw new IllegalArgumentException(clazz.getName());
+         }
+      }
+      String name = clazz.getSimpleName();
+      TemplateKey templateKey = new TemplateKey(name, 0);
+      Type type = TEMPLATE_CACHE.get(templateKey);
+      if (type == null) {
+         throw new IllegalStateException("No type declared with name: " + name);
+      }
+      return type;
+   }
+
    public static Type declareType(String name) {
       return declareType(name, EMPTY_ARRAY, EMPTY_ARRAY);
    }
@@ -61,6 +82,7 @@ public final class Types {
       return result;
    }
 
+   // TODO why have both this method and  declareType(String name, Type[] parents, Type[] parameters)
    public synchronized static Type type(String name, Type... parameters) {
       // Did try using TYPE_CACHE.computeIfAbsent here but that caused intermittent unexpected behaviour.
       // The call to getParameterisedType can result in TYPE_CACHE being updated. The HashMap
@@ -245,7 +267,7 @@ public final class Types {
          return true;
       }
 
-      private boolean c(Type toAssignToParent) {
+      private boolean c(Type toAssignToParent) { // TODO rename
          for (Type toAssignHierarchy : hierarchy) {
             if (isAssignable(toAssignHierarchy, toAssignToParent)) {
                return true;

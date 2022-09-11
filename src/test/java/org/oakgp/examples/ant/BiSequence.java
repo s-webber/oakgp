@@ -26,7 +26,6 @@ import org.oakgp.function.Signature;
 import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
-import org.oakgp.util.Void;
 
 /** Executes two nodes in sequence. */
 class BiSequence implements ImpureFunction {
@@ -42,9 +41,9 @@ class BiSequence implements ImpureFunction {
 
    @Override
    public Object evaluate(ChildNodes arguments, Assignments assignments) {
-      arguments.first();
-      arguments.second();
-      return Void.VOID;
+      arguments.first().evaluate(assignments);;
+      arguments.second().evaluate(assignments);;
+      return null;
    }
 
    @Override

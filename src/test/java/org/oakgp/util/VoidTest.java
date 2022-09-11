@@ -29,7 +29,7 @@ public class VoidTest {
    @Test
    public void testConstantNode() {
       assertSame(Void.VOID_TYPE, Void.VOID_CONSTANT.getType());
-      assertSame(Void.VOID, Void.VOID_CONSTANT.evaluate(null));
+      assertSame(Void.class, Void.VOID_CONSTANT.evaluate(null).getClass());
    }
 
    @Test
@@ -38,20 +38,19 @@ public class VoidTest {
    }
 
    @Test
-   public void testToString() {
-      assertEquals("void", Void.VOID.toString());
-   }
-
-   @Test
    public void testIsVoid() {
       assertTrue(Void.isVoid(Void.VOID_CONSTANT));
-      assertTrue(Void.isVoid(new ConstantNode(Void.VOID, Types.type("void"))));
-      assertTrue(Void.isVoid(new ConstantNode(Void.VOID, Types.declareType("dummy"))));
+      assertTrue(Void.isVoid(new ConstantNode(null, Types.type("void"))));
    }
 
    @Test
    public void testIsNotVoid() {
-      assertFalse(Void.isVoid(new ConstantNode(new Object(), Void.VOID_TYPE)));
+      assertFalse(Void.isVoid(new ConstantNode(null, Types.declareType("dummy"))));
       assertFalse(Void.isVoid(new ConstantNode(1, integerType())));
+   }
+
+   @Test
+   public void testToString() {
+      assertEquals("void", Void.VOID_CONSTANT.evaluate(null).toString());
    }
 }

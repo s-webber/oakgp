@@ -24,6 +24,8 @@ import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
 import org.oakgp.node.ChildNodes;
 
+//TODO move this functionality to TowersOfHanoi and plug-in to FunctionSetBuilder
+//TODO using .add(TowersOfHanoi.class, "upperDisc")
 /** Returns the ID of the next disc that would be returned from a particular pole for a particular game state. */
 class Next implements Function {
    private static final Signature SIGNATURE = Signature.createSignature(integerType(), STATE_TYPE, POLE_TYPE);

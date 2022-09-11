@@ -39,13 +39,20 @@ public class ArtificialAntExample {
    private static final int INITIAL_POPULATION_MAX_DEPTH = 4;
 
    public static void main(String[] args) {
-      FunctionSet functionSet = new FunctionSetBuilder().addAll(new IsFoodAhead(), FORWARD, LEFT, RIGHT, BISEQUENCE, TRISEQUENCE).add(new If(), VOID_TYPE)
-            .build();
+      FunctionSet functionSet = new FunctionSetBuilder().addAll(new IsFoodAhead(), FORWARD, LEFT, RIGHT, BISEQUENCE, TRISEQUENCE).add(new If(), VOID_TYPE).build();
       FitnessFunction fitnessFunction = new ArtificialAntFitnessFunction();
 
-      RankedCandidates output = new RunBuilder().setReturnType(VOID_TYPE).setConstants(VOID_CONSTANT).setVariables(STATE_TYPE).setFunctionSet(functionSet)
-            .setFitnessFunction(fitnessFunction).setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_POPULATION_MAX_DEPTH)
-            .setTargetFitness(TARGET_FITNESS).setMaxGenerations(NUM_GENERATIONS).process();
+      RankedCandidates output = new RunBuilder() //
+                  .setReturnType(VOID_TYPE) //
+                  .setConstants(VOID_CONSTANT) //
+                  .setVariables(STATE_TYPE) //
+                  .setFunctionSet(functionSet) //
+                  .setFitnessFunction(fitnessFunction) //
+                  .setInitialPopulationSize(INITIAL_POPULATION_SIZE) //
+                  .setTreeDepth(INITIAL_POPULATION_MAX_DEPTH) //
+                  .setTargetFitness(TARGET_FITNESS) //
+                  .setMaxGenerations(NUM_GENERATIONS) //
+                  .process();
       Node best = output.best().getNode();
       System.out.println(best);
    }

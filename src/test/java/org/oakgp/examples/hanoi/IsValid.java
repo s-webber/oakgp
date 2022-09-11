@@ -24,6 +24,8 @@ import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
 import org.oakgp.node.ChildNodes;
 
+// TODO move this functionality to TowersOfHanoi and plug-in to FunctionSetBuilder
+// TODO using .add(TowersOfHanoi.class, "isValid")
 /** Determines if a move is a valid move for a particular game state. */
 class IsValid implements Function {
    private static final Signature SIGNATURE = Signature.createSignature(booleanType(), STATE_TYPE, MOVE_TYPE);

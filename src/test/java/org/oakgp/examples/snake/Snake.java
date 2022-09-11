@@ -1,121 +1,176 @@
 package org.oakgp.examples.snake;
 
-import static org.oakgp.examples.snake.Direction.EAST;
-import static org.oakgp.examples.snake.Direction.NORTH;
-import static org.oakgp.examples.snake.Direction.SOUTH;
-import static org.oakgp.examples.snake.Direction.WEST;
-
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-import org.oakgp.Assignments;
-import org.oakgp.node.Node;
-import org.oakgp.rank.fitness.FitnessFunction;
 import org.oakgp.util.JavaUtilRandomAdapter;
 import org.oakgp.util.Random;
 
-final class Snake implements FitnessFunction {
-   private final Random random = new JavaUtilRandomAdapter();
-   private final int width;
-   private final int height;
-   private final Cell[] cells;
-   private final Cell[][] grid;
-
-   Snake(int width) {
-      this.width = width;
-      this.height = width;
-      this.cells = new Cell[height * width];
-      this.grid = new Cell[height][width];
-
-      for (int v = 0; v < height; v++) {
-         for (int h = 0; h < width; h++) {
-            int id = (v * height) + h;
+// http://gpbib.cs.ucl.ac.uk/gp-html/article1175.html
+// https://www.gamedev.net/articles/programming/artificial-intelligence/application-of-genetic-programming-to-the-snake-r1175/
+public final class Snake {
+   private static final Random RANDOM = new JavaUtilRandomAdapter();
+   private static final int WIDTH = 20;
+   private static final int HEIGHT = 11;
+   private static final Cell NULL_CELL = new Cell(-1, -1);
+   private static final Cell[] CELLS = new Cell[HEIGHT * WIDTH];
+   private static final Cell[][] GRID = new Cell[HEIGHT][WIDTH];
+   static {
+      int id = 0;
+      for (int v = 0; v < HEIGHT; v++) {
+         for (int h = 0; h < WIDTH; h++) {
             Cell cell = new Cell(h, v);
-            cells[id] = cell;
-            grid[v][h] = cell;
+            CELLS[id++] = cell;
+            GRID[v][h] = cell;
          }
       }
 
-      for (int v = 0; v < height; v++) {
-         for (int h = 0; h < width; h++) {
-            Cell cell = grid[v][h];
+      for (int v = 0; v < HEIGHT; v++) {
+         for (int h = 0; h < WIDTH; h++) {
+            Cell cell = GRID[v][h];
             if (v > 0) {
-               cell.north = grid[v - 1][h];
+               cell.north = GRID[v - 1][h];
             }
-            if (h < width - 1) {
-               cell.east = grid[v][h + 1];
+            if (h < WIDTH - 1) {
+               cell.east = GRID[v][h + 1];
             }
             if (h > 0) {
-               cell.west = grid[v][h - 1];
+               cell.west = GRID[v][h - 1];
             }
-            if (v < height - 1) {
-               cell.south = grid[v + 1][h];
+            if (v < HEIGHT - 1) {
+               cell.south = GRID[v + 1][h];
             }
          }
       }
    }
 
-   @Override
-   public double evaluate(Node n) {
-      double score = 0;
-      for (int i = 0; i < 5; i++) {
-         score += evaluate(n, false);
+   private final boolean draw;
+   private Cell apple;
+   private Cell head;
+   private final Deque<Cell> tail;
+   private Direction previousMove;
+   private boolean isDead;
+   private int movesWithoutApple;
+
+   Snake(boolean draw) {
+      this.draw = draw;
+      apple = GRID[5][10];
+      head = GRID[10][8];
+      tail = new ArrayDeque<>();
+      Cell temp = head;
+      for (int i = 0; i < 8; i++) {
+         temp = temp.move(Direction.LEFT);
+         tail.addLast(temp);
       }
-      return score;
+      previousMove = Direction.RIGHT;
    }
 
-   public double evaluate(Node n, boolean draw) {
-      Cell head = grid[2][width / 2];
-      Deque<Cell> tail = new ArrayDeque<>();
-      Direction previousMove = NORTH;
-      Cell apple = grid[0][width / 2];
-      int movesWithoutApple = 0;
+   public void forward() {
+      move(previousMove);
+   }
 
-      while (movesWithoutApple < cells.length * 2) {
-         movesWithoutApple++;
+   public void left() {
+      move(previousMove.turnLeft());
+   }
 
-         Assignments assignments = createAssignments(head, tail, previousMove);
-         Direction nextMove = n.evaluate(assignments);
-         if (draw) {
-            draw(head, tail, apple);
-            System.out.println(assignments + " -> " + nextMove);
-         }
+   public void right() {
+      move(previousMove.turnRight());
+   }
 
-         if (nextMove == previousMove.opposite() && !tail.isEmpty()) {
-            // hit self
-            break;
-         }
+   public boolean isFoodAhead() {
+      switch (previousMove) {
+         case UP:
+            return head.x == apple.x && head.y > apple.y;
+         case RIGHT:
+            return head.y == apple.y && head.x < apple.x;
+         case DOWN:
+            return head.x == apple.x && head.y < apple.y;
+         case LEFT:
+            return head.y == apple.y && head.x > apple.x;
+         default:
+            throw new IllegalStateException();
+      }
+   }
 
-         tail.addFirst(head);
-         head = head.move(nextMove);
-         previousMove = nextMove;
+   public boolean isDangerAhead() {
+      return isDanger(head.move(previousMove));
+   }
 
-         if (head == null) {
-            // hit wall
-            break;
-         } else if (tail.contains(head)) {
-            // hit self
-            break;
-         } else if (head == apple) {
-            apple = findEmptyCell(head, tail);
-            movesWithoutApple = 0;
-         } else {
-            tail.pollLast();
-         }
+   public boolean isDangerRight() {
+      return isDanger(head.move(previousMove.turnRight()));
+   }
+
+   public boolean isDangerLeft() {
+      return isDanger(head.move(previousMove.turnLeft()));
+   }
+
+   public boolean isDangerTwoAhead() {
+      Cell oneAhead = head.move(previousMove);
+      return isDanger(oneAhead) || isDanger(oneAhead.move(previousMove));
+   }
+
+   public boolean isFoodUp() {
+      return head.y > apple.y;
+   }
+
+   public boolean isFoodRight() {
+      return head.x < apple.x;
+   }
+
+   public boolean isMovingUp() {
+      return previousMove == Direction.UP;
+   }
+
+   public boolean isMovingDown() {
+      return previousMove == Direction.DOWN;
+   }
+
+   public boolean isMovingLeft() {
+      return previousMove == Direction.LEFT;
+   }
+
+   public boolean isMovingRight() {
+      return previousMove == Direction.RIGHT;
+   }
+
+   private void move(Direction nextMove) {
+      if (gameOver()) {
+         return;
       }
 
-      return cells.length - tail.size();
+      tail.addFirst(head);
+      head = head.move(nextMove);
+      previousMove = nextMove;
+      movesWithoutApple++;
+
+      if (isDanger(head)) {
+         isDead = true;
+         head = NULL_CELL;
+      } else if (head == apple) {
+         apple = findEmptyCell(head, tail);
+         movesWithoutApple = 0;
+      } else {
+         tail.pollLast();
+      }
+
+      if (draw) {
+         draw(head, tail, apple);
+      }
+   }
+
+   private boolean isDanger(Cell c) {
+      return c == null || tail.contains(c);
    }
 
    private Cell findEmptyCell(Cell head, Deque<Cell> tail) {
-      int emptyCellsCount = cells.length - tail.size() - 1;
+      int emptyCellsCount = CELLS.length - tail.size() - 1;
       if (emptyCellsCount == 0) {
-         return null;
+         return NULL_CELL;
       }
 
-      int idx = random.nextInt(emptyCellsCount);
-      for (int i = 0; i < cells.length; i++) {
-         Cell cell = cells[idx];
+      int idx = RANDOM.nextInt(emptyCellsCount);
+      for (int i = 0; i < CELLS.length; i++) {
+         Cell cell = CELLS[idx];
          if (head == cell || tail.contains(cell)) {
             idx++;
          } else if (idx == i) {
@@ -125,27 +180,10 @@ final class Snake implements FitnessFunction {
       throw new IllegalStateException(tail.size() + " ");
    }
 
-   private Assignments createAssignments(Cell head, Deque<Cell> tail, Direction previousMove) {
-      int[] distances = new int[] {distance(head, tail, NORTH), distance(head, tail, EAST), distance(head, tail, SOUTH), distance(head, tail, WEST)};
-      return Assignments.createAssignments(distances, previousMove);
-   }
-
-   private int distance(Cell head, Deque<Cell> tail, Direction d) {
-      int distance = 0;
-
-      Cell next = head.move(d);
-      while (next != null && !tail.contains(next)) {
-         next = next.move(d);
-         distance++;
-      }
-
-      return distance;
-   }
-
    private void draw(Cell head, Deque<Cell> tail, Cell apple) {
-      for (int v = 0; v < height; v++) {
-         for (int h = 0; h < width; h++) {
-            Cell cell = grid[v][h];
+      for (int v = 0; v < HEIGHT; v++) {
+         for (int h = 0; h < WIDTH; h++) {
+            Cell cell = GRID[v][h];
             if (cell == head) {
                System.out.print('H');
             } else if (cell == apple) {
@@ -159,9 +197,16 @@ final class Snake implements FitnessFunction {
          System.out.println();
       }
       System.out.println();
-      try {
-         Thread.sleep(100);
-      } catch (Exception e) {
+   }
+
+   public boolean gameOver() {
+      return isDead || movesWithoutApple > WIDTH * HEIGHT;
+   }
+
+   public int getFitness() {
+      if (tail.size() > 99) {
+         System.out.println("tail size " + tail.size());
       }
+      return CELLS.length - tail.size() - 1;
    }
 }
