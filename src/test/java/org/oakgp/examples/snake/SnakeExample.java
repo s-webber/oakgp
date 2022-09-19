@@ -32,20 +32,8 @@ public class SnakeExample {
       FunctionSet functionSet = new FunctionSetBuilder() //
                   .add(new If(), VOID_TYPE) //
                   .add(new BiSequence()) //
-                  .add(Snake.class, "forward") //
-                  .add(Snake.class, "left") //
-                  .add(Snake.class, "right") //
-                  .add(Snake.class, "isFoodAhead") //
-                  .add(Snake.class, "isDangerAhead") //
-                  .add(Snake.class, "isDangerLeft") //
-                  .add(Snake.class, "isDangerRight") //
-                  .add(Snake.class, "isDangerTwoAhead") //
-                  .add(Snake.class, "isFoodUp") //
-                  .add(Snake.class, "isFoodRight") //
-                  .add(Snake.class, "isMovingUp") //
-                  .add(Snake.class, "isMovingDown") //
-                  .add(Snake.class, "isMovingLeft") //
-                  .add(Snake.class, "isMovingRight") //
+                  .addMethods(Snake.class, "forward", "left", "right", "isFoodAhead", "isDangerAhead", "isDangerLeft", "isDangerRight", "isDangerTwoAhead", "isFoodUp",
+                              "isFoodRight", "isMovingUp", "isMovingDown", "isMovingLeft", "isMovingRight") //
                   .build();
       SnakeFitnessFunction fitnessFunction = new SnakeFitnessFunction();
 

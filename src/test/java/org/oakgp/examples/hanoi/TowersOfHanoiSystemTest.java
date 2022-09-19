@@ -19,7 +19,7 @@ import org.junit.Test;
 
 public class TowersOfHanoiSystemTest {
    @Test
-   public void test() throws Exception {
+   public void test() {
       TowersOfHanoiExample.main(null);
    }
 }

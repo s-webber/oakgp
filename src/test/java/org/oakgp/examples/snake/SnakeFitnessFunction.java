@@ -13,7 +13,7 @@ class SnakeFitnessFunction implements FitnessFunction {
    double evaluate(Node n, boolean draw) {
       int fitness = 0;
 
-      for (int i = 0; i < 4; i++) {
+      for (int i = 0; i < 1; i++) {
          Snake snake = new Snake(draw);
          Assignments assignments = Assignments.createAssignments(snake);
 

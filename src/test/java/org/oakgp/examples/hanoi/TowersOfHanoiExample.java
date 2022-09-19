@@ -50,15 +50,14 @@ public class TowersOfHanoiExample {
    private static final int INITIAL_POPULATION_SIZE = 200;
    private static final int INITIAL_POPULATION_MAX_DEPTH = 4;
 
-   public static void main(String[] args) throws Exception {
+   public static void main(String[] args) {
       FunctionSet functionSet = new FunctionSetBuilder() //
                   .add(new SwitchEnum(Move.class, nullableType(MOVE_TYPE), MOVE_TYPE)) //
                   .add(Equal.getSingleton(), MOVE_TYPE) //
                   .add(new If(), MOVE_TYPE) //
                   .add(GreaterThan.getSingleton(), integerType()) //
                   .add(Equal.getSingleton(), integerType()) //
-                  .add(TowersOfHanoi.class, "upperDisc", Pole.class) //
-                  .add(TowersOfHanoi.class, "isValid", Move.class) //
+                  .addMethods(TowersOfHanoi.class, "upperDisc", "isValid") //
                   .build();
       List<ConstantNode> constants = createConstants();
       Type[] variables = {STATE_TYPE, nullableType(MOVE_TYPE)};

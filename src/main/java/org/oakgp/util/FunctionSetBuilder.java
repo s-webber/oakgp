@@ -42,11 +42,35 @@ public final class FunctionSetBuilder {
       return put(function, function.getSignature());
    }
 
-   public FunctionSetBuilder add(Class<?> target, String methodName, Class<?>... parameterTypes) throws NoSuchMethodException, SecurityException {
-      return add(target.getMethod(methodName, parameterTypes));
+   public FunctionSetBuilder addMethods(Class<?> target, String... methodNames) {
+      for (String methodName : methodNames) {
+         addMethod(target, methodName);
+      }
+      return this;
    }
 
-   public FunctionSetBuilder add(Method method) {
+   public FunctionSetBuilder addMethod(Class<?> target, String methodName) {
+      Method method = null;
+      boolean duplicates = false;
+      for (Method m : target.getMethods()) {
+         if (m.getName().equals(methodName)) {
+            duplicates = method != null;
+            method = m;
+
+            if (method.getParameterCount() == 0) {
+               duplicates = false;
+               break;
+            }
+         }
+      }
+
+      if (method == null) {
+         throw new RuntimeException();
+      }
+      if (duplicates) {
+         throw new RuntimeException();
+      }
+
       Function f = MethodFunction.createFunction(method);
       return put(f, f.getSignature());
    }
