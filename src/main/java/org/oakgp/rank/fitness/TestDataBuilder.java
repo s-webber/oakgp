@@ -50,7 +50,11 @@ public final class TestDataBuilder {
       return values(values.toArray());
    }
 
-   // TODO have version that takes integer
+   public TestDataFitnessFunction<Integer> rankClosenessInteger(Function<Assignments, Integer> f) {
+      return rank(f, (e, a) -> Math.abs(e - a));
+   }
+
+   // TODO share version that takes integer
    public TestDataFitnessFunction<Double> rankCloseness(Function<Assignments, Double> f) {
       return rank(f, (e, a) -> Math.abs(e - a));
    }
