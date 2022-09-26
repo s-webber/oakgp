@@ -22,7 +22,7 @@ public final class MethodFunction {
    public static Function createFunction(Method method) {
       CommonTypes.stringType(); // TODO
       Type[] argumentTypes = getMethodArguments(method);
-      Type returnType = Types.find(method.getReturnType());
+      Type returnType = Types.type(method.getReturnType());
       Signature signature = Signature.createSignature(returnType, argumentTypes);
       return generate(method, signature);
    }
@@ -35,7 +35,7 @@ public final class MethodFunction {
       Parameter[] methodParameters = method.getParameters();
       Type[] argumentTypes = new Type[methodParameters.length];
       for (int i = 0; i < methodParameters.length; i++) {
-         argumentTypes[i] = Types.find(methodParameters[i].getType());
+         argumentTypes[i] = Types.type(methodParameters[i].getType());
       }
       return argumentTypes;
    }
@@ -43,9 +43,9 @@ public final class MethodFunction {
    private static Type[] getInstanceMethodArguments(Method method) {
       Parameter[] methodParameters = method.getParameters();
       Type[] argumentTypes = new Type[methodParameters.length + 1];
-      argumentTypes[0] = Types.find(method.getDeclaringClass());
+      argumentTypes[0] = Types.type(method.getDeclaringClass());
       for (int i = 0; i < methodParameters.length; i++) {
-         argumentTypes[i + 1] = Types.find(methodParameters[i].getType());
+         argumentTypes[i + 1] = Types.type(methodParameters[i].getType());
       }
       return argumentTypes;
    }
@@ -56,7 +56,8 @@ public final class MethodFunction {
       Class<?> functionClass = COMPILER.compileClass(PACKAGE + "." + className, sourceCode);
       try {
          return (Function) functionClass.getConstructor(Signature.class).newInstance(signature);
-      } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+      } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
+            | SecurityException e) {
          throw new RuntimeException(e);
       }
    }
@@ -90,9 +91,15 @@ public final class MethodFunction {
       Class<?> returnType = method.getReturnType();
       boolean isVoidReturnType = returnType == void.class;
       if (isVoidReturnType) {
-         sb.append("Object");
+         sb.append("Void");
       } else if (returnType == boolean.class) {
          sb.append("Boolean");
+      } else if (returnType == int.class) {
+         sb.append("Integer");
+      } else if (returnType == double.class) {
+         sb.append("Double");
+      } else if (returnType.isPrimitive()) {
+         throw new RuntimeException(returnType.toString()); // TODO
       } else {
          sb.append(returnType);
       }
@@ -100,6 +107,7 @@ public final class MethodFunction {
       if (!isVoidReturnType) {
          sb.append("return ");
       }
+      // TODO throw exception if classes or methods are not public
       int offset = 0;
       if (isStatic(method)) {
          sb.append(method.getDeclaringClass().getName());

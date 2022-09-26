@@ -18,6 +18,7 @@ package org.oakgp.primitive;
 import static java.util.Collections.unmodifiableList;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -45,9 +46,10 @@ public final class FunctionSet {
    /**
     * Returns a list of all functions in this set that have the specified return type.
     *
-    * @param type the type to find matching functions of
-    * @return a list of all functions in this set that have the specified return type, or an empty list if there are no
-    * functions with the required return type in this set
+    * @param type
+    *           the type to find matching functions of
+    * @return a list of all functions in this set that have the specified return type, or an empty list if there are no functions with the required return type
+    *         in this set
     */
    public List<Key> getByType(Type type) {
       return functionsByType.getByType(type);
@@ -56,9 +58,10 @@ public final class FunctionSet {
    /**
     * Returns a list of all functions in this set that have the specified signature.
     *
-    * @param signature the signature to find matching functions of
-    * @return a list of all functions in this set that have the specified signature, or {@code null} if there are no
-    * functions with the required signature in this set
+    * @param signature
+    *           the signature to find matching functions of
+    * @return a list of all functions in this set that have the specified signature, or {@code null} if there are no functions with the required signature in
+    *         this set
     */
    public List<Key> getBySignature(Signature signature) {
       // TODO should this return an empty list, rather than null, if no match found?
@@ -80,7 +83,7 @@ public final class FunctionSet {
 
       public Key(Function function, Signature signature) {
          if (signature.isTemplate()) {
-            throw new IllegalArgumentException(function.getDisplayName() + " " + signature.toString());
+            throw new IllegalArgumentException(function.getDisplayName() + " " + signature.toString() + " " + Arrays.toString(signature.getGenerics()));
          }
          this.function = function;
          this.signature = signature;

@@ -108,7 +108,7 @@ public final class PrimitiveSetImpl implements PrimitiveSet {
    public FunctionSet.Key nextFunction(Type type) {
       List<FunctionSet.Key> typeFunctions = functionSet.getByType(type);
       if (typeFunctions == null || typeFunctions.isEmpty()) {
-         throw new IllegalArgumentException("No functions with return type: " + type);
+         throw new IllegalArgumentException("No functions with return type: " + type + " Available return types of function set: " + functionSet);
       }
       int index = nextInt(typeFunctions.size());
       return typeFunctions.get(index);

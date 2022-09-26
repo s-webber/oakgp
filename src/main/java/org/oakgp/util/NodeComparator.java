@@ -62,6 +62,7 @@ public final class NodeComparator implements Comparator<Node>, Serializable {
       if (t1 == t2) {
          int i = o1.getType().getName().compareTo(o2.getType().getName());
          if (i == 0) {
+            // TODO of names equal then check parameters?
             return Integer.compare(o1.hashCode(), o2.hashCode());
          } else {
             return i;
