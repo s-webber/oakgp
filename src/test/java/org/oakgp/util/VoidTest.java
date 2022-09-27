@@ -23,6 +23,7 @@ import static org.oakgp.type.CommonTypes.integerType;
 
 import org.junit.Test;
 import org.oakgp.node.ConstantNode;
+import org.oakgp.type.CommonTypes;
 import org.oakgp.type.Types;
 
 public class VoidTest {
@@ -33,14 +34,9 @@ public class VoidTest {
    }
 
    @Test
-   public void testType() {
-      assertSame(Types.type("void"), Void.VOID_TYPE);
-   }
-
-   @Test
    public void testIsVoid() {
       assertTrue(Void.isVoid(Void.VOID_CONSTANT));
-      assertTrue(Void.isVoid(new ConstantNode(null, Types.type("void"))));
+      assertTrue(Void.isVoid(new ConstantNode(null, CommonTypes.voidType())));
    }
 
    @Test

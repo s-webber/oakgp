@@ -22,7 +22,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
-import org.oakgp.type.Types;
 import org.oakgp.type.Types.Type;
 import org.oakgp.util.Utils;
 
@@ -81,12 +80,14 @@ public final class Signature {
    public Signature create(Type... types) {
       Type[] generics = getGenerics();
       if (types.length != generics.length) {
-         throw new IllegalArgumentException("Wrong number of arguments " + types.length + " != " + generics.length);
+         throw new IllegalArgumentException(
+               "Wrong number of arguments " + types.length + " != " + generics.length + " " + Arrays.toString(types) + " " + Arrays.toString(generics));
       }
 
       Map<Type, Type> assignments = new HashMap<>();
       for (int i = 0; i < types.length; i++) {
-         Types.match(generics[i], types[i], assignments);
+         // TODOTypes.match(generics[i], types[i], assignments);
+         assignments.put(generics[i], types[i]);
       }
 
       Type newReturnType = replace(getReturnType(), assignments);
@@ -136,7 +137,7 @@ public final class Signature {
             Type newParameter = assignments.getOrDefault(originalParameter, originalParameter);
             newParameters[i] = replace(newParameter, assignments);
          }
-         return Types.type(original.getName(), newParameters);
+         return original.replace(newParameters);
       }
    }
 

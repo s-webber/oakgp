@@ -49,7 +49,7 @@ class TypeAssertions {
    static void assertParents(Type t, Type... expected) {
       Set<Type> expectedSet = new HashSet<>();
       expectedSet.addAll(asList(expected));
-      expectedSet.add(Types.type("Object")); // Object is a parent of all other types
+      expectedSet.add(Types.type(Object.class)); // Object is a parent of all other types
       assertEquals(expectedSet, t.getParents());
    }
 }

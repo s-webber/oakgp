@@ -32,6 +32,8 @@ import static org.oakgp.type.TypeAssertions.assertParameters;
 import static org.oakgp.type.TypeAssertions.assertParents;
 import static org.oakgp.type.TypeBuilder.name;
 
+import java.io.Serializable;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.oakgp.type.Types.Type;
@@ -95,7 +97,7 @@ public class TypesTest {
       assertEquals(type, type);
       assertSame(type, Types.type(name, parameter1, parameter2));
       assertName(type, name);
-      assertEquals(type.toString(), name + " [Integer, String]");
+      assertEquals(type.toString(), name + "<java.lang.Integer,java.lang.String>");
       assertParameters(type, integerType(), stringType());
       assertNoParents(type);
 
@@ -116,8 +118,8 @@ public class TypesTest {
 
       assertNoParents(a);
       assertParents(b, a);
-      assertParents(c, b, a);
-      assertParents(d, c, b, a);
+      assertParents(c, b);
+      assertParents(d, c);
    }
 
    @Test
@@ -133,7 +135,7 @@ public class TypesTest {
       Type c = name(uniqueTypeName()).parents(Types.type(b.getName(), stringType)).build();
       assertNoParents(a);
       assertParents(b, Types.type(a.getName(), z, z));
-      assertParents(c, Types.type(a.getName(), stringType, stringType), Types.type(b.getName(), stringType));
+      assertParents(c, Types.type(b.getName(), stringType));
    }
 
    @Test
@@ -152,22 +154,23 @@ public class TypesTest {
 
    @Test
    public void parameter() { // TODO
-      Type superType = CommonTypes.comparableType();
+      Type superType = Types.type(Serializable.class);
       Type subType = CommonTypes.stringType();
 
       String name = uniqueTypeName();
       Type type = name(name).parameters(superType).build();
       assertSame(type, Types.type(name, superType));
-      assertParameterMismatch(name, subType);
+      Type st = Types.type(name, subType);
+      assertEquals(name + "<java.lang.String>", st.toString());
    }
 
    @Test
    public void declareWithParametersThatHasParameter() {
       String name = uniqueTypeName();
 
-      Type type = Types.declareType(name, new Type[0], new Type[] {CommonTypes.listType(CommonTypes.stringType())});
+      Type type = Types.declareType(name, new Type[] { CommonTypes.listType(CommonTypes.stringType()) }, new Type[0]);
       assertEquals(name, type.getName());
-      assertEquals(name + " [List [String]]", type.toString());
+      assertEquals(name + "<java.util.List>", type.toString());
       assertNoParents(type);
       assertSame(type, Types.type(name, CommonTypes.listType(CommonTypes.stringType())));
       assertEquals(type, type);
@@ -195,23 +198,24 @@ public class TypesTest {
       String name = uniqueTypeName();
 
       // declare generic type that has one parent
-      Type superType = CommonTypes.comparableType();
+      Type generic = Types.type(Object.class);
+      Type superType = CommonTypes.comparableType(generic);
       Type parameter = Types.generic("X", superType);
-      assertParents(parameter, CommonTypes.comparableType());
+      assertParents(parameter, CommonTypes.comparableType(generic), Types.type(Object.class));
 
       // string and integer both extend comparable
-      Type template = Types.declareType(name, new Type[0], new Type[] {parameter});
+      Type template = Types.declareType(name, new Type[] { parameter }, new Type[0]);
       Type type1 = Types.type(name, CommonTypes.stringType());
       assertSame(type1, Types.type(name, CommonTypes.stringType()));
-      assertEquals(name + " [String]", type1.toString());
+      assertEquals(name + "<java.lang.String>", type1.toString());
 
       Type type2 = Types.type(name, CommonTypes.integerType());
       assertSame(type2, Types.type(name, CommonTypes.integerType()));
-      assertEquals(name + " [Integer]", type2.toString());
+      assertEquals(name + "<java.lang.Integer>", type2.toString());
 
       Type type3 = Types.type(name, superType);
       assertSame(type3, Types.type(name, superType));
-      assertEquals(name + " [Comparable]", type3.toString());
+      assertEquals(name + "<java.lang.Comparable>", type3.toString());
 
       assertNotEquals(template, type1);
       assertNotEquals(template, type2);
@@ -220,12 +224,14 @@ public class TypesTest {
       assertNotEquals(type1, type3);
       assertNotEquals(type2, type3);
 
+      Types.type(name, Types.declareType(uniqueTypeName(), new Type[0], new Type[] { CommonTypes.comparableType() }));
+
       String anotherName = uniqueTypeName();
       try {
          Types.type(name, Types.declareType(anotherName));
          fail();
-      } catch (RuntimeException e) {
-         assertEquals(anotherName + " not of types [Object, Comparable]", e.getMessage());
+      } catch (IllegalArgumentException e) {
+         assertEquals("Parameter mismatch", e.getMessage());
       }
    }
 
@@ -236,7 +242,7 @@ public class TypesTest {
       assertTrue(type.isAssignable(type));
       assertTrue(type.isAssignable(type));
 
-      Type superType = CommonTypes.comparableType();
+      Type superType = CommonTypes.comparableType(uniqueType());
       Type parameter = Types.generic("X", superType);
 
       // TODO assertFalse(parameter.isAssignable(type));
@@ -250,7 +256,7 @@ public class TypesTest {
       Type x = CommonTypes.listType(CommonTypes.comparableType());
       Type y = CommonTypes.listType(CommonTypes.numberType());
       Type z = CommonTypes.listType(CommonTypes.integerType());
-      assertTrue(y.isAssignable(x));
+      assertFalse(y.isAssignable(x));
       assertTrue(z.isAssignable(y));
       assertTrue(z.isAssignable(x));
    }
@@ -290,14 +296,14 @@ public class TypesTest {
       Type y = Types.generic("Y");
       Type x = Types.generic("X");
       Type string = CommonTypes.stringType();
-      Type xxx = Types.declareType("xxx", new Type[0], new Type[] {y, z});
-      Type zzz = Types.declareType("zzz", new Type[] {Types.type("xxx", x, x)}, new Type[] {x});
+      Type xxx = Types.declareType("xxx", new Type[] { y, z }, new Type[0]);
+      Type zzz = Types.declareType("zzz", new Type[] { x }, new Type[] { Types.type("xxx", x, x) });
       System.out.println("z4" + zzz + " " + zzz.getParents());
       Type listStrings = Types.type("zzz", string);
       System.out.println("z5" + listStrings + " " + listStrings.getParents());
       Type qqq = Types.type("xxx", CommonTypes.bigIntegerType(), CommonTypes.bigDecimalType());
       System.out.println("z6" + qqq + " " + qqq.getParents());
-      Type zzz2 = Types.declareType("zzz2", new Type[] {Types.type("xxx", CommonTypes.bigIntegerType(), CommonTypes.bigDecimalType())}, new Type[0]);
+      Type zzz2 = Types.declareType("zzz2", new Type[] { Types.type("xxx", CommonTypes.bigIntegerType(), CommonTypes.bigDecimalType()) }, new Type[0]);
       System.out.println("z7" + zzz2 + " " + zzz2.getParents());
 
       Type p1 = CommonTypes.listType(x);
@@ -312,7 +318,7 @@ public class TypesTest {
 
    @Test
    public void test1() { // TODO
-      Type type = Types.declareType(uniqueTypeName(), new Type[0], new Type[] {CommonTypes.stringType()});
+      Type type = Types.declareType(uniqueTypeName(), new Type[0], new Type[] { CommonTypes.stringType() });
       try {
          Types.type(type.getName(), Types.generic("X", CommonTypes.bigIntegerType()));
          Assert.fail();

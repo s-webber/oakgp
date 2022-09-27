@@ -17,6 +17,8 @@ package org.oakgp.examples.art;
 
 import static org.oakgp.type.CommonTypes.integerType;
 
+import java.awt.Color;
+
 import org.oakgp.function.math.IntegerUtils;
 import org.oakgp.generate.TreeGeneratorImpl;
 import org.oakgp.node.ChildNodes;
@@ -35,7 +37,7 @@ import org.oakgp.util.JavaUtilRandomAdapter;
 import org.oakgp.util.Utils;
 
 public class ArtFactory {
-   static Type COLOUR_TYPE = Types.declareType("colour");
+   static Type COLOUR_TYPE = Types.type(Color.class);
    private static int TREE_DEPTH = 7;
 
    private final JavaUtilRandomAdapter random;

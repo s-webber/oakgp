@@ -65,6 +65,7 @@ class SubClassFinder extends SimpleFileVisitor<Path> {
       }
 
       String className = getClassName(file);
+      System.out.println(parentClass + " parentClass");
       Class<?> c = createClass(className);
       if (isSubClass(c)) {
          return Optional.of(c);

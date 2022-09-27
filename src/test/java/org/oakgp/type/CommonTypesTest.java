@@ -25,53 +25,65 @@ import static org.oakgp.type.TypeAssertions.assertNoParents;
 import static org.oakgp.type.TypeAssertions.assertParameters;
 import static org.oakgp.type.TypeAssertions.assertParents;
 
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.Collection;
+
 import org.junit.Test;
 import org.oakgp.type.Types.Type;
 
 public class CommonTypesTest {
    @Test
-   public void testComparable() {
-      assertType(CommonTypes.comparableType(), "Comparable");
-   }
-
-   @Test
    public void testNumber() {
-      assertType(CommonTypes.numberType(), "Number", CommonTypes.comparableType());
+      assertType(CommonTypes.numberType(), "java.lang.Number", Types.type(Serializable.class), Types.type(Object.class));
    }
 
    @Test
    public void testString() {
-      assertType(CommonTypes.stringType(), "String", CommonTypes.comparableType());
+      assertType(CommonTypes.stringType(), "java.lang.String", CommonTypes.comparableType(String.class), Types.type(Serializable.class),
+            Types.type(CharSequence.class), Types.type(Object.class));
    }
 
    @Test
    public void testInteger() {
-      assertType(CommonTypes.integerType(), "Integer", CommonTypes.numberType(), CommonTypes.comparableType());
+      assertType(CommonTypes.integerType(), "java.lang.Integer", CommonTypes.numberType(), CommonTypes.comparableType(Integer.class));
    }
 
    @Test
    public void testLong() {
-      assertType(CommonTypes.longType(), "Long", CommonTypes.numberType(), CommonTypes.comparableType());
+      assertType(CommonTypes.longType(), "java.lang.Long", CommonTypes.numberType(), CommonTypes.comparableType(Long.class));
    }
 
    @Test
    public void testDouble() {
-      assertType(CommonTypes.doubleType(), "Double", CommonTypes.numberType(), CommonTypes.comparableType());
+      assertType(CommonTypes.doubleType(), "java.lang.Double", CommonTypes.numberType(), CommonTypes.comparableType(Double.class));
    }
 
    @Test
    public void testBigInteger() {
-      assertType(CommonTypes.bigIntegerType(), "BigInteger", CommonTypes.numberType(), CommonTypes.comparableType());
+      assertType(CommonTypes.bigIntegerType(), "java.math.BigInteger", CommonTypes.numberType(), CommonTypes.comparableType(BigInteger.class));
    }
 
    @Test
    public void testBigDecimal() {
-      assertType(CommonTypes.bigDecimalType(), "BigDecimal", CommonTypes.numberType(), CommonTypes.comparableType());
+      assertType(CommonTypes.bigDecimalType(), "java.math.BigDecimal", CommonTypes.numberType(), CommonTypes.comparableType(BigDecimal.class));
    }
 
    @Test
    public void testBoolean() {
-      assertType(CommonTypes.booleanType(), "Boolean", CommonTypes.comparableType());
+      assertType(CommonTypes.booleanType(), "java.lang.Boolean", CommonTypes.comparableType(Boolean.class), Types.type(Serializable.class),
+            Types.type(Object.class));
+   }
+
+   @Test
+   public void testComparable() {
+      Type elementType = uniqueType();
+      Type comparable = CommonTypes.comparableType(elementType);
+
+      assertSame(comparable, Types.type("java.lang.Comparable", elementType));
+      assertParameters(comparable, elementType);
+      assertNoParents(comparable);
    }
 
    @Test
@@ -79,9 +91,9 @@ public class CommonTypesTest {
       Type elementType = uniqueType();
       Type list = CommonTypes.listType(elementType);
 
-      assertSame(list, Types.type("List", elementType));
+      assertSame(list, Types.type("java.util.List", elementType));
       assertParameters(list, elementType);
-      assertNoParents(list);
+      assertParents(list, Types.type(Collection.class, elementType));
    }
 
    @Test
@@ -94,7 +106,7 @@ public class CommonTypesTest {
       Type argType = uniqueType();
       Type entry = CommonTypes.entryType(argType);
 
-      assertSame(entry, Types.type("Entry", argType, argType));
+      assertSame(entry, Types.type("java.util.Map$Entry", argType, argType));
       assertParameters(entry, argType, argType);
       assertNoParents(entry);
    }
@@ -105,7 +117,7 @@ public class CommonTypesTest {
       Type valueType = uniqueType();
       Type entry = CommonTypes.entryType(keyType, valueType);
 
-      assertSame(entry, Types.type("Entry", keyType, valueType));
+      assertSame(entry, Types.type("java.util.Map$Entry", keyType, valueType));
       assertParameters(entry, keyType, valueType);
       assertNoParents(entry);
    }
@@ -116,7 +128,7 @@ public class CommonTypesTest {
       Type valueType = uniqueType();
       Type map = CommonTypes.mapType(keyType, valueType);
 
-      assertSame(map, Types.type("Map", keyType, valueType));
+      assertSame(map, Types.type(java.util.Map.class, keyType, valueType));
       assertParameters(map, keyType, valueType);
       assertNoParents(map);
    }
@@ -127,7 +139,7 @@ public class CommonTypesTest {
       Type inputType = uniqueType();
       Type function = CommonTypes.functionType(returnType, inputType);
 
-      assertSame(function, Types.type("Function", returnType, inputType));
+      assertSame(function, Types.type("java.util.function.Function", returnType, inputType));
       assertParameters(function, returnType, inputType);
       assertNoParents(function);
    }
@@ -135,18 +147,6 @@ public class CommonTypesTest {
    @Test
    public void testIntegerToBooleanFunction() {
       assertSame(CommonTypes.integerToBooleanFunctionType(), CommonTypes.functionType(CommonTypes.booleanType(), CommonTypes.integerType()));
-   }
-
-   @Test
-   public void testBiFunction() {
-      Type returnType = uniqueType();
-      Type inputType1 = uniqueType();
-      Type inputType2 = uniqueType();
-      Type function = CommonTypes.biFunctionType(returnType, inputType1, inputType2);
-
-      assertSame(function, Types.type("Function", returnType, inputType1, inputType2));
-      assertParameters(function, returnType, inputType1, inputType2);
-      assertNoParents(function);
    }
 
    @Test

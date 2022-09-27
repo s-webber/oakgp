@@ -23,18 +23,18 @@ import org.oakgp.util.FunctionSetBuilder;
 import org.oakgp.util.RunBuilder;
 
 public class SnakeExample {
-   private static final Type SNAKE_TYPE = Types.declareType("Snake"); // TODO pass Snake.class rather than String
+   private static final Type SNAKE_TYPE = Types.type(Snake.class);
    private static final int INITIAL_POPULATION_SIZE = 10000;
    private static final int MAX_GENERATIONS = 500;
    private static final int INITIAL_POPULATION_MAX_DEPTH = 8;
 
    public static void main(String[] args) throws Exception {
       FunctionSet functionSet = new FunctionSetBuilder() //
-                  .add(new If(), VOID_TYPE) //
-                  .add(new BiSequence()) //
-                  .addMethods(Snake.class, "forward", "left", "right", "isFoodAhead", "isDangerAhead", "isDangerLeft", "isDangerRight", "isDangerTwoAhead", "isFoodUp",
-                              "isFoodRight", "isMovingUp", "isMovingDown", "isMovingLeft", "isMovingRight") //
-                  .build();
+            .add(new If(), VOID_TYPE) //
+            .add(new BiSequence()) //
+            .addMethods(Snake.class, "forward", "left", "right", "isFoodAhead", "isDangerAhead", "isDangerLeft", "isDangerRight", "isDangerTwoAhead",
+                  "isFoodUp", "isFoodRight", "isMovingUp", "isMovingDown", "isMovingLeft", "isMovingRight") //
+            .build();
       SnakeFitnessFunction fitnessFunction = new SnakeFitnessFunction();
 
       if (false) {
@@ -49,16 +49,16 @@ public class SnakeExample {
       }
 
       RankedCandidates output = new RunBuilder(). //
-                  setReturnType(VOID_TYPE). //
-                  setConstants(). //
-                  setVariables(SNAKE_TYPE). //
-                  setFunctionSet(functionSet). //
-                  setFitnessFunction(fitnessFunction). //
-                  setInitialPopulationSize(INITIAL_POPULATION_SIZE). //
-                  setTreeDepth(INITIAL_POPULATION_MAX_DEPTH). //
-                  setTargetFitness(0). //
-                  setMaxGenerations(MAX_GENERATIONS). //
-                  process();
+            setReturnType(VOID_TYPE). //
+            setConstants(). //
+            setVariables(SNAKE_TYPE). //
+            setFunctionSet(functionSet). //
+            setFitnessFunction(fitnessFunction). //
+            setInitialPopulationSize(INITIAL_POPULATION_SIZE). //
+            setTreeDepth(INITIAL_POPULATION_MAX_DEPTH). //
+            setTargetFitness(0). //
+            setMaxGenerations(MAX_GENERATIONS). //
+            process();
       Node best = output.best().getNode();
       System.out.println(best);
 

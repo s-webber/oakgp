@@ -63,7 +63,7 @@ public class TypeKeyTest {
 
    @Test
    public void toStringWithParameters() {
-      assertEquals("test1 [Integer, String]", new TypeKey("test1", integerType(), stringType()).toString());
+      assertEquals("test1 [java.lang.Integer, java.lang.String]", new TypeKey("test1", integerType(), stringType()).toString());
    }
 
    @Test

@@ -190,7 +190,7 @@ public class NodeReaderTest {
 
    @Test
    public void testMixedTypeList() {
-      assertReadException("[true 9 false v0]", "Mixed type list elements: Boolean and Integer");
+      assertReadException("[true 9 false v0]", "Mixed type list elements: java.lang.Boolean and java.lang.Integer");
    }
 
    @Test
@@ -237,7 +237,7 @@ public class NodeReaderTest {
    public void testConstantNode() throws IOException {
       String input = "TEST";
       ConstantNode expected = new ConstantNode(input, Types.declareType("testConstantNode"));
-      try (NodeReader r = new NodeReader(input, new Function[0], new ConstantNode[] {expected}, VariableSet.createVariableSet())) {
+      try (NodeReader r = new NodeReader(input, new Function[0], new ConstantNode[] { expected }, VariableSet.createVariableSet())) {
          Node actual = r.readNode();
          assertSame(expected, actual);
       }
@@ -255,12 +255,12 @@ public class NodeReaderTest {
 
    @Test
    public void testMapMixedKeyTypes() throws IOException {
-      assertReadException("{\"a\" 5 6 42 \"c\" 7}", "Mixed type map keys: String and Integer");
+      assertReadException("{\"a\" 5 6 42 \"c\" 7}", "Mixed type map keys: java.lang.String and java.lang.Integer");
    }
 
    @Test
    public void testMapMixedValueTypes() throws IOException {
-      assertReadException("{\"a\" 5 \"b\" \"42\" \"c\" 7}", "Mixed type map values: Integer and String");
+      assertReadException("{\"a\" 5 \"b\" \"42\" \"c\" 7}", "Mixed type map values: java.lang.Integer and java.lang.String");
    }
 
    @Test
@@ -282,7 +282,7 @@ public class NodeReaderTest {
 
    @Test
    public void testMulipleNodes() {
-      String[] inputs = {"6", "(+ v0 v1)", "42", "v0", "(+ 1 2)", "v98"};
+      String[] inputs = { "6", "(+ v0 v1)", "42", "v0", "(+ 1 2)", "v98" };
       String combinedInput = " " + inputs[0] + inputs[1] + inputs[2] + " " + inputs[3] + "\n\r\t\t\t" + inputs[4] + "       \n   " + inputs[5] + "\r\n";
       List<Node> outputs = readNodes(combinedInput);
       assertEquals(inputs.length, outputs.size());

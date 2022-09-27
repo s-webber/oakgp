@@ -15,16 +15,9 @@
  */
 package org.oakgp.type;
 
+import static org.oakgp.TestUtils.uniqueType;
 import static org.oakgp.TestUtils.uniqueTypeName;
-import static org.oakgp.type.CommonTypes.bigDecimalType;
-import static org.oakgp.type.CommonTypes.booleanType;
-import static org.oakgp.type.CommonTypes.comparableType;
-import static org.oakgp.type.CommonTypes.integerType;
-import static org.oakgp.type.CommonTypes.numberType;
-import static org.oakgp.type.CommonTypes.stringType;
 import static org.oakgp.type.TypeAssertions.assertName;
-import static org.oakgp.type.TypeAssertions.assertNoParameters;
-import static org.oakgp.type.TypeAssertions.assertNoParents;
 import static org.oakgp.type.TypeAssertions.assertParameters;
 import static org.oakgp.type.TypeAssertions.assertParents;
 
@@ -33,21 +26,16 @@ import org.oakgp.type.Types.Type;
 
 public class TypeBuilderTest {
    @Test
-   public void createByClass() {
-      Type type = TypeBuilder.name(TypeBuilderTest.class).build();
-
-      assertName(type, "TypeBuilderTest");
-      assertNoParameters(type);
-      assertNoParents(type);
-   }
-
-   @Test
    public void createByString() {
       String expectedName = uniqueTypeName();
-      Type type = TypeBuilder.name(expectedName).parameters(booleanType(), booleanType()).parents(bigDecimalType(), stringType(), integerType()).build();
+      Type b = uniqueType();
+      Type c = uniqueType();
+      Type d = uniqueType();
+      Type e = uniqueType();
+      Type type = TypeBuilder.name(expectedName).parameters(b, b).parents(c, d, e).build();
 
       assertName(type, expectedName);
-      assertParameters(type, booleanType(), booleanType());
-      assertParents(type, bigDecimalType(), stringType(), integerType(), numberType(), comparableType());
+      assertParameters(type, b, b);
+      assertParents(type, c, d, e);
    }
 }

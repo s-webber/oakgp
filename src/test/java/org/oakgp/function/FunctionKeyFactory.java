@@ -16,6 +16,14 @@
 package org.oakgp.function;
 
 import static java.util.stream.Collectors.toList;
+import static org.oakgp.TestUtils.asSet;
+import static org.oakgp.type.CommonTypes.booleanListType;
+import static org.oakgp.type.CommonTypes.booleanType;
+import static org.oakgp.type.CommonTypes.doubleType;
+import static org.oakgp.type.CommonTypes.integerListType;
+import static org.oakgp.type.CommonTypes.integerType;
+import static org.oakgp.type.CommonTypes.listType;
+import static org.oakgp.type.CommonTypes.stringType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,6 +32,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import org.oakgp.function.pair.CreatePair;
 import org.oakgp.primitive.FunctionSet;
 import org.oakgp.type.Types.Type;
 
@@ -31,6 +40,15 @@ import org.oakgp.type.Types.Type;
  * Returns all valid concrete implementations of the given (possibly generic) function using all valid permutations of the given types.
  */
 class FunctionKeyFactory { // TODO rename
+
+   public static void main(String[] args) {
+      Set<Type> allTypes = asSet(integerType(), doubleType(), stringType(), booleanType(), integerListType(), booleanListType(), listType(doubleType()));
+      CreatePair cp = new CreatePair();
+      for (FunctionSet.Key k : createKeys(cp, allTypes)) {
+         System.out.println(">>> " + k);
+      }
+   }
+
    /**
     * Returns all valid concrete implementations of the given (possibly generic) function using all valid permutations of the given types.
     */

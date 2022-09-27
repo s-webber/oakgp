@@ -49,6 +49,7 @@ import org.oakgp.node.ChildNodes;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
+import org.oakgp.node.VariableNode;
 import org.oakgp.primitive.FunctionSet;
 import org.oakgp.primitive.VariableSet;
 import org.oakgp.serialize.NodeReader;
@@ -127,7 +128,6 @@ public abstract class AbstractFunctionTest {
       for (Function f : FunctionsTest.getTestFunctions()) {
          keys.addAll(FunctionKeyFactory.createKeys(f, types));
       }
-
       return new FunctionSet(keys);
    }
 
@@ -264,7 +264,21 @@ public abstract class AbstractFunctionTest {
          simplifiedNode = NodeSimplifier.simplify(inputNode);
 
          // assert simplified version of input matches expected
+         if (!expectedNode.equals(simplifiedNode)) {
+            FunctionNode fn1 = (FunctionNode) expectedNode;
+            FunctionNode fn2 = (FunctionNode) simplifiedNode;
+            System.out.println("expected " + fn1.getFunction() + " " + variableSet.getById(0).getType());
+            System.out.println("actual " + fn2.getFunction());
+            System.out.println(fn1.getFunction() == fn2.getFunction());
+            VariableNode vn1 = (VariableNode) fn1.getChildren().first();
+            VariableNode vn2 = (VariableNode) fn2.getChildren().first();
+            System.out.println(vn1 + " " + vn1.getType());
+            System.out.println(vn2 + " " + vn2.getType());
+            System.out.println(vn1 == vn2);
+            // System.exit(1);
+         }
          assertEquals(expectedNode, simplifiedNode);
+         assertEquals(expectedNode.hashCode(), simplifiedNode.hashCode());
          assertSame(inputNode.getType(), simplifiedNode.getType());
 
          // if the simplified version is a function then assert that:
@@ -287,7 +301,9 @@ public abstract class AbstractFunctionTest {
       private void assertAssignableArgumentTypes(ChildNodes args, Signature signature) {
          assertEquals(args.size(), signature.getArgumentTypesLength());
          for (int i = 0; i < signature.getArgumentTypesLength(); i++) {
-            assertTrue(args.getNode(i).getType().isAssignable(signature.getArgumentType(i)));
+            Type from = args.getNode(i).getType();
+            Type to = signature.getArgumentType(i);
+            assertTrue("cannot assign from " + from + " to " + to + " " + (from == to), from.isAssignable(to));
          }
       }
 

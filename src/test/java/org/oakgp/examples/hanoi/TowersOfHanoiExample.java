@@ -17,7 +17,6 @@ package org.oakgp.examples.hanoi;
 
 import static org.oakgp.type.CommonTypes.integerType;
 import static org.oakgp.type.CommonTypes.nullableType;
-import static org.oakgp.type.Types.declareType;
 import static org.oakgp.util.Utils.createEnumConstants;
 
 import java.util.ArrayList;
@@ -33,17 +32,16 @@ import org.oakgp.node.Node;
 import org.oakgp.primitive.FunctionSet;
 import org.oakgp.rank.RankedCandidates;
 import org.oakgp.rank.fitness.FitnessFunction;
-import org.oakgp.type.CommonTypes;
-import org.oakgp.type.TypeBuilder;
+import org.oakgp.type.Types;
 import org.oakgp.type.Types.Type;
 import org.oakgp.util.FunctionSetBuilder;
 import org.oakgp.util.RunBuilder;
 import org.oakgp.util.Utils;
 
 public class TowersOfHanoiExample {
-   static final Type STATE_TYPE = declareType(TowersOfHanoi.class.getSimpleName());
-   static final Type MOVE_TYPE = TypeBuilder.name(Move.class).parents(CommonTypes.comparableType()).build();
-   static final Type POLE_TYPE = declareType(Pole.class.getSimpleName());
+   static final Type STATE_TYPE = Types.type(TowersOfHanoi.class);
+   static final Type MOVE_TYPE = Types.type(Move.class);
+   static final Type POLE_TYPE = Types.type(Pole.class);
 
    private static final int TARGET_FITNESS = 0;
    private static final int NUM_GENERATIONS = 10000;
@@ -52,28 +50,28 @@ public class TowersOfHanoiExample {
 
    public static void main(String[] args) {
       FunctionSet functionSet = new FunctionSetBuilder() //
-                  .add(new SwitchEnum(Move.class, nullableType(MOVE_TYPE), MOVE_TYPE)) //
-                  .add(Equal.getSingleton(), MOVE_TYPE) //
-                  .add(new If(), MOVE_TYPE) //
-                  .add(GreaterThan.getSingleton(), integerType()) //
-                  .add(Equal.getSingleton(), integerType()) //
-                  .addMethods(TowersOfHanoi.class, "upperDisc", "isValid") //
-                  .build();
+            .add(new SwitchEnum(Move.class, nullableType(MOVE_TYPE), MOVE_TYPE)) //
+            .add(Equal.getSingleton(), MOVE_TYPE) //
+            .add(new If(), MOVE_TYPE) //
+            .add(GreaterThan.getSingleton(), integerType()) //
+            .add(Equal.getSingleton(), integerType()) //
+            .addMethods(TowersOfHanoi.class, "upperDisc", "isValid") //
+            .build();
       List<ConstantNode> constants = createConstants();
-      Type[] variables = {STATE_TYPE, nullableType(MOVE_TYPE)};
+      Type[] variables = { STATE_TYPE, nullableType(MOVE_TYPE) };
       FitnessFunction fitnessFunction = new TowersOfHanoiFitnessFunction(false);
 
       RankedCandidates output = new RunBuilder() //
-                  .setReturnType(MOVE_TYPE) //
-                  .setConstants(constants) //
-                  .setVariables(variables) //
-                  .setFunctionSet(functionSet) //
-                  .setFitnessFunction(fitnessFunction) //
-                  .setInitialPopulationSize(INITIAL_POPULATION_SIZE) //
-                  .setTreeDepth(INITIAL_POPULATION_MAX_DEPTH) //
-                  .setTargetFitness(TARGET_FITNESS) //
-                  .setMaxGenerations(NUM_GENERATIONS) //
-                  .process();
+            .setReturnType(MOVE_TYPE) //
+            .setConstants(constants) //
+            .setVariables(variables) //
+            .setFunctionSet(functionSet) //
+            .setFitnessFunction(fitnessFunction) //
+            .setInitialPopulationSize(INITIAL_POPULATION_SIZE) //
+            .setTreeDepth(INITIAL_POPULATION_MAX_DEPTH) //
+            .setTargetFitness(TARGET_FITNESS) //
+            .setMaxGenerations(NUM_GENERATIONS) //
+            .process();
       Node best = output.best().getNode();
       System.out.println(best);
       new TowersOfHanoiFitnessFunction(true).evaluate(best);

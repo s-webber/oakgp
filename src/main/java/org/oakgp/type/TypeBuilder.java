@@ -23,10 +23,6 @@ public final class TypeBuilder {
    private Type[] parents = new Type[0];
    private Type[] parameters = new Type[0];
 
-   public static TypeBuilder name(Class<?> typeClass) {
-      return name(typeClass.getSimpleName());
-   }
-
    public static TypeBuilder name(String name) {
       return new TypeBuilder(name);
    }
@@ -46,6 +42,6 @@ public final class TypeBuilder {
    }
 
    public Type build() {
-      return Types.declareType(name, parents, parameters);
+      return Types.declareType(name, parameters, parents);
    }
 }

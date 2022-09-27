@@ -66,7 +66,7 @@ public final class CountMap implements Function {
          if (fn.getFunction() instanceof MapperFunction) {
             ChildNodes cn = fn.getChildren();
             Node node = cn.getNode(cn.size() - 1);
-            if (node.getType().getName().equals("List")) { // TODO
+            if (node.getType().getName().equals(java.util.List.class.getName())) { // TODO
                throw new IllegalStateException();
             } else {
                return new FunctionNode(functionNode, ChildNodes.createChildNodes(node));

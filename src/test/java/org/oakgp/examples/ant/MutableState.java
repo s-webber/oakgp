@@ -20,7 +20,7 @@ import org.oakgp.type.Types.Type;
 
 /** Represents the grid and the ant's position within it. */
 class MutableState {
-   static final Type STATE_TYPE = Types.declareType("state");
+   static final Type STATE_TYPE = Types.type(MutableState.class); // TODO move
 
    private boolean[][] grid;
    private int incX = 0;

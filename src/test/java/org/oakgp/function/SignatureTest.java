@@ -22,11 +22,11 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.oakgp.TestUtils.assertUnmodifiable;
 import static org.oakgp.type.CommonTypes.booleanType;
+import static org.oakgp.type.CommonTypes.entryType;
 import static org.oakgp.type.CommonTypes.functionType;
 import static org.oakgp.type.CommonTypes.integerType;
 import static org.oakgp.type.CommonTypes.listType;
 import static org.oakgp.type.CommonTypes.mapType;
-import static org.oakgp.type.CommonTypes.entryType;
 import static org.oakgp.type.CommonTypes.stringType;
 
 import java.util.List;
@@ -75,7 +75,7 @@ public class SignatureTest {
    @Test
    public void testToString() {
       Signature signature = Signature.createSignature(integerType(), booleanType(), integerType(), entryType(stringType(), integerType()));
-      assertEquals("Integer [Boolean, Integer, Entry [String, Integer]]", signature.toString());
+      assertEquals("java.lang.Integer [java.lang.Boolean, java.lang.Integer, java.util.Map$Entry<java.lang.String,java.lang.Integer>]", signature.toString());
    }
 
    @Test
@@ -208,13 +208,13 @@ public class SignatureTest {
       try {
          template.create(booleanType());
       } catch (IllegalArgumentException e) {
-         assertEquals("Wrong number of arguments 1 != 2", e.getMessage());
+         assertEquals("Wrong number of arguments 1 != 2 [java.lang.Boolean] [X, Y]", e.getMessage());
       }
 
       try {
          template.create(booleanType(), booleanType(), booleanType());
       } catch (IllegalArgumentException e) {
-         assertEquals("Wrong number of arguments 3 != 2", e.getMessage());
+         assertEquals("Wrong number of arguments 3 != 2 [java.lang.Boolean, java.lang.Boolean, java.lang.Boolean] [X, Y]", e.getMessage());
       }
    }
 }

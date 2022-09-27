@@ -59,7 +59,7 @@ public final class CountList implements Function {
          if (fn.getFunction() instanceof MapperFunction) {
             ChildNodes cn = fn.getChildren();
             Node node = cn.getNode(cn.size() - 1);
-            if (node.getType().getName().equals("Map")) { // TODO
+            if (node.getType().getName().equals(java.util.Map.class.getName())) { // TODO
                return new FunctionNode(CountMap.getSingleton(), integerType(), ChildNodes.createChildNodes(node));
             } else {
                return new FunctionNode(functionNode, ChildNodes.createChildNodes(node));
