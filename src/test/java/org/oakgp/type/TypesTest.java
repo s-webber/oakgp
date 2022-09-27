@@ -170,7 +170,7 @@ public class TypesTest {
 
       Type type = Types.declareType(name, new Type[] { CommonTypes.listType(CommonTypes.stringType()) }, new Type[0]);
       assertEquals(name, type.getName());
-      assertEquals(name + "<java.util.List>", type.toString());
+      assertEquals(name + "<java.util.List<java.lang.String>>", type.toString());
       assertNoParents(type);
       assertSame(type, Types.type(name, CommonTypes.listType(CommonTypes.stringType())));
       assertEquals(type, type);
@@ -215,7 +215,7 @@ public class TypesTest {
 
       Type type3 = Types.type(name, superType);
       assertSame(type3, Types.type(name, superType));
-      assertEquals(name + "<java.lang.Comparable>", type3.toString());
+      assertEquals(name + "<java.lang.Comparable<java.lang.Object>>", type3.toString());
 
       assertNotEquals(template, type1);
       assertNotEquals(template, type2);

@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -40,6 +41,8 @@ import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.node.VariableNode;
+import org.oakgp.primitive.ConstantSet;
+import org.oakgp.primitive.FunctionSet;
 import org.oakgp.primitive.VariableSet;
 import org.oakgp.type.Types;
 import org.oakgp.util.Void;
@@ -47,7 +50,7 @@ import org.oakgp.util.Void;
 public class NodeReaderTest {
    @Test
    public void testIsEndOfStream() throws IOException {
-      try (NodeReader nr = new NodeReader("1 2 3", new Function[0], new ConstantNode[0], VariableSet.createVariableSet())) {
+      try (NodeReader nr = new NodeReader("1 2 3", new FunctionSet(Collections.emptyList()), new ConstantSet(), VariableSet.createVariableSet())) {
          assertFalse(nr.isEndOfStream());
          nr.readNode();
 
@@ -237,7 +240,7 @@ public class NodeReaderTest {
    public void testConstantNode() throws IOException {
       String input = "TEST";
       ConstantNode expected = new ConstantNode(input, Types.declareType("testConstantNode"));
-      try (NodeReader r = new NodeReader(input, new Function[0], new ConstantNode[] { expected }, VariableSet.createVariableSet())) {
+      try (NodeReader r = new NodeReader(input, new FunctionSet(Collections.emptyList()), new ConstantSet(expected), VariableSet.createVariableSet())) {
          Node actual = r.readNode();
          assertSame(expected, actual);
       }
@@ -271,7 +274,7 @@ public class NodeReaderTest {
    @Test
    public void testUnknown() throws IOException {
       String input = "TEST";
-      try (NodeReader r = new NodeReader(input, new Function[0], new ConstantNode[0], VariableSet.createVariableSet())) {
+      try (NodeReader r = new NodeReader(input, new FunctionSet(Collections.emptyList()), new ConstantSet(), VariableSet.createVariableSet())) {
          r.readNode();
          fail();
       } catch (IllegalArgumentException e) {

@@ -50,6 +50,7 @@ import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.node.VariableNode;
+import org.oakgp.primitive.ConstantSet;
 import org.oakgp.primitive.FunctionSet;
 import org.oakgp.primitive.VariableSet;
 import org.oakgp.serialize.NodeReader;
@@ -151,7 +152,7 @@ public abstract class AbstractFunctionTest {
    }
 
    private Node readNode(String input, VariableSet variableSet) {
-      try (NodeReader nodeReader = new NodeReader(input, getFunctionSet(), new ConstantNode[0], variableSet)) {
+      try (NodeReader nodeReader = new NodeReader(input, getFunctionSet(), new ConstantSet(), variableSet)) {
          return nodeReader.readNode();
       } catch (IOException e) {
          throw new UncheckedIOException(e);

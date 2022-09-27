@@ -22,7 +22,6 @@ import static java.util.Collections.unmodifiableMap;
 import static java.util.stream.Collectors.groupingBy;
 import static org.oakgp.node.NodeType.isFunction;
 import static org.oakgp.type.CommonTypes.booleanType;
-import static org.oakgp.type.CommonTypes.doubleType;
 import static org.oakgp.type.CommonTypes.integerType;
 
 import java.util.ArrayList;
@@ -61,39 +60,7 @@ public final class Utils {
    }
 
    /**
-    * Returns a list consisting of a {@code ConstantNode} instance for each of the possible values of the specified
-    * enum.
-    *
-    * @param e the enum that the {@code ConstantNode} instances should wrap
-    * @param t the {@code Type} that should be associated with the {@code ConstantNode} instances
-    */
-   public static List<ConstantNode> createEnumConstants(Class<? extends Enum<?>> e, Type t) {
-      Enum<?>[] enumConstants = e.getEnumConstants();
-      List<ConstantNode> constants = new ArrayList<>(enumConstants.length);
-      for (Enum<?> enumConstant : enumConstants) {
-         constants.add(new ConstantNode(enumConstant, t));
-      }
-      return constants;
-   }
-
-   /**
-    * Returns a list consisting of a {@code ConstantNode} instance for each of the integer values in the specified
-    * range.
-    *
-    * @param minInclusive the minimum value (inclusive) to be represented by a {@code ConstantNode} in the returned list
-    * @param maxInclusive the minimum value (inclusive) to be represented by a {@code ConstantNode} in the returned list
-    */
-   public static List<ConstantNode> createIntegerConstants(int minInclusive, int maxInclusive) {
-      List<ConstantNode> constants = new ArrayList<>(maxInclusive - minInclusive + 1);
-      for (int i = minInclusive; i <= maxInclusive; i++) {
-         constants.add(new ConstantNode(i, integerType()));
-      }
-      return constants; // TODO make immutable?
-   }
-
-   /**
-    * Creates an array of the specified size and assigns the result of {@link CommonTypes#integerType()} to each
-    * element.
+    * Creates an array of the specified size and assigns the result of {@link CommonTypes#integerType()} to each element.
     */
    public static Type[] createIntegerTypeArray(int size) { // TODO move to TestUtils
       Type[] array = new Type[size];
@@ -110,8 +77,10 @@ public final class Utils {
    /**
     * Returns a map grouping the specified values according to the specified classification function.
     *
-    * @param values the values to group
-    * @param valueToKey the classification function used to group values
+    * @param values
+    *           the values to group
+    * @param valueToKey
+    *           the classification function used to group values
     */
    public static <K, V> Map<K, List<V>> groupBy(V[] values, Function<V, K> valueToKey) {
       return groupBy(Arrays.stream(values), valueToKey);
@@ -120,8 +89,10 @@ public final class Utils {
    /**
     * Returns a map grouping the specified values according to the specified classification function.
     *
-    * @param values the values to group
-    * @param valueToKey the classification function used to group values
+    * @param values
+    *           the values to group
+    * @param valueToKey
+    *           the classification function used to group values
     */
    public static <K, V> Map<K, List<V>> groupBy(Collection<V> values, Function<V, K> valueToKey) {
       return groupBy(values.stream(), valueToKey);
@@ -234,18 +205,5 @@ public final class Utils {
       }
 
       return n;
-   }
-
-   // TODO use BigDecimal
-   public static List<ConstantNode> createDoubleConstants(int count, double min, double max) {
-      // TODO validation
-      List<ConstantNode> result = new ArrayList<>();
-      double increment = (max - min) / count;
-      double value = min;
-      for (int i = 0; i < count; i++) {
-         result.add(new ConstantNode(value, doubleType()));
-         value += increment;
-      }
-      return result;
    }
 }

@@ -17,26 +17,22 @@ package org.oakgp.examples.hanoi;
 
 import static org.oakgp.type.CommonTypes.integerType;
 import static org.oakgp.type.CommonTypes.nullableType;
-import static org.oakgp.util.Utils.createEnumConstants;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import org.oakgp.function.choice.If;
 import org.oakgp.function.choice.SwitchEnum;
 import org.oakgp.function.compare.Equal;
 import org.oakgp.function.compare.GreaterThan;
-import org.oakgp.function.math.IntegerUtils;
-import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
+import org.oakgp.primitive.ConstantSet;
 import org.oakgp.primitive.FunctionSet;
+import org.oakgp.primitive.VariableSet;
 import org.oakgp.rank.RankedCandidates;
 import org.oakgp.rank.fitness.FitnessFunction;
 import org.oakgp.type.Types;
 import org.oakgp.type.Types.Type;
+import org.oakgp.util.ConstantSetBuilder;
 import org.oakgp.util.FunctionSetBuilder;
 import org.oakgp.util.RunBuilder;
-import org.oakgp.util.Utils;
 
 public class TowersOfHanoiExample {
    static final Type STATE_TYPE = Types.type(TowersOfHanoi.class);
@@ -57,14 +53,19 @@ public class TowersOfHanoiExample {
             .add(Equal.getSingleton(), integerType()) //
             .addMethods(TowersOfHanoi.class, "upperDisc", "isValid") //
             .build();
-      List<ConstantNode> constants = createConstants();
-      Type[] variables = { STATE_TYPE, nullableType(MOVE_TYPE) };
+      ConstantSet constantSet = new ConstantSetBuilder() //
+            .addAll(Move.values()) //
+            .addAll(Pole.values()) //
+            .add(0) //
+            .add(true) //
+            .build();
+      VariableSet variableSet = VariableSet.createVariableSet(STATE_TYPE, nullableType(MOVE_TYPE));
       FitnessFunction fitnessFunction = new TowersOfHanoiFitnessFunction(false);
 
       RankedCandidates output = new RunBuilder() //
             .setReturnType(MOVE_TYPE) //
-            .setConstants(constants) //
-            .setVariables(variables) //
+            .setConstants(constantSet) //
+            .setVariables(variableSet) //
             .setFunctionSet(functionSet) //
             .setFitnessFunction(fitnessFunction) //
             .setInitialPopulationSize(INITIAL_POPULATION_SIZE) //
@@ -75,14 +76,5 @@ public class TowersOfHanoiExample {
       Node best = output.best().getNode();
       System.out.println(best);
       new TowersOfHanoiFitnessFunction(true).evaluate(best);
-   }
-
-   private static List<ConstantNode> createConstants() {
-      List<ConstantNode> constants = new ArrayList<>();
-      constants.add(IntegerUtils.INTEGER_UTILS.zero());
-      constants.add(Utils.TRUE_NODE);
-      constants.addAll(createEnumConstants(Move.class, MOVE_TYPE));
-      constants.addAll(createEnumConstants(Pole.class, POLE_TYPE));
-      return constants;
    }
 }

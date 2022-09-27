@@ -23,12 +23,14 @@ import org.oakgp.function.bool.And;
 import org.oakgp.function.bool.Or;
 import org.oakgp.function.bool.Xor;
 import org.oakgp.function.classify.IsFalse;
-import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
+import org.oakgp.primitive.ConstantSet;
 import org.oakgp.primitive.FunctionSet;
+import org.oakgp.primitive.VariableSet;
 import org.oakgp.rank.RankedCandidates;
 import org.oakgp.rank.fitness.TestDataBuilder;
 import org.oakgp.rank.fitness.TestDataFitnessFunction;
+import org.oakgp.util.ConstantSetBuilder;
 import org.oakgp.util.FunctionSetBuilder;
 import org.oakgp.util.RunBuilder;
 
@@ -45,21 +47,29 @@ public class EvenFourParityTest {
 
    @Test
    public void test() {
-      FunctionSet functionSet = new FunctionSetBuilder().addAll(IsFalse.getSingleton(), And.getSingleton(), Or.getSingleton(), Xor.getSingleton()).build();
-      TestDataFitnessFunction<Boolean> fitnessFunction = new TestDataBuilder().booleanValues().booleanValues().booleanValues().booleanValues()
-                  .rankEquality(EvenFourParityTest::getExpectedOutput);
+      FunctionSet functionSet = new FunctionSetBuilder() //
+            .addAll(IsFalse.getSingleton(), And.getSingleton(), Or.getSingleton(), Xor.getSingleton()) //
+            .build();
+      ConstantSet constantSet = new ConstantSetBuilder().addAll(true, false).build();
+      VariableSet variableSet = VariableSet.createVariableSet(booleanType(), booleanType(), booleanType());
+      TestDataFitnessFunction<Boolean> fitnessFunction = new TestDataBuilder() //
+            .booleanValues() //
+            .booleanValues() //
+            .booleanValues() //
+            .booleanValues() //
+            .rankEquality(EvenFourParityTest::getExpectedOutput);
 
       RankedCandidates output = new RunBuilder(). //
-                  setReturnType(booleanType()). //
-                  setConstants(new ConstantNode(true, booleanType()), new ConstantNode(false, booleanType())). //
-                  setVariables(booleanType(), booleanType(), booleanType(), booleanType()). //
-                  setFunctionSet(functionSet). //
-                  setFitnessFunction(fitnessFunction). //
-                  setInitialPopulationSize(INITIAL_POPULATION_SIZE). //
-                  setTreeDepth(INITIAL_POPULATION_MAX_DEPTH). //
-                  setTargetFitness(TARGET_FITNESS). //
-                  setMaxGenerations(NUM_GENERATIONS). //
-                  process();
+            setReturnType(booleanType()). //
+            setConstants(constantSet). //
+            setVariables(variableSet). //
+            setFunctionSet(functionSet). //
+            setFitnessFunction(fitnessFunction). //
+            setInitialPopulationSize(INITIAL_POPULATION_SIZE). //
+            setTreeDepth(INITIAL_POPULATION_MAX_DEPTH). //
+            setTargetFitness(TARGET_FITNESS). //
+            setMaxGenerations(NUM_GENERATIONS). //
+            process();
       Node best = output.best().getNode();
       System.out.println(best);
       fitnessFunction.evaluate(best, System.out::println);

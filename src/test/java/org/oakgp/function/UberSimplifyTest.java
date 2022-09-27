@@ -38,16 +38,15 @@ import org.oakgp.function.compare.NotEqual;
 import org.oakgp.function.math.IntegerUtils;
 import org.oakgp.generate.TreeGenerator;
 import org.oakgp.generate.TreeGeneratorImpl;
-import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
 import org.oakgp.primitive.ConstantSet;
 import org.oakgp.primitive.FunctionSet;
 import org.oakgp.primitive.PrimitiveSet;
 import org.oakgp.primitive.PrimitiveSetImpl;
 import org.oakgp.primitive.VariableSet;
+import org.oakgp.util.ConstantSetBuilder;
 import org.oakgp.util.FunctionSetBuilder;
 import org.oakgp.util.JavaUtilRandomAdapter;
-import org.oakgp.util.Utils;
 
 public class UberSimplifyTest {
    @Test
@@ -99,7 +98,7 @@ public class UberSimplifyTest {
             .add(IntegerUtils.INTEGER_UTILS.getMultiply()) //
             .add(IntegerUtils.INTEGER_UTILS.getSubtract()) //
             .build();
-      ConstantSet constants = new ConstantSet(Utils.createIntegerConstants(-5, 5).toArray(new ConstantNode[0]));
+      ConstantSet constants = new ConstantSetBuilder().integerRange(-5, 5).build();
       VariableSet variables = VariableSet.createVariableSet(integerType(), integerType(), integerType(), booleanType(), booleanType(), booleanType());
       PrimitiveSet primitiveSet = new PrimitiveSetImpl(functions, constants, variables, new JavaUtilRandomAdapter(), .7);
       return primitiveSet;

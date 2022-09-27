@@ -21,12 +21,9 @@ import static org.oakgp.type.CommonTypes.booleanType;
 import static org.oakgp.type.CommonTypes.integerListType;
 import static org.oakgp.type.CommonTypes.integerToBooleanFunctionType;
 import static org.oakgp.type.CommonTypes.integerType;
-import static org.oakgp.util.Utils.createIntegerConstants;
-import static org.oakgp.util.Utils.createIntegerTypeArray;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -46,10 +43,13 @@ import org.oakgp.function.hof.Filter;
 import org.oakgp.function.math.IntegerUtils;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
+import org.oakgp.primitive.ConstantSet;
 import org.oakgp.primitive.FunctionSet;
+import org.oakgp.primitive.VariableSet;
 import org.oakgp.rank.RankedCandidates;
 import org.oakgp.rank.fitness.TestDataFitnessFunction;
 import org.oakgp.type.Types.Type;
+import org.oakgp.util.ConstantSetBuilder;
 import org.oakgp.util.FunctionSetBuilder;
 import org.oakgp.util.RunBuilder;
 
@@ -74,18 +74,24 @@ public class FitnessFunctionSystemTest {
 
    @Test
    public void testTwoVariableArithmeticExpression() {
-      List<ConstantNode> constants = createIntegerConstants(0, 11);
-      Type[] variableTypes = createIntegerTypeArray(2);
-
-      TestDataFitnessFunction<Integer> fitnessFunction = new TestDataFitnessFunction<>(createTests(variableTypes.length, a -> {
+      ConstantSet constantSet = new ConstantSetBuilder().integerRange(0, 11).build();
+      VariableSet variableSet = VariableSet.createVariableSet(integerType(), integerType());
+      TestDataFitnessFunction<Integer> fitnessFunction = new TestDataFitnessFunction<>(createTests(variableSet.size(), a -> {
          int x = (int) a.get(0);
          int y = (int) a.get(1);
          return (x * x) + 2 * y + 3 * x + 5;
       }), (e, a) -> Math.abs(e - a));
 
-      RankedCandidates output = new RunBuilder().setReturnType(integerType()).setConstants(constants).setVariables(variableTypes)
-            .setFunctions(ARITHMETIC_FUNCTIONS).setFitnessFunction(fitnessFunction).setInitialPopulationSize(INITIAL_POPULATION_SIZE)
-            .setTreeDepth(INITIAL_POPULATION_MAX_DEPTH).setMaxGenerations(NUM_GENERATIONS).process();
+      RankedCandidates output = new RunBuilder() //
+            .setReturnType(integerType()) //
+            .setConstants(constantSet) //
+            .setVariables(variableSet) //
+            .setFunctions(ARITHMETIC_FUNCTIONS) //
+            .setFitnessFunction(fitnessFunction) //
+            .setInitialPopulationSize(INITIAL_POPULATION_SIZE) //
+            .setTreeDepth(INITIAL_POPULATION_MAX_DEPTH) //
+            .setMaxGenerations(NUM_GENERATIONS) //
+            .process();
       Node best = output.best().getNode();
       System.out.println(best);
       fitnessFunction.evaluate(best, System.out::println);
@@ -93,19 +99,25 @@ public class FitnessFunctionSystemTest {
 
    @Test
    public void testThreeVariableArithmeticExpression() {
-      List<ConstantNode> constants = createIntegerConstants(0, 11);
-      Type[] variableTypes = createIntegerTypeArray(3);
-
-      TestDataFitnessFunction<Integer> fitnessFunction = new TestDataFitnessFunction<>(createTests(variableTypes.length, a -> {
+      ConstantSet constantSet = new ConstantSetBuilder().integerRange(0, 11).build();
+      VariableSet variableSet = VariableSet.createVariableSet(integerType(), integerType(), integerType());
+      TestDataFitnessFunction<Integer> fitnessFunction = new TestDataFitnessFunction<>(createTests(variableSet.size(), a -> {
          int x = (int) a.get(0);
          int y = (int) a.get(1);
          int z = (int) a.get(2);
          return (x * -3) + (y * 5) - z;
       }), (e, a) -> Math.abs(e - a));
 
-      RankedCandidates output = new RunBuilder().setReturnType(integerType()).setConstants(constants).setVariables(variableTypes)
-            .setFunctions(ARITHMETIC_FUNCTIONS).setFitnessFunction(fitnessFunction).setInitialPopulationSize(INITIAL_POPULATION_SIZE)
-            .setTreeDepth(INITIAL_POPULATION_MAX_DEPTH).setMaxGenerations(NUM_GENERATIONS).process();
+      RankedCandidates output = new RunBuilder() //
+            .setReturnType(integerType()) //
+            .setConstants(constantSet) //
+            .setVariables(variableSet) //
+            .setFunctions(ARITHMETIC_FUNCTIONS) //
+            .setFitnessFunction(fitnessFunction) //
+            .setInitialPopulationSize(INITIAL_POPULATION_SIZE) //
+            .setTreeDepth(INITIAL_POPULATION_MAX_DEPTH) //
+            .setMaxGenerations(NUM_GENERATIONS) //
+            .process();
       Node best = output.best().getNode();
       System.out.println(best);
       fitnessFunction.evaluate(best, System.out::println);
@@ -113,22 +125,32 @@ public class FitnessFunctionSystemTest {
 
    @Test
    public void testTwoVariableBooleanLogicExpression() {
-      List<ConstantNode> constants = createIntegerConstants(0, 5);
-      Type[] variableTypes = createIntegerTypeArray(2);
       FunctionSet functionSet = new FunctionSetBuilder()
-            .addAll(IntegerUtils.INTEGER_UTILS.getAdd(), IntegerUtils.INTEGER_UTILS.getSubtract(), IntegerUtils.INTEGER_UTILS.getMultiply())
-            .add(GreaterThan.getSingleton(), integerType()).add(GreaterThanOrEqual.getSingleton(), integerType()).add(Equal.getSingleton(), integerType())
-            .add(NotEqual.getSingleton(), integerType()).add(new If(), integerType()).build();
-
-      TestDataFitnessFunction<Integer> fitnessFunction = new TestDataFitnessFunction<>(createTests(variableTypes.length, a -> {
+            .addAll(IntegerUtils.INTEGER_UTILS.getAdd(), IntegerUtils.INTEGER_UTILS.getSubtract(), IntegerUtils.INTEGER_UTILS.getMultiply()) //
+            .add(GreaterThan.getSingleton(), integerType()) //
+            .add(GreaterThanOrEqual.getSingleton(), integerType()) //
+            .add(Equal.getSingleton(), integerType()) //
+            .add(NotEqual.getSingleton(), integerType()) //
+            .add(new If(), integerType()) //
+            .build();
+      ConstantSet constantSet = new ConstantSetBuilder().integerRange(0, 5).build();
+      VariableSet variableSet = VariableSet.createVariableSet(integerType(), integerType());
+      TestDataFitnessFunction<Integer> fitnessFunction = new TestDataFitnessFunction<>(createTests(variableSet.size(), a -> {
          int x = (int) a.get(0);
          int y = (int) a.get(1);
          return x > 20 ? x : y;
       }), (e, a) -> Math.abs(e - a));
 
-      RankedCandidates output = new RunBuilder().setReturnType(integerType()).setConstants(constants).setVariables(variableTypes).setFunctionSet(functionSet)
-            .setFitnessFunction(fitnessFunction).setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_POPULATION_MAX_DEPTH)
-            .setMaxGenerations(NUM_GENERATIONS).process();
+      RankedCandidates output = new RunBuilder() //
+            .setReturnType(integerType()) //
+            .setConstants(constantSet) //
+            .setVariables(variableSet) //
+            .setFunctionSet(functionSet) //
+            .setFitnessFunction(fitnessFunction) //
+            .setInitialPopulationSize(INITIAL_POPULATION_SIZE) //
+            .setTreeDepth(INITIAL_POPULATION_MAX_DEPTH) //
+            .setMaxGenerations(NUM_GENERATIONS) //
+            .process();
       Node best = output.best().getNode();
       System.out.println(best);
       fitnessFunction.evaluate(best, System.out::println);

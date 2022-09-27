@@ -16,6 +16,7 @@
 package org.oakgp.primitive;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.oakgp.node.ConstantNode;
@@ -24,11 +25,13 @@ import org.oakgp.util.TypeMap;
 
 /** Represents the range of possible constants to use during a genetic programming run. */
 public final class ConstantSet {
+   private final List<ConstantNode> constants;
    private final TypeMap<ConstantNode> constantsByType;
 
    /** Constructs a constant set containing the specified constants. */
-   public ConstantSet(ConstantNode... constants) {
-      constantsByType = new TypeMap<>(Arrays.asList(constants), ConstantNode::getType);
+   public ConstantSet(ConstantNode... constants) { // TODO take list rather than varargs
+      this.constants = Collections.unmodifiableList(Arrays.asList(constants));
+      this.constantsByType = new TypeMap<>(this.constants, ConstantNode::getType);
    }
 
    /**
@@ -40,5 +43,9 @@ public final class ConstantSet {
     */
    public List<ConstantNode> getByType(Type type) {
       return constantsByType.getByType(type);
+   }
+
+   public List<ConstantNode> getAll() {
+      return constants;
    }
 }

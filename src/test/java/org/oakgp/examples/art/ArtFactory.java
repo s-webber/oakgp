@@ -22,7 +22,6 @@ import java.awt.Color;
 import org.oakgp.function.math.IntegerUtils;
 import org.oakgp.generate.TreeGeneratorImpl;
 import org.oakgp.node.ChildNodes;
-import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.primitive.ConstantSet;
@@ -32,9 +31,9 @@ import org.oakgp.primitive.PrimitiveSetImpl;
 import org.oakgp.primitive.VariableSet;
 import org.oakgp.type.Types;
 import org.oakgp.type.Types.Type;
+import org.oakgp.util.ConstantSetBuilder;
 import org.oakgp.util.FunctionSetBuilder;
 import org.oakgp.util.JavaUtilRandomAdapter;
-import org.oakgp.util.Utils;
 
 public class ArtFactory {
    static Type COLOUR_TYPE = Types.type(Color.class);
@@ -51,9 +50,9 @@ public class ArtFactory {
             .add(IntegerUtils.INTEGER_UTILS.getMultiply()) //
             .add(IntegerUtils.INTEGER_UTILS.getSubtract()) //
             .build();
-      ConstantSet constants = new ConstantSet(Utils.createIntegerConstants(-5, 5).toArray(new ConstantNode[0]));
+      ConstantSet constantSet = new ConstantSetBuilder().integerRange(-5, 5).build();
       VariableSet variables = VariableSet.createVariableSet(integerType(), integerType());
-      this.primitiveSet = new PrimitiveSetImpl(functions, constants, variables, random, .7);
+      this.primitiveSet = new PrimitiveSetImpl(functions, constantSet, variables, random, .7);
    }
 
    FunctionNode generate() {

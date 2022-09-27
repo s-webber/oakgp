@@ -18,18 +18,16 @@ package org.oakgp.examples.simple;
 import static org.oakgp.rank.fitness.DoubleArrayBuilder.doubles;
 import static org.oakgp.type.CommonTypes.doubleType;
 
-import java.util.List;
-
 import org.oakgp.Assignments;
 import org.oakgp.function.Function;
 import org.oakgp.function.math.DoubleUtils;
-import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
+import org.oakgp.primitive.ConstantSet;
 import org.oakgp.rank.RankedCandidates;
 import org.oakgp.rank.fitness.TestDataBuilder;
 import org.oakgp.rank.fitness.TestDataFitnessFunction;
+import org.oakgp.util.ConstantSetBuilder;
 import org.oakgp.util.RunBuilder;
-import org.oakgp.util.Utils;
 
 public class ApproximateSinExample {
    private static final int MAX_GENERATIONS = 2000;
@@ -37,25 +35,23 @@ public class ApproximateSinExample {
    private static final int INITIAL_POPULATION_MAX_DEPTH = 4;
 
    public static void main(String[] args) {
-      Function[] functions = {
-                  DoubleUtils.DOUBLE_UTILS.getAdd(),
-                  DoubleUtils.DOUBLE_UTILS.getSubtract(),
-                  DoubleUtils.DOUBLE_UTILS.getMultiply(),
-                  DoubleUtils.DOUBLE_UTILS.getDivide()};
-      List<ConstantNode> constants = Utils.createDoubleConstants(100, -5.0, 5.0);
-      TestDataFitnessFunction<Double> fitnessFunction = new TestDataBuilder().values(doubles().from(0).to(6.2).increment(.1).build())
-                  .rankCloseness(ApproximateSinExample::getExpectedOutput);
+      Function[] functions = { DoubleUtils.DOUBLE_UTILS.getAdd(), DoubleUtils.DOUBLE_UTILS.getSubtract(), DoubleUtils.DOUBLE_UTILS.getMultiply(),
+            DoubleUtils.DOUBLE_UTILS.getDivide() };
+      ConstantSet constantSet = new ConstantSetBuilder().doubleRange(-5.0, 5.0, 0.1).build();
+      TestDataFitnessFunction<Double> fitnessFunction = new TestDataBuilder() //
+            .values(doubles().from(0).to(6.2).increment(.1).build()) //
+            .rankCloseness(ApproximateSinExample::getExpectedOutput);
 
       RankedCandidates output = new RunBuilder().//
-                  setReturnType(doubleType()). //
-                  setConstants(constants). //
-                  setVariables(doubleType()). //
-                  setFunctions(functions). //
-                  setFitnessFunction(fitnessFunction). //
-                  setInitialPopulationSize(INITIAL_POPULATION_SIZE). //
-                  setTreeDepth(INITIAL_POPULATION_MAX_DEPTH). //
-                  setMaxGenerations(MAX_GENERATIONS) //
-                  .process();
+            setReturnType(doubleType()). //
+            setConstants(constantSet). //
+            setVariables(doubleType()). //
+            setFunctions(functions). //
+            setFitnessFunction(fitnessFunction). //
+            setInitialPopulationSize(INITIAL_POPULATION_SIZE). //
+            setTreeDepth(INITIAL_POPULATION_MAX_DEPTH). //
+            setMaxGenerations(MAX_GENERATIONS) //
+            .process();
       Node best = output.best().getNode();
       System.out.println(best);
       fitnessFunction.evaluate(best, System.out::println);

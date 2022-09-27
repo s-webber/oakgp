@@ -28,7 +28,6 @@ import static org.oakgp.type.CommonTypes.mapType;
 import static org.oakgp.type.CommonTypes.stringType;
 import static org.oakgp.util.Utils.FALSE_NODE;
 import static org.oakgp.util.Utils.TRUE_NODE;
-import static org.oakgp.util.Utils.copyOf;
 import static org.oakgp.util.Void.VOID_CONSTANT;
 
 import java.io.BufferedReader;
@@ -49,12 +48,12 @@ import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.node.VariableNode;
+import org.oakgp.primitive.ConstantSet;
 import org.oakgp.primitive.FunctionSet;
 import org.oakgp.primitive.FunctionSet.Key;
 import org.oakgp.primitive.VariableSet;
 import org.oakgp.type.Types;
 import org.oakgp.type.Types.Type;
-import org.oakgp.util.FunctionSetBuilder;
 
 /**
  * Creates {@code Node} instances from {@code String} representations.
@@ -91,13 +90,8 @@ public final class NodeReader implements Closeable {
    private final Map<Predicate<String>, java.util.function.Function<String, Node>> readers;
    private final CharReader cr;
    private final FunctionSet functionSet;
-   private final ConstantNode[] constants;
+   private final ConstantSet constantSet;
    private final VariableSet variableSet;
-
-   // TODO remove this constructor
-   public NodeReader(String input, Function[] functions, ConstantNode[] constants, VariableSet variableSet) {
-      this(input, new FunctionSetBuilder().addAll(functions).build(), constants, variableSet);
-   }
 
    /**
     * Creates a {@code NodeReader} that reads from the given {@code java.lang.String}.
@@ -111,11 +105,11 @@ public final class NodeReader implements Closeable {
     * @param variableSet
     *           the variable set to use to represent variables read from {@code input}
     */
-   public NodeReader(String input, FunctionSet functionSet, ConstantNode[] constants, VariableSet variableSet) {
+   public NodeReader(String input, FunctionSet functionSet, ConstantSet constantSet, VariableSet variableSet) {
       StringReader sr = new StringReader(input);
       this.cr = new CharReader(new BufferedReader(sr));
       this.functionSet = functionSet;
-      this.constants = copyOf(constants);
+      this.constantSet = constantSet;
       this.variableSet = variableSet;
       this.readers = createReaders();
    }
@@ -326,7 +320,7 @@ public final class NodeReader implements Closeable {
    }
 
    private ConstantNode getConstant(String token) {
-      for (ConstantNode n : constants) {
+      for (ConstantNode n : constantSet.getAll()) {
          if (token.equals(n.toString())) {
             return n;
          }

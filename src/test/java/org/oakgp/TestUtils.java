@@ -68,6 +68,7 @@ import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.node.VariableNode;
+import org.oakgp.primitive.ConstantSet;
 import org.oakgp.primitive.FunctionSet;
 import org.oakgp.primitive.VariableSet;
 import org.oakgp.rank.RankedCandidate;
@@ -135,7 +136,7 @@ public class TestUtils {
 
    private static List<Node> readNodes(String input, VariableSet variableSet) {
       List<Node> outputs = new ArrayList<>();
-      try (NodeReader nr = new NodeReader(input, FUNCTION_SET, new ConstantNode[0], variableSet)) {
+      try (NodeReader nr = new NodeReader(input, FUNCTION_SET, new ConstantSet(), variableSet)) {
          while (!nr.isEndOfStream()) {
             outputs.add(nr.readNode());
          }

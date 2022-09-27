@@ -18,18 +18,16 @@ package org.oakgp.examples.simple;
 import static org.oakgp.rank.fitness.IntegerArrayBuilder.integers;
 import static org.oakgp.type.CommonTypes.integerType;
 
-import java.util.List;
-
 import org.oakgp.Assignments;
 import org.oakgp.function.Function;
 import org.oakgp.function.math.IntegerUtils;
-import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
+import org.oakgp.primitive.ConstantSet;
 import org.oakgp.rank.RankedCandidates;
 import org.oakgp.rank.fitness.TestDataBuilder;
 import org.oakgp.rank.fitness.TestDataFitnessFunction;
+import org.oakgp.util.ConstantSetBuilder;
 import org.oakgp.util.RunBuilder;
-import org.oakgp.util.Utils;
 
 /**
  * An example of using symbolic regression to evolve a program that best fits a given data set for the function {@code x2 + x + 1}.
@@ -46,12 +44,19 @@ public class SymbolicRegressionExample {
       // the fitness function will compare candidates against a data set which maps inputs to their expected outputs
 
       Function[] functions = { IntegerUtils.INTEGER_UTILS.getAdd(), IntegerUtils.INTEGER_UTILS.getSubtract(), IntegerUtils.INTEGER_UTILS.getMultiply() };
-      List<ConstantNode> constants = Utils.createIntegerConstants(0, 10);
-      TestDataFitnessFunction<Integer> fitnessFunction = new TestDataBuilder().values(integers().from(-10).to(10).build())
+      ConstantSet constantSet = new ConstantSetBuilder().integerRange(0, 10).build();
+      TestDataFitnessFunction<Integer> fitnessFunction = new TestDataBuilder() //
+            .values(integers().from(-10).to(10).build()) //
             .rankClosenessInteger(SymbolicRegressionExample::getExpectedOutput);
 
-      RankedCandidates output = new RunBuilder().setReturnType(integerType()).setConstants(constants).setVariables(integerType()).setFunctions(functions)
-            .setFitnessFunction(fitnessFunction).setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_POPULATION_MAX_DEPTH)
+      RankedCandidates output = new RunBuilder() //
+            .setReturnType(integerType()) //
+            .setConstants(constantSet) //
+            .setVariables(integerType()) //
+            .setFunctions(functions) //
+            .setFitnessFunction(fitnessFunction) //
+            .setInitialPopulationSize(INITIAL_POPULATION_SIZE) //
+            .setTreeDepth(INITIAL_POPULATION_MAX_DEPTH) //
             .setTargetFitness(TARGET_FITNESS).process();
       Node best = output.best().getNode();
       System.out.println(best);

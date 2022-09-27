@@ -11,8 +11,8 @@ import org.oakgp.function.ImpureFunction;
 import org.oakgp.function.Signature;
 import org.oakgp.function.choice.If;
 import org.oakgp.node.ChildNodes;
-import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
+import org.oakgp.primitive.ConstantSet;
 import org.oakgp.primitive.FunctionSet;
 import org.oakgp.primitive.VariableSet;
 import org.oakgp.rank.RankedCandidates;
@@ -40,7 +40,7 @@ public class SnakeExample {
       if (false) {
          List<String> lines = Files.readAllLines(new File("src/test/java/org/oakgp/examples/snake/example.tmp").toPath());
          String syntax = String.join(" ", lines);
-         NodeReader nr = new NodeReader(syntax, functionSet, new ConstantNode[0], VariableSet.createVariableSet(SNAKE_TYPE));
+         NodeReader nr = new NodeReader(syntax, functionSet, new ConstantSet(), VariableSet.createVariableSet(SNAKE_TYPE));
          Node node = nr.readNode();
          System.out.println(node);
          fitnessFunction.evaluate(node, true);
@@ -48,17 +48,17 @@ public class SnakeExample {
          System.exit(1);
       }
 
-      RankedCandidates output = new RunBuilder(). //
-            setReturnType(VOID_TYPE). //
-            setConstants(). //
-            setVariables(SNAKE_TYPE). //
-            setFunctionSet(functionSet). //
-            setFitnessFunction(fitnessFunction). //
-            setInitialPopulationSize(INITIAL_POPULATION_SIZE). //
-            setTreeDepth(INITIAL_POPULATION_MAX_DEPTH). //
-            setTargetFitness(0). //
-            setMaxGenerations(MAX_GENERATIONS). //
-            process();
+      RankedCandidates output = new RunBuilder() //
+            .setReturnType(VOID_TYPE) //
+            .setConstants() // TODO .emptyConstantSet()
+            .setVariables(SNAKE_TYPE) //
+            .setFunctionSet(functionSet) //
+            .setFitnessFunction(fitnessFunction) //
+            .setInitialPopulationSize(INITIAL_POPULATION_SIZE) //
+            .setTreeDepth(INITIAL_POPULATION_MAX_DEPTH) //
+            .setTargetFitness(0) //
+            .setMaxGenerations(MAX_GENERATIONS) //
+            .process();
       Node best = output.best().getNode();
       System.out.println(best);
 

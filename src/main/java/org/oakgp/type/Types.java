@@ -12,60 +12,11 @@ import java.util.Map;
 import java.util.Set;
 
 public final class Types {
-   public static void main(String[] args) {
-      // Type type3 = rawType(Object.class);
-      // Type type2 = rawType(Enum.class);
-      // Type type = type(String.class);
-      // System.out.println(type.name);
-      // System.out.println(type);
-      // Type t = type(Deck.class, type);
-      // System.out.println(t.name);
-      // System.out.println(t);
-      //
-      // System.out.println(t == type(Deck.class, type));
-      // System.out.println(t == type(Deck.class, type(String.class)));
-      // System.out.println(type(Deck.class, type(String.class)) == type(Deck.class, type(String.class)));
-      // System.out.println(type(Deck.class, type(String.class)));
-      // System.out.println(type(X.class));
-      // System.out.println(Arrays.toString(type(X.class).parameters));
-      // System.out.println(type(X.class).parents);
-      // for (Type x : RAW_TYPES.values()) {
-      // System.out.println(x);
-      // }
-
-      Type t1 = type(List.class, generic("E", type(Number.class)));
-      Type t2 = type(List.class, type(Integer.class));
-      Type t3 = type(List.class, type(Number.class));
-      Type t4 = type(List.class, type(Object.class));
-      Type t5 = type(List.class, type(String.class));
-      Type t6 = type(List.class, type(Boolean.class));
-
-      System.out.println(t2.isAssignable(t1) == true);
-      System.out.println(t3.isAssignable(t1) == true);
-      System.out.println(t4.isAssignable(t1) == false);
-      System.out.println(t5.isAssignable(t1) == false);
-      System.out.println(t2.isAssignable(t4) == true);
-      System.out.println(t2.isAssignable(t6) == false);
-
-      System.out.println(type(Boolean.class).isAssignable(type(Boolean.class)) == true);
-      System.out.println(type(Boolean.class).isAssignable(type(Integer.class)) == false);
-      System.out.println(type(Integer.class).isAssignable(type(Boolean.class)) == false);
-   }
-
-   static enum X {
-      A, B, C
-   }
-
-   static class Deck<X extends CharSequence> extends HashMap<X, X> {
-
-   }
-
-   private Types() {
-
-   }
-
    private static final Map<RawTypeKey, Type> RAW_TYPES = new HashMap<>();
    private static final Map<TypeKey, Type> CONCRETE_TYPES = new HashMap<>();
+
+   private Types() {
+   }
 
    public static Type generic(String name, Type... parents) {
       Type generic = new Type(name, new Type[0], true);
@@ -119,9 +70,14 @@ public final class Types {
       TypeVariable<?>[] typeParameters = target.getTypeParameters();
       for (int i = 0; i < typeParameters.length; i++) {
          for (java.lang.reflect.Type bound : typeParameters[i].getBounds()) {
-            // TOOD if (!parameters[i].hasParent(concreteType((Class<?>) bound))) {
-            if (!parameters[i].isAssignable(concreteType((Class<?>) bound))) {
-               throw new RuntimeException(parameters[i] + " is not a subclass of " + bound);
+            if (bound.getClass() == Class.class) {
+               if (!parameters[i].isAssignable(concreteType((Class<?>) bound))) {
+                  throw new RuntimeException(parameters[i] + " is not a subclass of " + bound);
+               }
+            } else if (bound instanceof ParameterizedType) {
+               // TODO
+            } else {
+               throw new RuntimeException();
             }
          }
       }
@@ -223,9 +179,8 @@ public final class Types {
             } else if (arg instanceof TypeVariable<?>) {
                TypeVariable<?> typeVariable = ((TypeVariable<?>) arg);
                String name = typeVariable.getName();
-               typeVariable.getBounds(); // TODO
                superClassParameters[i] = parametersMap.get(name);
-               if (superClassParameters[i] == null) {
+               if (superClassParameters[i] == null) { // TODO explain why needed
                   superClassParameters[i] = generic(name);
                   parametersMap.put(name, superClassParameters[i]);
                }
@@ -400,21 +355,6 @@ public final class Types {
          return false;
       }
 
-      // private boolean hasParent(Type t) {
-      // if (this.parents == null) {
-      // throw new RuntimeException(name + " " + Arrays.toString(parameters));
-      // }
-      // for (Type p : parents) {
-      // if (t.equals(p)) {
-      // return true;
-      // }
-      // if (p.hasParent(t)) {
-      // return true;
-      // }
-      // }
-      // return false;
-      // }
-
       @Override
       public String toString() {
          StringBuilder sb = new StringBuilder();
@@ -425,7 +365,7 @@ public final class Types {
                if (i != 0) {
                   sb.append(',');
                }
-               sb.append(parameters[i].name);
+               sb.append(parameters[i]);
             }
             sb.append('>');
          }

@@ -26,13 +26,15 @@ import org.oakgp.function.bool.Xor;
 import org.oakgp.function.classify.IsFalse;
 import org.oakgp.function.pair.CreatePair;
 import org.oakgp.function.pair.Pair;
-import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
+import org.oakgp.primitive.ConstantSet;
 import org.oakgp.primitive.FunctionSet;
+import org.oakgp.primitive.VariableSet;
 import org.oakgp.rank.RankedCandidates;
 import org.oakgp.rank.fitness.TestDataBuilder;
 import org.oakgp.rank.fitness.TestDataFitnessFunction;
 import org.oakgp.type.Types.Type;
+import org.oakgp.util.ConstantSetBuilder;
 import org.oakgp.util.FunctionSetBuilder;
 import org.oakgp.util.RunBuilder;
 
@@ -49,23 +51,30 @@ public class FullAdderTest {
 
    @Test
    public void test() {
-      FunctionSet functionSet = new FunctionSetBuilder().add(new CreatePair(), booleanType(), booleanType())
-                  .addAll(IsFalse.getSingleton(), And.getSingleton(), Or.getSingleton(), Xor.getSingleton()).build();
       Type returnType = entryType(booleanType());
-      TestDataFitnessFunction<Pair<Boolean, Boolean>> fitnessFunction = new TestDataBuilder().booleanValues().booleanValues().booleanValues()
-                  .rankEquality(FullAdderTest::getExpectedOutput);
+      FunctionSet functionSet = new FunctionSetBuilder() //
+            .add(new CreatePair(), booleanType(), booleanType()) //
+            .addAll(IsFalse.getSingleton(), And.getSingleton(), Or.getSingleton(), Xor.getSingleton()) //
+            .build();
+      ConstantSet constantSet = new ConstantSetBuilder().addAll(true, false).build();
+      VariableSet variableSet = VariableSet.createVariableSet(booleanType(), booleanType(), booleanType());
+      TestDataFitnessFunction<Pair<Boolean, Boolean>> fitnessFunction = new TestDataBuilder() //
+            .booleanValues() //
+            .booleanValues() //
+            .booleanValues() //
+            .rankEquality(FullAdderTest::getExpectedOutput);
 
       RankedCandidates output = new RunBuilder(). //
-                  setReturnType(returnType). //
-                  setConstants(new ConstantNode(true, booleanType()), new ConstantNode(false, booleanType())). //
-                  setVariables(booleanType(), booleanType(), booleanType()). //
-                  setFunctionSet(functionSet). //
-                  setFitnessFunction(fitnessFunction). //
-                  setInitialPopulationSize(INITIAL_POPULATION_SIZE). //
-                  setTreeDepth(INITIAL_POPULATION_MAX_DEPTH). //
-                  setTargetFitness(TARGET_FITNESS). //
-                  setMaxGenerations(NUM_GENERATIONS). //
-                  process();
+            setReturnType(returnType). //
+            setConstants(constantSet). //
+            setVariables(variableSet). //
+            setFunctionSet(functionSet). //
+            setFitnessFunction(fitnessFunction). //
+            setInitialPopulationSize(INITIAL_POPULATION_SIZE). //
+            setTreeDepth(INITIAL_POPULATION_MAX_DEPTH). //
+            setTargetFitness(TARGET_FITNESS). //
+            setMaxGenerations(NUM_GENERATIONS). //
+            process();
       Node best = output.best().getNode();
       System.out.println(best);
       fitnessFunction.evaluate(best, System.out::println);

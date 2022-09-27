@@ -35,7 +35,6 @@ import java.util.Map;
 import org.junit.Test;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
-import org.oakgp.type.Types;
 import org.oakgp.type.Types.Type;
 
 public class UtilsTest {
@@ -90,20 +89,6 @@ public class UtilsTest {
    }
 
    @Test
-   public void testCreateIntegerConstants() {
-      int minInclusive = 7;
-      int maxInclusive = 12;
-
-      List<ConstantNode> result = Utils.createIntegerConstants(minInclusive, maxInclusive);
-
-      assertEquals(6, result.size());
-      for (int i = 0; i < result.size(); i++) {
-         assertSame(integerType(), result.get(i).getType());
-         assertEquals(new Integer(i + minInclusive), result.get(i).evaluate(null));
-      }
-   }
-
-   @Test
    public void testCreateIntegerTypeArray() {
       assertIntegerTypeArray(0);
       assertIntegerTypeArray(1);
@@ -126,23 +111,5 @@ public class UtilsTest {
       String[] copy = Utils.copyOf(original);
       assertNotSame(original, copy);
       assertTrue(Arrays.equals(original, copy));
-   }
-
-   @Test
-   public void testCreateEnumConstants() {
-      Type type = Types.declareType("testCreateEnumConstants");
-      TestCreateEnumConstantsEnum[] input = TestCreateEnumConstantsEnum.values();
-
-      List<ConstantNode> result = Utils.createEnumConstants(TestCreateEnumConstantsEnum.class, type);
-
-      assertEquals(input.length, result.size());
-      for (int i = 0; i < result.size(); i++) {
-         assertSame(type, result.get(i).getType());
-         assertSame(input[i], result.get(i).evaluate(null));
-      }
-   }
-
-   private enum TestCreateEnumConstantsEnum {
-      A, B, C
    }
 }
