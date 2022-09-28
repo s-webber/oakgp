@@ -142,7 +142,7 @@ public class ArithmeticExpressionSimplifierTest {
          int[][] assignedValues = { { 0, 0 }, { 1, 21 }, { 2, 14 }, { 3, -6 }, { 7, 3 }, { -1, 9 }, { -7, 0 } };
          for (int[] assignedValue : assignedValues) {
             Assignments assignments = Assignments.createAssignments(assignedValue[0], assignedValue[1]);
-            if (!in.evaluate(assignments).equals(simplifiedVersion.evaluate(assignments))) {
+            if (!in.evaluate(assignments, null).equals(simplifiedVersion.evaluate(assignments, null))) {
                throw new RuntimeException(expectedOutput);
             }
          }

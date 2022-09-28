@@ -27,6 +27,7 @@ import java.util.LinkedHashMap;
 import org.oakgp.Assignments;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
+import org.oakgp.node.AbstractDefinedFunctions;
 import org.oakgp.node.ChildNodes;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
@@ -44,15 +45,15 @@ public final class GroupBy implements Function {
    }
 
    @Override
-   public Object evaluate(ChildNodes arguments, Assignments assignments) {
-      Function f = arguments.first().evaluate(assignments);
+   public Object evaluate(ChildNodes arguments, Assignments assignments, AbstractDefinedFunctions adfs) {
+      Function f = arguments.first().evaluate(assignments, adfs);
       Node second = arguments.second();
       Type type = second.getType().getParameter(0);
-      Collection<Object> elements = second.evaluate(assignments);
+      Collection<Object> elements = second.evaluate(assignments, adfs);
       LinkedHashMap<Object, ArrayList<Object>> result = new LinkedHashMap<>();
       for (Object element : elements) {
          ChildNodes childNodes = ChildNodes.createChildNodes(new ConstantNode(element, type));
-         Object evaluateResult = f.evaluate(childNodes, assignments);
+         Object evaluateResult = f.evaluate(childNodes, assignments, adfs);
          result.computeIfAbsent(evaluateResult, k -> new ArrayList<>()).add(element);
       }
       return unmodifiableMap(result);

@@ -28,7 +28,7 @@ import static org.oakgp.type.CommonTypes.mapType;
 import static org.oakgp.type.CommonTypes.stringType;
 import static org.oakgp.util.Utils.FALSE_NODE;
 import static org.oakgp.util.Utils.TRUE_NODE;
-import static org.oakgp.util.Void.VOID_CONSTANT;
+import static org.oakgp.util.Utils.VOID_NODE;
 
 import java.io.BufferedReader;
 import java.io.Closeable;
@@ -116,10 +116,10 @@ public final class NodeReader implements Closeable {
 
    private Map<Predicate<String>, java.util.function.Function<String, Node>> createReaders() {
       Map<Predicate<String>, java.util.function.Function<String, Node>> m = new LinkedHashMap<>();
-      m.put(NodeReader::isVariable, this::getVariable);
+      m.put(this::isVariable, this::getVariable);
       m.put(s -> "true".equals(s), s -> TRUE_NODE);
       m.put(s -> "false".equals(s), s -> FALSE_NODE);
-      m.put(s -> "void".equals(s), s -> VOID_CONSTANT);
+      m.put(s -> "void".equals(s), s -> VOID_NODE);
       m.put(NodeReader::isLong, this::createLongConstant);
       m.put(NodeReader::isBigInteger, this::createBigIntegerConstant);
       m.put(NodeReader::isBigDecimal, this::createBigDecimalConstant);
@@ -231,7 +231,7 @@ public final class NodeReader implements Closeable {
          } else if (t != n.getType()) {
             throw new IllegalStateException("Mixed type list elements: " + t + " and " + n.getType());
          }
-         arguments.add(n.evaluate(null));
+         arguments.add(n.evaluate(null, null));
       }
       if (t == null) {
          // TODO what is the correct behaviour when the list is empty?
@@ -267,7 +267,7 @@ public final class NodeReader implements Closeable {
             throw new IllegalStateException("Mixed type map values: " + valueType + " and " + value.getType());
          }
 
-         map.put(key.evaluate(null), value.evaluate(null));
+         map.put(key.evaluate(null, null), value.evaluate(null, null));
       }
       if (keyType == null) {
          // TODO what is the correct behaviour when the map is empty?
@@ -291,8 +291,7 @@ public final class NodeReader implements Closeable {
    }
 
    private VariableNode getVariable(String firstToken) {
-      int id = Integer.parseInt(firstToken.substring(1));
-      return variableSet.getById(id);
+      return variableSet.getByName(firstToken);
    }
 
    private ConstantNode createLongConstant(String token) {
@@ -380,8 +379,8 @@ public final class NodeReader implements Closeable {
       return functionType(types[0], types[1]);// TODO
    }
 
-   private static boolean isVariable(String token) {
-      return token.startsWith("v") && isNumber(token.substring(1));
+   private boolean isVariable(String token) {
+      return variableSet.getByName(token) != null;
    }
 
    private static boolean isLong(String token) {

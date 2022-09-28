@@ -40,6 +40,7 @@ import org.oakgp.function.hof.IsNone;
 import org.oakgp.function.pair.Key;
 import org.oakgp.function.pair.Pair;
 import org.oakgp.function.pair.Value;
+import org.oakgp.node.AbstractDefinedFunctions;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
 import org.oakgp.node.NodeType;
@@ -103,7 +104,7 @@ public class PrisonersDilemma {
       Node best = output.best().getNode();
       System.out.println(new NodeWriter().writeNode(best));
       Node wrapper = new Opponent(a -> {
-         Boolean b = best.evaluate(a);
+         Boolean b = best.evaluate(a, null);
          System.out.println(b);
          return b;
       });
@@ -133,8 +134,8 @@ public class PrisonersDilemma {
          double result2 = 0;
 
          for (int round = 0; round < NUM_ROUNDS; round++) {
-            Boolean output1 = player1.evaluate(Assignments.createAssignments(history1));
-            Boolean output2 = player2.evaluate(Assignments.createAssignments(history2));
+            Boolean output1 = player1.evaluate(Assignments.createAssignments(history1), null);
+            Boolean output2 = player2.evaluate(Assignments.createAssignments(history2), null);
             history1.add(new Pair<>(output1, output2));
             history2.add(new Pair<>(output2, output1));
 
@@ -163,7 +164,7 @@ public class PrisonersDilemma {
       }
 
       @Override
-      public Boolean evaluate(Assignments assignments) {
+      public Boolean evaluate(Assignments assignments, AbstractDefinedFunctions adfs) {
          return logic.apply(assignments);
       }
 

@@ -25,6 +25,7 @@ import java.util.List;
 import org.oakgp.Assignments;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
+import org.oakgp.node.AbstractDefinedFunctions;
 import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
@@ -48,11 +49,11 @@ public final class Min implements Function {
       this.signature = Signature.createSignature(type, type, type);
    }
 
-   @SuppressWarnings({"rawtypes", "unchecked"})
+   @SuppressWarnings({ "rawtypes", "unchecked" })
    @Override
-   public Comparable evaluate(ChildNodes arguments, Assignments assignments) {
-      Comparable first = arguments.first().evaluate(assignments);
-      Comparable second = arguments.second().evaluate(assignments);
+   public Comparable evaluate(ChildNodes arguments, Assignments assignments, AbstractDefinedFunctions adfs) {
+      Comparable first = arguments.first().evaluate(assignments, adfs);
+      Comparable second = arguments.second().evaluate(assignments, adfs);
       return first.compareTo(second) < 0 ? first : second;
    }
 

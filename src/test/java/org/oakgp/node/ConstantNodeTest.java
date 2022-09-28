@@ -49,7 +49,7 @@ public class ConstantNodeTest {
    public void testEvaluate() {
       Integer expected = 9;
       ConstantNode n = integerConstant(expected);
-      Object actual = n.evaluate(null);
+      Object actual = n.evaluate(null, null);
       assertSame(expected, actual);
    }
 
@@ -92,7 +92,7 @@ public class ConstantNodeTest {
       final ConstantNode nullConstant = new ConstantNode(null, nullableType(stringType()));
 
       assertEquals("null", nullConstant.toString());
-      assertNull(nullConstant.evaluate(null));
+      assertNull(nullConstant.evaluate(null, null));
       assertTrue(nullConstant.equals(nullConstant));
       assertTrue(nullConstant.equals(new ConstantNode(null, nullableType(stringType()))));
       assertFalse(nullConstant.equals(new ConstantNode(null, nullableType(integerType()))));

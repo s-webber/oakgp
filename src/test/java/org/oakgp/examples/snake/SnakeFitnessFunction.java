@@ -18,7 +18,7 @@ class SnakeFitnessFunction implements FitnessFunction {
          Assignments assignments = Assignments.createAssignments(snake);
 
          while (!snake.gameOver()) {
-            n.evaluate(assignments);
+            n.evaluate(assignments, null);
          }
 
          fitness += snake.getFitness();

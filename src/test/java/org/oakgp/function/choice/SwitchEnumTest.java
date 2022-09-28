@@ -60,7 +60,7 @@ public class SwitchEnumTest extends AbstractFunctionTest {
    }
 
    private ConstantNode nullable(ConstantNode n) {
-      return new ConstantNode(n.evaluate(null), NULLABLE_ENUM_TYPE);
+      return new ConstantNode(n.evaluate(null, null), NULLABLE_ENUM_TYPE);
    }
 
    @Override

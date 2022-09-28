@@ -22,6 +22,7 @@ import static org.oakgp.type.CommonTypes.booleanType;
 import org.oakgp.Assignments;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
+import org.oakgp.node.AbstractDefinedFunctions;
 import org.oakgp.node.ChildNodes;
 
 // TODO move this functionality to TowersOfHanoi and plug-in to FunctionSetBuilder
@@ -36,15 +37,16 @@ class IsValid implements Function {
    }
 
    /**
-    * @param arguments the first argument is a {@code TowersOfHanoi} representing a game state and the second argument
-    * is a {@code Move}
-    * @param assignments the values assigned to each of member of the variable set
+    * @param arguments
+    *           the first argument is a {@code TowersOfHanoi} representing a game state and the second argument is a {@code Move}
+    * @param assignments
+    *           the values assigned to each of member of the variable set
     * @return {@code true} if the specified move is a valid move for the specified game state, else {@code false}
     */
    @Override
-   public Object evaluate(ChildNodes arguments, Assignments assignments) {
-      TowersOfHanoi gameState = arguments.first().evaluate(assignments);
-      Move move = arguments.second().evaluate(assignments);
+   public Object evaluate(ChildNodes arguments, Assignments assignments, AbstractDefinedFunctions adfs) {
+      TowersOfHanoi gameState = arguments.first().evaluate(assignments, adfs);
+      Move move = arguments.second().evaluate(assignments, adfs);
       return gameState.move(move) != null;
    }
 }

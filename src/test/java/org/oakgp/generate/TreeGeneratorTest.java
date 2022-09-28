@@ -28,6 +28,7 @@ import org.junit.Test;
 import org.oakgp.Assignments;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
+import org.oakgp.node.AbstractDefinedFunctions;
 import org.oakgp.node.ChildNodes;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
@@ -101,7 +102,7 @@ public class TreeGeneratorTest {
    private Function createFunction(String displayName, Type returnType, Type... arguments) {
       return new Function() {
          @Override
-         public Object evaluate(ChildNodes arguments, Assignments assignments) {
+         public Object evaluate(ChildNodes arguments, Assignments assignments, AbstractDefinedFunctions adfs) {
             throw new UnsupportedOperationException();
          }
 

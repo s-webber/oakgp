@@ -87,7 +87,7 @@ public final class NodeWriter { // TODO add format option with line breaks and i
    }
 
    private String writeConstantNode(Node node) {
-      Object value = node.evaluate(null);
+      Object value = node.evaluate(null, null);
       return writeRawObject(value);
    }
 

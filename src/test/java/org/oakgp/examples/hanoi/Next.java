@@ -22,6 +22,7 @@ import static org.oakgp.type.CommonTypes.integerType;
 import org.oakgp.Assignments;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
+import org.oakgp.node.AbstractDefinedFunctions;
 import org.oakgp.node.ChildNodes;
 
 //TODO move this functionality to TowersOfHanoi and plug-in to FunctionSetBuilder
@@ -36,15 +37,16 @@ class Next implements Function {
    }
 
    /**
-    * @param arguments the first argument is a {@code TowersOfHanoi} representing a game state and the second argument
-    * is a {@code Pole}
-    * @param assignments the values assigned to each of member of the variable set
+    * @param arguments
+    *           the first argument is a {@code TowersOfHanoi} representing a game state and the second argument is a {@code Pole}
+    * @param assignments
+    *           the values assigned to each of member of the variable set
     * @return the ID of the upper (i.e. top) disc of the specified pole, or {code 0} if there are no discs on the pole
     */
    @Override
-   public Object evaluate(ChildNodes arguments, Assignments assignments) {
-      TowersOfHanoi gameState = arguments.first().evaluate(assignments);
-      Pole pole = arguments.second().evaluate(assignments);
+   public Object evaluate(ChildNodes arguments, Assignments assignments, AbstractDefinedFunctions adfs) {
+      TowersOfHanoi gameState = arguments.first().evaluate(assignments, adfs);
+      Pole pole = arguments.second().evaluate(assignments, adfs);
       return gameState.upperDisc(pole);
    }
 }

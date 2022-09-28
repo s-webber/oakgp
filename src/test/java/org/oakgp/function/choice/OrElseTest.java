@@ -51,14 +51,14 @@ public class OrElseTest extends AbstractFunctionTest {
       ConstantNode arg2 = new ConstantNode("world!", stringType());
       simplify(new FunctionNode(getFunction(), stringType(), arg1, arg2), new ConstantNode("hello", stringType()));
 
-      VariableNode v0 = new VariableNode(0, stringType());
+      VariableNode v0 = new VariableNode(0, null, stringType());
       FunctionNode fn = new FunctionNode(getFunction(), stringType(), v0, arg2);
       simplify(new FunctionNode(getFunction(), stringType(), v0, fn), fn);
 
       simplify(new FunctionNode(getFunction(), stringType(), v0,
             new FunctionNode(getFunction(), stringType(), v0, new FunctionNode(getFunction(), stringType(), v0, fn))), fn);
 
-      VariableNode v1 = new VariableNode(1, stringType());
+      VariableNode v1 = new VariableNode(1, null, stringType());
       simplify(
             new FunctionNode(getFunction(), stringType(), v0,
                   new FunctionNode(getFunction(), stringType(), v1, new FunctionNode(getFunction(), stringType(), v0, fn))),

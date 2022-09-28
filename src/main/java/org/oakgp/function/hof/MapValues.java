@@ -26,6 +26,7 @@ import org.oakgp.Assignments;
 import org.oakgp.function.Function;
 import org.oakgp.function.MapperFunction;
 import org.oakgp.function.Signature;
+import org.oakgp.node.AbstractDefinedFunctions;
 import org.oakgp.node.ChildNodes;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
@@ -33,8 +34,7 @@ import org.oakgp.type.Types;
 import org.oakgp.type.Types.Type;
 
 /**
- * Transforms the given map of values to another map with the same keys but with the given function applied to the
- * values.
+ * Transforms the given map of values to another map with the same keys but with the given function applied to the values.
  */
 public final class MapValues implements MapperFunction {
    private final Signature signature;
@@ -47,15 +47,15 @@ public final class MapValues implements MapperFunction {
    }
 
    @Override
-   public Object evaluate(ChildNodes arguments, Assignments assignments) {
-      Function f = arguments.first().evaluate(assignments);
+   public Object evaluate(ChildNodes arguments, Assignments assignments, AbstractDefinedFunctions adfs) {
+      Function f = arguments.first().evaluate(assignments, adfs);
       Node second = arguments.second();
       Type type = second.getType().getParameter(0);
-      Map<Object, Object> candidates = second.evaluate(assignments);
+      Map<Object, Object> candidates = second.evaluate(assignments, adfs);
       Map<Object, Object> result = new LinkedHashMap<>();
       for (Map.Entry<Object, Object> e : candidates.entrySet()) {
          ChildNodes childNodes = ChildNodes.createChildNodes(new ConstantNode(e.getValue(), type));
-         Object evaluateResult = f.evaluate(childNodes, assignments);
+         Object evaluateResult = f.evaluate(childNodes, assignments, adfs);
          result.put(e.getKey(), evaluateResult);
       }
       return unmodifiableMap(result);

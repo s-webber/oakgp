@@ -22,6 +22,7 @@ import java.util.Collection;
 import org.oakgp.Assignments;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
+import org.oakgp.node.AbstractDefinedFunctions;
 import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
@@ -39,8 +40,8 @@ final class Sum<T extends Comparable<T>> implements Function {
    }
 
    @Override
-   public T evaluate(ChildNodes arguments, Assignments assignments) {
-      Collection<T> input = arguments.first().evaluate(assignments);
+   public T evaluate(ChildNodes arguments, Assignments assignments, AbstractDefinedFunctions adfs) {
+      Collection<T> input = arguments.first().evaluate(assignments, adfs);
       T result = numberUtils.rawZero();
       for (T i : input) {
          result = numberUtils.add(result, i);

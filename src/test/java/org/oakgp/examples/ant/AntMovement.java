@@ -15,17 +15,19 @@
  */
 package org.oakgp.examples.ant;
 
+import static org.oakgp.type.CommonTypes.voidType;
+
 import java.util.function.Consumer;
 
 import org.oakgp.Assignments;
 import org.oakgp.function.Function;
 import org.oakgp.function.ImpureFunction;
 import org.oakgp.function.Signature;
+import org.oakgp.node.AbstractDefinedFunctions;
 import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.node.NodeType;
-import org.oakgp.util.Void;
 
 /** Mutates the state of a {@code MutableState} object. */
 final class AntMovement implements ImpureFunction {
@@ -46,12 +48,12 @@ final class AntMovement implements ImpureFunction {
 
    @Override
    public Signature getSignature() {
-      return Signature.createSignature(Void.VOID_TYPE, MutableState.STATE_TYPE);
+      return Signature.createSignature(voidType(), MutableState.STATE_TYPE);
    }
 
    @Override
-   public Object evaluate(ChildNodes arguments, Assignments assignments) {
-      MutableState state = arguments.first().evaluate(assignments);
+   public Object evaluate(ChildNodes arguments, Assignments assignments, AbstractDefinedFunctions adfs) {
+      MutableState state = arguments.first().evaluate(assignments, adfs);
       movement.accept(state);
       return null;
    }

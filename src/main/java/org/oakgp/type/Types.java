@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.oakgp.util.PrimitiveMapper;
+
 public final class Types {
    private static final Map<RawTypeKey, Type> RAW_TYPES = new HashMap<>();
    private static final Map<TypeKey, Type> CONCRETE_TYPES = new HashMap<>();
@@ -65,7 +67,7 @@ public final class Types {
    }
 
    public static Type type(Class<?> target, Type... parameters) {
-      target = box(target);
+      target = PrimitiveMapper.mapPrimitive(target);
 
       TypeVariable<?>[] typeParameters = target.getTypeParameters();
       for (int i = 0; i < typeParameters.length; i++) {
@@ -85,23 +87,6 @@ public final class Types {
       return concreteType(target, parameters);
    }
 
-   private static Class<?> box(Class<?> target) {
-      if (target.isPrimitive()) {
-         if (target == boolean.class) {
-            target = Boolean.class;
-         } else if (target == int.class) {
-            target = Integer.class;
-         } else if (target == double.class) {
-            target = Double.class;
-         } else if (target == void.class) {
-            target = Void.class;
-         } else {
-            throw new RuntimeException(target.toString()); // TODO
-         }
-      }
-      return target;
-   }
-
    private static Type concreteType(Class<?> target, Type... parameters) {
       TypeKey key = new TypeKey(target.getName(), parameters);
       if (CONCRETE_TYPES.containsKey(key)) {
@@ -110,7 +95,7 @@ public final class Types {
 
       Type rawType = rawType(target);
       Type result = rawType.replace(parameters);
-      CONCRETE_TYPES.put(key, result); // TODO only if doesn't contain generics?
+      CONCRETE_TYPES.put(key, result); // TODO only cache if doesn't contain generics?
       return result;
    }
 

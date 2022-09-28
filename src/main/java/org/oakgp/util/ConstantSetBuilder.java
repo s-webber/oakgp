@@ -12,6 +12,7 @@ import org.oakgp.node.ConstantNode;
 import org.oakgp.primitive.ConstantSet;
 import org.oakgp.type.Types.Type;
 
+// TODO test
 public final class ConstantSetBuilder {
    private final List<ConstantNode> constants = new ArrayList<>();
 
@@ -49,7 +50,7 @@ public final class ConstantSetBuilder {
 
    public ConstantSetBuilder add(Object value) {
       if (value instanceof Type || value instanceof Class || value instanceof ConstantNode) {
-         throw new IllegalArgumentException(value + " " + value.getClass());
+         throw new IllegalArgumentException(value + " " + value.getClass()); // TODO
       }
       return add(value, value.getClass());
    }
@@ -59,6 +60,7 @@ public final class ConstantSetBuilder {
    }
 
    public ConstantSetBuilder add(Object value, Type type) {
+      // TODO use cache for true, false, void, etc.
       constants.add(new ConstantNode(value, type));
       return this;
    }

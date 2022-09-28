@@ -18,6 +18,7 @@ package org.oakgp.function.math;
 import org.oakgp.Assignments;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
+import org.oakgp.node.AbstractDefinedFunctions;
 import org.oakgp.node.ChildNodes;
 import org.oakgp.type.Types.Type;
 
@@ -29,8 +30,8 @@ abstract class ArithmeticOperator<T extends Comparable<T>> implements Function {
    }
 
    @Override
-   public final T evaluate(ChildNodes arguments, Assignments assignments) {
-      return calculate(arguments.first().evaluate(assignments), arguments.second().evaluate(assignments));
+   public final T evaluate(ChildNodes arguments, Assignments assignments, AbstractDefinedFunctions adfs) {
+      return calculate(arguments.first().evaluate(assignments, adfs), arguments.second().evaluate(assignments, adfs));
    }
 
    protected abstract T calculate(T arg1, T arg2);

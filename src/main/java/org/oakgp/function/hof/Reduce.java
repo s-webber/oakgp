@@ -23,6 +23,7 @@ import java.util.Collection;
 import org.oakgp.Assignments;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
+import org.oakgp.node.AbstractDefinedFunctions;
 import org.oakgp.node.ChildNodes;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
@@ -46,8 +47,8 @@ public final class Reduce implements Function {
    /**
     * Creates a higher order functions that recursively applies a function to the elements of a collection.
     *
-    * @param type the type of the elements contained in the collection - this will also be the type associated with the
-    * value produced by evaluating this function
+    * @param type
+    *           the type of the elements contained in the collection - this will also be the type associated with the value produced by evaluating this function
     */
    public Reduce(Type type) {
       // TODO second argument of signature should be for a function that accepts two args, not one
@@ -55,18 +56,18 @@ public final class Reduce implements Function {
    }
 
    @Override
-   public Object evaluate(ChildNodes arguments, Assignments assignments) {
+   public Object evaluate(ChildNodes arguments, Assignments assignments, AbstractDefinedFunctions adfs) {
       Node first = arguments.first();
       Node second = arguments.second();
       Type resultType = second.getType();
       Node third = arguments.third();
       Type elementType = third.getType().getParameter(0);
-      Function f = first.evaluate(assignments);
-      Object result = second.evaluate(assignments);
-      Collection<Object> elements = third.evaluate(assignments);
+      Function f = first.evaluate(assignments, adfs);
+      Object result = second.evaluate(assignments, adfs);
+      Collection<Object> elements = third.evaluate(assignments, adfs);
       for (Object element : elements) {
          ChildNodes childNodes = ChildNodes.createChildNodes(new ConstantNode(result, resultType), new ConstantNode(element, elementType));
-         result = f.evaluate(childNodes, assignments);
+         result = f.evaluate(childNodes, assignments, adfs);
       }
       return result;
    }

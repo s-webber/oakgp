@@ -18,6 +18,7 @@ package org.oakgp.minimax;
 import org.oakgp.Assignments;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
+import org.oakgp.node.AbstractDefinedFunctions;
 import org.oakgp.node.ChildNodes;
 import org.oakgp.type.Types;
 import org.oakgp.type.Types.Type;
@@ -33,7 +34,7 @@ public class MinimaxFunction implements Function { // TODO move from test to mai
    }
 
    @Override
-   public Object evaluate(ChildNodes arguments, Assignments assignments) {
+   public Object evaluate(ChildNodes arguments, Assignments assignments, AbstractDefinedFunctions adfs) {
       return MinimaxSearch.minimax((MinimaxGameState) assignments.get(0), arguments.first(), depth);
    }
 

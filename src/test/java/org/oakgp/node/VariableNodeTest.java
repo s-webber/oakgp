@@ -20,7 +20,6 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
 import static org.oakgp.Assignments.createAssignments;
-import static org.oakgp.TestUtils.createVariable;
 import static org.oakgp.TestUtils.integerConstant;
 import static org.oakgp.type.CommonTypes.integerType;
 
@@ -31,7 +30,7 @@ public class VariableNodeTest {
    @Test
    public void testGetters() {
       final int id = 7;
-      final VariableNode v = createVariable(id);
+      final VariableNode v = new VariableNode(id, null, integerType());
       assertEquals(id, v.getId());
       assertEquals(1, v.getNodeCount());
       assertEquals(1, v.getHeight());
@@ -40,35 +39,39 @@ public class VariableNodeTest {
 
    @Test
    public void testToString() {
-      assertEquals("v5", createVariable(5).toString());
+      assertEquals("v0", new VariableNode(0, null, integerType()).toString());
+      assertEquals("v5", new VariableNode(5, null, integerType()).toString());
+      assertEquals("qwerty", new VariableNode(5, "qwerty", integerType()).toString());
    }
 
    @Test
    public void testEvaluate() {
       final Integer expected = 9;
-      final VariableNode v = createVariable(0);
+      final VariableNode v = new VariableNode(0, null, integerType());
       final Assignments assignments = createAssignments(expected);
-      final Object actual = (int) v.evaluate(assignments);
+      final Object actual = (int) v.evaluate(assignments, null);
       assertSame(expected, actual);
    }
 
    @Test
    public void testEqualsAndHashCode() {
-      final VariableNode n1 = new VariableNode(1, integerType());
-      final VariableNode n2 = new VariableNode(1, integerType());
+      final VariableNode n1 = new VariableNode(1, null, integerType());
+      final VariableNode n2 = new VariableNode(1, null, integerType());
       assertNotSame(n1, n2);
       assertEquals(n1, n1);
       assertEquals(n2, n2);
       assertEquals(n1.hashCode(), n2.hashCode());
+
       // NOTE: *not* over-riding equals(Object) as two VariableNode references are only "equal" if they refer to the same instance
       assertNotEquals(n1, n2);
    }
 
    @Test
    public void testNotEquals() {
-      final VariableNode n = createVariable(1);
-      assertNotEquals(n, createVariable(0));
-      assertNotEquals(n, createVariable(2));
+      final VariableNode n = new VariableNode(1, null, integerType());
+      assertNotEquals(n, new VariableNode(1, null, integerType()));
+      assertNotEquals(n, new VariableNode(2, null, integerType()));
+      assertNotEquals(n, new VariableNode(3, null, integerType()));
       assertNotEquals(n, integerConstant(1));
       assertNotEquals(n, Integer.valueOf(1));
    }

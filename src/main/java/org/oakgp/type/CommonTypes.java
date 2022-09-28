@@ -22,6 +22,8 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 
+import org.oakgp.node.Node;
+import org.oakgp.node.NodeType;
 import org.oakgp.type.Types.Type;
 
 public final class CommonTypes {
@@ -88,6 +90,10 @@ public final class CommonTypes {
    /** Returns the type associated with instances of {@code java.math.BigDecimal}. */
    public static Type bigDecimalType() {
       return BIG_DECIMAL;
+   }
+
+   public static Type voidType() {
+      return VOID;
    }
 
    /** Returns the type associated with a {@code java.util.List} containing elements of the specified type. */
@@ -160,7 +166,8 @@ public final class CommonTypes {
       return t.getName().equals(NULLABLE.getName()); // TODO and check parameters.length == 1
    }
 
-   public static Type voidType() {
-      return VOID;
+   /** Returns {@code true} if the given node is a constant node containing {@link #VOID}. */
+   public static boolean isVoid(Node n) {
+      return NodeType.isConstant(n) && n.getType() == VOID;
    }
 }

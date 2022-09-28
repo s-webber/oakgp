@@ -21,6 +21,7 @@ import static org.oakgp.type.CommonTypes.numberType;
 import org.oakgp.Assignments;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
+import org.oakgp.node.AbstractDefinedFunctions;
 import org.oakgp.node.ChildNodes;
 import org.oakgp.type.Types;
 import org.oakgp.type.Types.Type;
@@ -45,8 +46,8 @@ public final class Logarithm implements Function {
    }
 
    @Override
-   public Double evaluate(ChildNodes arguments, Assignments assignments) {
-      Number a = arguments.first().evaluate(assignments);
+   public Double evaluate(ChildNodes arguments, Assignments assignments, AbstractDefinedFunctions adfs) {
+      Number a = arguments.first().evaluate(assignments, adfs);
       return Math.log(a.doubleValue());
    }
 

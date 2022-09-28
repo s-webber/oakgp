@@ -25,6 +25,7 @@ import org.oakgp.type.Types.Type;
  */
 public final class VariableNode extends TerminalNode {
    private final int id;
+   private final String name;
    private final Type type;
    private final int hashCode;
 
@@ -33,11 +34,14 @@ public final class VariableNode extends TerminalNode {
     *
     * @param id
     *           represents the index to specify when getting the value for this variable from an {@link Assignments}
+    * @param name
+    *           TODO
     * @param type
     *           the {@code Type} that the values represented by this node are of
     */
-   public VariableNode(int id, Type type) {
+   public VariableNode(int id, String name, Type type) {
       this.id = id;
+      this.name = name;
       this.type = type;
       // +1 so never multiplying by 0
       // *997 as an alternative to *31 - so VariableNode with id 1 has a different hash code than a ConstantNode with an Integer with value 1
@@ -60,7 +64,7 @@ public final class VariableNode extends TerminalNode {
     */
    @SuppressWarnings("unchecked")
    @Override
-   public <T> T evaluate(Assignments assignments) {
+   public <T> T evaluate(Assignments assignments, AbstractDefinedFunctions adfs) {
       return (T) assignments.get(id);
    }
 
@@ -89,6 +93,6 @@ public final class VariableNode extends TerminalNode {
 
    @Override
    public String toString() {
-      return "v" + id;
+      return name == null ? "v" + id : name;
    }
 }

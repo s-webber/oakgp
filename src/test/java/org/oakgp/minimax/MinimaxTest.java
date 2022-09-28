@@ -22,6 +22,7 @@ import org.junit.Test;
 import org.oakgp.Assignments;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
+import org.oakgp.node.AbstractDefinedFunctions;
 import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.rank.tournament.TwoPlayerGameResult;
@@ -37,7 +38,7 @@ public class MinimaxTest {
          }
 
          @Override
-         public Object evaluate(ChildNodes arguments, Assignments assignments) {
+         public Object evaluate(ChildNodes arguments, Assignments assignments, AbstractDefinedFunctions adfs) {
             TicTacToe state = (TicTacToe) assignments.get(0);
             return (int) state.getResult().getFitness1();
          }
@@ -49,15 +50,16 @@ public class MinimaxTest {
          }
 
          @Override
-         public Object evaluate(ChildNodes arguments, Assignments assignments) {
+         public Object evaluate(ChildNodes arguments, Assignments assignments, AbstractDefinedFunctions adfs) {
             TicTacToe state = (TicTacToe) assignments.get(0);
             return (int) state.getResult().getFitness2();
          }
       };
       MinimaxFunction f = new MinimaxFunction(-1);
 
-      TwoPlayerGameResult result = new MinimaxGame(TicTacToe::new).evaluate(new FunctionNode(f, f.getSignature().getReturnType(), new FunctionNode(f1, CommonTypes.integerType())),
-                  new FunctionNode(f, f.getSignature().getReturnType(), new FunctionNode(f2, CommonTypes.integerType())));
+      TwoPlayerGameResult result = new MinimaxGame(TicTacToe::new).evaluate(
+            new FunctionNode(f, f.getSignature().getReturnType(), new FunctionNode(f1, CommonTypes.integerType())),
+            new FunctionNode(f, f.getSignature().getReturnType(), new FunctionNode(f2, CommonTypes.integerType())));
       System.out.println(result);
    }
 }
@@ -68,7 +70,7 @@ class TicTacToe implements MinimaxGameState {
    private static final TwoPlayerGameResult NO_WINNER = new TwoPlayerGameResult(0, 0);
    private static final MinimaxGameState[] GAME_OVER = new MinimaxGameState[0];
    private static long BOARD = 0b111_111_111;
-   private static long[] LINES = {0b111, 0b111_000, 0b111_000_000, 0b100_100_100, 0b10_010_010, 0b1_001_001, 0b100_010_001, 0b1_010_100};
+   private static long[] LINES = { 0b111, 0b111_000, 0b111_000_000, 0b100_100_100, 0b10_010_010, 0b1_001_001, 0b100_010_001, 0b1_010_100 };
 
    private final long player1;
    private final long player2;

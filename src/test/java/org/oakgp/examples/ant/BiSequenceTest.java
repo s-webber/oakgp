@@ -22,8 +22,8 @@ import static org.oakgp.examples.ant.AntMovement.LEFT;
 import static org.oakgp.examples.ant.AntMovement.RIGHT;
 import static org.oakgp.examples.ant.BiSequence.BISEQUENCE;
 import static org.oakgp.examples.ant.TriSequence.TRISEQUENCE;
-import static org.oakgp.util.Void.VOID_CONSTANT;
-import static org.oakgp.util.Void.VOID_TYPE;
+import static org.oakgp.type.CommonTypes.voidType;
+import static org.oakgp.util.Utils.VOID_NODE;
 
 import org.junit.Test;
 import org.oakgp.node.ChildNodes;
@@ -32,42 +32,42 @@ import org.oakgp.node.Node;
 import org.oakgp.node.VariableNode;
 
 public class BiSequenceTest {
-   private final Node stateVariable = new VariableNode(0, MutableState.STATE_TYPE);
-   private final Node forward = new FunctionNode(FORWARD, VOID_TYPE, stateVariable);
-   private final Node left = new FunctionNode(LEFT, VOID_TYPE, stateVariable);
-   private final Node right = new FunctionNode(RIGHT, VOID_TYPE, stateVariable);
+   private final Node stateVariable = new VariableNode(0, null, MutableState.STATE_TYPE);
+   private final Node forward = new FunctionNode(FORWARD, voidType(), stateVariable);
+   private final Node left = new FunctionNode(LEFT, voidType(), stateVariable);
+   private final Node right = new FunctionNode(RIGHT, voidType(), stateVariable);
 
    @Test
    public void testSimplifyWhenLeftAndRight() {
-      assertEquals(VOID_CONSTANT, simplify(left, right));
+      assertEquals(VOID_NODE, simplify(left, right));
    }
 
    @Test
    public void testSimplifyWhenRightAndLeft() {
-      assertEquals(VOID_CONSTANT, simplify(right, left));
+      assertEquals(VOID_NODE, simplify(right, left));
    }
 
    @Test
    public void testFirstArgBi() {
-      Node firstArg = new FunctionNode(BISEQUENCE, VOID_TYPE, left, forward);
+      Node firstArg = new FunctionNode(BISEQUENCE, voidType(), left, forward);
       Node secondArg = right;
-      Node expected = new FunctionNode(TRISEQUENCE, VOID_TYPE, left, forward, secondArg);
+      Node expected = new FunctionNode(TRISEQUENCE, voidType(), left, forward, secondArg);
       assertEquals(expected, simplify(firstArg, secondArg));
    }
 
    @Test
    public void testSecondArgBi() {
       Node firstArg = right;
-      Node secondArg = new FunctionNode(BISEQUENCE, VOID_TYPE, forward, left);
-      Node expected = new FunctionNode(TRISEQUENCE, VOID_TYPE, firstArg, forward, left);
+      Node secondArg = new FunctionNode(BISEQUENCE, voidType(), forward, left);
+      Node expected = new FunctionNode(TRISEQUENCE, voidType(), firstArg, forward, left);
       assertEquals(expected, simplify(firstArg, secondArg));
    }
 
    @Test
    public void testBothArgsBi() {
-      Node firstArg = new FunctionNode(BISEQUENCE, VOID_TYPE, left, forward);
-      Node secondArg = new FunctionNode(BISEQUENCE, VOID_TYPE, forward, right);
-      Node expected = new FunctionNode(TRISEQUENCE, VOID_TYPE, left, forward, secondArg);
+      Node firstArg = new FunctionNode(BISEQUENCE, voidType(), left, forward);
+      Node secondArg = new FunctionNode(BISEQUENCE, voidType(), forward, right);
+      Node expected = new FunctionNode(TRISEQUENCE, voidType(), left, forward, secondArg);
       assertEquals(expected, simplify(firstArg, secondArg));
    }
 
@@ -87,6 +87,6 @@ public class BiSequenceTest {
    }
 
    private Node simplify(Node first, Node second) {
-      return BISEQUENCE.simplify(new FunctionNode(BISEQUENCE, VOID_TYPE, ChildNodes.createChildNodes(first, second)));
+      return BISEQUENCE.simplify(new FunctionNode(BISEQUENCE, voidType(), ChildNodes.createChildNodes(first, second)));
    }
 }

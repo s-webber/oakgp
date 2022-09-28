@@ -18,6 +18,7 @@ package org.oakgp.function;
 import static org.oakgp.type.CommonTypes.booleanType;
 
 import org.oakgp.Assignments;
+import org.oakgp.node.AbstractDefinedFunctions;
 import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
@@ -27,10 +28,13 @@ public interface Function {
    /**
     * Returns the result of applying this operation to the specified {@code Arguments}. TODO javadoc
     *
-    * @param arguments represents the arguments to apply to the operation
+    * TODO
+    *
+    * @param arguments
+    *           represents the arguments to apply to the operation
     * @return the result of applying this operation to the {@code arguments}
     */
-   Object evaluate(ChildNodes arguments, Assignments assignments);
+   Object evaluate(ChildNodes arguments, Assignments assignments, AbstractDefinedFunctions adfs);
 
    /** Returns the return type and argument types associated with this function. */
    Signature getSignature();
@@ -38,13 +42,12 @@ public interface Function {
    /**
     * Attempts to find a simplified alternative to applying this function to the specified arguments. TODO javadoc
     * <p>
-    * Simplification can occur by replacing expressions with constant values (e.g. replacing {@code (+ 1 1)} with
-    * {@code 2}) or removing redundant branches (e.g. replacing {@code (if (< 2 3) (+ v0 v1) (* v0 v1))} with
-    * {@code (+ v0 v1)}.
+    * Simplification can occur by replacing expressions with constant values (e.g. replacing {@code (+ 1 1)} with {@code 2}) or removing redundant branches
+    * (e.g. replacing {@code (if (< 2 3) (+ v0 v1) (* v0 v1))} with {@code (+ v0 v1)}.
     *
-    * @param functionNode the arguments to be applied to (i.e. evaluated by) this function
-    * @return a simplified version of applying this function to the specified arguments, or {@code null} if unable to
-    * simplify.
+    * @param functionNode
+    *           the arguments to be applied to (i.e. evaluated by) this function
+    * @return a simplified version of applying this function to the specified arguments, or {@code null} if unable to simplify.
     * @see org.oakgp.NodeSimplifier
     */
    default Node simplify(FunctionNode functionNode) {
@@ -54,8 +57,7 @@ public interface Function {
    /**
     * Returns the {@code String} value to use in the textual representation of this function.
     * <p>
-    * Converts class names to kebab-case function names. Replaces "is-" prefix with "?" suffix in names of boolean
-    * functions.
+    * Converts class names to kebab-case function names. Replaces "is-" prefix with "?" suffix in names of boolean functions.
     */
    default String getDisplayName() {
       StringBuilder sb = new StringBuilder();
@@ -91,9 +93,8 @@ public interface Function {
     * </ol>
     * </p>
     * <p>
-    * If a function is pure then it is <i>referentially transparent</i>. This means that if a function node contains a
-    * pure function, and all its arguments are constants, then the function node can be replaced with the result of
-    * evaluating it. This avoids unnecessary computation and reduces bloat.
+    * If a function is pure then it is <i>referentially transparent</i>. This means that if a function node contains a pure function, and all its arguments are
+    * constants, then the function node can be replaced with the result of evaluating it. This avoids unnecessary computation and reduces bloat.
     * </p>
     * <p>
     * Default implementation always returns {@code true}.

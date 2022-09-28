@@ -1,8 +1,13 @@
 package org.oakgp.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.oakgp.function.pair.Pair;
 import org.oakgp.primitive.VariableSet;
 import org.oakgp.type.Types.Type;
 
+// TODO test
 public class VariableSetBuilder {
    public AnonymousVariableSetBuilder add(Type type) {
       return new AnonymousVariableSetBuilder().add(type);
@@ -17,10 +22,13 @@ public class VariableSetBuilder {
    }
 
    public static class AnonymousVariableSetBuilder {
+      private List<Type> types = new ArrayList<>();
+
       private AnonymousVariableSetBuilder() {
       }
 
       public AnonymousVariableSetBuilder add(Type type) {
+         types.add(type);
          return this;
       }
 
@@ -35,20 +43,23 @@ public class VariableSetBuilder {
       }
 
       public VariableSet build() {
-         return null;
+         return VariableSet.createVariableSet(types.toArray(new Type[types.size()]));
       }
    }
 
    public static class NamedVariableSetBuilder {
+      private List<Pair<String, Type>> types = new ArrayList<>();
+
       private NamedVariableSetBuilder() {
       }
 
       public NamedVariableSetBuilder add(String name, Type type) {
+         types.add(new Pair<>(name, type));
          return this;
       }
 
       public VariableSet build() {
-         return null;
+         return VariableSet.createVariableSet(types.toArray(new Pair[types.size()]));
       }
    }
 }

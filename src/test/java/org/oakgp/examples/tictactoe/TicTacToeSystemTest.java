@@ -25,6 +25,7 @@ import org.oakgp.NodeSimplifier;
 import org.oakgp.function.bool.And;
 import org.oakgp.function.choice.If;
 import org.oakgp.function.choice.OrElse;
+import org.oakgp.node.AbstractDefinedFunctions;
 import org.oakgp.node.Node;
 import org.oakgp.primitive.ConstantSet;
 import org.oakgp.primitive.FunctionSet;
@@ -125,13 +126,13 @@ public class TicTacToeSystemTest {
       private Node[] ais = new Node[] { //
             new DummyNode() {
                @Override
-               public Move evaluate(Assignments assignments) {
+               public Move evaluate(Assignments assignments, AbstractDefinedFunctions adfs) {
                   Board board = (Board) assignments.get(0);
                   return board.getFreeMove();
                }
             }, new DummyNode() {
                @Override
-               public Move evaluate(Assignments assignments) {
+               public Move evaluate(Assignments assignments, AbstractDefinedFunctions adfs) {
                   Board board = (Board) assignments.get(0);
                   Move nextMove = board.getWinningMove(Symbol.X);
                   if (nextMove == null) {
@@ -141,7 +142,7 @@ public class TicTacToeSystemTest {
                }
             }, new DummyNode() {
                @Override
-               public Move evaluate(Assignments assignments) {
+               public Move evaluate(Assignments assignments, AbstractDefinedFunctions adfs) {
                   Board board = (Board) assignments.get(0);
                   Move nextMove = board.getWinningMove(Symbol.O);
                   if (nextMove == null) {
@@ -151,7 +152,7 @@ public class TicTacToeSystemTest {
                }
             }, new DummyNode() {
                @Override
-               public Move evaluate(Assignments assignments) {
+               public Move evaluate(Assignments assignments, AbstractDefinedFunctions adfs) {
                   Board board = (Board) assignments.get(0);
                   Move nextMove = board.getWinningMove(Symbol.X);
                   if (nextMove == null) {
@@ -170,7 +171,7 @@ public class TicTacToeSystemTest {
                }
             }, new DummyNode() {
                @Override
-               public Move evaluate(Assignments assignments) {
+               public Move evaluate(Assignments assignments, AbstractDefinedFunctions adfs) {
                   Board board = (Board) assignments.get(0);
                   Move nextMove = board.getWinningMove(Symbol.X);
                   if (nextMove == null) {

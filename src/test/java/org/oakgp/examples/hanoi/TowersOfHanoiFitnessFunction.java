@@ -33,7 +33,8 @@ class TowersOfHanoiFitnessFunction implements FitnessFunction {
    }
 
    /**
-    * @param n a potential solution to the Towers of Hanoi puzzle
+    * @param n
+    *           a potential solution to the Towers of Hanoi puzzle
     * @return the fitness of {@code n}
     */
    @Override
@@ -47,7 +48,7 @@ class TowersOfHanoiFitnessFunction implements FitnessFunction {
       while (true) {
          // update the puzzle with the next move returned from the potential solution
          Assignments assignments = Assignments.createAssignments(towersOfHanoi, previousMove);
-         previousMove = n.evaluate(assignments);
+         previousMove = n.evaluate(assignments, null);
          towersOfHanoi = towersOfHanoi.move(previousMove);
          if (doLog) {
             System.out.println(previousMove + " " + towersOfHanoi);

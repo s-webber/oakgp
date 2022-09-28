@@ -23,6 +23,7 @@ import static java.util.stream.Collectors.groupingBy;
 import static org.oakgp.node.NodeType.isFunction;
 import static org.oakgp.type.CommonTypes.booleanType;
 import static org.oakgp.type.CommonTypes.integerType;
+import static org.oakgp.type.CommonTypes.voidType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -51,6 +52,12 @@ public final class Utils {
    public static final ConstantNode TRUE_NODE = new ConstantNode(TRUE, booleanType());
    /** Represents the boolean value {@code false}. */
    public static final ConstantNode FALSE_NODE = new ConstantNode(FALSE, booleanType());
+   public static final ConstantNode VOID_NODE = new ConstantNode(new Object() {
+      @Override
+      public String toString() {
+         return "void";
+      }
+   }, voidType());
    // TODO have immutable list of TRUE_NODE and FALSE_NODE so can do constants.addAll(BOOLEANS) or Utils.createBooleanConstants()
    // TODO check using TRUE_NODE and FALSE_NODE in examples rather than create new ConstantNodes each time
 

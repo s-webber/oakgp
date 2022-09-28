@@ -28,6 +28,7 @@ import org.junit.ComparisonFailure;
 import org.junit.Test;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
+import org.oakgp.node.AbstractDefinedFunctions;
 import org.oakgp.node.ChildNodes;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
@@ -77,7 +78,7 @@ public class NodeSimplifierTest {
       Node output = NodeSimplifier.simplify(input);
       assertSame(FunctionNode.class, output.getClass());
       assertEquals("(- (* 37 v0) 1)", output.toString());
-      assertEquals(73, (int) output.evaluate(Assignments.createAssignments(2)));
+      assertEquals(73, (int) output.evaluate(Assignments.createAssignments(2), null));
    }
 
    @Test
@@ -148,7 +149,7 @@ public class NodeSimplifierTest {
    @Test
    public void testDeeplyNestedTreeSimplifedToFunction14() {
       when("(- (+ 432 (* -108 v2)) (* 81 (* (+ -3 (* -3 v2)) (- (- (+ (* 162 v0) (* 243 v2)) (* 162 v2)) (+ (* -6 v2) (- (- (* 162 v2) (- 819 (+ (* -162 v0) (* -243 v2)))) (* 12 v2)))))))")
-                  .expect("(- (+ 432 (* -108 v2)) (* 81 (* (- (* -3 v2) 3) (+ (+ 819 (* 324 v0)) (* 180 v2)))))");
+            .expect("(- (+ 432 (* -108 v2)) (* 81 (* (- (* -3 v2) 3) (+ (+ 819 (* 324 v0)) (* 180 v2)))))");
    }
 
    @Test
@@ -217,7 +218,7 @@ public class NodeSimplifierTest {
          }
 
          @Override
-         public Object evaluate(ChildNodes arguments, Assignments assignments) {
+         public Object evaluate(ChildNodes arguments, Assignments assignments, AbstractDefinedFunctions adfs) {
             return evaluationResult;
          }
 
@@ -241,7 +242,7 @@ public class NodeSimplifierTest {
          }
 
          @Override
-         public Object evaluate(ChildNodes arguments, Assignments assignments) {
+         public Object evaluate(ChildNodes arguments, Assignments assignments, AbstractDefinedFunctions adfs) {
             throw new UnsupportedOperationException();
          }
 
@@ -272,7 +273,8 @@ public class NodeSimplifierTest {
          Node simplifiedVersion = NodeSimplifier.simplify(inputNode);
 
          // test simplified version produces the same results as original (i.e. unsimplified) version
-         Object[][] assignedValues = {{0, 0, 0, 0, 0}, {1, 21, 8, -3, 3}, {2, 14, 4, 5, 6}, {3, -6, 2, 12, 4}, {7, 3, -1, 0, -6}, {-1, 9, 7, 4, 0}, {-7, 0, -2, -3, 8}};
+         Object[][] assignedValues = { { 0, 0, 0, 0, 0 }, { 1, 21, 8, -3, 3 }, { 2, 14, 4, 5, 6 }, { 3, -6, 2, 12, 4 }, { 7, 3, -1, 0, -6 }, { -1, 9, 7, 4, 0 },
+               { -7, 0, -2, -3, 8 } };
          String simplifiedVersionString = writeNode(simplifiedVersion);
          for (Object[] assignedValue : assignedValues) {
             Assignments assignments = Assignments.createAssignments(assignedValue);
@@ -288,7 +290,7 @@ public class NodeSimplifierTest {
       }
 
       Object evaluate(Node n, Assignments assignments) {
-         return n.evaluate(assignments);
+         return n.evaluate(assignments, null);
       }
    }
 }

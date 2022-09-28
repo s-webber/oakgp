@@ -12,6 +12,9 @@ import org.oakgp.type.Types;
 import org.oakgp.type.Types.Type;
 
 // TODO rename, repackage
+// TODO test public/protected default classes and methods
+// TODO test static methods
+// TODO test inner classes
 public final class MethodFunction {
    private static final JavaSourceCompiler COMPILER = new JavaSourceCompiler();
    private static final String PACKAGE = "org.oakgp.generated_at_runtime";
@@ -88,22 +91,10 @@ public final class MethodFunction {
 
       // evaluate
       sb.append("public ");
-      Class<?> returnType = method.getReturnType();
-      boolean isVoidReturnType = returnType == void.class;
-      if (isVoidReturnType) {
-         sb.append("Void");
-      } else if (returnType == boolean.class) {
-         sb.append("Boolean");
-      } else if (returnType == int.class) {
-         sb.append("Integer");
-      } else if (returnType == double.class) {
-         sb.append("Double");
-      } else if (returnType.isPrimitive()) {
-         throw new RuntimeException(returnType.toString()); // TODO
-      } else {
-         sb.append(returnType);
-      }
-      sb.append(" evaluate(ChildNodes a, Assignments v){\n");
+      Class<?> returnType = PrimitiveMapper.mapPrimitive(method.getReturnType());
+      boolean isVoidReturnType = returnType == Void.class;
+      sb.append(returnType.getName());
+      sb.append(" evaluate(ChildNodes a, Assignments v, AbstractDefinedFunctions f){\n");
       if (!isVoidReturnType) {
          sb.append("return ");
       }
@@ -116,7 +107,7 @@ public final class MethodFunction {
       } else {
          sb.append("((");
          sb.append(method.getDeclaringClass().getName());
-         sb.append(")a.getNode(0).evaluate(v)).");
+         sb.append(")a.getNode(0).evaluate(v,f)).");
          offset = 1;
       }
       sb.append(method.getName());
@@ -130,7 +121,7 @@ public final class MethodFunction {
          sb.append(parameters[i].getType().getName());
          sb.append(")a.getNode(");
          sb.append(i + offset);
-         sb.append(").evaluate(v)");
+         sb.append(").evaluate(v,f)");
       }
       sb.append(");");
       if (isVoidReturnType) {

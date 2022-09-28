@@ -25,6 +25,7 @@ import org.oakgp.function.Signature;
 import org.oakgp.function.bool.And;
 import org.oakgp.function.bool.Or;
 import org.oakgp.function.classify.IsFalse;
+import org.oakgp.node.AbstractDefinedFunctions;
 import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
@@ -55,9 +56,9 @@ public final class If implements Function { // TODO make singleton
    }
 
    @Override
-   public Object evaluate(ChildNodes arguments, Assignments assignments) {
-      int index = getOutcomeArgumentIndex(arguments.first().evaluate(assignments));
-      return arguments.getNode(index).evaluate(assignments);
+   public Object evaluate(ChildNodes arguments, Assignments assignments, AbstractDefinedFunctions adfs) {
+      int index = getOutcomeArgumentIndex(arguments.first().evaluate(assignments, adfs));
+      return arguments.getNode(index).evaluate(assignments, adfs);
    }
 
    @Override
@@ -80,7 +81,7 @@ public final class If implements Function { // TODO make singleton
       // (if true v0 v1) -> v0
       // (if false v0 v1) -> v1
       if (isConstant(condition)) {
-         int index = getOutcomeArgumentIndex(condition.evaluate(null));
+         int index = getOutcomeArgumentIndex(condition.evaluate(null, null));
          return index == TRUE_IDX ? trueBranch : falseBranch;
       }
 

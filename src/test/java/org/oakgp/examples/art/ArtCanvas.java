@@ -55,7 +55,7 @@ public class ArtCanvas extends Canvas {
    }
 
    private Color getColor(int x, int y) {
-      return logic.evaluate(Assignments.createAssignments(x, y));
+      return logic.evaluate(Assignments.createAssignments(x, y), null);
    }
 
    void display() {

@@ -188,16 +188,16 @@ public abstract class AbstractFunctionTest {
          Assignments assignments = toAssignments(assignedValues);
 
          // assert evaluate consistently returns the expected result
-         assertEquals(expectedResult, functionNode.evaluate(assignments));
-         assertEquals(expectedResult, functionNode.evaluate(assignments));
+         assertEquals(expectedResult, functionNode.evaluate(assignments, null));
+         assertEquals(expectedResult, functionNode.evaluate(assignments, null));
 
          // assert simplified version of input matches the expected result
          Node simplifiedNode = NodeSimplifier.simplify(functionNode);
-         assertEquals(expectedResult, simplifiedNode.evaluate(assignments));
+         assertEquals(expectedResult, simplifiedNode.evaluate(assignments, null));
          // if no assigned values then assert simplifies to a terminal node (i.e. node count = 1)
          if (assignedValues.length == 0) {
             assertEquals(1, simplifiedNode.getNodeCount());
-            assertEquals(expectedResult, simplifiedNode.evaluate(null));
+            assertEquals(expectedResult, simplifiedNode.evaluate(null, null));
          }
 
          observable.notifyObservers(new Notification(functionNode, assignedValues, expectedResult));
@@ -206,7 +206,7 @@ public abstract class AbstractFunctionTest {
       private Assignments toAssignments(ConstantNode[] constants) {
          Object[] values = new Object[constants.length];
          for (int i = 0; i < constants.length; i++) {
-            values[i] = constants[i].evaluate(null);
+            values[i] = constants[i].evaluate(null, null);
          }
          return Assignments.createAssignments(values);
       }
@@ -310,8 +310,8 @@ public abstract class AbstractFunctionTest {
 
       public SimplifyExpectation verify(Object... values) {
          Assignments assignments = Assignments.createAssignments(values);
-         Object expectedOutcome = inputNode.evaluate(assignments);
-         Object actualOutcome = simplifiedNode.evaluate(assignments);
+         Object expectedOutcome = inputNode.evaluate(assignments, null);
+         Object actualOutcome = simplifiedNode.evaluate(assignments, null);
          assertEquals(expectedOutcome, actualOutcome);
          return this;
       }

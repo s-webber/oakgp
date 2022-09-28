@@ -234,6 +234,6 @@ public class PrimitiveSetImplTest {
 
    public static void assertConstant(Object expectedValue, Node node) {
       assertTrue(node instanceof ConstantNode);
-      assertEquals(expectedValue, ((ConstantNode) node).evaluate(null));
+      assertEquals(expectedValue, ((ConstantNode) node).evaluate(null, null));
    }
 }

@@ -20,6 +20,7 @@ import static org.oakgp.type.CommonTypes.entryType;
 import org.oakgp.Assignments;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
+import org.oakgp.node.AbstractDefinedFunctions;
 import org.oakgp.node.ChildNodes;
 import org.oakgp.type.Types;
 import org.oakgp.type.Types.Type;
@@ -34,8 +35,8 @@ public final class Value implements Function {
    }
 
    @Override
-   public Object evaluate(ChildNodes arguments, Assignments assignments) {
-      Pair p = arguments.first().evaluate(assignments);
+   public Object evaluate(ChildNodes arguments, Assignments assignments, AbstractDefinedFunctions adfs) {
+      Pair p = arguments.first().evaluate(assignments, adfs);
       return p.second();
    }
 

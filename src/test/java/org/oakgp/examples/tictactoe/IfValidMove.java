@@ -22,15 +22,16 @@ import static org.oakgp.type.Types.type;
 import org.oakgp.Assignments;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
+import org.oakgp.node.AbstractDefinedFunctions;
 import org.oakgp.node.ChildNodes;
 
 public class IfValidMove implements Function {
    private static final Signature SIGNATURE = null;
 
    @Override
-   public Object evaluate(ChildNodes arguments, Assignments assignments) {
-      Board board = arguments.first().evaluate(assignments);
-      Move move = arguments.second().evaluate(assignments);
+   public Object evaluate(ChildNodes arguments, Assignments assignments, AbstractDefinedFunctions adfs) {
+      Board board = arguments.first().evaluate(assignments, adfs);
+      Move move = arguments.second().evaluate(assignments, adfs);
       if (board.isFree(move)) {
          return move;
       } else {

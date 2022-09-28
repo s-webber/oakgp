@@ -22,6 +22,7 @@ import static org.oakgp.type.Types.type;
 import org.oakgp.Assignments;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
+import org.oakgp.node.AbstractDefinedFunctions;
 import org.oakgp.node.ChildNodes;
 
 final class GetPossibleMove implements Function {
@@ -36,8 +37,8 @@ final class GetPossibleMove implements Function {
    }
 
    @Override
-   public Object evaluate(ChildNodes arguments, Assignments assignments) {
-      Board board = arguments.first().evaluate(assignments);
+   public Object evaluate(ChildNodes arguments, Assignments assignments, AbstractDefinedFunctions adfs) {
+      Board board = arguments.first().evaluate(assignments, adfs);
       return f.apply(board);
    }
 

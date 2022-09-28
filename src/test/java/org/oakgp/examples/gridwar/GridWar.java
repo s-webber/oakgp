@@ -92,7 +92,7 @@ class GridWar implements TwoPlayerGame {
    }
 
    private static int getNextMove(Player player, Assignments assignments) {
-      int result = player.getLogic().evaluate(assignments);
+      int result = player.getLogic().evaluate(assignments, null);
       // normalise the result to ensure it is in the valid range of possible moves
       return Math.abs(result % NUMBER_OF_POSSIBLE_DIRECTIONS);
    }

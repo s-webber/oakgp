@@ -20,14 +20,15 @@ import static org.oakgp.function.Signature.createSignature;
 import org.oakgp.Assignments;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
+import org.oakgp.node.AbstractDefinedFunctions;
 import org.oakgp.node.ChildNodes;
 
 public class GetAnyMove implements Function {
    private static final Signature SIGNATURE = createSignature(TicTacToeSystemTest.MOVE_TYPE, TicTacToeSystemTest.BOARD_TYPE);
 
    @Override
-   public Object evaluate(ChildNodes arguments, Assignments assignments) {
-      Board board = arguments.first().evaluate(assignments);
+   public Object evaluate(ChildNodes arguments, Assignments assignments, AbstractDefinedFunctions adfs) {
+      Board board = arguments.first().evaluate(assignments, adfs);
       return board.getFreeMove();
    }
 

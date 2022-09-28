@@ -19,12 +19,13 @@ import static org.oakgp.examples.ant.AntMovement.LEFT;
 import static org.oakgp.examples.ant.AntMovement.RIGHT;
 import static org.oakgp.examples.ant.AntMovement.areAllSame;
 import static org.oakgp.examples.ant.AntMovement.isLeftAndRight;
-import static org.oakgp.util.Void.VOID_TYPE;
-import static org.oakgp.util.Void.isVoid;
+import static org.oakgp.type.CommonTypes.isVoid;
+import static org.oakgp.type.CommonTypes.voidType;
 
 import org.oakgp.Assignments;
 import org.oakgp.function.ImpureFunction;
 import org.oakgp.function.Signature;
+import org.oakgp.node.AbstractDefinedFunctions;
 import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
@@ -38,14 +39,14 @@ class TriSequence implements ImpureFunction {
 
    @Override
    public Signature getSignature() {
-      return Signature.createSignature(VOID_TYPE, VOID_TYPE, VOID_TYPE, VOID_TYPE);
+      return Signature.createSignature(voidType(), voidType(), voidType(), voidType());
    }
 
    @Override
-   public Object evaluate(ChildNodes arguments, Assignments assignments) {
-      arguments.first().evaluate(assignments);
-      arguments.second().evaluate(assignments);
-      arguments.third().evaluate(assignments);
+   public Object evaluate(ChildNodes arguments, Assignments assignments, AbstractDefinedFunctions adfs) {
+      arguments.first().evaluate(assignments, adfs);
+      arguments.second().evaluate(assignments, adfs);
+      arguments.third().evaluate(assignments, adfs);
       return null;
    }
 
@@ -66,15 +67,15 @@ class TriSequence implements ImpureFunction {
       } else if (isLeftAndRight(second, third)) {
          return first;
       } else if (areAllSame(LEFT, first, second, third)) {
-         return new FunctionNode(RIGHT, VOID_TYPE, ((FunctionNode) first).getChildren());
+         return new FunctionNode(RIGHT, voidType(), ((FunctionNode) first).getChildren());
       } else if (areAllSame(RIGHT, first, second, third)) {
-         return new FunctionNode(LEFT, VOID_TYPE, ((FunctionNode) first).getChildren());
+         return new FunctionNode(LEFT, voidType(), ((FunctionNode) first).getChildren());
       } else {
          return null;
       }
    }
 
    private Node createBiSequence(Node arg1, Node arg2) {
-      return new FunctionNode(BiSequence.BISEQUENCE, VOID_TYPE, arg1, arg2);
+      return new FunctionNode(BiSequence.BISEQUENCE, voidType(), arg1, arg2);
    }
 }

@@ -35,7 +35,7 @@ class ArtificialAntFitnessFunction implements FitnessFunction {
       Assignments assignments = Assignments.createAssignments(state);
       int movesTaken = 0;
       while (movesTaken < MAX_MOVES && isRemainingFood(state)) {
-         candidate.evaluate(assignments);
+         candidate.evaluate(assignments, null);
 
          // if last call to evaluate did not result in the state being updated
          // then exit now to avoid getting stuck in loop when evaluating candidates that do not do anything

@@ -42,8 +42,8 @@ public class DepthWalkTest {
    public void testNodeCountTerminakNode() {
       Integer value = 9;
       ConstantNode input = integerConstant(value);
-      assertEquals(1, DepthWalk.getNodeCount(input, (n, d) -> d == 1 && value == input.evaluate(null)));
-      assertEquals(0, DepthWalk.getNodeCount(input, (n, d) -> d != 1 || value != input.evaluate(null)));
+      assertEquals(1, DepthWalk.getNodeCount(input, (n, d) -> d == 1 && value == input.evaluate(null, null)));
+      assertEquals(0, DepthWalk.getNodeCount(input, (n, d) -> d != 1 || value != input.evaluate(null, null)));
    }
 
    @Test

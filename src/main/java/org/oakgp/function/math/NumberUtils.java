@@ -301,6 +301,6 @@ abstract class NumberUtils<T extends Comparable<T>> {
    }
 
    private T evaluate(Node n) {
-      return n.evaluate(null);
+      return n.evaluate(null, null);
    }
 }

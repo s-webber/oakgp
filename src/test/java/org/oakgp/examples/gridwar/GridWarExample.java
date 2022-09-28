@@ -16,7 +16,6 @@
 package org.oakgp.examples.gridwar;
 
 import static org.oakgp.type.CommonTypes.integerType;
-import static org.oakgp.util.Utils.createIntegerTypeArray;
 
 import org.oakgp.function.choice.If;
 import org.oakgp.function.compare.Equal;
@@ -27,17 +26,17 @@ import org.oakgp.function.math.IntegerUtils;
 import org.oakgp.node.Node;
 import org.oakgp.primitive.ConstantSet;
 import org.oakgp.primitive.FunctionSet;
+import org.oakgp.primitive.VariableSet;
 import org.oakgp.rank.RankedCandidates;
 import org.oakgp.rank.tournament.FirstPlayerAdvantageGame;
 import org.oakgp.rank.tournament.TwoPlayerGame;
-import org.oakgp.type.Types.Type;
 import org.oakgp.util.ConstantSetBuilder;
 import org.oakgp.util.FunctionSetBuilder;
 import org.oakgp.util.JavaUtilRandomAdapter;
 import org.oakgp.util.RunBuilder;
+import org.oakgp.util.VariableSetBuilder;
 
 public class GridWarExample {
-   private static final int NUM_VARIABLES = 5;
    private static final int NUM_GENERATIONS = 10;
    private static final int INITIAL_POPULATION_SIZE = 50;
    private static final int INITIAL_POPULATION_MAX_DEPTH = 4;
@@ -52,14 +51,14 @@ public class GridWarExample {
             .add(new If(), integerType()) //
             .build();
       ConstantSet constantSet = new ConstantSetBuilder().integerRange(0, 4).build();
-      Type[] variables = createIntegerTypeArray(NUM_VARIABLES);
+      VariableSet variableSet = new VariableSetBuilder().add(integerType(), 6).build();
       // wrap a GridWar object in a FirstPlayerAdvantageGame to avoid bias
       TwoPlayerGame game = new FirstPlayerAdvantageGame(new GridWar(new JavaUtilRandomAdapter()));
 
       RankedCandidates output = new RunBuilder() //
             .setReturnType(integerType()) //
             .setConstants(constantSet) //
-            .setVariables(variables) //
+            .setVariables(variableSet) //
             .setFunctionSet(functionSet) //
             .setTwoPlayerGame(game) //
             .setInitialPopulationSize(INITIAL_POPULATION_SIZE) //

@@ -20,8 +20,8 @@ import static org.oakgp.examples.ant.AntMovement.LEFT;
 import static org.oakgp.examples.ant.AntMovement.RIGHT;
 import static org.oakgp.examples.ant.BiSequence.BISEQUENCE;
 import static org.oakgp.examples.ant.TriSequence.TRISEQUENCE;
-import static org.oakgp.util.Void.VOID_CONSTANT;
-import static org.oakgp.util.Void.VOID_TYPE;
+import static org.oakgp.type.CommonTypes.voidType;
+import static org.oakgp.util.Utils.VOID_NODE;
 
 import org.oakgp.function.choice.If;
 import org.oakgp.node.Node;
@@ -44,13 +44,13 @@ public class ArtificialAntExample {
    public static void main(String[] args) {
       FunctionSet functionSet = new FunctionSetBuilder() //
             .addAll(new IsFoodAhead(), FORWARD, LEFT, RIGHT, BISEQUENCE, TRISEQUENCE) //
-            .add(new If(), VOID_TYPE) //
+            .add(new If(), voidType()) //
             .build();
       FitnessFunction fitnessFunction = new ArtificialAntFitnessFunction();
 
       RankedCandidates output = new RunBuilder() //
-            .setReturnType(VOID_TYPE) //
-            .setConstants(VOID_CONSTANT) //
+            .setReturnType(voidType()) //
+            .setConstants(VOID_NODE) //
             .setVariables(STATE_TYPE) //
             .setFunctionSet(functionSet) //
             .setFitnessFunction(fitnessFunction) //

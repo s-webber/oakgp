@@ -305,6 +305,8 @@ final class ArithmeticExpressionSimplifier {
    /**
     * Asserts that the specified nodes evaluate to the same results.
     *
+    * TODO remove this method?
+    *
     * @param first
     *           the node to compare to {@code second}
     * @param second
@@ -315,8 +317,8 @@ final class ArithmeticExpressionSimplifier {
    static void assertEvaluateToSameResult(Node first, Node second) { // TODO move to test utils
       Object[] assignedValues = { 2, 14, 4, 9, 7 };
       Assignments assignments = Assignments.createAssignments(assignedValues);
-      Object firstResult = first.evaluate(assignments);
-      Object secondResult = second.evaluate(assignments);
+      Object firstResult = first.evaluate(assignments, null);
+      Object secondResult = second.evaluate(assignments, null);
       if (!firstResult.equals(secondResult)) {
          throw new IllegalArgumentException(first + " = " + firstResult + " " + second + " = " + secondResult);
       }

@@ -26,6 +26,7 @@ import org.oakgp.function.BooleanFunctionUtils;
 import org.oakgp.function.Signature;
 import org.oakgp.function.bool.And;
 import org.oakgp.function.bool.Or;
+import org.oakgp.node.AbstractDefinedFunctions;
 import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
@@ -48,8 +49,8 @@ public final class IsFalse implements BooleanFunction {
    }
 
    @Override
-   public Object evaluate(ChildNodes arguments, Assignments assignments) {
-      boolean b = arguments.first().evaluate(assignments);
+   public Object evaluate(ChildNodes arguments, Assignments assignments, AbstractDefinedFunctions adfs) {
+      boolean b = arguments.first().evaluate(assignments, adfs);
       return !b;
    }
 

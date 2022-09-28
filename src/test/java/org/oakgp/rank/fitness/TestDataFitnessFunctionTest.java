@@ -41,9 +41,9 @@ public class TestDataFitnessFunctionTest {
 
       // mock
       Node mockNode = mockNode();
-      given(mockNode.evaluate(assignments1)).willReturn(12);
-      given(mockNode.evaluate(assignments2)).willReturn(-1);
-      given(mockNode.evaluate(assignments3)).willReturn(5);
+      given(mockNode.evaluate(assignments1, null)).willReturn(12);
+      given(mockNode.evaluate(assignments2, null)).willReturn(-1);
+      given(mockNode.evaluate(assignments3, null)).willReturn(5);
 
       // invoke evaluate method
       FitnessFunction fitnessFunction = new TestDataFitnessFunction<>(testData, (e, a) -> Math.abs(e - a));
@@ -66,9 +66,9 @@ public class TestDataFitnessFunctionTest {
 
       // mock
       Node mockNode = mockNode();
-      given(mockNode.evaluate(assignments1)).willReturn("abcdex");
-      given(mockNode.evaluate(assignments2)).willReturn("asdxxx");
-      given(mockNode.evaluate(assignments3)).willReturn("qwerty");
+      given(mockNode.evaluate(assignments1, null)).willReturn("abcdex");
+      given(mockNode.evaluate(assignments2, null)).willReturn("asdxxx");
+      given(mockNode.evaluate(assignments3, null)).willReturn("qwerty");
 
       // invoke evaluate method
       FitnessFunction fitnessFunction = new TestDataFitnessFunction<>(testData, (e, a) -> {

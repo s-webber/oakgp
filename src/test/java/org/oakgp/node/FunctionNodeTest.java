@@ -87,7 +87,7 @@ public class FunctionNodeTest {
       assertSame(arguments, functionNode.getChildren());
 
       Assignments assignments = createAssignments(3);
-      assertEquals(new Integer(126), functionNode.evaluate(assignments));
+      assertEquals(new Integer(126), functionNode.evaluate(assignments, null));
    }
 
    @Test
@@ -180,14 +180,14 @@ public class FunctionNodeTest {
    }
 
    /**
-    * Tests that for two {@code FunctionNode} instances to be considered equal they must share the same instance of
-    * {@code Function} (i.e. it is not enough for them to have separate instances of the same {@code Function} class).
+    * Tests that for two {@code FunctionNode} instances to be considered equal they must share the same instance of {@code Function} (i.e. it is not enough for
+    * them to have separate instances of the same {@code Function} class).
     */
    @Test
    public void testEqualityRequiresSameFunctionInstance() {
       class DummyFunction implements Function {
          @Override
-         public Object evaluate(ChildNodes arguments, Assignments assignments) {
+         public Object evaluate(ChildNodes arguments, Assignments assignments, AbstractDefinedFunctions adfs) {
             throw new UnsupportedOperationException();
          }
 
@@ -253,7 +253,8 @@ public class FunctionNodeTest {
 
    /** Returns representation of: {@code (x*y)+z+1} */
    private FunctionNode createFunctionNode() {
-      return new FunctionNode(INTEGER_UTILS.getAdd(), integerType(), new FunctionNode(INTEGER_UTILS.getMultiply(), integerType(), createVariable(0), createVariable(1)),
-                  new FunctionNode(INTEGER_UTILS.getAdd(), integerType(), createVariable(2), integerConstant(1)));
+      return new FunctionNode(INTEGER_UTILS.getAdd(), integerType(),
+            new FunctionNode(INTEGER_UTILS.getMultiply(), integerType(), createVariable(0), createVariable(1)),
+            new FunctionNode(INTEGER_UTILS.getAdd(), integerType(), createVariable(2), integerConstant(1)));
    }
 }

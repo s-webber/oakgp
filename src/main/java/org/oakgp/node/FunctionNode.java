@@ -24,12 +24,11 @@ public final class FunctionNode implements Node {
    /**
     * A sequence of prime numbers.
     * <p>
-    * Used to generate the {@code hashCode} value. This is used - rather than calling
-    * {@code java.util.Arrays.hashCode(Object a[])} with the node's arguments - so that, for example, the two
-    * expressions {@code (- (- (* -1 v3) 0) (- 13 v1))} and {@code (- (- (* -1 v3) 13) (- 0 v1))} have different hash
-    * code values. See {@code org.oakgp.node.FunctionNodeTest.testHashCode()} for more details.
+    * Used to generate the {@code hashCode} value. This is used - rather than calling {@code java.util.Arrays.hashCode(Object a[])} with the node's arguments -
+    * so that, for example, the two expressions {@code (- (- (* -1 v3) 0) (- 13 v1))} and {@code (- (- (* -1 v3) 13) (- 0 v1))} have different hash code values.
+    * See {@code org.oakgp.node.FunctionNodeTest.testHashCode()} for more details.
     */
-   private static final int[] PRIMES = {2, 3, 5, 7, 11, 13, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97};
+   private static final int[] PRIMES = { 2, 3, 5, 7, 11, 13, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97 };
 
    private final Function function;
    private final Type returnType;
@@ -53,9 +52,10 @@ public final class FunctionNode implements Node {
    /**
     * Constructs a new {@code FunctionNode} with the specified function function and arguments.
     *
-    * @param function the function to associate with this {@code FunctionNode}
-    * @param arguments the arguments (i.e. operands) to apply to {@code function} when evaluating this
-    * {@code FunctionNode}
+    * @param function
+    *           the function to associate with this {@code FunctionNode}
+    * @param arguments
+    *           the arguments (i.e. operands) to apply to {@code function} when evaluating this {@code FunctionNode}
     */
    public FunctionNode(Function function, Type returnType, Node... arguments) {
       this(function, returnType, ChildNodes.createChildNodes(arguments));
@@ -68,9 +68,10 @@ public final class FunctionNode implements Node {
    /**
     * Constructs a new {@code FunctionNode} with the specified function function and arguments.
     *
-    * @param function the function to associate with this {@code FunctionNode}
-    * @param arguments the arguments (i.e. operands) to apply to {@code function} when evaluating this
-    * {@code FunctionNode}
+    * @param function
+    *           the function to associate with this {@code FunctionNode}
+    * @param arguments
+    *           the arguments (i.e. operands) to apply to {@code function} when evaluating this {@code FunctionNode}
     */
    public FunctionNode(Function function, Type returnType, ChildNodes arguments) {
       this.function = function;
@@ -110,8 +111,8 @@ public final class FunctionNode implements Node {
 
    @SuppressWarnings("unchecked")
    @Override
-   public <T> T evaluate(Assignments assignments) {
-      return (T) function.evaluate(arguments, assignments);
+   public <T> T evaluate(Assignments assignments, AbstractDefinedFunctions adfs) {
+      return (T) function.evaluate(arguments, assignments, adfs);
    }
 
    @Override

@@ -24,6 +24,7 @@ import java.util.List;
 import org.oakgp.Assignments;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
+import org.oakgp.node.AbstractDefinedFunctions;
 import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
@@ -41,10 +42,10 @@ public final class OrElse implements Function {
    }
 
    @Override
-   public Object evaluate(ChildNodes arguments, Assignments assignments) {
-      Object result = arguments.first().evaluate(assignments);
+   public Object evaluate(ChildNodes arguments, Assignments assignments, AbstractDefinedFunctions adfs) {
+      Object result = arguments.first().evaluate(assignments, adfs);
       if (result == null) {
-         return arguments.second().evaluate(assignments);
+         return arguments.second().evaluate(assignments, adfs);
       } else {
          return result;
       }

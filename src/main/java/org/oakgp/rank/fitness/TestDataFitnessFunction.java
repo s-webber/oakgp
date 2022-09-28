@@ -71,7 +71,7 @@ public final class TestDataFitnessFunction<T> implements FitnessFunction {
       for (Map.Entry<Assignments, T> test : tests.entrySet()) {
          Assignments input = test.getKey();
          T expected = test.getValue();
-         T actual = node.evaluate(input);
+         T actual = node.evaluate(input, null);
          double score = rankingFunction.applyAsDouble(expected, actual);
          diff += score;
 

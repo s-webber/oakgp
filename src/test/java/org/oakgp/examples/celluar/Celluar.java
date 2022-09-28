@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Random;
 
 import org.oakgp.Assignments;
+import org.oakgp.node.AbstractDefinedFunctions;
 import org.oakgp.node.Node;
 import org.oakgp.rank.fitness.FitnessFunction;
 import org.oakgp.util.DummyNode;
@@ -60,7 +61,7 @@ class Celluar implements FitnessFunction {
       Map<Assignments, Boolean> m = Collections.singletonMap(Assignments.createAssignments(input), true);
       new Celluar(m).evaluate(new DummyNode() {
          @Override
-         public Boolean evaluate(Assignments assignments) {
+         public Boolean evaluate(Assignments assignments, AbstractDefinedFunctions adfs) {
             return r.nextBoolean();
          }
       });
@@ -121,7 +122,7 @@ class Celluar implements FitnessFunction {
          int assignmentIdx = calculateAssignmentIdx(input, i);
          Boolean bit = cache[assignmentIdx];
          if (bit == null) {
-            bit = candidate.evaluate(ASSIGNMENTS[assignmentIdx]);
+            bit = candidate.evaluate(ASSIGNMENTS[assignmentIdx], null);
             cache[assignmentIdx] = bit;
          }
          result[i] = bit;

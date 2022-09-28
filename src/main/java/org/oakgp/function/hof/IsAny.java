@@ -24,6 +24,7 @@ import java.util.Collection;
 import org.oakgp.Assignments;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
+import org.oakgp.node.AbstractDefinedFunctions;
 import org.oakgp.node.ChildNodes;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
@@ -40,14 +41,14 @@ public final class IsAny implements Function {
    }
 
    @Override
-   public Object evaluate(ChildNodes arguments, Assignments assignments) {
-      Function f = arguments.first().evaluate(assignments);
+   public Object evaluate(ChildNodes arguments, Assignments assignments, AbstractDefinedFunctions adfs) {
+      Function f = arguments.first().evaluate(assignments, adfs);
       Node second = arguments.second();
       Type type = second.getType().getParameters().get(0);
-      Collection<Object> candidates = second.evaluate(assignments);
+      Collection<Object> candidates = second.evaluate(assignments, adfs);
       for (Object candidate : candidates) {
          ChildNodes childNodes = ChildNodes.createChildNodes(new ConstantNode(candidate, type));
-         if ((Boolean) f.evaluate(childNodes, assignments)) {
+         if ((Boolean) f.evaluate(childNodes, assignments, adfs)) {
             return true;
          }
       }

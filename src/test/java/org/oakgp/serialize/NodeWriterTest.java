@@ -28,7 +28,7 @@ import static org.oakgp.type.CommonTypes.integerType;
 import static org.oakgp.type.CommonTypes.listType;
 import static org.oakgp.type.CommonTypes.mapType;
 import static org.oakgp.type.CommonTypes.stringType;
-import static org.oakgp.util.Void.VOID_CONSTANT;
+import static org.oakgp.util.Utils.VOID_NODE;
 
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -40,6 +40,7 @@ import org.oakgp.function.hof.Filter;
 import org.oakgp.function.math.IntegerUtils;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
+import org.oakgp.node.VariableNode;
 
 public class NodeWriterTest {
    @Test
@@ -87,7 +88,7 @@ public class NodeWriterTest {
    @Test
    public void testVoidConstantNode() {
       NodeWriter writer = new NodeWriter();
-      String output = writer.writeNode(VOID_CONSTANT);
+      String output = writer.writeNode(VOID_NODE);
       assertEquals("void", output);
    }
 
@@ -96,6 +97,13 @@ public class NodeWriterTest {
       NodeWriter writer = new NodeWriter();
       String output = writer.writeNode(createVariable(2));
       assertEquals("v2", output);
+   }
+
+   @Test
+   public void testNamedVariableNode() {
+      NodeWriter writer = new NodeWriter();
+      String output = writer.writeNode(new VariableNode(2, "qwerty", integerType()));
+      assertEquals("qwerty", output);
    }
 
    @Test

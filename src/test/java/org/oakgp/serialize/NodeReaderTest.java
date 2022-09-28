@@ -25,6 +25,7 @@ import static org.junit.Assert.fail;
 import static org.oakgp.TestUtils.readNode;
 import static org.oakgp.TestUtils.readNodes;
 import static org.oakgp.type.CommonTypes.integerToBooleanFunctionType;
+import static org.oakgp.type.CommonTypes.integerType;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -45,7 +46,8 @@ import org.oakgp.primitive.ConstantSet;
 import org.oakgp.primitive.FunctionSet;
 import org.oakgp.primitive.VariableSet;
 import org.oakgp.type.Types;
-import org.oakgp.util.Void;
+import org.oakgp.util.Utils;
+import org.oakgp.util.VariableSetBuilder;
 
 public class NodeReaderTest {
    @Test
@@ -130,17 +132,17 @@ public class NodeReaderTest {
    /** Tests that, when available, parser uses constants defined in BigDecimal. */
    @Test
    public void testBigDecimalReuse() {
-      assertSame(BigDecimal.ZERO, readConstant("0D").evaluate(null));
-      assertSame(BigDecimal.ONE, readConstant("1D").evaluate(null));
-      assertSame(BigDecimal.TEN, readConstant("10D").evaluate(null));
+      assertSame(BigDecimal.ZERO, readConstant("0D").evaluate(null, null));
+      assertSame(BigDecimal.ONE, readConstant("1D").evaluate(null, null));
+      assertSame(BigDecimal.TEN, readConstant("10D").evaluate(null, null));
    }
 
    /** Tests that, when available, parser uses constants defined in BigInteger. */
    @Test
    public void testBigIntegerReuse() {
-      assertSame(BigInteger.ZERO, readConstant("0I").evaluate(null));
-      assertSame(BigInteger.ONE, readConstant("1I").evaluate(null));
-      assertSame(BigInteger.TEN, readConstant("10I").evaluate(null));
+      assertSame(BigInteger.ZERO, readConstant("0I").evaluate(null, null));
+      assertSame(BigInteger.ONE, readConstant("1I").evaluate(null, null));
+      assertSame(BigInteger.TEN, readConstant("10I").evaluate(null, null));
    }
 
    @Test
@@ -155,7 +157,7 @@ public class NodeReaderTest {
 
    @Test
    public void testVoid() {
-      assertParseLiteral("void", Void.VOID_CONSTANT.evaluate(null));
+      assertParseLiteral("void", Utils.VOID_NODE.evaluate(null, null));
    }
 
    @Test
@@ -204,6 +206,19 @@ public class NodeReaderTest {
    @Test
    public void testMultipleDigitIdVariableNode() {
       assertParseVariable(78);
+   }
+
+   @Test
+   public void testNamedVariableNode() {
+      VariableSet variableSet = new VariableSetBuilder() //
+            .add("abcdef", integerType()) //
+            .add("qwerty", integerType()) //
+            .add("zxcvb", integerType()) //
+            .build();
+      Node output = readNode("qwerty", variableSet);
+      assertSame(VariableNode.class, output.getClass());
+      assertEquals(1, ((VariableNode) output).getId());
+      assertEquals("qwerty", output.toString());
    }
 
    @Test
@@ -346,15 +361,15 @@ public class NodeReaderTest {
    private void assertParseLiteral(String input, Object expected) {
       Node output = readConstant(input);
       assertSame(ConstantNode.class, output.getClass());
-      assertSame(expected.getClass(), output.evaluate(null).getClass());
+      assertSame(expected.getClass(), output.evaluate(null, null).getClass());
       assertEquals(expected.toString(), output.toString());
-      assertEquals(expected, output.evaluate(null));
+      assertEquals(expected, output.evaluate(null, null));
    }
 
    private void assertParseFunction(String input, Class<? extends Function> expected) {
       Node output = readConstant(input);
       assertSame(integerToBooleanFunctionType(), output.getType());
-      assertEquals(expected, ((ConstantNode) output).evaluate(null).getClass());
+      assertEquals(expected, ((ConstantNode) output).evaluate(null, null).getClass());
    }
 
    private void assertParseVariable(int id) {

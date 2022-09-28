@@ -68,8 +68,8 @@ public class UberSimplifyTest {
          Node simplified = NodeSimplifier.simplify(original);
          System.out.println(i + ". " + original.getNodeCount() + " v " + simplified.getNodeCount());
          for (Assignments a : assignments) {
-            Object originalResult = original.evaluate(a);
-            Object simplifiedResult = simplified.evaluate(a);
+            Object originalResult = original.evaluate(a, null);
+            Object simplifiedResult = simplified.evaluate(a, null);
             assertEquals(original.toString(), originalResult, simplifiedResult);
          }
       }

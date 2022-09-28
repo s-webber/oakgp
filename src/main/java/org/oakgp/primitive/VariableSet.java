@@ -18,6 +18,7 @@ package org.oakgp.primitive;
 import java.util.Arrays;
 import java.util.List;
 
+import org.oakgp.function.pair.Pair;
 import org.oakgp.node.VariableNode;
 import org.oakgp.type.Types.Type;
 import org.oakgp.util.TypeMap;
@@ -29,13 +30,23 @@ public final class VariableSet {
 
    /** Constructs a variable set containing variables of the specified types. */
    public static VariableSet createVariableSet(Type... variableTypes) {
+      Pair<String, Type>[] pairs = new Pair[variableTypes.length];
+      for (int i = 0; i < variableTypes.length; i++) {
+         pairs[i] = new Pair<>(null, variableTypes[i]);
+      }
+      return new VariableSet(pairs);
+   }
+
+   /** Constructs a variable set containing variables of the specified types. */
+   public static VariableSet createVariableSet(Pair<String, Type>[] variableTypes) {
       return new VariableSet(variableTypes);
    }
 
-   private VariableSet(Type[] variableTypes) {
+   private VariableSet(Pair<String, Type>[] variableTypes) {
+      // TODO validate variable names are valid and unique
       this.variables = new VariableNode[variableTypes.length];
       for (int i = 0; i < variableTypes.length; i++) {
-         this.variables[i] = new VariableNode(i, variableTypes[i]);
+         this.variables[i] = new VariableNode(i, variableTypes[i].getKey(), variableTypes[i].getValue());
       }
       this.variablesByType = new TypeMap<>(Arrays.asList(variables), VariableNode::getType);
    }
@@ -54,6 +65,15 @@ public final class VariableSet {
    /** Returns the {@code VariableNode} from this set that is associated with the specified ID. */
    public VariableNode getById(int id) {
       return variables[id];
+   }
+
+   public VariableNode getByName(String token) { // TODO comment and test
+      for (VariableNode v : variables) {
+         if (v.toString().equals(token)) {
+            return v;
+         }
+      }
+      return null;
    }
 
    public int size() {

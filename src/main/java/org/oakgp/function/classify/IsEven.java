@@ -24,6 +24,7 @@ import java.util.Set;
 import org.oakgp.Assignments;
 import org.oakgp.function.BooleanFunction;
 import org.oakgp.function.Signature;
+import org.oakgp.node.AbstractDefinedFunctions;
 import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
@@ -41,8 +42,8 @@ public final class IsEven implements BooleanFunction {
    }
 
    @Override
-   public Object evaluate(ChildNodes arguments, Assignments assignments) {
-      int i = arguments.first().evaluate(assignments);
+   public Object evaluate(ChildNodes arguments, Assignments assignments, AbstractDefinedFunctions adfs) {
+      int i = arguments.first().evaluate(assignments, adfs);
       return i % 2 == 0;
    }
 

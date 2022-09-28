@@ -16,13 +16,14 @@
 package org.oakgp.examples.ant;
 
 import static org.oakgp.examples.ant.AntMovement.isLeftAndRight;
-import static org.oakgp.util.Void.VOID_CONSTANT;
-import static org.oakgp.util.Void.VOID_TYPE;
-import static org.oakgp.util.Void.isVoid;
+import static org.oakgp.type.CommonTypes.isVoid;
+import static org.oakgp.type.CommonTypes.voidType;
+import static org.oakgp.util.Utils.VOID_NODE;
 
 import org.oakgp.Assignments;
 import org.oakgp.function.ImpureFunction;
 import org.oakgp.function.Signature;
+import org.oakgp.node.AbstractDefinedFunctions;
 import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
@@ -36,13 +37,13 @@ class BiSequence implements ImpureFunction {
 
    @Override
    public Signature getSignature() {
-      return Signature.createSignature(VOID_TYPE, VOID_TYPE, VOID_TYPE);
+      return Signature.createSignature(voidType(), voidType(), voidType());
    }
 
    @Override
-   public Object evaluate(ChildNodes arguments, Assignments assignments) {
-      arguments.first().evaluate(assignments);;
-      arguments.second().evaluate(assignments);;
+   public Object evaluate(ChildNodes arguments, Assignments assignments, AbstractDefinedFunctions adfs) {
+      arguments.first().evaluate(assignments, adfs);
+      arguments.second().evaluate(assignments, adfs);
       return null;
    }
 
@@ -56,7 +57,7 @@ class BiSequence implements ImpureFunction {
       } else if (isVoid(secondArg)) {
          return firstArg;
       } else if (isLeftAndRight(firstArg, secondArg)) {
-         return VOID_CONSTANT;
+         return VOID_NODE;
       } else if (isBiSequence(firstArg)) {
          ChildNodes firstArgChildren = ((FunctionNode) firstArg).getChildren();
          return createTriSequence(firstArgChildren.first(), firstArgChildren.second(), secondArg);
@@ -74,6 +75,6 @@ class BiSequence implements ImpureFunction {
    }
 
    private Node createTriSequence(Node arg1, Node arg2, Node arg3) {
-      return new FunctionNode(TriSequence.TRISEQUENCE, VOID_TYPE, arg1, arg2, arg3);
+      return new FunctionNode(TriSequence.TRISEQUENCE, voidType(), arg1, arg2, arg3);
    }
 }

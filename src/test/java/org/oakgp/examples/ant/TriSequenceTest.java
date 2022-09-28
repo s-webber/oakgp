@@ -23,8 +23,8 @@ import static org.oakgp.examples.ant.AntMovement.LEFT;
 import static org.oakgp.examples.ant.AntMovement.RIGHT;
 import static org.oakgp.examples.ant.BiSequence.BISEQUENCE;
 import static org.oakgp.examples.ant.TriSequence.TRISEQUENCE;
-import static org.oakgp.util.Void.VOID_CONSTANT;
-import static org.oakgp.util.Void.VOID_TYPE;
+import static org.oakgp.type.CommonTypes.voidType;
+import static org.oakgp.util.Utils.VOID_NODE;
 
 import org.junit.Test;
 import org.oakgp.node.ChildNodes;
@@ -33,11 +33,11 @@ import org.oakgp.node.Node;
 import org.oakgp.node.VariableNode;
 
 public class TriSequenceTest {
-   private final Node stateVariable = new VariableNode(0, MutableState.STATE_TYPE);
-   private final Node forward = new FunctionNode(FORWARD, VOID_TYPE, stateVariable);
-   private final Node left = new FunctionNode(LEFT, VOID_TYPE, stateVariable);
-   private final Node right = new FunctionNode(RIGHT, VOID_TYPE, stateVariable);
-   private final Node forwardTwice = new FunctionNode(BISEQUENCE, VOID_TYPE, forward, forward);
+   private final Node stateVariable = new VariableNode(0, null, MutableState.STATE_TYPE);
+   private final Node forward = new FunctionNode(FORWARD, voidType(), stateVariable);
+   private final Node left = new FunctionNode(LEFT, voidType(), stateVariable);
+   private final Node right = new FunctionNode(RIGHT, voidType(), stateVariable);
+   private final Node forwardTwice = new FunctionNode(BISEQUENCE, voidType(), forward, forward);
 
    @Test
    public void testSimplifyWhenLeftAndRight() {
@@ -61,11 +61,11 @@ public class TriSequenceTest {
 
    @Test
    public void testSimplifyWhenVoid() {
-      Node expected = new FunctionNode(BISEQUENCE, VOID_TYPE, forward, forwardTwice);
+      Node expected = new FunctionNode(BISEQUENCE, voidType(), forward, forwardTwice);
 
-      Node a = simplify(VOID_CONSTANT, forward, forwardTwice);
-      Node b = simplify(forward, VOID_CONSTANT, forwardTwice);
-      Node c = simplify(forward, forwardTwice, VOID_CONSTANT);
+      Node a = simplify(VOID_NODE, forward, forwardTwice);
+      Node b = simplify(forward, VOID_NODE, forwardTwice);
+      Node c = simplify(forward, forwardTwice, VOID_NODE);
 
       assertAllEqual(expected, a, b, c);
    }
@@ -88,7 +88,7 @@ public class TriSequenceTest {
    }
 
    private Node simplify(Node first, Node second, Node third) {
-      return TRISEQUENCE.simplify(new FunctionNode(TRISEQUENCE, VOID_TYPE, ChildNodes.createChildNodes(first, second, third)));
+      return TRISEQUENCE.simplify(new FunctionNode(TRISEQUENCE, voidType(), ChildNodes.createChildNodes(first, second, third)));
    }
 
    private void assertAllSame(Object first, Object... rest) {

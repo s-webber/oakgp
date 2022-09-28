@@ -24,6 +24,7 @@ import java.util.Map;
 import org.oakgp.Assignments;
 import org.oakgp.function.MapperFunction;
 import org.oakgp.function.Signature;
+import org.oakgp.node.AbstractDefinedFunctions;
 import org.oakgp.node.ChildNodes;
 import org.oakgp.type.Types;
 import org.oakgp.type.Types.Type;
@@ -39,8 +40,8 @@ public final class Keys implements MapperFunction {
    }
 
    @Override
-   public Object evaluate(ChildNodes arguments, Assignments assignments) {
-      Map<?, ?> a = arguments.first().evaluate(assignments);
+   public Object evaluate(ChildNodes arguments, Assignments assignments, AbstractDefinedFunctions adfs) {
+      Map<?, ?> a = arguments.first().evaluate(assignments, adfs);
       return new ArrayList<>(a.keySet()); // TODO should we just return a.keySet() instead?
    }
 

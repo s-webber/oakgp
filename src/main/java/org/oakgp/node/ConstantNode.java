@@ -47,7 +47,7 @@ public final class ConstantNode extends TerminalNode {
     */
    @SuppressWarnings("unchecked")
    @Override
-   public <T> T evaluate(Assignments assignments) {
+   public <T> T evaluate(Assignments assignments, AbstractDefinedFunctions adfs) {
       return (T) value;
    }
 

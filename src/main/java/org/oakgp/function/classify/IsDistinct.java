@@ -28,6 +28,7 @@ import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
 import org.oakgp.function.coll.Set;
 import org.oakgp.function.coll.SortedSet;
+import org.oakgp.node.AbstractDefinedFunctions;
 import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
@@ -45,8 +46,8 @@ public final class IsDistinct implements Function { // TODO what is the correct 
    }
 
    @Override
-   public Object evaluate(ChildNodes arguments, Assignments assignments) {
-      Collection<Object> input = arguments.first().evaluate(assignments);
+   public Object evaluate(ChildNodes arguments, Assignments assignments, AbstractDefinedFunctions adfs) {
+      Collection<Object> input = arguments.first().evaluate(assignments, adfs);
       HashSet<Object> previous = new HashSet<>();
       for (Object e : input) {
          if (!previous.add(e)) {

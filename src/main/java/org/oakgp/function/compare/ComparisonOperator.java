@@ -21,6 +21,7 @@ import static org.oakgp.type.CommonTypes.comparableType;
 import org.oakgp.Assignments;
 import org.oakgp.function.BooleanFunction;
 import org.oakgp.function.Signature;
+import org.oakgp.node.AbstractDefinedFunctions;
 import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
@@ -38,11 +39,11 @@ abstract class ComparisonOperator implements BooleanFunction {
       this.equalsIsTrue = equalsIsTrue;
    }
 
-   @SuppressWarnings({"rawtypes", "unchecked"})
+   @SuppressWarnings({ "rawtypes", "unchecked" })
    @Override
-   public final Object evaluate(ChildNodes arguments, Assignments assignments) {
-      Comparable o1 = arguments.first().evaluate(assignments);
-      Comparable o2 = arguments.second().evaluate(assignments);
+   public final Object evaluate(ChildNodes arguments, Assignments assignments, AbstractDefinedFunctions adfs) {
+      Comparable o1 = arguments.first().evaluate(assignments, adfs);
+      Comparable o2 = arguments.second().evaluate(assignments, adfs);
       int diff = o1.compareTo(o2);
       if (evaluate(diff)) {
          return Boolean.TRUE;

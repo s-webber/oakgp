@@ -19,6 +19,7 @@ import static org.junit.Assert.assertFalse;
 
 import org.junit.Test;
 import org.oakgp.Assignments;
+import org.oakgp.node.AbstractDefinedFunctions;
 import org.oakgp.node.ChildNodes;
 
 public class ImpureFunctionTest {
@@ -31,7 +32,7 @@ public class ImpureFunctionTest {
          }
 
          @Override
-         public Object evaluate(ChildNodes arguments, Assignments assignments) {
+         public Object evaluate(ChildNodes arguments, Assignments assignments, AbstractDefinedFunctions adfs) {
             throw new UnsupportedOperationException();
          }
       };

@@ -33,7 +33,7 @@ class TicTacToe implements TwoPlayerGame {
       Symbol next = X;
       while (true) {
          Assignments assignments = Assignments.createAssignments(board, next, next.getOpponent());
-         Move move = (next == X ? player1 : player2).evaluate(assignments);
+         Move move = (next == X ? player1 : player2).evaluate(assignments, null);
          board = board.update(next, move);
 
          if (board.isDraw()) {

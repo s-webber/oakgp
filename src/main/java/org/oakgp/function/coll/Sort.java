@@ -27,6 +27,7 @@ import org.oakgp.Assignments;
 import org.oakgp.function.Function;
 import org.oakgp.function.MapperFunction;
 import org.oakgp.function.Signature;
+import org.oakgp.node.AbstractDefinedFunctions;
 import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
@@ -50,8 +51,8 @@ public final class Sort implements MapperFunction {
    }
 
    @Override
-   public Object evaluate(ChildNodes arguments, Assignments assignments) {
-      Collection<Comparable<?>> input = arguments.first().evaluate(assignments);
+   public Object evaluate(ChildNodes arguments, Assignments assignments, AbstractDefinedFunctions adfs) {
+      Collection<Comparable<?>> input = arguments.first().evaluate(assignments, adfs);
       List<Comparable<?>> output = new ArrayList<>(input);
       output.sort(null);
       return output;

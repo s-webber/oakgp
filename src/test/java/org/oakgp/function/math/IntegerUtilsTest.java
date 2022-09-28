@@ -37,7 +37,7 @@ public class IntegerUtilsTest { // TODO add more tests of IntegerUtils and other
    @Test
    public void testZero() {
       ConstantNode zero = UTILS.zero();
-      assertEquals(Integer.valueOf(0), zero.evaluate(null));
+      assertEquals(Integer.valueOf(0), zero.evaluate(null, null));
       assertEquals(integerType(), zero.getType());
    }
 

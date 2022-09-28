@@ -1,6 +1,6 @@
 package org.oakgp.examples.snake;
 
-import static org.oakgp.util.Void.VOID_TYPE;
+import static org.oakgp.type.CommonTypes.voidType;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -10,6 +10,7 @@ import org.oakgp.Assignments;
 import org.oakgp.function.ImpureFunction;
 import org.oakgp.function.Signature;
 import org.oakgp.function.choice.If;
+import org.oakgp.node.AbstractDefinedFunctions;
 import org.oakgp.node.ChildNodes;
 import org.oakgp.node.Node;
 import org.oakgp.primitive.ConstantSet;
@@ -30,7 +31,7 @@ public class SnakeExample {
 
    public static void main(String[] args) throws Exception {
       FunctionSet functionSet = new FunctionSetBuilder() //
-            .add(new If(), VOID_TYPE) //
+            .add(new If(), voidType()) //
             .add(new BiSequence()) //
             .addMethods(Snake.class, "forward", "left", "right", "isFoodAhead", "isDangerAhead", "isDangerLeft", "isDangerRight", "isDangerTwoAhead",
                   "isFoodUp", "isFoodRight", "isMovingUp", "isMovingDown", "isMovingLeft", "isMovingRight") //
@@ -49,7 +50,7 @@ public class SnakeExample {
       }
 
       RankedCandidates output = new RunBuilder() //
-            .setReturnType(VOID_TYPE) //
+            .setReturnType(voidType()) //
             .setConstants() // TODO .emptyConstantSet()
             .setVariables(SNAKE_TYPE) //
             .setFunctionSet(functionSet) //
@@ -70,13 +71,13 @@ public class SnakeExample {
 class BiSequence implements ImpureFunction {
    @Override
    public Signature getSignature() {
-      return Signature.createSignature(VOID_TYPE, VOID_TYPE, VOID_TYPE);
+      return Signature.createSignature(voidType(), voidType(), voidType());
    }
 
    @Override
-   public Object evaluate(ChildNodes arguments, Assignments assignments) {
-      arguments.first().evaluate(assignments);
-      arguments.second().evaluate(assignments);
+   public Object evaluate(ChildNodes arguments, Assignments assignments, AbstractDefinedFunctions adfs) {
+      arguments.first().evaluate(assignments, adfs);
+      arguments.second().evaluate(assignments, adfs);
       return null;
    }
 }

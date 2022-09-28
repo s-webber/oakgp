@@ -34,7 +34,7 @@ public final class MinimaxGame implements TwoPlayerGame {
       MinimaxGameState state = supplier.get();
       Node nextPlayer = player1;
       MinimaxGameState nextState;
-      while ((nextState = nextPlayer.evaluate(Assignments.createAssignments(state))) != null) {
+      while ((nextState = nextPlayer.evaluate(Assignments.createAssignments(state), null)) != null) {
          state = nextState;
          nextPlayer = nextPlayer == player1 ? player2 : player1;
       }
