@@ -51,7 +51,7 @@ public class SymbolicRegressionExample {
 
       RankedCandidates output = new RunBuilder() //
             .setReturnType(integerType()) //
-            .setConstants(constantSet) //
+            .setConstantSet(constantSet) //
             .setVariables(integerType()) //
             .setFunctions(functions) //
             .setFitnessFunction(fitnessFunction) //

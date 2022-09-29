@@ -22,14 +22,14 @@ import static org.oakgp.type.Types.type;
 import org.oakgp.Assignments;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
-import org.oakgp.node.AbstractDefinedFunctions;
+import org.oakgp.node.AutomaticallyDefinedFunctions;
 import org.oakgp.node.ChildNodes;
 
 public class IsFree implements Function {
    private static final Signature SIGNATURE = createSignature(booleanType(), type("board"), type("possibleMove"));
 
    @Override
-   public Object evaluate(ChildNodes arguments, Assignments assignments, AbstractDefinedFunctions adfs) {
+   public Object evaluate(ChildNodes arguments, Assignments assignments, AutomaticallyDefinedFunctions adfs) {
       Board board = arguments.first().evaluate(assignments, adfs);
       Move move = arguments.second().evaluate(assignments, adfs);
       return board.isFree(move);

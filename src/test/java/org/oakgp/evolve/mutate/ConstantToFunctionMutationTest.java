@@ -57,7 +57,7 @@ public class ConstantToFunctionMutationTest {
 
    private Node mutate(Random random, TreeGenerator treeGenerator, Node input) {
       DummyNodeSelector selector = new DummyNodeSelector(input);
-      Node result = new ConstantToFunctionMutation(random, treeGenerator).evolve(selector);
+      Node result = new MutateWrapper(new ConstantToFunctionMutation(), null, treeGenerator, random).evolve(selector);
       selector.assertEmpty();
       return result;
    }

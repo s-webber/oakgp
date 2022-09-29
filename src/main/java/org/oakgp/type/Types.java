@@ -307,7 +307,6 @@ public final class Types {
          } else if (toAssignTo.isGeneric) {
             for (Type p : toAssignTo.parents) {
                if (!_isAssignable(this, p)) {
-                  System.out.println(name + " not assignable to " + p.name);
                   return false;
                }
             }

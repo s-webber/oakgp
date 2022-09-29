@@ -44,7 +44,7 @@ public class ApproximateSinExample {
 
       RankedCandidates output = new RunBuilder().//
             setReturnType(doubleType()). //
-            setConstants(constantSet). //
+            setConstantSet(constantSet). //
             setVariables(doubleType()). //
             setFunctions(functions). //
             setFitnessFunction(fitnessFunction). //

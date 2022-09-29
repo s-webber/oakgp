@@ -20,7 +20,7 @@ import static org.oakgp.type.CommonTypes.booleanType;
 import org.oakgp.Assignments;
 import org.oakgp.function.ImpureFunction;
 import org.oakgp.function.Signature;
-import org.oakgp.node.AbstractDefinedFunctions;
+import org.oakgp.node.AutomaticallyDefinedFunctions;
 import org.oakgp.node.ChildNodes;
 
 /** Returns {@code true} if the square the ant is facing contains food, else {@code false}. */
@@ -31,7 +31,7 @@ class IsFoodAhead implements ImpureFunction {
    }
 
    @Override
-   public Object evaluate(ChildNodes arguments, Assignments assignments, AbstractDefinedFunctions adfs) {
+   public Object evaluate(ChildNodes arguments, Assignments assignments, AutomaticallyDefinedFunctions adfs) {
       MutableState state = arguments.first().evaluate(assignments, adfs);
       return state.isFoodAhead();
    }

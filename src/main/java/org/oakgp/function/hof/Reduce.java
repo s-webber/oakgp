@@ -23,7 +23,7 @@ import java.util.Collection;
 import org.oakgp.Assignments;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
-import org.oakgp.node.AbstractDefinedFunctions;
+import org.oakgp.node.AutomaticallyDefinedFunctions;
 import org.oakgp.node.ChildNodes;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
@@ -56,7 +56,7 @@ public final class Reduce implements Function {
    }
 
    @Override
-   public Object evaluate(ChildNodes arguments, Assignments assignments, AbstractDefinedFunctions adfs) {
+   public Object evaluate(ChildNodes arguments, Assignments assignments, AutomaticallyDefinedFunctions adfs) {
       Node first = arguments.first();
       Node second = arguments.second();
       Type resultType = second.getType();

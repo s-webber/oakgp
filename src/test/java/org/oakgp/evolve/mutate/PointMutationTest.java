@@ -48,7 +48,7 @@ public class PointMutationTest {
             return alternativeTerminals.next(current);
          }
       };
-      GeneticOperator pointMutation = new PointMutation(DummyRandom.EMPTY, primitiveSet);
+      GeneticOperator pointMutation = new MutateWrapper(new PointMutation(), primitiveSet, null, DummyRandom.EMPTY);
 
       Node offspring = pointMutation.evolve(dummySelector);
 
@@ -82,7 +82,7 @@ public class PointMutationTest {
             return alternativeTerminals.next(current);
          }
       };
-      GeneticOperator pointMutation = new PointMutation(dummyRandom, primitiveSet);
+      GeneticOperator pointMutation = new MutateWrapper(new PointMutation(), primitiveSet, null, dummyRandom);
 
       assertEquals(new FunctionNode(rootFunction, integerType(), new FunctionNode(inputFunction, integerType(), inputArg1, outputArg2)),
             pointMutation.evolve(dummySelector));

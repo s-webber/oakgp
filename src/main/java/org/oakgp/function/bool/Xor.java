@@ -23,7 +23,7 @@ import org.oakgp.function.BooleanFunctionUtils;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
 import org.oakgp.function.classify.IsFalse;
-import org.oakgp.node.AbstractDefinedFunctions;
+import org.oakgp.node.AutomaticallyDefinedFunctions;
 import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
@@ -42,7 +42,7 @@ public final class Xor implements Function {
    }
 
    @Override
-   public Object evaluate(ChildNodes arguments, Assignments assignments, AbstractDefinedFunctions adfs) {
+   public Object evaluate(ChildNodes arguments, Assignments assignments, AutomaticallyDefinedFunctions adfs) {
       boolean b1 = arguments.first().evaluate(assignments, adfs);
       boolean b2 = arguments.second().evaluate(assignments, adfs);
       return (b1 || b2) && b1 != b2;

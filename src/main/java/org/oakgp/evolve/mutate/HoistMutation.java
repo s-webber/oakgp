@@ -17,10 +17,10 @@ package org.oakgp.evolve.mutate;
 
 import java.util.function.Predicate;
 
-import org.oakgp.evolve.GeneticOperator;
+import org.oakgp.generate.TreeGenerator;
 import org.oakgp.node.Node;
 import org.oakgp.node.walk.StrategyWalk;
-import org.oakgp.select.NodeSelector;
+import org.oakgp.primitive.PrimitiveSet;
 import org.oakgp.util.Random;
 import org.oakgp.util.Utils;
 
@@ -29,26 +29,18 @@ import org.oakgp.util.Utils;
  * <p>
  * The resulting offspring will be smaller than the parent.
  */
-public final class HoistMutation implements GeneticOperator {
-   private final Random random;
-
-   /** Creates a {@code HoistMutation} that uses the given {@code Random} to select subtrees as new offspring. */
-   public HoistMutation(Random random) {
-      this.random = random;
-   }
-
+public final class HoistMutation implements MutateOperator {
    @Override
-   public Node evolve(NodeSelector selector) {
-      Node root = selector.next();
-      Predicate<Node> treeWalkerStrategy = n -> n.getType() == root.getType();
-      int nodeCount = StrategyWalk.getNodeCount(root, treeWalkerStrategy);
+   public Node mutate(Node input, PrimitiveSet primitiveSet, TreeGenerator treeGenerator, Random random) {
+      Predicate<Node> treeWalkerStrategy = n -> n.getType() == input.getType();
+      int nodeCount = StrategyWalk.getNodeCount(input, treeWalkerStrategy);
       if (nodeCount == 1) {
          // if node count == 1 then that indicates that the only node with the same return type
          // as the root node is the root node itself
-         return root;
+         return input;
       } else {
          int index = Utils.selectSubNodeIndex(random, nodeCount);
-         return StrategyWalk.getAt(root, index, treeWalkerStrategy);
+         return StrategyWalk.getAt(input, index, treeWalkerStrategy);
       }
    }
 }

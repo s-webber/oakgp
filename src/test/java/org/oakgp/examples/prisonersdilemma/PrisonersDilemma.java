@@ -40,7 +40,7 @@ import org.oakgp.function.hof.IsNone;
 import org.oakgp.function.pair.Key;
 import org.oakgp.function.pair.Pair;
 import org.oakgp.function.pair.Value;
-import org.oakgp.node.AbstractDefinedFunctions;
+import org.oakgp.node.AutomaticallyDefinedFunctions;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
 import org.oakgp.node.NodeType;
@@ -164,7 +164,7 @@ public class PrisonersDilemma {
       }
 
       @Override
-      public Boolean evaluate(Assignments assignments, AbstractDefinedFunctions adfs) {
+      public Boolean evaluate(Assignments assignments, AutomaticallyDefinedFunctions adfs) {
          return logic.apply(assignments);
       }
 

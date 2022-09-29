@@ -22,6 +22,7 @@ import static org.oakgp.TestUtils.readNode;
 import static org.oakgp.util.DummyRandom.GetIntExpectation.nextInt;
 
 import org.junit.Test;
+import org.oakgp.evolve.GeneticOperator;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
 import org.oakgp.primitive.DummyPrimitiveSet;
@@ -65,7 +66,7 @@ public class ShrinkMutationTest {
          }
       };
       DummyRandom random = nextInt(4).returns(1, 3, 0, 2);
-      ShrinkMutation mutator = new ShrinkMutation(random, primitiveSet);
+      GeneticOperator mutator = new MutateWrapper(new ShrinkMutation(), primitiveSet, null, random);
 
       assertNodeEquals("(+ (+ 42 v1) (+ 9 v2))", mutator.evolve(selector));
       assertNodeEquals("(+ (+ (if (zero? v0) 7 8) v1) 42)", mutator.evolve(selector));
@@ -78,7 +79,7 @@ public class ShrinkMutationTest {
 
    private Node shrinkMutate(Random random, PrimitiveSet primitiveSet, Node input) {
       DummyNodeSelector selector = new DummyNodeSelector(input);
-      Node result = new ShrinkMutation(random, primitiveSet).evolve(selector);
+      Node result = new MutateWrapper(new ShrinkMutation(), primitiveSet, null, random).evolve(selector);
       selector.assertEmpty();
       return result;
    }

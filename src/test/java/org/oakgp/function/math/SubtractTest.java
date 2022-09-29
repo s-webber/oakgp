@@ -133,6 +133,7 @@ public class SubtractTest extends AbstractFunctionTest {
    public void testCannotSimplify() {
       cannotSimplify("(- v0 1)", integerType());
       cannotSimplify("(- 0 v0)", integerType());
+      cannotSimplify("(- -1 v0)", integerType()); // TODO simplify to (v0 -1)
    }
 
    @Override

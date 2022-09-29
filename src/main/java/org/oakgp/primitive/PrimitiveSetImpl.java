@@ -15,12 +15,16 @@
  */
 package org.oakgp.primitive;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.oakgp.function.Signature;
+import org.oakgp.node.AutomaticallyDefinedFunction;
 import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
+import org.oakgp.node.VariableNode;
 import org.oakgp.type.Types.Type;
 import org.oakgp.util.Random;
 
@@ -155,5 +159,20 @@ public final class PrimitiveSetImpl implements PrimitiveSet {
 
    private int nextInt(int bound) {
       return bound == 1 ? 0 : random.nextInt(bound);
+   }
+
+   public PrimitiveSetImpl addFunction(AutomaticallyDefinedFunction newFunction) {
+      Collection<FunctionSet.Key> functions = new ArrayList<>(functionSet.getFunctions());
+      functions.add(new FunctionSet.Key(newFunction, newFunction.getSignature()));
+      return new PrimitiveSetImpl(new FunctionSet(functions), constantSet, variableSet, random, ratioVariables);
+   }
+
+   public PrimitiveSetImpl addVariable(String name, Type newVariable) {
+      VariableNode[] variables = new VariableNode[variableSet.size() + 1];
+      for (int i = 0; i < variableSet.size(); i++) {
+         variables[i] = variableSet.getById(i);
+      }
+      variables[variableSet.size()] = new VariableNode(variableSet.size(), name, newVariable);
+      return new PrimitiveSetImpl(functionSet, constantSet, VariableSet.createVariableSet(variables), random, ratioVariables);
    }
 }

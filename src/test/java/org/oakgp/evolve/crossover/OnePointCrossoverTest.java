@@ -30,7 +30,7 @@ public class OnePointCrossoverTest {
       DummyRandom dummyRandom = nextInt(4).returns(0, 1, 2, 3);
       DummyNodeSelector dummySelector = DummyNodeSelector.repeat(4, "(if true 5 (+ 1 (- 2 3)))", "(if false 7 (- 8 v5))");
 
-      GeneticOperator c = new OnePointCrossover(dummyRandom);
+      GeneticOperator c = new CrossoverWrapper(new OnePointCrossover(), dummyRandom);
 
       assertNodeEquals("(if false 5 (+ 1 (- 2 3)))", c.evolve(dummySelector));
       assertNodeEquals("(if true 7 (+ 1 (- 2 3)))", c.evolve(dummySelector));
@@ -45,7 +45,7 @@ public class OnePointCrossoverTest {
    public void testConstantNode() {
       DummyNodeSelector dummySelector = new DummyNodeSelector("7", "(* 7 (- 8 v5))");
 
-      GeneticOperator c = new OnePointCrossover(DummyRandom.EMPTY);
+      GeneticOperator c = new CrossoverWrapper(new OnePointCrossover(), DummyRandom.EMPTY);
 
       Node result = c.evolve(dummySelector);
       assertNodeEquals("(* 7 (- 8 v5))", result);

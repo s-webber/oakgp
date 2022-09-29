@@ -45,7 +45,7 @@ public final class ConstantSet {
       return constantsByType.getByType(type);
    }
 
-   public List<ConstantNode> getAll() {
+   public List<ConstantNode> getAll() { // TODO add tests for this method
       return constants;
    }
 }

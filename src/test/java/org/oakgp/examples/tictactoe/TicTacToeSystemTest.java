@@ -25,7 +25,7 @@ import org.oakgp.NodeSimplifier;
 import org.oakgp.function.bool.And;
 import org.oakgp.function.choice.If;
 import org.oakgp.function.choice.OrElse;
-import org.oakgp.node.AbstractDefinedFunctions;
+import org.oakgp.node.AutomaticallyDefinedFunctions;
 import org.oakgp.node.Node;
 import org.oakgp.primitive.ConstantSet;
 import org.oakgp.primitive.FunctionSet;
@@ -68,7 +68,7 @@ public class TicTacToeSystemTest {
       ConstantSet constantSet = getMoveConstants();
       TwoPlayerGame game = createTicTacToeGame();
 
-      new RunBuilder().setReturnType(MOVE_TYPE).setConstants(constantSet).setVariables(VARIABLE_TYPES).setFunctionSet(functionSet).setTwoPlayerGame(game)
+      new RunBuilder().setReturnType(MOVE_TYPE).setConstantSet(constantSet).setVariables(VARIABLE_TYPES).setFunctionSet(functionSet).setTwoPlayerGame(game)
             .setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_POPULATION_MAX_DEPTH).setMaxGenerations(NUM_GENERATIONS).process();
    }
 
@@ -108,7 +108,7 @@ public class TicTacToeSystemTest {
       ConstantSet constantSet = getMoveConstants();
       TicTacToeFitnessFunction fitnessFunction = new TicTacToeFitnessFunction();
 
-      new RunBuilder().setReturnType(MOVE_TYPE).setConstants(constantSet).setVariables(VARIABLE_TYPES).setFunctionSet(functionSet)
+      new RunBuilder().setReturnType(MOVE_TYPE).setConstantSet(constantSet).setVariables(VARIABLE_TYPES).setFunctionSet(functionSet)
             .setFitnessFunction(fitnessFunction).setInitialPopulationSize(INITIAL_POPULATION_SIZE).setTreeDepth(INITIAL_POPULATION_MAX_DEPTH)
             .setMaxGenerations(NUM_GENERATIONS).process();
    }
@@ -126,13 +126,13 @@ public class TicTacToeSystemTest {
       private Node[] ais = new Node[] { //
             new DummyNode() {
                @Override
-               public Move evaluate(Assignments assignments, AbstractDefinedFunctions adfs) {
+               public Move evaluate(Assignments assignments, AutomaticallyDefinedFunctions adfs) {
                   Board board = (Board) assignments.get(0);
                   return board.getFreeMove();
                }
             }, new DummyNode() {
                @Override
-               public Move evaluate(Assignments assignments, AbstractDefinedFunctions adfs) {
+               public Move evaluate(Assignments assignments, AutomaticallyDefinedFunctions adfs) {
                   Board board = (Board) assignments.get(0);
                   Move nextMove = board.getWinningMove(Symbol.X);
                   if (nextMove == null) {
@@ -142,7 +142,7 @@ public class TicTacToeSystemTest {
                }
             }, new DummyNode() {
                @Override
-               public Move evaluate(Assignments assignments, AbstractDefinedFunctions adfs) {
+               public Move evaluate(Assignments assignments, AutomaticallyDefinedFunctions adfs) {
                   Board board = (Board) assignments.get(0);
                   Move nextMove = board.getWinningMove(Symbol.O);
                   if (nextMove == null) {
@@ -152,7 +152,7 @@ public class TicTacToeSystemTest {
                }
             }, new DummyNode() {
                @Override
-               public Move evaluate(Assignments assignments, AbstractDefinedFunctions adfs) {
+               public Move evaluate(Assignments assignments, AutomaticallyDefinedFunctions adfs) {
                   Board board = (Board) assignments.get(0);
                   Move nextMove = board.getWinningMove(Symbol.X);
                   if (nextMove == null) {
@@ -171,7 +171,7 @@ public class TicTacToeSystemTest {
                }
             }, new DummyNode() {
                @Override
-               public Move evaluate(Assignments assignments, AbstractDefinedFunctions adfs) {
+               public Move evaluate(Assignments assignments, AutomaticallyDefinedFunctions adfs) {
                   Board board = (Board) assignments.get(0);
                   Move nextMove = board.getWinningMove(Symbol.X);
                   if (nextMove == null) {

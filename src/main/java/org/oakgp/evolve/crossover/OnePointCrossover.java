@@ -15,9 +15,7 @@
  */
 package org.oakgp.evolve.crossover;
 
-import org.oakgp.evolve.GeneticOperator;
 import org.oakgp.node.Node;
-import org.oakgp.select.NodeSelector;
 import org.oakgp.util.Random;
 import org.oakgp.util.Utils;
 
@@ -31,18 +29,9 @@ import org.oakgp.util.Utils;
  * @see <a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.49.5419&rep=rep1&type=pdf">Genetic Programming with One-Point Crossover and Point
  *      Mutation</a>
  */
-public final class OnePointCrossover implements GeneticOperator {
-   private final Random random;
-
-   /** Creates a {@code OnePointCrossover} that uses the given {@code Random} to select crossover points. */
-   public OnePointCrossover(Random random) {
-      this.random = random;
-   }
-
+public final class OnePointCrossover implements CrossoverOperator {
    @Override
-   public Node evolve(NodeSelector selector) {
-      Node parent1 = selector.next();
-      Node parent2 = selector.next();
+   public Node crossover(Node parent1, Node parent2, Random random) {
       int commonRegionSize = CommonRegion.getNodeCount(parent1, parent2);
       if (commonRegionSize < 2) {
          return parent2;

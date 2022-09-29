@@ -23,7 +23,7 @@ import static org.oakgp.type.CommonTypes.integerType;
 
 import org.junit.Test;
 import org.oakgp.Assignments;
-import org.oakgp.node.AbstractDefinedFunctions;
+import org.oakgp.node.AutomaticallyDefinedFunctions;
 import org.oakgp.node.ChildNodes;
 
 public class FunctionTest {
@@ -36,7 +36,7 @@ public class FunctionTest {
          }
 
          @Override
-         public Object evaluate(ChildNodes arguments, Assignments assignments, AbstractDefinedFunctions adfs) {
+         public Object evaluate(ChildNodes arguments, Assignments assignments, AutomaticallyDefinedFunctions adfs) {
             throw new UnsupportedOperationException();
          }
       };
@@ -66,7 +66,7 @@ class DummyFunction implements Function {
    }
 
    @Override
-   public Object evaluate(ChildNodes arguments, Assignments assignments, AbstractDefinedFunctions adfs) {
+   public Object evaluate(ChildNodes arguments, Assignments assignments, AutomaticallyDefinedFunctions adfs) {
       throw new UnsupportedOperationException();
    }
 }
@@ -78,7 +78,7 @@ class IsBooleanDummyFunction implements Function {
    }
 
    @Override
-   public Object evaluate(ChildNodes arguments, Assignments assignments, AbstractDefinedFunctions adfs) {
+   public Object evaluate(ChildNodes arguments, Assignments assignments, AutomaticallyDefinedFunctions adfs) {
       throw new UnsupportedOperationException();
    }
 }

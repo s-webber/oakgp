@@ -28,6 +28,10 @@ public final class VariableSet {
    private final TypeMap<VariableNode> variablesByType;
    private final VariableNode[] variables;
 
+   public static VariableSet createVariableSet(VariableNode[] variables) {
+      return new VariableSet(variables);
+   }
+
    /** Constructs a variable set containing variables of the specified types. */
    public static VariableSet createVariableSet(Type... variableTypes) {
       Pair<String, Type>[] pairs = new Pair[variableTypes.length];
@@ -38,7 +42,7 @@ public final class VariableSet {
    }
 
    /** Constructs a variable set containing variables of the specified types. */
-   public static VariableSet createVariableSet(Pair<String, Type>[] variableTypes) {
+   public static VariableSet createVariableSet(Pair<String, Type>[] variableTypes) { // TODO replace array with list
       return new VariableSet(variableTypes);
    }
 
@@ -48,6 +52,11 @@ public final class VariableSet {
       for (int i = 0; i < variableTypes.length; i++) {
          this.variables[i] = new VariableNode(i, variableTypes[i].getKey(), variableTypes[i].getValue());
       }
+      this.variablesByType = new TypeMap<>(Arrays.asList(variables), VariableNode::getType);
+   }
+
+   private VariableSet(VariableNode[] variables) { // TODO make this the only constructor
+      this.variables = variables;
       this.variablesByType = new TypeMap<>(Arrays.asList(variables), VariableNode::getType);
    }
 

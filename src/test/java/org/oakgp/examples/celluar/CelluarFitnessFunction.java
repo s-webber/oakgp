@@ -1,17 +1,13 @@
 package org.oakgp.examples.celluar;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Map;
-import java.util.Random;
 
 import org.oakgp.Assignments;
-import org.oakgp.node.AbstractDefinedFunctions;
 import org.oakgp.node.Node;
 import org.oakgp.rank.fitness.FitnessFunction;
-import org.oakgp.util.DummyNode;
 
-class Celluar implements FitnessFunction {
+class CelluarFitnessFunction implements FitnessFunction {
    private static final int NUM_ITERATIONS = 600;
    private static final int NUM_BITS = 149;
    private static final int NUM_ARGS = 7;
@@ -21,7 +17,6 @@ class Celluar implements FitnessFunction {
    static {
       for (int i = 0; i < NUM_BITS; i++) {
          BITMASKS[i] = createBitmask(i);
-         System.out.println(i + " " + Arrays.toString(BITMASKS[i]));
       }
 
       for (int i = 0; i < ASSIGNMENTS.length; i++) {
@@ -33,7 +28,6 @@ class Celluar implements FitnessFunction {
          boolean b6 = (i & 0b100000) != 0;
          boolean b7 = (i & 0b1000000) != 0;
          ASSIGNMENTS[i] = Assignments.createAssignments(b1, b2, b3, b4, b5, b6, b7);
-         System.out.println(i + " " + ASSIGNMENTS[i]);
       }
    }
 
@@ -51,27 +45,29 @@ class Celluar implements FitnessFunction {
       return params;
    }
 
-   public static void main(String[] args) {
-      Random r = new Random();
-      Object[] input = new Object[NUM_BITS];
-      for (int i = 0; i < NUM_BITS; i++) {
-         input[i] = r.nextBoolean();
-      }
-
-      Map<Assignments, Boolean> m = Collections.singletonMap(Assignments.createAssignments(input), true);
-      new Celluar(m).evaluate(new DummyNode() {
-         @Override
-         public Boolean evaluate(Assignments assignments, AbstractDefinedFunctions adfs) {
-            return r.nextBoolean();
-         }
-      });
-   }
+   // public static void main(String[] args) {
+   // Random r = new Random();
+   // Object[] input = new Object[NUM_BITS];
+   // for (int i = 0; i < NUM_BITS; i++) {
+   // input[i] = r.nextBoolean();
+   // }
+   //
+   // Map<Assignments, Boolean> m = Collections.singletonMap(Assignments.createAssignments(input), true);
+   // new Celluar(m).evaluate(new DummyNode() {
+   // @Override
+   // public Boolean evaluate(Assignments assignments, AutomaticallyDefinedFunctions adfs) {
+   // return r.nextBoolean();
+   // }
+   // });
+   // }
 
    private final Map<Assignments, Boolean> testCases;
 
-   Celluar(Map<Assignments, Boolean> testCases) {
+   CelluarFitnessFunction(Map<Assignments, Boolean> testCases) {
       this.testCases = testCases;
    }
+
+   int ctr = 0;
 
    @Override
    public double evaluate(Node candidate) {

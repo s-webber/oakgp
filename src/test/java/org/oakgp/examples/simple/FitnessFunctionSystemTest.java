@@ -84,8 +84,8 @@ public class FitnessFunctionSystemTest {
 
       RankedCandidates output = new RunBuilder() //
             .setReturnType(integerType()) //
-            .setConstants(constantSet) //
-            .setVariables(variableSet) //
+            .setConstantSet(constantSet) //
+            .setVariableSet(variableSet) //
             .setFunctions(ARITHMETIC_FUNCTIONS) //
             .setFitnessFunction(fitnessFunction) //
             .setInitialPopulationSize(INITIAL_POPULATION_SIZE) //
@@ -110,8 +110,8 @@ public class FitnessFunctionSystemTest {
 
       RankedCandidates output = new RunBuilder() //
             .setReturnType(integerType()) //
-            .setConstants(constantSet) //
-            .setVariables(variableSet) //
+            .setConstantSet(constantSet) //
+            .setVariableSet(variableSet) //
             .setFunctions(ARITHMETIC_FUNCTIONS) //
             .setFitnessFunction(fitnessFunction) //
             .setInitialPopulationSize(INITIAL_POPULATION_SIZE) //
@@ -143,8 +143,8 @@ public class FitnessFunctionSystemTest {
 
       RankedCandidates output = new RunBuilder() //
             .setReturnType(integerType()) //
-            .setConstants(constantSet) //
-            .setVariables(variableSet) //
+            .setConstantSet(constantSet) //
+            .setVariableSet(variableSet) //
             .setFunctionSet(functionSet) //
             .setFitnessFunction(fitnessFunction) //
             .setInitialPopulationSize(INITIAL_POPULATION_SIZE) //

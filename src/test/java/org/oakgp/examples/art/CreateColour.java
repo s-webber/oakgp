@@ -22,7 +22,7 @@ import java.awt.Color;
 import org.oakgp.Assignments;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
-import org.oakgp.node.AbstractDefinedFunctions;
+import org.oakgp.node.AutomaticallyDefinedFunctions;
 import org.oakgp.node.ChildNodes;
 
 public class CreateColour implements Function {
@@ -30,7 +30,7 @@ public class CreateColour implements Function {
    private static final Signature SIGNATURE = Signature.createSignature(ArtFactory.COLOUR_TYPE, integerType(), integerType(), integerType());
 
    @Override
-   public Object evaluate(ChildNodes arguments, Assignments assignments, AbstractDefinedFunctions adfs) {
+   public Object evaluate(ChildNodes arguments, Assignments assignments, AutomaticallyDefinedFunctions adfs) {
       int red = arguments.first().evaluate(assignments, adfs);
       int green = arguments.second().evaluate(assignments, adfs);
       int blue = arguments.third().evaluate(assignments, adfs);

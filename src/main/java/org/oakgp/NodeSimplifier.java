@@ -26,6 +26,7 @@ import org.oakgp.node.ChildNodes;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
+import org.oakgp.node.ProgramNode;
 
 /**
  * Attempts to reduce the size of tree structures without altering their functionality.
@@ -88,7 +89,7 @@ public final class NodeSimplifier {
          if (ctr++ > MAX_RETRIES) {
             throw new IllegalArgumentException(input.toString());
          }
-      } while (isFunction(output) && !output.equals(previous));
+      } while (output.getNodeCount() > 1 && !output.equals(previous));
       // long took = System.currentTimeMillis() - start;
       // if (took > 2000) {
       // System.out.println(">>> " + input.getNodeCount() + " " + input);
@@ -100,18 +101,28 @@ public final class NodeSimplifier {
    }
 
    private static Node simplifyOnce(Node input) {
-      if (isFunction(input)) {
+      if (input instanceof ProgramNode) {
+         return simplifyProgramNode((ProgramNode) input);
+      } else if (isFunction(input)) {
          return simplifyFunctionNode((FunctionNode) input);
       } else {
          return input;
       }
    }
 
-   static Object evaluate(Node n, Assignments assignments) {
-      return n.evaluate(assignments, null);
+   private static Node simplifyProgramNode(final ProgramNode originalProgramNode) {
+      Node[] newBranches = new Node[originalProgramNode.adfCount()];
+      boolean updated = false;
+      for (int i = 0; i < newBranches.length; i++) {
+         Node originalBranch = originalProgramNode.getAbstractDefinedFunction(i);
+         if (originalBranch != (newBranches[i] = simplify(originalBranch))) {
+            updated = true;
+         }
+      }
+      return updated ? new ProgramNode(newBranches) : originalProgramNode;
    }
 
-   public static Node simplifyFunctionNode(final FunctionNode input) {
+   private static Node simplifyFunctionNode(final FunctionNode input) {
       // try to simplify each of the arguments
       ChildNodes inputChildren = input.getChildren();
       Node[] simplifiedArgs = new Node[inputChildren.size()];

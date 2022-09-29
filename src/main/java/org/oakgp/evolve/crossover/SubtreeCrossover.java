@@ -17,11 +17,9 @@ package org.oakgp.evolve.crossover;
 
 import java.util.function.Predicate;
 
-import org.oakgp.evolve.GeneticOperator;
 import org.oakgp.node.Node;
 import org.oakgp.node.walk.DepthWalk;
 import org.oakgp.node.walk.StrategyWalk;
-import org.oakgp.select.NodeSelector;
 import org.oakgp.type.Types.Type;
 import org.oakgp.util.Random;
 import org.oakgp.util.Utils;
@@ -33,27 +31,15 @@ import org.oakgp.util.Utils;
  * tree can differ significantly from either of the trees that were combined to produce it.
  * </p>
  */
-public final class SubtreeCrossover implements GeneticOperator {
-   private final Random random;
+public final class SubtreeCrossover implements CrossoverOperator {
    private final int maxDepth;
 
-   /**
-    * Creates a {@code SubtreeCrossover} that uses the given {@code Random} to select subtrees from parents.
-    *
-    * @param random
-    *           used to randomly select subtrees to replace and the subtrees to replace them with
-    * @param maxDepth
-    *           used to enforce a maximum depth of any offspring
-    */
-   public SubtreeCrossover(Random random, int maxDepth) {
-      this.random = random;
+   public SubtreeCrossover(int maxDepth) {
       this.maxDepth = maxDepth;
    }
 
    @Override
-   public Node evolve(NodeSelector selector) {
-      Node parent1 = selector.next();
-      Node parent2 = selector.next();
+   public Node crossover(Node parent1, Node parent2, Random random) {
       int to = Utils.selectSubNodeIndex(random, parent1);
       return DepthWalk.replaceAt(parent1, to, (t, d) -> {
          int maxHeightParent2 = maxDepth - d;

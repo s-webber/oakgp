@@ -15,12 +15,11 @@
  */
 package org.oakgp.evolve.mutate;
 
-import org.oakgp.evolve.GeneticOperator;
+import org.oakgp.generate.TreeGenerator;
 import org.oakgp.node.Node;
 import org.oakgp.node.NodeType;
 import org.oakgp.node.walk.StrategyWalk;
 import org.oakgp.primitive.PrimitiveSet;
-import org.oakgp.select.NodeSelector;
 import org.oakgp.util.Random;
 import org.oakgp.util.Utils;
 
@@ -29,38 +28,21 @@ import org.oakgp.util.Utils;
  * <p>
  * The resulting offspring will be smaller than the parent.
  */
-public final class ShrinkMutation implements GeneticOperator {
-   private final Random random;
-   private final PrimitiveSet primitiveSet;
-
-   /**
-    * Creates a {@code ShrinkMutation} that uses a {@code Random} to select function nodes to replace with terminals from a {@code PrimitiveSet}.
-    *
-    * @param random
-    *           used to randomly select function nodes
-    * @param primitiveSet
-    *           used to select terminal nodes to replace function nodes with
-    */
-   public ShrinkMutation(Random random, PrimitiveSet primitiveSet) {
-      this.random = random;
-      this.primitiveSet = primitiveSet;
-   }
-
+public final class ShrinkMutation implements MutateOperator {
    @Override
-   public Node evolve(NodeSelector selector) {
-      Node root = selector.next();
-      int nodeCount = StrategyWalk.getNodeCount(root, NodeType::isFunction);
+   public Node mutate(Node input, PrimitiveSet primitiveSet, TreeGenerator treeGenerator, Random random) {
+      int nodeCount = StrategyWalk.getNodeCount(input, NodeType::isFunction);
       if (nodeCount == 0) {
          // if nodeCount == 0 then that indicates that 'root' is a terminal node
          // (so can't be shrunk any further)
-         return root;
+         return input;
       } else if (nodeCount == 1) {
          // if node count == 1 then that indicates that 'root' is a function node
          // that only has terminal nodes as arguments
-         return primitiveSet.nextAlternativeTerminal(root);
+         return primitiveSet.nextAlternativeTerminal(input);
       } else {
          int index = Utils.selectSubNodeIndex(random, nodeCount);
-         return StrategyWalk.replaceAt(root, index, primitiveSet::nextAlternativeTerminal, NodeType::isFunction);
+         return StrategyWalk.replaceAt(input, index, primitiveSet::nextAlternativeTerminal, NodeType::isFunction);
       }
    }
 }

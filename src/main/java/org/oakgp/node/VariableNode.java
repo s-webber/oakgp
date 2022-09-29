@@ -64,7 +64,7 @@ public final class VariableNode extends TerminalNode {
     */
    @SuppressWarnings("unchecked")
    @Override
-   public <T> T evaluate(Assignments assignments, AbstractDefinedFunctions adfs) {
+   public <T> T evaluate(Assignments assignments, AutomaticallyDefinedFunctions adfs) {
       return (T) assignments.get(id);
    }
 

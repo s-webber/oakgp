@@ -15,37 +15,19 @@
  */
 package org.oakgp.evolve.mutate;
 
-import org.oakgp.evolve.GeneticOperator;
 import org.oakgp.generate.TreeGenerator;
 import org.oakgp.node.Node;
 import org.oakgp.node.walk.NodeWalk;
-import org.oakgp.select.NodeSelector;
+import org.oakgp.primitive.PrimitiveSet;
 import org.oakgp.util.Random;
 import org.oakgp.util.Utils;
 
 /** Randomly replaces a subtree of the parent with a newly generated subtree. */
-public final class SubTreeMutation implements GeneticOperator {
-   private final Random random;
-   private final TreeGenerator treeGenerator;
-
-   /**
-    * Creates a {@code SubTreeMutation} that uses the given {@code TreeGenerator} to generate new subtrees to replace existing subtrees.
-    *
-    * @param random
-    *           used to randomly select nodes to mutate
-    * @param treeGenerator
-    *           used to generate new subtrees to replace nodes selected for mutation
-    */
-   public SubTreeMutation(Random random, TreeGenerator treeGenerator) {
-      this.random = random;
-      this.treeGenerator = treeGenerator;
-   }
-
+public final class SubTreeMutation implements MutateOperator {
    @Override
-   public Node evolve(NodeSelector selector) {
-      Node root = selector.next();
-      int mutationPoint = Utils.selectSubNodeIndex(random, root);
-      return NodeWalk.replaceAt(root, mutationPoint, node -> {
+   public Node mutate(Node input, PrimitiveSet primitiveSet, TreeGenerator treeGenerator, Random random) {
+      int mutationPoint = Utils.selectSubNodeIndex(random, input);
+      return NodeWalk.replaceAt(input, mutationPoint, node -> {
          return treeGenerator.generate(node.getType(), node.getHeight());
       });
    }

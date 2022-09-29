@@ -187,7 +187,7 @@ public class FunctionNodeTest {
    public void testEqualityRequiresSameFunctionInstance() {
       class DummyFunction implements Function {
          @Override
-         public Object evaluate(ChildNodes arguments, Assignments assignments, AbstractDefinedFunctions adfs) {
+         public Object evaluate(ChildNodes arguments, Assignments assignments, AutomaticallyDefinedFunctions adfs) {
             throw new UnsupportedOperationException();
          }
 

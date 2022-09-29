@@ -22,6 +22,7 @@ import static org.oakgp.TestUtils.readNode;
 import static org.oakgp.util.DummyRandom.GetIntExpectation.nextInt;
 
 import org.junit.Test;
+import org.oakgp.evolve.GeneticOperator;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.Node;
 import org.oakgp.select.DummyNodeSelector;
@@ -50,7 +51,7 @@ public class HoistMutationTest {
       Node input = readNode("(+ (+ (if (zero? v0) 7 8) v1) (+ 9 v2))");
       DummyNodeSelector selector = DummyNodeSelector.repeat(9, input);
       DummyRandom random = nextInt(9).returns(3, 4, 5, 2, 1, 8, 6, 7, 0);
-      HoistMutation mutator = new HoistMutation(random);
+      GeneticOperator mutator = new MutateWrapper(new HoistMutation(), null, null, random);
 
       assertNodeEquals("(if (zero? v0) 7 8)", mutator.evolve(selector));
       assertNodeEquals("v1", mutator.evolve(selector));
@@ -68,7 +69,7 @@ public class HoistMutationTest {
 
    private Node hoistMutate(Random random, Node input) {
       DummyNodeSelector selector = new DummyNodeSelector(input);
-      Node result = new HoistMutation(random).evolve(selector);
+      Node result = new MutateWrapper(new HoistMutation(), null, null, random).evolve(selector);
       selector.assertEmpty();
       return result;
    }

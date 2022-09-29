@@ -25,7 +25,7 @@ import static org.oakgp.type.CommonTypes.voidType;
 import org.oakgp.Assignments;
 import org.oakgp.function.ImpureFunction;
 import org.oakgp.function.Signature;
-import org.oakgp.node.AbstractDefinedFunctions;
+import org.oakgp.node.AutomaticallyDefinedFunctions;
 import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
@@ -43,7 +43,7 @@ class TriSequence implements ImpureFunction {
    }
 
    @Override
-   public Object evaluate(ChildNodes arguments, Assignments assignments, AbstractDefinedFunctions adfs) {
+   public Object evaluate(ChildNodes arguments, Assignments assignments, AutomaticallyDefinedFunctions adfs) {
       arguments.first().evaluate(assignments, adfs);
       arguments.second().evaluate(assignments, adfs);
       arguments.third().evaluate(assignments, adfs);

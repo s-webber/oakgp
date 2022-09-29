@@ -1,5 +1,5 @@
 package org.oakgp.node;
 
-public interface AbstractDefinedFunctions {
+public interface AutomaticallyDefinedFunctions {
    Node getAbstractDefinedFunction(int i);
 }

@@ -41,7 +41,7 @@ public class SubtreeCrossoverTest {
       DummyRandom dummyRandom = random().nextInt(2).returns(1).nextInt(5).returns(3).build();
       DummyNodeSelector dummySelector = new DummyNodeSelector("(+ 9 5)", "(* 7 (- 8 v5))");
 
-      GeneticOperator c = new SubtreeCrossover(dummyRandom, DEFAULT_DEPTH);
+      GeneticOperator c = new CrossoverWrapper(new SubtreeCrossover(DEFAULT_DEPTH), dummyRandom);
 
       Node result = c.evolve(dummySelector);
       assertNodeEquals("(+ 9 (- 8 v5))", result);
@@ -55,7 +55,7 @@ public class SubtreeCrossoverTest {
       DummyRandom dummyRandom = nextInt(1).returns(0);
       DummyNodeSelector dummySelector = new DummyNodeSelector("1", "2");
 
-      GeneticOperator c = new SubtreeCrossover(dummyRandom, DEFAULT_DEPTH);
+      GeneticOperator c = new CrossoverWrapper(new SubtreeCrossover(DEFAULT_DEPTH), dummyRandom);
 
       Node result = c.evolve(dummySelector);
       assertNodeEquals("2", result);
@@ -71,7 +71,7 @@ public class SubtreeCrossoverTest {
       DummyRandom dummyRandom = random().nextInt(2).returns(0, 1, 1, 1, 1, 1).nextInt(5).returns(0, 0, 1, 2, 3, 4).build();
       DummyNodeSelector dummySelector = new DummyNodeSelector(input, output, input, output, input, output, input, output, input, output, input, output);
 
-      GeneticOperator c = new SubtreeCrossover(dummyRandom, DEFAULT_DEPTH);
+      GeneticOperator c = new CrossoverWrapper(new SubtreeCrossover(DEFAULT_DEPTH), dummyRandom);
 
       assertNodeEquals("(+ 6 5)", c.evolve(dummySelector));
       assertNodeEquals("(+ 4 6)", c.evolve(dummySelector));
@@ -93,7 +93,7 @@ public class SubtreeCrossoverTest {
       DummyRandom dummyRandom = nextInt(7).returns(2);
       DummyNodeSelector dummySelector = new DummyNodeSelector(input, output);
 
-      GeneticOperator c = new SubtreeCrossover(dummyRandom, DEFAULT_DEPTH);
+      GeneticOperator c = new CrossoverWrapper(new SubtreeCrossover(DEFAULT_DEPTH), dummyRandom);
 
       assertNodeEquals(input, c.evolve(dummySelector));
 
@@ -134,7 +134,7 @@ public class SubtreeCrossoverTest {
          dummyRandom = random().nextInt(first).returns(second).nextInt(third).returns(fourth).build();
       }
 
-      GeneticOperator c = new SubtreeCrossover(dummyRandom, maxDepth);
+      GeneticOperator c = new CrossoverWrapper(new SubtreeCrossover(maxDepth), dummyRandom);
       Node result = c.evolve(dummySelector);
 
       dummyRandom.assertEmpty();

@@ -22,7 +22,7 @@ import java.util.Collections;
 
 import org.junit.Test;
 import org.oakgp.Assignments;
-import org.oakgp.node.AbstractDefinedFunctions;
+import org.oakgp.node.AutomaticallyDefinedFunctions;
 import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
@@ -38,7 +38,7 @@ public class BooleanFunctionTest {
          }
 
          @Override
-         public Object evaluate(ChildNodes arguments, Assignments assignments, AbstractDefinedFunctions adfs) {
+         public Object evaluate(ChildNodes arguments, Assignments assignments, AutomaticallyDefinedFunctions adfs) {
             throw new UnsupportedOperationException();
          }
       };

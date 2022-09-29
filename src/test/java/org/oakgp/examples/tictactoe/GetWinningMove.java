@@ -22,14 +22,14 @@ import static org.oakgp.type.Types.type;
 import org.oakgp.Assignments;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
-import org.oakgp.node.AbstractDefinedFunctions;
+import org.oakgp.node.AutomaticallyDefinedFunctions;
 import org.oakgp.node.ChildNodes;
 
 final class GetWinningMove implements Function {
    private static final Signature SIGNATURE = createSignature(nullableType(type("tictactoemove")), type("board"), type("symbol"));
 
    @Override
-   public Object evaluate(ChildNodes arguments, Assignments assignments, AbstractDefinedFunctions adfs) {
+   public Object evaluate(ChildNodes arguments, Assignments assignments, AutomaticallyDefinedFunctions adfs) {
       Board board = arguments.first().evaluate(assignments, adfs);
       Symbol symbol = arguments.second().evaluate(assignments, adfs);
       return board.getWinningMove(symbol);

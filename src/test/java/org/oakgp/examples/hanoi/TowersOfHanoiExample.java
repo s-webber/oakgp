@@ -64,8 +64,8 @@ public class TowersOfHanoiExample {
 
       RankedCandidates output = new RunBuilder() //
             .setReturnType(MOVE_TYPE) //
-            .setConstants(constantSet) //
-            .setVariables(variableSet) //
+            .setConstantSet(constantSet) //
+            .setVariableSet(variableSet) //
             .setFunctionSet(functionSet) //
             .setFitnessFunction(fitnessFunction) //
             .setInitialPopulationSize(INITIAL_POPULATION_SIZE) //

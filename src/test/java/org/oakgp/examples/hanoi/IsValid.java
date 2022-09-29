@@ -22,7 +22,7 @@ import static org.oakgp.type.CommonTypes.booleanType;
 import org.oakgp.Assignments;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
-import org.oakgp.node.AbstractDefinedFunctions;
+import org.oakgp.node.AutomaticallyDefinedFunctions;
 import org.oakgp.node.ChildNodes;
 
 // TODO move this functionality to TowersOfHanoi and plug-in to FunctionSetBuilder
@@ -44,7 +44,7 @@ class IsValid implements Function {
     * @return {@code true} if the specified move is a valid move for the specified game state, else {@code false}
     */
    @Override
-   public Object evaluate(ChildNodes arguments, Assignments assignments, AbstractDefinedFunctions adfs) {
+   public Object evaluate(ChildNodes arguments, Assignments assignments, AutomaticallyDefinedFunctions adfs) {
       TowersOfHanoi gameState = arguments.first().evaluate(assignments, adfs);
       Move move = arguments.second().evaluate(assignments, adfs);
       return gameState.move(move) != null;

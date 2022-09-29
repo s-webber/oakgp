@@ -27,6 +27,7 @@ import org.oakgp.node.NodeType;
 import org.oakgp.type.Types.Type;
 
 public final class CommonTypes {
+   // TODO remove "private static final Type" variables - call "Types.type(Class<?>)" directly from static methods each time
    private static final Type COMPARABLE = type(Comparable.class, Types.generic("E"));
    private static final Type NUMBER = type(Number.class);
    private static final Type STRING = type(String.class);

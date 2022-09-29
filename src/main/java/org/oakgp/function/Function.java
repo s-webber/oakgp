@@ -18,7 +18,7 @@ package org.oakgp.function;
 import static org.oakgp.type.CommonTypes.booleanType;
 
 import org.oakgp.Assignments;
-import org.oakgp.node.AbstractDefinedFunctions;
+import org.oakgp.node.AutomaticallyDefinedFunctions;
 import org.oakgp.node.ChildNodes;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
@@ -34,7 +34,7 @@ public interface Function {
     *           represents the arguments to apply to the operation
     * @return the result of applying this operation to the {@code arguments}
     */
-   Object evaluate(ChildNodes arguments, Assignments assignments, AbstractDefinedFunctions adfs);
+   Object evaluate(ChildNodes arguments, Assignments assignments, AutomaticallyDefinedFunctions adfs);
 
    /** Returns the return type and argument types associated with this function. */
    Signature getSignature();

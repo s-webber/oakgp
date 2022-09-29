@@ -28,7 +28,7 @@ import org.junit.ComparisonFailure;
 import org.junit.Test;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
-import org.oakgp.node.AbstractDefinedFunctions;
+import org.oakgp.node.AutomaticallyDefinedFunctions;
 import org.oakgp.node.ChildNodes;
 import org.oakgp.node.ConstantNode;
 import org.oakgp.node.FunctionNode;
@@ -218,7 +218,7 @@ public class NodeSimplifierTest {
          }
 
          @Override
-         public Object evaluate(ChildNodes arguments, Assignments assignments, AbstractDefinedFunctions adfs) {
+         public Object evaluate(ChildNodes arguments, Assignments assignments, AutomaticallyDefinedFunctions adfs) {
             return evaluationResult;
          }
 
@@ -242,7 +242,7 @@ public class NodeSimplifierTest {
          }
 
          @Override
-         public Object evaluate(ChildNodes arguments, Assignments assignments, AbstractDefinedFunctions adfs) {
+         public Object evaluate(ChildNodes arguments, Assignments assignments, AutomaticallyDefinedFunctions adfs) {
             throw new UnsupportedOperationException();
          }
 

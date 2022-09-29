@@ -111,7 +111,7 @@ public final class FunctionNode implements Node {
 
    @SuppressWarnings("unchecked")
    @Override
-   public <T> T evaluate(Assignments assignments, AbstractDefinedFunctions adfs) {
+   public <T> T evaluate(Assignments assignments, AutomaticallyDefinedFunctions adfs) {
       return (T) function.evaluate(arguments, assignments, adfs);
    }
 

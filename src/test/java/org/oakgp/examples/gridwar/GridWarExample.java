@@ -57,8 +57,8 @@ public class GridWarExample {
 
       RankedCandidates output = new RunBuilder() //
             .setReturnType(integerType()) //
-            .setConstants(constantSet) //
-            .setVariables(variableSet) //
+            .setConstantSet(constantSet) //
+            .setVariableSet(variableSet) //
             .setFunctionSet(functionSet) //
             .setTwoPlayerGame(game) //
             .setInitialPopulationSize(INITIAL_POPULATION_SIZE) //

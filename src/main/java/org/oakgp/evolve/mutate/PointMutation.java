@@ -17,13 +17,12 @@ package org.oakgp.evolve.mutate;
 
 import static org.oakgp.node.NodeType.isFunction;
 
-import org.oakgp.evolve.GeneticOperator;
+import org.oakgp.generate.TreeGenerator;
 import org.oakgp.node.FunctionNode;
 import org.oakgp.node.Node;
 import org.oakgp.node.walk.NodeWalk;
 import org.oakgp.primitive.FunctionSet;
 import org.oakgp.primitive.PrimitiveSet;
-import org.oakgp.select.NodeSelector;
 import org.oakgp.util.Random;
 import org.oakgp.util.Utils;
 
@@ -36,28 +35,12 @@ import org.oakgp.util.Utils;
  * Also known as node replacement mutation.
  * </p>
  */
-public final class PointMutation implements GeneticOperator {
-   private final Random random;
-   private final PrimitiveSet primitiveSet;
-
-   /**
-    * Creates a {@code PointMutation} that uses the given {@code Random} to select nodes to mutate.
-    *
-    * @param random
-    *           used to randomly select nodes to mutate
-    * @param primitiveSet
-    *           used to select replacements for nodes selected for mutation
-    */
-   public PointMutation(Random random, PrimitiveSet primitiveSet) {
-      this.random = random;
-      this.primitiveSet = primitiveSet;
-   }
+public final class PointMutation implements MutateOperator {
 
    @Override
-   public Node evolve(NodeSelector selector) {
-      Node root = selector.next();
-      int mutationPoint = Utils.selectSubNodeIndex(random, root);
-      return NodeWalk.replaceAt(root, mutationPoint, node -> {
+   public Node mutate(Node input, PrimitiveSet primitiveSet, TreeGenerator treeGenerator, Random random) {
+      int mutationPoint = Utils.selectSubNodeIndex(random, input);
+      return NodeWalk.replaceAt(input, mutationPoint, node -> {
          if (isFunction(node)) {
             FunctionNode functionNode = (FunctionNode) node;
             FunctionSet.Key key = primitiveSet.nextAlternativeFunction(functionNode);

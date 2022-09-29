@@ -66,8 +66,8 @@ public class FullAdderTest {
 
       RankedCandidates output = new RunBuilder(). //
             setReturnType(returnType). //
-            setConstants(constantSet). //
-            setVariables(variableSet). //
+            setConstantSet(constantSet). //
+            setVariableSet(variableSet). //
             setFunctionSet(functionSet). //
             setFitnessFunction(fitnessFunction). //
             setInitialPopulationSize(INITIAL_POPULATION_SIZE). //

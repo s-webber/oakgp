@@ -29,7 +29,7 @@ public interface Node {
     *           represents the values to assign to any variables used in the evaluation of this {@code Node}
     * @return the result of evaluating this {@code Node} using the values of the specified {@code Assignments}
     */
-   <T> T evaluate(Assignments assignments, AbstractDefinedFunctions adfs);
+   <T> T evaluate(Assignments assignments, AutomaticallyDefinedFunctions adfs);
 
    /** Returns the total number of nodes represented by this {@code Node} - including any child-nodes. */
    int getNodeCount();

@@ -49,7 +49,6 @@ public class TypeMap<T> {
       LinkedHashSet<T> result = new LinkedHashSet<>();
       for (Entry<Type, List<T>> e : input.entrySet()) {
          if (e.getKey().isAssignable(type)) {
-            System.out.println(e.getKey() + " is assignable to " + type);
             result.addAll(e.getValue());
          }
       }

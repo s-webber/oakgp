@@ -20,13 +20,13 @@ import static org.oakgp.examples.gridwar.GridWar.GRID_WIDTH;
 import java.util.Scanner;
 
 import org.oakgp.Assignments;
-import org.oakgp.node.AbstractDefinedFunctions;
+import org.oakgp.node.AutomaticallyDefinedFunctions;
 import org.oakgp.util.DummyNode;
 
 /** Represents a human player in a GridWar game. */
 class Human extends DummyNode {
    @Override
-   public Integer evaluate(Assignments assignments, AbstractDefinedFunctions adfs) {
+   public Integer evaluate(Assignments assignments, AutomaticallyDefinedFunctions adfs) {
       int playerX = (int) assignments.get(0);
       int playerY = (int) assignments.get(1);
       int opponentX = (int) assignments.get(3);

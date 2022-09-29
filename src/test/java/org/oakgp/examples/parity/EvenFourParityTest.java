@@ -61,8 +61,8 @@ public class EvenFourParityTest {
 
       RankedCandidates output = new RunBuilder(). //
             setReturnType(booleanType()). //
-            setConstants(constantSet). //
-            setVariables(variableSet). //
+            setConstantSet(constantSet). //
+            setVariableSet(variableSet). //
             setFunctionSet(functionSet). //
             setFitnessFunction(fitnessFunction). //
             setInitialPopulationSize(INITIAL_POPULATION_SIZE). //

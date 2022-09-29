@@ -20,7 +20,7 @@ import static org.oakgp.type.CommonTypes.entryType;
 import org.oakgp.Assignments;
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
-import org.oakgp.node.AbstractDefinedFunctions;
+import org.oakgp.node.AutomaticallyDefinedFunctions;
 import org.oakgp.node.ChildNodes;
 import org.oakgp.type.Types;
 import org.oakgp.type.Types.Type;
@@ -36,7 +36,7 @@ public final class CreatePair implements Function {
 
    @SuppressWarnings({ "rawtypes", "unchecked" })
    @Override
-   public Pair evaluate(ChildNodes arguments, Assignments assignments, AbstractDefinedFunctions adfs) {
+   public Pair evaluate(ChildNodes arguments, Assignments assignments, AutomaticallyDefinedFunctions adfs) {
       return new Pair(arguments.first().evaluate(assignments, adfs), arguments.second().evaluate(assignments, adfs));
    }
 

@@ -36,7 +36,7 @@ public final class FunctionSet {
    private final TypeMap<Key> functionsByType;
 
    /** Constructs a function set containing the specified functions. */
-   public FunctionSet(Collection<FunctionSet.Key> functions) {
+   public FunctionSet(Collection<Key> functions) {
       // TODO validate display names using NodeReader.isValidDisplayName
       this.functions = unmodifiableList(new ArrayList<>(functions)); // TODO add immutableCopy(List) method to Utils
       this.functionsBySignature = Utils.groupBy(functions, Key::getSignature);
