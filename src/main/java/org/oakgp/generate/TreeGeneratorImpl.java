@@ -99,9 +99,10 @@ public final class TreeGeneratorImpl implements TreeGenerator {
 
    private boolean shouldCreateFunction(Type type, int depth) {
       if (!primitiveSet.hasTerminals(type)) {
-         // TODO Logger.getGlobal().info("no type " + type + " depth " + depth + " " + strategy.test(depth)); // TODO
+         // Logger.getGlobal().info("no terminal for " + type + " depth " + depth + " " + strategy.test(depth)); // TODO
          return true;
       } else if (!primitiveSet.hasFunctions(type)) {
+         // Logger.getGlobal().info("no function for " + type + " depth " + depth + " " + strategy.test(depth)); // TODO
          return false;
       } else {
          return strategy.test(depth);

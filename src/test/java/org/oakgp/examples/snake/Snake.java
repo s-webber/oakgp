@@ -51,6 +51,7 @@ public final class Snake {
    private Direction previousMove;
    private boolean isDead;
    private int movesWithoutApple;
+   private int moveCtr;
 
    Snake(boolean draw) {
       this.draw = draw;
@@ -59,10 +60,10 @@ public final class Snake {
       tail = new ArrayDeque<>();
       Cell temp = head;
       for (int i = 0; i < 8; i++) {
-         temp = temp.move(Direction.LEFT);
+         temp = temp.move(Direction.WEST);
          tail.addLast(temp);
       }
-      previousMove = Direction.RIGHT;
+      previousMove = Direction.EAST;
    }
 
    public void forward() {
@@ -79,13 +80,13 @@ public final class Snake {
 
    public boolean isFoodAhead() {
       switch (previousMove) {
-         case UP:
+         case NORTH:
             return head.x == apple.x && head.y > apple.y;
-         case RIGHT:
+         case EAST:
             return head.y == apple.y && head.x < apple.x;
-         case DOWN:
+         case SOUTH:
             return head.x == apple.x && head.y < apple.y;
-         case LEFT:
+         case WEST:
             return head.y == apple.y && head.x > apple.x;
          default:
             throw new IllegalStateException();
@@ -109,28 +110,32 @@ public final class Snake {
       return isDanger(oneAhead) || isDanger(oneAhead.move(previousMove));
    }
 
-   public boolean isFoodUp() {
+   public boolean isFoodNorth() {
       return head.y > apple.y;
    }
 
-   public boolean isFoodRight() {
+   public boolean isFoodEast() {
       return head.x < apple.x;
    }
 
-   public boolean isMovingUp() {
-      return previousMove == Direction.UP;
+   public boolean isMovingNorth() {
+      return previousMove == Direction.NORTH;
    }
 
-   public boolean isMovingDown() {
-      return previousMove == Direction.DOWN;
+   public boolean isMovingSouth() {
+      return previousMove == Direction.SOUTH;
    }
 
-   public boolean isMovingLeft() {
-      return previousMove == Direction.LEFT;
+   public boolean isMovingEast() {
+      return previousMove == Direction.WEST;
    }
 
-   public boolean isMovingRight() {
-      return previousMove == Direction.RIGHT;
+   public boolean isMovingWest() {
+      return previousMove == Direction.EAST;
+   }
+
+   public Direction getDirection() {
+      return previousMove;
    }
 
    private void move(Direction nextMove) {
@@ -142,6 +147,7 @@ public final class Snake {
       head = head.move(nextMove);
       previousMove = nextMove;
       movesWithoutApple++;
+      moveCtr++;
 
       if (isDanger(head)) {
          isDead = true;
@@ -200,7 +206,7 @@ public final class Snake {
    }
 
    public boolean gameOver() {
-      return isDead || movesWithoutApple > WIDTH * HEIGHT;
+      return isDead || movesWithoutApple > (WIDTH * HEIGHT) * 5;
    }
 
    public int getFitness() {
@@ -208,5 +214,9 @@ public final class Snake {
          System.out.println("tail size " + tail.size());
       }
       return CELLS.length - tail.size() - 1;
+   }
+
+   public int getMoves() {
+      return moveCtr;
    }
 }

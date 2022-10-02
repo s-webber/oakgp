@@ -1,24 +1,18 @@
 package org.oakgp.examples.celluar;
 
 import java.util.Arrays;
-import java.util.Map;
+import java.util.List;
 
 import org.oakgp.Assignments;
 import org.oakgp.node.Node;
 import org.oakgp.rank.fitness.FitnessFunction;
 
-class CelluarFitnessFunction implements FitnessFunction {
+final class CelluarFitnessFunction implements FitnessFunction {
+   static final int NUM_BITS = 149;
    private static final int NUM_ITERATIONS = 600;
-   private static final int NUM_BITS = 149;
-   private static final int NUM_ARGS = 7;
-   private static final int[][] BITMASKS = new int[NUM_BITS][];
    // there are 128 possible combinations of 7 booleans
    private static final Assignments[] ASSIGNMENTS = new Assignments[128];
    static {
-      for (int i = 0; i < NUM_BITS; i++) {
-         BITMASKS[i] = createBitmask(i);
-      }
-
       for (int i = 0; i < ASSIGNMENTS.length; i++) {
          boolean b1 = (i & 0b1) != 0;
          boolean b2 = (i & 0b10) != 0;
@@ -31,77 +25,42 @@ class CelluarFitnessFunction implements FitnessFunction {
       }
    }
 
-   private static int[] createBitmask(int idx) {
-      int[] params = new int[NUM_ARGS];
-      for (int i = 0; i < params.length; i++) {
-         int q = idx + i - (NUM_ARGS / 2);
-         if (q < 0) {
-            q = NUM_BITS + q;
-         } else if (q >= NUM_BITS) {
-            q = q - NUM_BITS;
-         }
-         params[i] = q;
-      }
-      return params;
-   }
+   private final List<TestCase> testCases;
 
-   // public static void main(String[] args) {
-   // Random r = new Random();
-   // Object[] input = new Object[NUM_BITS];
-   // for (int i = 0; i < NUM_BITS; i++) {
-   // input[i] = r.nextBoolean();
-   // }
-   //
-   // Map<Assignments, Boolean> m = Collections.singletonMap(Assignments.createAssignments(input), true);
-   // new Celluar(m).evaluate(new DummyNode() {
-   // @Override
-   // public Boolean evaluate(Assignments assignments, AutomaticallyDefinedFunctions adfs) {
-   // return r.nextBoolean();
-   // }
-   // });
-   // }
-
-   private final Map<Assignments, Boolean> testCases;
-
-   CelluarFitnessFunction(Map<Assignments, Boolean> testCases) {
+   CelluarFitnessFunction(List<TestCase> testCases) {
       this.testCases = testCases;
    }
 
-   int ctr = 0;
-
    @Override
    public double evaluate(Node candidate) {
-      int fitness = 0;
+      int fitness = testCases.size();
 
-      Boolean cache[] = new Boolean[ASSIGNMENTS.length];
+      boolean[] cache = createCache(candidate);
 
-      for (Map.Entry<Assignments, Boolean> testCase : testCases.entrySet()) {
-         boolean[] input = toBooleans(testCase.getKey());
-         Boolean output = evaluateTestCase(candidate, input, cache);
+      for (TestCase testCase : testCases) {
+         Boolean output = evaluateTestCase(testCase.input, cache);
 
-         if (testCase.getValue().equals(output)) {
-            fitness++;
+         if (output != null && testCase.expected == output.booleanValue()) {
+            fitness--;
          }
       }
 
       return fitness;
    }
 
-   private boolean[] toBooleans(Assignments input) {
-      boolean[] output = new boolean[NUM_BITS];
-
-      for (int i = 0; i < NUM_BITS; i++) {
-         output[i] = (boolean) input.get(i);
+   private boolean[] createCache(Node candidate) {
+      boolean[] cache = new boolean[ASSIGNMENTS.length];
+      for (int i = 0; i < cache.length; i++) {
+         cache[i] = candidate.evaluate(ASSIGNMENTS[i], null);
       }
-
-      return output;
+      return cache;
    }
 
-   private Boolean evaluateTestCase(Node candidate, boolean[] input, Boolean[] cache) {
+   private Boolean evaluateTestCase(boolean[] input, boolean[] cache) {
       boolean[] current = input;
 
       for (int i = 0; i < NUM_ITERATIONS; i++) {
-         boolean[] next = nextIteration(current, candidate, cache);
+         boolean[] next = nextIteration(current, cache);
          if (Arrays.equals(current, next)) {
             break;
          }
@@ -111,33 +70,17 @@ class CelluarFitnessFunction implements FitnessFunction {
       return getOutcome(current);
    }
 
-   private boolean[] nextIteration(boolean[] input, Node candidate, Boolean cache[]) {
+   private boolean[] nextIteration(boolean[] input, boolean cache[]) {
       boolean[] result = new boolean[NUM_BITS];
 
+      int previous = (input[NUM_BITS - 3] ? 1 : 0) + (input[NUM_BITS - 2] ? 2 : 0) + (input[NUM_BITS - 1] ? 4 : 0) + (input[0] ? 8 : 0) + (input[1] ? 16 : 0)
+            + (input[2] ? 32 : 0) + (input[3] ? 64 : 0);
       for (int i = 0; i < NUM_BITS; i++) {
-         int assignmentIdx = calculateAssignmentIdx(input, i);
-         Boolean bit = cache[assignmentIdx];
-         if (bit == null) {
-            bit = candidate.evaluate(ASSIGNMENTS[assignmentIdx], null);
-            cache[assignmentIdx] = bit;
-         }
-         result[i] = bit;
+         result[i] = cache[previous];
+         previous = input[i < NUM_BITS - 3 ? i + 3 : i - (NUM_BITS - 3)] ? (previous >> 1) + 64 : (previous >> 1);
       }
 
       return result;
-   }
-
-   private int calculateAssignmentIdx(boolean[] input, int idx) {
-      int assignmentIdx = 0;
-
-      int[] bitmask = BITMASKS[idx];
-      for (int i = 0, b = 1; i < NUM_ARGS; i++, b *= 2) {
-         if (input[bitmask[i]]) {
-            assignmentIdx += b;
-         }
-      }
-
-      return assignmentIdx;
    }
 
    private Boolean getOutcome(boolean[] arguments) {
@@ -150,5 +93,15 @@ class CelluarFitnessFunction implements FitnessFunction {
       }
 
       return outcome;
+   }
+
+   static final class TestCase {
+      private final boolean[] input;
+      private final boolean expected;
+
+      TestCase(boolean[] input, boolean expected) {
+         this.input = input;
+         this.expected = expected;
+      }
    }
 }

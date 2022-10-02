@@ -15,7 +15,6 @@
  */
 package org.oakgp.util;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,28 +49,7 @@ public final class FunctionSetBuilder {
    }
 
    public FunctionSetBuilder addMethod(Class<?> target, String methodName) {
-      Method method = null;
-      boolean duplicates = false;
-      for (Method m : target.getMethods()) {
-         if (m.getName().equals(methodName)) {
-            duplicates = method != null;
-            method = m;
-
-            if (method.getParameterCount() == 0) {
-               duplicates = false;
-               break;
-            }
-         }
-      }
-
-      if (method == null) {
-         throw new RuntimeException();
-      }
-      if (duplicates) {
-         throw new RuntimeException();
-      }
-
-      Function f = MethodFunction.createFunction(method);
+      Function f = MethodFunction.createFunction(target, methodName);
       return put(f, f.getSignature());
    }
 

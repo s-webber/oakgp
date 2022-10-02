@@ -7,7 +7,6 @@ import java.lang.reflect.Parameter;
 
 import org.oakgp.function.Function;
 import org.oakgp.function.Signature;
-import org.oakgp.type.CommonTypes;
 import org.oakgp.type.Types;
 import org.oakgp.type.Types.Type;
 
@@ -22,8 +21,32 @@ public final class MethodFunction {
    private MethodFunction() {
    }
 
+   public static Function createFunction(Class<?> target, String methodName) {
+      Method method = null;
+      boolean duplicates = false;
+      for (Method m : target.getMethods()) {
+         if (m.getName().equals(methodName)) {
+            duplicates = method != null;
+            method = m;
+
+            if (method.getParameterCount() == 0) {
+               duplicates = false;
+               break;
+            }
+         }
+      }
+
+      if (method == null) {
+         throw new RuntimeException(target.getName() + " " + methodName);
+      }
+      if (duplicates) {
+         throw new RuntimeException();
+      }
+
+      return createFunction(method);
+   }
+
    public static Function createFunction(Method method) {
-      CommonTypes.stringType(); // TODO
       Type[] argumentTypes = getMethodArguments(method);
       Type returnType = Types.type(method.getReturnType());
       Signature signature = Signature.createSignature(returnType, argumentTypes);
@@ -94,7 +117,7 @@ public final class MethodFunction {
       Class<?> returnType = PrimitiveMapper.mapPrimitive(method.getReturnType());
       boolean isVoidReturnType = returnType == Void.class;
       sb.append(returnType.getName());
-      sb.append(" evaluate(ChildNodes a, Assignments v, AbstractDefinedFunctions f){\n");
+      sb.append(" evaluate(ChildNodes a, Assignments v, AutomaticallyDefinedFunctions f){\n");
       if (!isVoidReturnType) {
          sb.append("return ");
       }

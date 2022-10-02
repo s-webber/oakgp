@@ -15,13 +15,13 @@ final class Cell {
 
    Cell move(Direction d) {
       switch (d) {
-         case UP:
+         case NORTH:
             return north;
-         case RIGHT:
+         case EAST:
             return east;
-         case DOWN:
+         case SOUTH:
             return south;
-         case LEFT:
+         case WEST:
             return west;
          default:
             throw new IllegalArgumentException();

@@ -25,7 +25,7 @@ import org.oakgp.util.RunBuilder;
 
 public class SnakeExample {
    private static final Type SNAKE_TYPE = Types.type(Snake.class);
-   private static final int INITIAL_POPULATION_SIZE = 10000;
+   private static final int INITIAL_POPULATION_SIZE = 1000;
    private static final int MAX_GENERATIONS = 500;
    private static final int INITIAL_POPULATION_MAX_DEPTH = 8;
 
@@ -34,7 +34,7 @@ public class SnakeExample {
             .add(new If(), voidType()) //
             .add(new BiSequence()) //
             .addMethods(Snake.class, "forward", "left", "right", "isFoodAhead", "isDangerAhead", "isDangerLeft", "isDangerRight", "isDangerTwoAhead",
-                  "isFoodUp", "isFoodRight", "isMovingUp", "isMovingDown", "isMovingLeft", "isMovingRight") //
+                  "isFoodNorth", "isFoodEast", "isMovingNorth", "isMovingSouth", "isMovingEast", "isMovingWest") //
             .build();
       SnakeFitnessFunction fitnessFunction = new SnakeFitnessFunction();
 
