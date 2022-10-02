@@ -33,6 +33,7 @@ import org.oakgp.rank.fitness.TestDataFitnessFunction;
 import org.oakgp.util.ConstantSetBuilder;
 import org.oakgp.util.FunctionSetBuilder;
 import org.oakgp.util.RunBuilder;
+import org.oakgp.util.VariableSetBuilder;
 
 /**
  * Evolve a function that will return true when an even number of its 4 boolean arguments are true.
@@ -51,7 +52,7 @@ public class EvenFourParityTest {
             .addAll(IsFalse.getSingleton(), And.getSingleton(), Or.getSingleton(), Xor.getSingleton()) //
             .build();
       ConstantSet constantSet = new ConstantSetBuilder().addAll(true, false).build();
-      VariableSet variableSet = VariableSet.createVariableSet(booleanType(), booleanType(), booleanType());
+      VariableSet variableSet = new VariableSetBuilder().add(booleanType(), 4).build();
       TestDataFitnessFunction<Boolean> fitnessFunction = new TestDataBuilder() //
             .booleanValues() //
             .booleanValues() //

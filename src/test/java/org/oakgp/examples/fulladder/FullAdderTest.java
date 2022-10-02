@@ -37,6 +37,7 @@ import org.oakgp.type.Types.Type;
 import org.oakgp.util.ConstantSetBuilder;
 import org.oakgp.util.FunctionSetBuilder;
 import org.oakgp.util.RunBuilder;
+import org.oakgp.util.VariableSetBuilder;
 
 /**
  * A full adder adds three binary numbers.
@@ -57,7 +58,7 @@ public class FullAdderTest {
             .addAll(IsFalse.getSingleton(), And.getSingleton(), Or.getSingleton(), Xor.getSingleton()) //
             .build();
       ConstantSet constantSet = new ConstantSetBuilder().addAll(true, false).build();
-      VariableSet variableSet = VariableSet.createVariableSet(booleanType(), booleanType(), booleanType());
+      VariableSet variableSet = new VariableSetBuilder().add(booleanType(), 3).build();
       TestDataFitnessFunction<Pair<Boolean, Boolean>> fitnessFunction = new TestDataBuilder() //
             .booleanValues() //
             .booleanValues() //
