@@ -2,7 +2,6 @@
 *.class
 *.jar
 *.zip
-poker
 
 # eclipse configuration
 /.classpath
