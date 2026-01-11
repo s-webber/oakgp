@@ -7,21 +7,13 @@
    <packaging>jar</packaging>
    <name>oakgp</name>
    <description>A tree-based genetic programming framework.</description>
-   <url>http://oakgp.org/</url>
+   <url>https://github.com/s-webber/oakgp</url>
    <licenses>
       <license>
          <name>The Apache License, Version 2.0</name>
          <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
       </license>
    </licenses>
-   <developers>
-      <developer>
-         <name>S Webber</name>
-         <email>oakgp@oakgp.org</email>
-         <organization>oakgp</organization>
-         <organizationUrl>https://github.com/s-webber</organizationUrl>
-      </developer>
-   </developers>
    <scm>
       <connection>scm:git:git@github.com:s-webber/oakgp.git</connection>
       <developerConnection>scm:git:git@github.com:s-webber/oakgp.git</developerConnection>
@@ -43,7 +35,7 @@
       </dependency>
       <dependency>
          <groupId>org.mockito</groupId>
-         <artifactId>mockito-all</artifactId>
+         <artifactId>mockito-core</artifactId>
          <version>1.10.19</version>
          <scope>test</scope>
       </dependency>

@@ -70,7 +70,7 @@ import org.oakgp.type.Types.Type;
 /**
  * Provides a convenient way to configure and start a genetic programming run.
  *
- * @see <a href="http://oakgp.org/getting-started-with-oakgp">Getting Started with OakGP</a>
+ * @see <a href="https://github.com/s-webber/oakgp/tree/master/archive/getting-started-with-oakgp.html">Getting Started with OakGP</a>
  */
 public final class RunBuilder { // TODO remove any unused methods, add new cache()/noCache() and parallel()/sequential() methods
    private static final Random RANDOM = new JavaUtilRandomAdapter();
